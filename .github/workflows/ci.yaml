@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet 8.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
+      - name: Build
+        run: |
+          dotnet build
+
+      - name: Test
+        env:
+          TestIdentity__ClientSecret: ${{ secrets.TESTIDENTITY_CLIENTSECRET }}
+        run: |
+          dotnet test
