@@ -1,12 +1,11 @@
 ﻿
-using System.Collections.Immutable;
 using FluentValidation.Results;
 
 namespace SimpleTrading.Domain.Infrastructure;
 
 public record Completed;
 
-public record Completed<T>(T Data);
+public record Completed<T>(T Data) : Completed;
 
 public record BadInput(ValidationResult ValidationResult);
 
