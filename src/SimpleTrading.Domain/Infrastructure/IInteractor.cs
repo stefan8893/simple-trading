@@ -1,6 +1,6 @@
 ﻿namespace SimpleTrading.Domain.Infrastructure;
 
-public interface IInteractor<in TRequestModel, TResponseModel>
+public interface IInteractor<in TRequestModel, TResponse>
 {
-    Task<TResponseModel> Execute(TRequestModel model);
+    Task<TResponse> Execute(TRequestModel model);
 }
