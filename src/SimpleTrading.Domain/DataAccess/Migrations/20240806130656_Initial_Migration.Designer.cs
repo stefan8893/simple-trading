@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleTrading.Domain;
+using SimpleTrading.Domain.DataAccess;
 
 #nullable disable
 
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240804055348_Initial_Migration")]
+    [Migration("20240806130656_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -106,13 +106,12 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<string>("Link")
-                        .IsRequired()
+                    b.Property<string>("Notes")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
@@ -147,7 +146,6 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
@@ -228,7 +226,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Reference", b =>
                 {
                     b.HasOne("SimpleTrading.Domain.Trading.Trade", "Trade")
-                        .WithMany("Reference")
+                        .WithMany("References")
                         .HasForeignKey("TradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -300,7 +298,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>
                 {
-                    b.Navigation("Reference");
+                    b.Navigation("References");
                 });
 #pragma warning restore 612, 618
         }

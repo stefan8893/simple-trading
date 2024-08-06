@@ -10,6 +10,6 @@ public enum Result
 
 public class Outcome
 {
-    public required Result Result { get; init; }
     public required decimal Balance { get; init; }
+    public required Result Result { get; init; }
 }

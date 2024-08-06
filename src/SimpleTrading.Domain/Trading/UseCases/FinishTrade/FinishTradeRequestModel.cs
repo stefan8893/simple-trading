@@ -9,8 +9,8 @@ public class FinishTradeRequestModelValidator : AbstractValidator<FinishTradeReq
 {
     public FinishTradeRequestModelValidator()
     {
-        RuleFor(x => x.TradeId).NotEmpty();
-
-        RuleFor(x => x.Result).IsInEnum();
+        RuleFor(x => x.Result)
+            .IsInEnum()
+            .WithName(SimpleTradingStrings.Result);
     }
 }

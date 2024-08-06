@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Asset" xml:space="preserve">
+    <value>Asset</value>
+  </data>
   <data name="Balance" xml:space="preserve">
     <value>Bilanz</value>
   </data>
   <data name="BreakEvenIfBalanceIsZero" xml:space="preserve">
     <value>Das Ergebnis muss 'Kostendeckend' sein, wenn die Bilanz gleich Null ist.</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Währung</value>
   </data>
   <data name="FinishedAt" xml:space="preserve">
     <value>Beendet</value>
@@ -132,11 +138,20 @@
   <data name="FinishedBeforeOpenedError" xml:space="preserve">
     <value>Das Datum 'Beendet' muss nach dem Datum 'Eröffnet' liegen.</value>
   </data>
+  <data name="FinishedTradeNeedsFinishedBalanceAndResult" xml:space="preserve">
+    <value>Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz' und 'Ergebnis' angeben.</value>
+  </data>
+  <data name="InvalidLink" xml:space="preserve">
+    <value>Ungültiger Link.</value>
+  </data>
   <data name="LossIfBalanceIsLessThanZero" xml:space="preserve">
     <value>Das Ergebnis muss 'Verlust' sein, wenn die Bilanz kleiner als Null ist.</value>
   </data>
   <data name="MediocreOrWinIfBalanceAboveZero" xml:space="preserve">
     <value>Das Ergebnis muss 'Mittelmäßig' oder 'Gewinn' sein, wenn die Bilanz größer als Null ist.</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Anmerkungen</value>
   </data>
   <data name="NotFound" xml:space="preserve">
     <value>Ressource nicht gefunden.</value>
@@ -144,8 +159,23 @@
   <data name="NotFoundNamed" xml:space="preserve">
     <value>{0} nicht gefunden.</value>
   </data>
+  <data name="OpenedAt" xml:space="preserve">
+    <value>Eröffnet</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Sonstiges</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="ReferenceType" xml:space="preserve">
+    <value>Referenztyp</value>
+  </data>
   <data name="Result" xml:space="preserve">
     <value>Ergebnis</value>
+  </data>
+  <data name="Trade" xml:space="preserve">
+    <value>Trade</value>
   </data>
   <data name="TradeAlreadyFinished" xml:space="preserve">
     <value>Der Trade wurde bereits am '{0}' beendet.</value>

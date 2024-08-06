@@ -19,7 +19,7 @@ public class ReferenceConfiguration : IEntityTypeConfiguration<Reference>
             .HasMaxLength(4000);
 
         builder
-            .Property(x => x.Description)
+            .Property(x => x.Notes)
             .HasMaxLength(4000);
     }
 }

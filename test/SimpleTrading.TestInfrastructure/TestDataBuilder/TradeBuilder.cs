@@ -40,7 +40,7 @@ public static partial class TestData
                 CurrencyId = currency.Id,
                 Currency = currency,
                 PositionPrices = PositionPrices,
-                Reference = Reference,
+                References = Reference,
                 Notes = Notes
             };
 

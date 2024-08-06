@@ -31,23 +31,19 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
             .AutoInclude();
 
         builder
-            .HasMany(x => x.Reference)
+            .HasMany(x => x.References)
             .WithOne(x => x.Trade)
             .HasForeignKey(x => x.TradeId)
             .HasPrincipalKey(x => x.Id)
             .IsRequired();
 
         builder
-            .Navigation(x => x.Reference)
+            .Navigation(x => x.References)
             .AutoInclude();
 
         builder
             .Property(x => x.Size)
             .HasPrecision(24, 8);
-
-        builder
-            .Property(x => x.Notes)
-            .HasMaxLength(4000);
 
         var positionPrices = builder.ComplexProperty(x => x.PositionPrices);
 
@@ -66,5 +62,9 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         outcome
             .Property(x => x.Balance)
             .HasPrecision(24, 8);
+
+        builder
+            .Property(x => x.Notes)
+            .HasMaxLength(4000);
     }
 }

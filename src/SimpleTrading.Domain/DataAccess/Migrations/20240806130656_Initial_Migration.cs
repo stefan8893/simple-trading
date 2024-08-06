@@ -66,7 +66,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Outcome_Result = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Outcome_Balance = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: true),
                     CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     PositionPrices_Entry = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: false),
                     PositionPrices_StopLoss = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: true),
                     PositionPrices_TakeProfit = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: true)
@@ -124,7 +124,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     TradeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     Link = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

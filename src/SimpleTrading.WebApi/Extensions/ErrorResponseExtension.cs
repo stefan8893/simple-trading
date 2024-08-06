@@ -38,9 +38,9 @@ public static class ErrorResponseExtension
 
     public static ActionResult ToActionResult(this NotFound notFound)
     {
-        var errorMessage = notFound.ResourceName is null
+        var errorMessage = notFound.ResourceType is null
             ? SimpleTradingStrings.NotFound
-            : string.Format(SimpleTradingStrings.NotFoundNamed, notFound.ResourceName);
+            : string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.ResourceManager.GetString(notFound.ResourceType));
 
         var errorResponse = new ErrorResponse
         {

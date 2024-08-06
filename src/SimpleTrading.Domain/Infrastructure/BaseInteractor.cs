@@ -15,15 +15,21 @@ public abstract class BaseInteractor
         return new Completed<T>(data);
     }
 
-    protected static BadInput BadInput(Guid resourceId, ValidationResult validationResult)
+    protected static BadInput BadInput(ValidationResult validationResult)
     {
-        return new BadInput(resourceId, validationResult);
+        return new BadInput(validationResult);
     }
 
     protected static NotFound NotFound(Guid resourceId, string? resourceName = null)
     {
         return new NotFound(resourceId, resourceName);
     }
+
+    protected static NotFound NotFound<TEntity>(Guid resourceId)
+    {
+        return new NotFound<TEntity>(resourceId);
+    }
+
 
     protected static BusinessError BusinessError(Guid resourceId, string reason)
     {
