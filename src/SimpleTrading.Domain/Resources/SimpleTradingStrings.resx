@@ -129,6 +129,12 @@
   <data name="Currency" xml:space="preserve">
     <value>Währung</value>
   </data>
+  <data name="EntryPrice" xml:space="preserve">
+    <value>Einstiegspreis</value>
+  </data>
+  <data name="ExitPrice" xml:space="preserve">
+    <value>Ausstiegspreis</value>
+  </data>
   <data name="FinishedAt" xml:space="preserve">
     <value>Beendet</value>
   </data>
@@ -143,6 +149,9 @@
   </data>
   <data name="InvalidLink" xml:space="preserve">
     <value>Ungültiger Link.</value>
+  </data>
+  <data name="Link" xml:space="preserve">
+    <value>Link</value>
   </data>
   <data name="LossIfBalanceIsLessThanZero" xml:space="preserve">
     <value>Das Ergebnis muss 'Verlust' sein, wenn die Bilanz kleiner als Null ist.</value>
@@ -174,10 +183,19 @@
   <data name="Result" xml:space="preserve">
     <value>Ergebnis</value>
   </data>
+  <data name="StopLoss" xml:space="preserve">
+    <value>Stop-Loss</value>
+  </data>
+  <data name="TakeProfit" xml:space="preserve">
+    <value>Take-Profit</value>
+  </data>
   <data name="Trade" xml:space="preserve">
     <value>Trade</value>
   </data>
   <data name="TradeAlreadyFinished" xml:space="preserve">
     <value>Der Trade wurde bereits am '{0}' beendet.</value>
+  </data>
+  <data name="TradeSize" xml:space="preserve">
+    <value>Handelsvolumen</value>
   </data>
 </root>

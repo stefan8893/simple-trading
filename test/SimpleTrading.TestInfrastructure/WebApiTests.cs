@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.TestInfrastructure.Authentication;
 using SimpleTrading.WebApi;
+using System.Net.Http.Headers;
 using Xunit;
 
 namespace SimpleTrading.TestInfrastructure;
@@ -36,5 +38,14 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
         var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
         await dbMasterData.Seed();
+    }
+
+    public async Task<HttpClient> CreateClientWithAccessToken()
+    {
+        var accessToken = await TestIdentity.AccessToken;
+        var client = Factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        return client;
     }
 }

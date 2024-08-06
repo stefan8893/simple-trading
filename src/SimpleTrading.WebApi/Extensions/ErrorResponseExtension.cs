@@ -8,10 +8,6 @@ namespace SimpleTrading.WebApi.Extensions;
 
 public static class ErrorResponseExtension
 {
-    public static ActionResult ToActionResult(this Completed _)
-    {
-        return new NoContentResult();
-    }
 
     public static ActionResult ToActionResult(this BadInput badInput)
     {

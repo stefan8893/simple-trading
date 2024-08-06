@@ -10,7 +10,7 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading;
 
-public class TradingControllerTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-04T12:00").ToUtcKind();
 
@@ -40,9 +40,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task The_trade_to_finish_was_not_found()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
@@ -67,9 +65,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task The_result_must_not_be_null()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
@@ -97,9 +93,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task The_balance_must_not_be_null()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
@@ -127,9 +121,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task The_finished_date_must_not_be_null()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
@@ -157,9 +149,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task Bad_request_response_if_balance_is_null()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
@@ -187,9 +177,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task Unprocessable_entity_response_if_finished_date_is_before_opened_date()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var trade = (TestData.Trade.Default with {OpenedAt = _utcNow}).Build();
@@ -217,9 +205,7 @@ public class TradingControllerTests(TestingWebApplicationFactory<Program> factor
     public async Task A_trade_can_be_successfully_finished()
     {
         // arrange
-        var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var trade = (TestData.Trade.Default with {OpenedAt = _utcNow}).Build();

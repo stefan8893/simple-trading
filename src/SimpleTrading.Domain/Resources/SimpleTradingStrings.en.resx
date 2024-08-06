@@ -129,6 +129,12 @@
   <data name="Currency" xml:space="preserve">
     <value>Currency</value>
   </data>
+  <data name="EntryPrice" xml:space="preserve">
+    <value>Entry price</value>
+  </data>
+  <data name="ExitPrice" xml:space="preserve">
+    <value>Exit price</value>
+  </data>
   <data name="FinishedAt" xml:space="preserve">
     <value>Finished</value>
   </data>
@@ -142,7 +148,10 @@
     <value>In order to add a finished trade, you must specify 'Finished', 'Balance' and 'Result'.</value>
   </data>
   <data name="InvalidLink" xml:space="preserve">
-    <value>Invalid Link.</value>
+    <value>Invalid link.</value>
+  </data>
+  <data name="Link" xml:space="preserve">
+    <value>Link</value>
   </data>
   <data name="LossIfBalanceIsLessThanZero" xml:space="preserve">
     <value>The result must be 'Loss' if the balance is below zero.</value>
@@ -174,10 +183,19 @@
   <data name="Result" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="StopLoss" xml:space="preserve">
+    <value>Stop loss</value>
+  </data>
+  <data name="TakeProfit" xml:space="preserve">
+    <value>Take profit</value>
+  </data>
   <data name="Trade" xml:space="preserve">
     <value>Trade</value>
   </data>
   <data name="TradeAlreadyFinished" xml:space="preserve">
     <value>The trade has already been finished on '{0}'.</value>
+  </data>
+  <data name="TradeSize" xml:space="preserve">
+    <value>Trade size</value>
   </data>
 </root>

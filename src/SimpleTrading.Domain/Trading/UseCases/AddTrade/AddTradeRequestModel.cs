@@ -3,6 +3,8 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
+public record ReferenceModel(ReferenceType Type, string Link, string? Notes = null);
+
 public record AddTradeRequestModel
 {
     public Guid AssetId { get; init; }
@@ -36,6 +38,10 @@ public class AddTradeRequestModelValidator: AbstractValidator<AddTradeRequestMod
             .GreaterThanOrEqualTo(Constants.MinDate)
             .WithName(SimpleTradingStrings.OpenedAt);
 
+        RuleFor(x => x.Size)
+            .GreaterThan(0)
+            .WithName(SimpleTradingStrings.TradeSize);
+
         RuleFor(x => x.Result)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
@@ -49,8 +55,6 @@ public class AddTradeRequestModelValidator: AbstractValidator<AddTradeRequestMod
             .SetValidator(referenceModelValidator);
     }
 }
-
-public record ReferenceModel(ReferenceType Type, string Link, string? Notes = null);
 
 public class ReferenceModelValidator : AbstractValidator<ReferenceModel>
 {

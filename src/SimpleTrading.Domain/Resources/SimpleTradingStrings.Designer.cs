@@ -97,6 +97,24 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Einstiegspreis.
+        /// </summary>
+        public static string EntryPrice {
+            get {
+                return ResourceManager.GetString("EntryPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausstiegspreis.
+        /// </summary>
+        public static string ExitPrice {
+            get {
+                return ResourceManager.GetString("ExitPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beendet.
         /// </summary>
         public static string FinishedAt {
@@ -138,6 +156,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string InvalidLink {
             get {
                 return ResourceManager.GetString("InvalidLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link.
+        /// </summary>
+        public static string Link {
+            get {
+                return ResourceManager.GetString("Link", resourceCulture);
             }
         }
         
@@ -232,6 +259,24 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop-Loss.
+        /// </summary>
+        public static string StopLoss {
+            get {
+                return ResourceManager.GetString("StopLoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take-Profit.
+        /// </summary>
+        public static string TakeProfit {
+            get {
+                return ResourceManager.GetString("TakeProfit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trade.
         /// </summary>
         public static string Trade {
@@ -246,6 +291,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string TradeAlreadyFinished {
             get {
                 return ResourceManager.GetString("TradeAlreadyFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handelsvolumen.
+        /// </summary>
+        public static string TradeSize {
+            get {
+                return ResourceManager.GetString("TradeSize", resourceCulture);
             }
         }
     }

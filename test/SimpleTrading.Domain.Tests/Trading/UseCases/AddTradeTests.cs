@@ -85,6 +85,31 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Theory]
+    [InlineData("en-US", "'Trade size' must be greater than '0'.")]
+    [InlineData("de-AT", "Der Wert von 'Handelsvolumen' muss grösser sein als '0'.")]
+    public async Task Size_must_be_above_zero(string culture, string errorMessage)
+    {
+        Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = TestData.Asset.Default.Build().Id,
+            ProfileId = TestData.Profile.Default.Build().Id,
+            OpenedAt = _utcNow,
+            Size = 0,
+            CurrencyId = TestData.Currency.Default.Build().Id,
+        };
+
+        var response = await CreateInteractor().Execute(requestModel);
+
+        response.Value.Should().BeOfType<BadInput>()
+            .Which.ValidationResult.Errors.Should()
+            .Contain(x => x.ErrorMessage == errorMessage)
+            .And.Contain(x => x.PropertyName == "Size")
+            .And.HaveCount(1);
+    }
+
+    [Theory]
     [InlineData("en-US", "'Result' has a range of values which does not include '50'.")]
     [InlineData("de-AT", "'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.")]
     public async Task Result_must_be_in_enum_range(string culture, string errorMessage)
@@ -159,7 +184,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == "Invalid Link.")
+            .Contain(x => x.ErrorMessage == "Invalid link.")
             .And.Contain(x => x.PropertyName == "References[0].Link")
             .And.HaveCount(1);
     }
