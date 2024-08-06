@@ -33,17 +33,15 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         var trade = CreateTrade(model, asset, profile, currency);
 
         var userSettings = await dbContext.GetUserSettings();
-        var result = FinishTrade(trade, model, userSettings.TimeZone);
+        var finishedTrade = FinishTrade(trade, model, userSettings.TimeZone);
 
-        if (result.Value is Completed<Trade>)
-        {
-            dbContext.Add(trade);
-            await dbContext.SaveChangesAsync();
-        }
+        if (finishedTrade.Value is BusinessError businessError)
+            return businessError;
 
-        return result.Match<AddTradeResponse>(
-            x => Completed(x.Data.Id),
-            x => x);
+        dbContext.Add(trade);
+        await dbContext.SaveChangesAsync();
+
+        return Completed(trade.Id);
     }
 
     private Trade CreateTrade(AddTradeRequestModel model, Asset asset, Profile profile, Currency currency)
