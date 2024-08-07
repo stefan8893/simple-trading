@@ -38,4 +38,17 @@ public class DateTimeExtensionsTests
 
         act.Should().Throw<ArgumentException>().WithMessage("The given dateTime is not in UTC");
     }
+
+    [Theory]
+    [InlineData(DateTimeKind.Local)]
+    [InlineData(DateTimeKind.Unspecified)]
+    [InlineData(DateTimeKind.Utc)]
+    public void ToUnspecifiedKind_converts_kind_properly(DateTimeKind kind)
+    {
+        var dateTime = new DateTime(2024, 8, 5, 12, 0, 0, kind);
+
+        var unspecifiedDateTime = dateTime.ToUnspecifiedKind();
+
+        unspecifiedDateTime.Kind.Should().Be(DateTimeKind.Unspecified);
+    }
 }

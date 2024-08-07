@@ -12,14 +12,14 @@ public class ReferenceConfiguration : IEntityTypeConfiguration<Reference>
 
         builder
             .Property(x => x.Type)
-            .HasMaxLength(4000);
+            .HasMaxLength(100);
 
         builder
             .Property(x => x.Link)
             .HasMaxLength(4000);
 
         builder
-            .Property(x => x.Description)
+            .Property(x => x.Notes)
             .HasMaxLength(4000);
     }
 }
