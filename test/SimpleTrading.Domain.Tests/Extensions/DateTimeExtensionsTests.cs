@@ -24,7 +24,7 @@ public class DateTimeExtensionsTests
 
         var act = () => utc.ToLocal("FooBar");
 
-        act.Should().Throw<TimeZoneNotFoundException>();
+        act.Should().ThrowExactly<TimeZoneNotFoundException>();
     }
 
     [Theory]
@@ -36,7 +36,7 @@ public class DateTimeExtensionsTests
 
         var act = () => utc.ToLocal("Europe/Vienna");
 
-        act.Should().Throw<ArgumentException>().WithMessage("The given dateTime is not in UTC");
+        act.Should().ThrowExactly<ArgumentException>().WithMessage("The given dateTime is not in UTC");
     }
 
     [Theory]

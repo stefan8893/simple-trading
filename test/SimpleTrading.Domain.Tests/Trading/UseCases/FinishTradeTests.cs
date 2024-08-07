@@ -43,8 +43,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == "'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.")
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.")
             .And.Contain(x => x.PropertyName == "Result")
             .And.HaveCount(1);
     }

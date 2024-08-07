@@ -55,7 +55,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         exception.Which.Result.FieldErrors.Should().BeEmpty();
-        exception.Which.Result.CommonErrors.Should().OnlyContain(x => x == "Trade nicht gefunden.")
+        exception.Which.Result.CommonErrors
+            .Should().Contain(x => x == "Trade nicht gefunden.")
             .And.HaveCount(1);
     }
 
@@ -81,10 +82,11 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.CommonErrors.Should().BeEmpty();
 
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.OnlyContain(x => x.Identifier == "Result")
-            .And.OnlyContain(x => x.Messages.Count == 1)
-            .And.OnlyContain(x => x.Messages.First() == "'Ergebnis' darf kein Nullwert sein.");
+        exception.Which.Result.FieldErrors
+            .Should().HaveCount(1)
+            .And.Contain(x => x.Identifier == "Result")
+            .And.Contain(x => x.Messages.Count == 1)
+            .And.Contain(x => x.Messages.First() == "'Ergebnis' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -109,10 +111,11 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.CommonErrors.Should().BeEmpty();
 
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.OnlyContain(x => x.Identifier == "Balance")
-            .And.OnlyContain(x => x.Messages.Count == 1)
-            .And.OnlyContain(x => x.Messages.First() == "'Bilanz' darf kein Nullwert sein.");
+        exception.Which.Result.FieldErrors
+            .Should().HaveCount(1)
+            .And.Contain(x => x.Identifier == "Balance")
+            .And.Contain(x => x.Messages.Count == 1)
+            .And.Contain(x => x.Messages.Single() == "'Bilanz' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -137,10 +140,11 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.CommonErrors.Should().BeEmpty();
 
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.OnlyContain(x => x.Identifier == "FinishedAt")
-            .And.OnlyContain(x => x.Messages.Count == 1)
-            .And.OnlyContain(x => x.Messages.First() == "'Beendet' darf kein Nullwert sein.");
+        exception.Which.Result.FieldErrors
+            .Should().HaveCount(1)
+            .And.Contain(x => x.Identifier == "FinishedAt")
+            .And.Contain(x => x.Messages.Count == 1)
+            .And.Contain(x => x.Messages.Single() == "'Beendet' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -165,10 +169,11 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.CommonErrors.Should().BeEmpty();
 
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.OnlyContain(x => x.Identifier == "Balance")
-            .And.OnlyContain(x => x.Messages.Count == 1)
-            .And.OnlyContain(x => x.Messages.First() == "'Bilanz' darf kein Nullwert sein.");
+        exception.Which.Result.FieldErrors
+            .Should().HaveCount(1)
+            .And.Contain(x => x.Identifier == "Balance")
+            .And.Contain(x => x.Messages.Count == 1)
+            .And.Contain(x => x.Messages.First() == "'Bilanz' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -195,8 +200,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
         exception.Which.Result.FieldErrors.Should().BeEmpty();
         exception.Which.Result.CommonErrors
-            .Should().OnlyContain(x => x == "Das Datum 'Beendet' muss nach dem Datum 'Eröffnet' liegen.")
-            .And.HaveCount(1);
+            .Should().HaveCount(1)
+            .And.Contain(x => x == "Das Datum 'Beendet' muss nach dem Datum 'Eröffnet' liegen.");
     }
 
     [Fact]
