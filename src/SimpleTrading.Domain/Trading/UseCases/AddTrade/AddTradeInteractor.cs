@@ -30,6 +30,11 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         if (currency is null)
             return NotFound<Currency>(model.CurrencyId);
 
+        return await AddTrade(model, asset, profile, currency);
+    }
+
+    private async Task<AddTradeResponse> AddTrade(AddTradeRequestModel model, Asset asset, Profile profile, Currency currency)
+    {
         var trade = CreateTrade(model, asset, profile, currency);
 
         var userSettings = await dbContext.GetUserSettings();

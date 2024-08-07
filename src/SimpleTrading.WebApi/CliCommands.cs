@@ -30,7 +30,7 @@ public static class CliCommands
             "An already existing database gets dropped");
 
         var forceOption = new Option<bool>(["-f", "--force"],
-            "Drop the db even it's an SqlServer");
+            "Drop the db even it's 'SqlServer'");
 
         createDbCommand.AddOption(dropExistingOption);
         createDbCommand.AddOption(forceOption);
@@ -93,10 +93,10 @@ public static class CliCommands
     public static Command DropDatabaseCommand(WebApplication app)
     {
         var dropDbCommand = new Command("drop-db",
-            "Drops the database, but only if it is not 'SqlServer'. Be aware all data get lost");
+            "Drops the database, but only if it is not 'SqlServer'. Be careful, all your data will be lost");
 
         var forceOption = new Option<bool>(["-f", "--force"],
-            "Drop the db even it's an SqlServer");
+            "Drop the db even it's 'SqlServer'");
 
         dropDbCommand.AddOption(forceOption);
         dropDbCommand.SetHandler(async ctx =>
