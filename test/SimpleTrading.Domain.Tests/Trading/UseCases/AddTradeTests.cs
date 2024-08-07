@@ -337,6 +337,38 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
+    public async Task Reference_notes_are_successfully_stored()
+    {
+        // arrange
+        var currency = TestData.Currency.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var asset = TestData.Asset.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            OpenedAt = _utcNow,
+            Size = 5000,
+            CurrencyId = currency.Id,
+            References = [new ReferenceModel(ReferenceType.Other, "http://example.org", "some notes")]
+        };
+
+        // act
+        var response = await CreateInteractor().Execute(requestModel);
+
+        // assert
+        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+
+        newlyAddedTrade.Should().NotBeNull();
+        newlyAddedTrade.References.Should().HaveCount(1)
+            .And.Contain(x => x.Notes == "some notes");
+    }
+
+    [Fact]
     public async Task A_finished_trade_can_be_added_successfully()
     {
         // arrange

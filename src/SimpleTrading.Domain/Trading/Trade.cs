@@ -23,6 +23,7 @@ public class Trade
     public ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
     public bool IsFinished => Outcome is not null && FinishedAt.HasValue;
+    public required DateTime CreatedAt { get; init; }
 
     internal OneOf<Completed, BusinessError> Finish(FinishTradeDto dto)
     {

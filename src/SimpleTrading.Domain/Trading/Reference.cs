@@ -2,7 +2,7 @@
 
 public enum ReferenceType
 {
-    TradingViewLink = 0,
+    TradingView = 0,
     Other = 1
 }
 

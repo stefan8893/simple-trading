@@ -11,20 +11,8 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         builder.HasKey(x => x.Id);
 
         builder
-            .HasOne(x => x.Asset)
-            .WithOne()
-            .HasForeignKey<Trade>(x => x.AssetId)
-            .IsRequired();
-
-        builder
             .Navigation(x => x.Asset)
             .AutoInclude();
-
-        builder
-            .HasOne(x => x.Profile)
-            .WithOne()
-            .HasForeignKey<Trade>(x => x.ProfileId)
-            .IsRequired();
 
         builder
             .Navigation(x => x.Profile)

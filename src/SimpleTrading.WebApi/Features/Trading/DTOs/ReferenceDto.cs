@@ -1,12 +1,17 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.Domain.Trading;
 
 namespace SimpleTrading.WebApi.Features.Trading.DTOs;
 
+public enum ReferenceTypeDto
+{
+    TradingView,
+    Other
+}
+
 public record ReferenceDto
 {
-    public ReferenceType? Type { get; set; }
+    public ReferenceTypeDto? Type { get; set; }
     public string? Link { get; set; }
     public string? Notes { get; set; }
 }

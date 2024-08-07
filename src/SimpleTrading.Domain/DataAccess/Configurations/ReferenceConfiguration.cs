@@ -12,7 +12,7 @@ public class ReferenceConfiguration : IEntityTypeConfiguration<Reference>
 
         builder
             .Property(x => x.Type)
-            .HasMaxLength(4000);
+            .HasMaxLength(100);
 
         builder
             .Property(x => x.Link)

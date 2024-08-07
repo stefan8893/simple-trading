@@ -63,17 +63,19 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
                 StopLoss = model.StopLoss,
                 TakeProfit = model.TakeProfit
             },
-            Notes = model.Notes
+            Notes = model.Notes,
+            CreatedAt = utcNow()
         };
 
-        foreach (var x in model.References)
+        foreach (var m in model.References)
             newTrade.References.Add(new Reference
             {
                 Id = Guid.NewGuid(),
                 TradeId = newTrade.Id,
                 Trade = newTrade,
-                Link = new Uri(x.Link),
-                Type = x.Type,
+                Type = m.Type,
+                Link = new Uri(m.Link),
+                Notes = m.Notes,
                 CreatedAt = utcNow()
             });
 

@@ -633,7 +633,7 @@ namespace SimpleTrading.Client
     {
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ReferenceType? Type { get; set; }
+        public ReferenceTypeDto? Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Link { get; set; }
@@ -644,11 +644,11 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum ReferenceType
+    public enum ReferenceTypeDto
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"TradingViewLink")]
-        TradingViewLink = 0,
+        [System.Runtime.Serialization.EnumMember(Value = @"TradingView")]
+        TradingView = 0,
 
         [System.Runtime.Serialization.EnumMember(Value = @"Other")]
         Other = 1,

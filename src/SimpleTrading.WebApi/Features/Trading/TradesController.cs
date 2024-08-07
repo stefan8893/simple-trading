@@ -44,7 +44,9 @@ public class TradesController : ControllerBase
             StopLoss = dto.StopLoss,
             TakeProfit = dto.TakeProfit,
             Notes = dto.Notes,
-            References = dto.References?.Select(x => new ReferenceModel(x.Type!.Value, x.Link!, x.Notes)).ToList() ?? []
+            References = dto.References?
+                .Select(x => new ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
+                .ToList() ?? []
         };
 
         var result = await addTrade.Execute(addTradeRequestModel);
@@ -96,6 +98,18 @@ public class TradesController : ControllerBase
             ResultDto.Loss => Result.Loss,
             _ => throw new ArgumentOutOfRangeException(nameof(ResultDto))
         };
+        return tradeResult;
+    }
+
+    private static ReferenceType MapToDomainReferenceType(ReferenceTypeDto? typeDto)
+    {
+        var tradeResult = typeDto switch
+        {
+            ReferenceTypeDto.Other => ReferenceType.Other,
+            ReferenceTypeDto.TradingView => ReferenceType.TradingView,
+            _ => throw new ArgumentOutOfRangeException(nameof(ResultDto))
+        };
+
         return tradeResult;
     }
 }

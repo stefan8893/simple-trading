@@ -18,7 +18,8 @@ public static partial class TestData
         public Currency Currency { get; init; } = Currency.Default;
         public PositionPrices PositionPrices { get; init; } = new() {Entry = 1.0m};
         public ICollection<Reference> Reference { get; init; } = [];
-        public string Notes { get; set; } = "";
+        public string Notes { get; init; } = "";
+        public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
         public static Trade Default => new();
 
@@ -41,7 +42,8 @@ public static partial class TestData
                 Currency = currency,
                 PositionPrices = PositionPrices,
                 References = Reference,
-                Notes = Notes
+                Notes = Notes,
+                CreatedAt = CreatedAt
             };
 
             if (Outcome is not null && FinishedAt.HasValue)
