@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: webiny/action-conventional-commits@v1.3.0
-      - uses: actions/checkout@v4
+      - name: Run Conventional Commits check
+        uses: webiny/action-conventional-commits@v1.3.0
+        
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Setup dotnet 8.x
         uses: actions/setup-dotnet@v4
