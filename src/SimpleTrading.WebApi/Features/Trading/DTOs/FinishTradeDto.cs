@@ -23,7 +23,7 @@ public class FinishTradeDtoValidator : AbstractValidator<FinishTradeDto>
     {
         RuleFor(x => x.Balance).NotNull();
         RuleFor(x => x.FinishedAt).NotNull();
-        
+
         RuleFor(x => x.Result)
             .NotNull()
             .IsInEnum();

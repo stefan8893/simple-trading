@@ -32,9 +32,9 @@ public class FinishTradeInteractor(
     {
         var userSettings = await dbContext.GetUserSettings();
 
-        var finishTradeDto = new Trade.FinishTradeDto((Result) model.Result!,
-            (decimal) model.Balance!,
-            (DateTime) model.FinishedAt!,
+        var finishTradeDto = new Trade.FinishTradeDto(model.Result!,
+            model.Balance!,
+            model.FinishedAt!,
             utcNow,
             userSettings.TimeZone);
 

@@ -33,7 +33,8 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         return await AddTrade(model, asset, profile, currency);
     }
 
-    private async Task<AddTradeResponse> AddTrade(AddTradeRequestModel model, Asset asset, Profile profile, Currency currency)
+    private async Task<AddTradeResponse> AddTrade(AddTradeRequestModel model, Asset asset, Profile profile,
+        Currency currency)
     {
         var trade = CreateTrade(model, asset, profile, currency);
 

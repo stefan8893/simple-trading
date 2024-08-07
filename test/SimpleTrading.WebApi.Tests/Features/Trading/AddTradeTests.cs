@@ -106,7 +106,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act=  () => simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
         {
             AssetId = notExistingAssetId,
             ProfileId = profile.Id,
@@ -153,6 +153,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
         exception.Which.Result.CommonErrors.Should().HaveCount(1)
-            .And.Contain(x => x == "Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz' und 'Ergebnis' angeben.");
+            .And.Contain(x =>
+                x == "Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz' und 'Ergebnis' angeben.");
     }
 }

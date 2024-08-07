@@ -6,6 +6,7 @@
 
 /* tslint:disable */
 /* eslint-disable */
+
 // ReSharper disable InconsistentNaming
 
 export interface ISimpleTradingClient {
@@ -16,22 +17,22 @@ export interface ISimpleTradingClient {
     getAppInfo(): Promise<SwaggerResponse<ApiInfo>>;
 
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return OK
      */
     addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<string>>;
 
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return No Content
      */
     finishTrade(tradeId: string, body: FinishTradeDto | undefined): Promise<SwaggerResponse<void>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -57,26 +58,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiInfo.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<ApiInfo>>(new SwaggerResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return OK
      */
     addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<string>> {
@@ -99,55 +82,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddTrade(response: Response): Promise<SwaggerResponse<string>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Content", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<string>>(new SwaggerResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return No Content
      */
     finishTrade(tradeId: string, body: FinishTradeDto | undefined): Promise<SwaggerResponse<void>> {
@@ -172,44 +108,118 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processFinishTrade(response: Response): Promise<SwaggerResponse<void>> {
+    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 401) {
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
-            });
-        } else if (status === 204) {
-            return response.text().then((_responseText) => {
-            return new SwaggerResponse(status, _headers, null as any);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ApiInfo.fromJS(resultData200);
+                return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<ApiInfo>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    protected processAddTrade(response: Response): Promise<SwaggerResponse<string>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+
+                return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<string>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    protected processFinishTrade(response: Response): Promise<SwaggerResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+                return new SwaggerResponse(status, _headers, null as any);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
@@ -240,6 +250,13 @@ export class AddTradeDto implements IAddTradeDto {
         }
     }
 
+    static fromJS(data: any): AddTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.assetId = _data["assetId"];
@@ -260,13 +277,6 @@ export class AddTradeDto implements IAddTradeDto {
                     this.references!.push(ReferenceDto.fromJS(item));
             }
         }
-    }
-
-    static fromJS(data: any): AddTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -322,19 +332,19 @@ export class ApiInfo implements IApiInfo {
         }
     }
 
+    static fromJS(data: any): ApiInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiInfo();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
             this.version = _data["version"];
             this.environment = _data["environment"];
         }
-    }
-
-    static fromJS(data: any): ApiInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiInfo();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -365,6 +375,13 @@ export class ErrorResponse implements IErrorResponse {
         }
     }
 
+    static fromJS(data: any): ErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             if (Array.isArray(_data["fieldErrors"])) {
@@ -378,13 +395,6 @@ export class ErrorResponse implements IErrorResponse {
                     this.commonErrors!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): ErrorResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorResponse();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -421,6 +431,13 @@ export class FieldError implements IFieldError {
         }
     }
 
+    static fromJS(data: any): FieldError {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldError();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.identifier = _data["identifier"];
@@ -430,13 +447,6 @@ export class FieldError implements IFieldError {
                     this.messages!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): FieldError {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldError();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -470,19 +480,19 @@ export class FinishTradeDto implements IFinishTradeDto {
         }
     }
 
+    static fromJS(data: any): FinishTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FinishTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.balance = _data["balance"];
             this.finishedAt = _data["finishedAt"] ? new Date(_data["finishedAt"].toString()) : <any>undefined;
             this.result = _data["result"];
         }
-    }
-
-    static fromJS(data: any): FinishTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new FinishTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -518,6 +528,13 @@ export class ProblemDetails implements IProblemDetails {
         }
     }
 
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -530,13 +547,6 @@ export class ProblemDetails implements IProblemDetails {
             this.detail = _data["detail"];
             this.instance = _data["instance"];
         }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -578,19 +588,19 @@ export class ReferenceDto implements IReferenceDto {
         }
     }
 
+    static fromJS(data: any): ReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.type = _data["type"];
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
-    }
-
-    static fromJS(data: any): ReferenceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ReferenceDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -625,8 +635,7 @@ export class SwaggerResponse<TResult> {
     headers: { [key: string]: any; };
     result: TResult;
 
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
-    {
+    constructor(status: number, headers: { [key: string]: any; }, result: TResult) {
         this.status = status;
         this.headers = headers;
         this.result = result;
@@ -639,6 +648,7 @@ export class SimpleTradingClientException extends Error {
     response: string;
     headers: { [key: string]: any; };
     result: any;
+    protected isSimpleTradingClientException = true;
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -650,13 +660,13 @@ export class SimpleTradingClientException extends Error {
         this.result = result;
     }
 
-    protected isSimpleTradingClientException = true;
-
     static isSimpleTradingClientException(obj: any): obj is SimpleTradingClientException {
         return obj.isSimpleTradingClientException === true;
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: {
+    [key: string]: any;
+}, result?: any): any {
     throw new SimpleTradingClientException(message, status, response, headers, result);
 }

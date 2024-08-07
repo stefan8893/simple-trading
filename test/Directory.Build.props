@@ -1,10 +1,10 @@
 ﻿<Project>
-	<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"/>
 
-	<PropertyGroup>
-	</PropertyGroup>
+    <PropertyGroup>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="xunit" Version="2.5.3" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="xunit" Version="2.5.3"/>
+    </ItemGroup>
 </Project>

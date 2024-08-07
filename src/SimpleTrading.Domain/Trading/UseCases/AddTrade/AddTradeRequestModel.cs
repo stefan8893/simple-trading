@@ -22,7 +22,7 @@ public record AddTradeRequestModel
     public IReadOnlyList<ReferenceModel> References { get; set; } = [];
 }
 
-public class AddTradeRequestModelValidator: AbstractValidator<AddTradeRequestModel>
+public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
 {
     public AddTradeRequestModelValidator(ReferenceModelValidator referenceModelValidator)
     {

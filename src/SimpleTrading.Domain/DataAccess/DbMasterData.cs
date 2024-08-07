@@ -43,7 +43,8 @@ public class DbMasterData(TradingDbContext dbContext, ILogger<DbMasterData> logg
 
         await dbContext.SaveChangesAsync();
 
-        logger.LogInformation("Database {dbProviderName} successfully populated with master data", dbContext.Database.ProviderName);
+        logger.LogInformation("Database {dbProviderName} successfully populated with master data",
+            dbContext.Database.ProviderName);
     }
 
     private static IReadOnlyList<Currency> CreateCurrencies()

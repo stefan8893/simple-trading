@@ -8,7 +8,6 @@ namespace SimpleTrading.WebApi.Extensions;
 
 public static class ErrorResponseExtension
 {
-
     public static ActionResult ToActionResult(this BadInput badInput)
     {
         return badInput.ValidationResult.ToActionResult();
@@ -36,7 +35,8 @@ public static class ErrorResponseExtension
     {
         var errorMessage = notFound.ResourceType is null
             ? SimpleTradingStrings.NotFound
-            : string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.ResourceManager.GetString(notFound.ResourceType));
+            : string.Format(SimpleTradingStrings.NotFoundNamed,
+                SimpleTradingStrings.ResourceManager.GetString(notFound.ResourceType));
 
         var errorResponse = new ErrorResponse
         {
