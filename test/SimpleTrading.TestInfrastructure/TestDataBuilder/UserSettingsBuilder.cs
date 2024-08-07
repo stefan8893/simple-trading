@@ -14,8 +14,7 @@ public static partial class TestData
         public string TimeZone { get; set; } = Constants.DefaultTimeZone;
         public DateTime UpdatedAt { get; set; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-
-        public static UserSettings Default => new();
+        public static UserSettings Default { get; } = new Lazy<UserSettings>(() => new UserSettings()).Value;
 
         public Domain.User.UserSettings Build()
         {

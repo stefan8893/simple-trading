@@ -11,7 +11,7 @@ public static partial class TestData
         public string Name { get; init; } = "EUR/USD";
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Asset Default => new();
+        public static Asset Default { get; } = new Lazy<Asset>(() => new Asset()).Value;
 
         public Domain.Trading.Asset Build()
         {
