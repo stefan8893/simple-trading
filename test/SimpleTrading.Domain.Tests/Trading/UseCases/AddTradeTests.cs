@@ -97,7 +97,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 0,
-            CurrencyId = TestData.Currency.Default.Build().Id,
+            CurrencyId = TestData.Currency.Default.Build().Id
         };
 
         var response = await CreateInteractor().Execute(requestModel);

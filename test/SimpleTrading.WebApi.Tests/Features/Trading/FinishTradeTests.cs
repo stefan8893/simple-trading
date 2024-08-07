@@ -1,11 +1,9 @@
-﻿using System.Net.Http.Headers;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.TestInfrastructure;
-using SimpleTrading.TestInfrastructure.Authentication;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading;

@@ -1,6 +1,4 @@
-﻿using SimpleTrading.Client;
-using SimpleTrading.TestInfrastructure;
-using SimpleTrading.TestInfrastructure.Authentication;
+﻿using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading;
 
