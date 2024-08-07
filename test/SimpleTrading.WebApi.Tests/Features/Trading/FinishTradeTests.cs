@@ -13,7 +13,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-04T12:00").ToUtcKind();
 
     [Fact]
-    public async Task Unauthorized_gets_returned_if_the_request_does_not_contain_an_access_token()
+    public async Task A_request_without_an_access_token_is_not_authorized()
     {
         // arrange
         var client = Factory.CreateClient();
