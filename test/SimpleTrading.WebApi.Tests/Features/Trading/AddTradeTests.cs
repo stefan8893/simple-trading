@@ -87,8 +87,10 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
+        exception.Which.Result.FieldErrors
+            .Should().HaveCount(1)
             .And.Contain(x => x.Identifier == "Size")
+            .And.Contain(x => x.Messages.Count == 1)
             .And.Contain(x => x.Messages.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
     }
 
@@ -119,7 +121,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.CommonErrors.Should().HaveCount(1)
+        exception.Which.Result.CommonErrors
+            .Should().HaveCount(1)
             .And.Contain(x => x == "Asset nicht gefunden.");
     }
 
@@ -152,7 +155,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.CommonErrors.Should().HaveCount(1)
+        exception.Which.Result.CommonErrors
+            .Should().HaveCount(1)
             .And.Contain(x =>
                 x == "Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz' und 'Ergebnis' angeben.");
     }

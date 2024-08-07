@@ -36,8 +36,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == "'Asset' must not be empty.")
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "'Asset' must not be empty.")
             .And.Contain(x => x.PropertyName == "AssetId")
             .And.HaveCount(1);
     }
@@ -57,8 +57,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == "'Profile' must not be empty.")
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "'Profile' must not be empty.")
             .And.Contain(x => x.PropertyName == "ProfileId")
             .And.HaveCount(1);
     }
@@ -78,8 +78,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == "'Currency' must not be empty.")
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "'Currency' must not be empty.")
             .And.Contain(x => x.PropertyName == "CurrencyId")
             .And.HaveCount(1);
     }
@@ -103,8 +103,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == errorMessage)
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == errorMessage)
             .And.Contain(x => x.PropertyName == "Size")
             .And.HaveCount(1);
     }
@@ -129,8 +129,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == errorMessage)
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == errorMessage)
             .And.Contain(x => x.PropertyName == "Result")
             .And.HaveCount(1);
     }
@@ -159,8 +159,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == errorMessage)
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == errorMessage)
             .And.Contain(x => x.PropertyName == "OpenedAt")
             .And.HaveCount(1);
     }
@@ -183,8 +183,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == "Invalid link.")
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "Invalid link.")
             .And.Contain(x => x.PropertyName == "References[0].Link")
             .And.HaveCount(1);
     }
@@ -214,8 +214,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x => x.ErrorMessage == errorMessage)
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == errorMessage)
             .And.Contain(x => x.PropertyName == "References[0].Notes")
             .And.HaveCount(1);
     }
@@ -364,7 +364,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade.References.Should().HaveCount(1)
+        newlyAddedTrade.References
+            .Should().HaveCount(1)
             .And.Contain(x => x.Notes == "some notes");
     }
 
