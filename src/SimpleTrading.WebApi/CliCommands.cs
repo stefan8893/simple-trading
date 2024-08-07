@@ -84,7 +84,13 @@ public static class CliCommands
         seedDataCommand.SetHandler(async () =>
         {
             using var scope = app.Services.CreateScope();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+            logger.LogInformation("Seed Data into database ...");
+
             await scope.ServiceProvider.GetRequiredService<DbMasterData>().Seed();
+
+            logger.LogInformation("Database successfully populated with master data");
         });
 
         return seedDataCommand;

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleTrading.Domain.DataAccess;
 
 namespace SimpleTrading.TestInfrastructure;
@@ -42,6 +43,11 @@ public class TestingWebApplicationFactory<TProgram> : WebApplicationFactory<TPro
         });
 
         builder.UseEnvironment("Development");
+
+        builder.ConfigureLogging(lb =>
+        {
+            lb.SetMinimumLevel(LogLevel.Error);
+        });
 
         if (OverrideServices is not null)
             builder.ConfigureServices(OverrideServices);

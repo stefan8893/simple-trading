@@ -4,14 +4,12 @@ using SimpleTrading.Domain.User;
 
 namespace SimpleTrading.Domain.DataAccess;
 
-public class DbMasterData(TradingDbContext dbContext, ILogger<DbMasterData> logger)
+public class DbMasterData(TradingDbContext dbContext)
 {
     private static readonly DateTime InitialCreationDateTime = DateTime.Parse("2024-08-03T08:00:00Z");
 
     public async Task Seed()
     {
-        logger.LogInformation("Seed Data into {dbProviderName} database", dbContext.Database.ProviderName);
-
         var assets = CreateAssets();
         dbContext.Assets.AddRange(assets);
 
@@ -42,9 +40,6 @@ public class DbMasterData(TradingDbContext dbContext, ILogger<DbMasterData> logg
         dbContext.UserSettings.Add(userSettings);
 
         await dbContext.SaveChangesAsync();
-
-        logger.LogInformation("Database {dbProviderName} successfully populated with master data",
-            dbContext.Database.ProviderName);
     }
 
     private static IReadOnlyList<Currency> CreateCurrencies()
