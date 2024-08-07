@@ -17,9 +17,13 @@ public static class ServiceCollectionExtensions
                 .WithScopedLifetime());
     }
 
-    public static IServiceCollection AddTradingDbContext(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddTradingDbContext(this IServiceCollection services,
+        IWebHostEnvironment environment, string connectionString)
     {
-        services.AddDbContext<TradingDbContext>(o => o.UseSqlServer(connectionString));
+        if (environment.IsDevelopment())
+            services.AddDbContext<TradingDbContext>(o => o.UseNpgsql(connectionString));
+        else
+            services.AddDbContext<TradingDbContext>(o => o.UseSqlServer(connectionString));
 
         services.AddScoped<DbMasterData>();
 

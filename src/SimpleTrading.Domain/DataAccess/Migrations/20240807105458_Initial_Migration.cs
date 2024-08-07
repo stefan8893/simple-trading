@@ -15,10 +15,10 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "Asset",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Symbol = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Symbol = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,10 +29,10 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "Currency",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsoCode = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsoCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,10 +43,10 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "Profile",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,19 +57,20 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "Trade",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Size = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: false),
-                    OpenedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FinishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Outcome_Result = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Outcome_Balance = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: true),
-                    CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    PositionPrices_Entry = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: false),
-                    PositionPrices_StopLoss = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: true),
-                    PositionPrices_TakeProfit = table.Column<decimal>(type: "decimal(24,8)", precision: 24, scale: 8, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssetId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Size = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
+                    OpenedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FinishedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Outcome_Balance = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    Outcome_Result = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PositionPrices_Entry = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
+                    PositionPrices_StopLoss = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    PositionPrices_TakeProfit = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,12 +99,12 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "UserSettings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SelectedProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Culture = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Language = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    TimeZone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SelectedProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Culture = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Language = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TimeZone = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,12 +121,12 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "Reference",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TradeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    Link = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TradeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Link = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: false),
+                    Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,8 +147,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Trade_AssetId",
                 table: "Trade",
-                column: "AssetId",
-                unique: true);
+                column: "AssetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trade_CurrencyId",
@@ -157,8 +157,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Trade_ProfileId",
                 table: "Trade",
-                column: "ProfileId",
-                unique: true);
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSettings_SelectedProfileId",

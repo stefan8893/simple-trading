@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Asset" xml:space="preserve">
+    <value>Asset</value>
+  </data>
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
   </data>
   <data name="BreakEvenIfBalanceIsZero" xml:space="preserve">
     <value>The result must be 'Break-even' if the balance is zero.</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="EntryPrice" xml:space="preserve">
+    <value>Entry price</value>
+  </data>
+  <data name="ExitPrice" xml:space="preserve">
+    <value>Exit price</value>
   </data>
   <data name="FinishedAt" xml:space="preserve">
     <value>Finished</value>
@@ -132,11 +144,23 @@
   <data name="FinishedBeforeOpenedError" xml:space="preserve">
     <value>The 'Finished' date must be after the 'Opened' date.</value>
   </data>
+  <data name="FinishedTradeNeedsFinishedBalanceAndResult" xml:space="preserve">
+    <value>In order to add a finished trade, you must specify 'Finished', 'Balance' and 'Result'.</value>
+  </data>
+  <data name="InvalidLink" xml:space="preserve">
+    <value>Invalid link.</value>
+  </data>
+  <data name="Link" xml:space="preserve">
+    <value>Link</value>
+  </data>
   <data name="LossIfBalanceIsLessThanZero" xml:space="preserve">
     <value>The result must be 'Loss' if the balance is below zero.</value>
   </data>
   <data name="MediocreOrWinIfBalanceAboveZero" xml:space="preserve">
     <value>The result must be 'Mediocre' or 'Win' if the balance is above zero.</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
   </data>
   <data name="NotFound" xml:space="preserve">
     <value>Resource not found.</value>
@@ -144,10 +168,34 @@
   <data name="NotFoundNamed" xml:space="preserve">
     <value>{0} not found.</value>
   </data>
+  <data name="OpenedAt" xml:space="preserve">
+    <value>Opened</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="ReferenceType" xml:space="preserve">
+    <value>Reference Type</value>
+  </data>
   <data name="Result" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="StopLoss" xml:space="preserve">
+    <value>Stop loss</value>
+  </data>
+  <data name="TakeProfit" xml:space="preserve">
+    <value>Take profit</value>
+  </data>
+  <data name="Trade" xml:space="preserve">
+    <value>Trade</value>
+  </data>
   <data name="TradeAlreadyFinished" xml:space="preserve">
     <value>The trade has already been finished on '{0}'.</value>
+  </data>
+  <data name="TradeSize" xml:space="preserve">
+    <value>Trade size</value>
   </data>
 </root>

@@ -59,7 +59,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await CreateInteractor().Execute(requestModel);
 
         var notFound = response.Value.Should().BeOfType<NotFound>();
-        notFound.Which.ResourceName.Should().Be("Trade");
+        notFound.Which.ResourceType.Should().Be("Trade");
         notFound.Which.ResourceId.Should().Be(tradeId);
     }
 

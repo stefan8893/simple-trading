@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.Domain.Trading.UseCases.AddTrade;
-using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 using SimpleTrading.WebApi;
 using SimpleTrading.WebApi.Clients;
 using SimpleTrading.WebApi.Configuration;
@@ -43,7 +41,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
 ValidatorOptions.Global.DisplayNameResolver =
     (_, memberInfo, _) => SimpleTradingStrings.ResourceManager.GetString(memberInfo.Name);
 
-builder.Services.AddTradingDbContext(connectionString);
+builder.Services.AddTradingDbContext(builder.Environment, connectionString);
 builder.Services.AddDateTimeProvider();
 builder.Services.AddUseCases();
 builder.Services.AddSingleton<ClientGenerator>();
@@ -60,9 +58,11 @@ app.UseAuthorization();
 app.MapControllers()
     .RequireAuthorization();
 
-var rootCommand = CliCommands.CreateRootCommand(app);
-rootCommand.AddCommand(CliCommands.CreateSeedDataCommand(app));
-rootCommand.AddCommand(CliCommands.CreateGenerateClientCommand(app));
+var rootCommand = CliCommands.RootCommand(app);
+rootCommand.AddCommand(CliCommands.CreateDatabaseCommand(app));
+rootCommand.AddCommand(CliCommands.SeedDatabaseCommand(app));
+rootCommand.AddCommand(CliCommands.DropDatabaseCommand(app));
+rootCommand.AddCommand(CliCommands.GenerateClientCommand(app));
 
 await rootCommand.InvokeAsync(args);
 

@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleTrading.Domain;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using SimpleTrading.Domain.DataAccess;
 
 #nullable disable
 
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240804055348_Initial_Migration")]
+    [Migration("20240807105458_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -22,28 +22,28 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Asset", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("character varying(10)");
 
                     b.HasKey("Id");
 
@@ -54,20 +54,20 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IsoCode")
                         .IsRequired()
                         .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasColumnType("character varying(3)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -78,19 +78,19 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasColumnType("character varying(4000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -101,28 +101,27 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
 
                     b.Property<Guid>("TradeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -135,31 +134,33 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CurrencyId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("FinishedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasColumnType("character varying(4000)");
 
                     b.Property<DateTime>("OpenedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ProfileId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Size")
                         .HasPrecision(24, 8)
-                        .HasColumnType("decimal(24,8)");
+                        .HasColumnType("numeric(24,8)");
 
                     b.ComplexProperty<Dictionary<string, object>>("PositionPrices", "SimpleTrading.Domain.Trading.Trade.PositionPrices#PositionPrices", b1 =>
                         {
@@ -167,26 +168,24 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
                             b1.Property<decimal>("Entry")
                                 .HasPrecision(24, 8)
-                                .HasColumnType("decimal(24,8)");
+                                .HasColumnType("numeric(24,8)");
 
                             b1.Property<decimal?>("StopLoss")
                                 .HasPrecision(24, 8)
-                                .HasColumnType("decimal(24,8)");
+                                .HasColumnType("numeric(24,8)");
 
                             b1.Property<decimal?>("TakeProfit")
                                 .HasPrecision(24, 8)
-                                .HasColumnType("decimal(24,8)");
+                                .HasColumnType("numeric(24,8)");
                         });
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssetId")
-                        .IsUnique();
+                    b.HasIndex("AssetId");
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("ProfileId")
-                        .IsUnique();
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Trade");
                 });
@@ -195,27 +194,27 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Culture")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Language")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("SelectedProfileId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("TimeZone")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -228,7 +227,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Reference", b =>
                 {
                     b.HasOne("SimpleTrading.Domain.Trading.Trade", "Trade")
-                        .WithMany("Reference")
+                        .WithMany("References")
                         .HasForeignKey("TradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -239,8 +238,8 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>
                 {
                     b.HasOne("SimpleTrading.Domain.Trading.Asset", "Asset")
-                        .WithOne()
-                        .HasForeignKey("SimpleTrading.Domain.Trading.Trade", "AssetId")
+                        .WithMany()
+                        .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -251,24 +250,24 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("SimpleTrading.Domain.Trading.Profile", "Profile")
-                        .WithOne()
-                        .HasForeignKey("SimpleTrading.Domain.Trading.Trade", "ProfileId")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.OwnsOne("SimpleTrading.Domain.Trading.Outcome", "Outcome", b1 =>
                         {
                             b1.Property<Guid>("TradeId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uuid");
 
                             b1.Property<decimal>("Balance")
                                 .HasPrecision(24, 8)
-                                .HasColumnType("decimal(24,8)");
+                                .HasColumnType("numeric(24,8)");
 
                             b1.Property<string>("Result")
                                 .IsRequired()
                                 .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
+                                .HasColumnType("character varying(50)");
 
                             b1.HasKey("TradeId");
 
@@ -300,7 +299,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>
                 {
-                    b.Navigation("Reference");
+                    b.Navigation("References");
                 });
 #pragma warning restore 612, 618
         }

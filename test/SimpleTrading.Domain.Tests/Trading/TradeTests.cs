@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using FluentAssertions;
+﻿using FluentAssertions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -97,7 +96,8 @@ public class TradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var finishTradeDto = new Trade.FinishTradeDto(invalidResult, 0m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var finishTradeDto =
+            new Trade.FinishTradeDto(invalidResult, 0m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -116,7 +116,8 @@ public class TradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var finishTradeDto = new Trade.FinishTradeDto(invalidResult, -1m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var finishTradeDto =
+            new Trade.FinishTradeDto(invalidResult, -1m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -135,7 +136,8 @@ public class TradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var finishTradeDto = new Trade.FinishTradeDto(invalidResult, 1m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var finishTradeDto =
+            new Trade.FinishTradeDto(invalidResult, 1m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);

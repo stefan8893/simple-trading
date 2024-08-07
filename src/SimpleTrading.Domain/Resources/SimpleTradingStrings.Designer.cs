@@ -61,6 +61,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Asset.
+        /// </summary>
+        public static string Asset {
+            get {
+                return ResourceManager.GetString("Asset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bilanz.
         /// </summary>
         public static string Balance {
@@ -75,6 +84,33 @@ namespace SimpleTrading.Domain.Resources {
         public static string BreakEvenIfBalanceIsZero {
             get {
                 return ResourceManager.GetString("BreakEvenIfBalanceIsZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Währung.
+        /// </summary>
+        public static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einstiegspreis.
+        /// </summary>
+        public static string EntryPrice {
+            get {
+                return ResourceManager.GetString("EntryPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausstiegspreis.
+        /// </summary>
+        public static string ExitPrice {
+            get {
+                return ResourceManager.GetString("ExitPrice", resourceCulture);
             }
         }
         
@@ -106,6 +142,33 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Um einen beendeten Trade hinzuzufügen, müssen Sie &apos;Beendet&apos;, &apos;Bilanz&apos; und &apos;Ergebnis&apos; angeben..
+        /// </summary>
+        public static string FinishedTradeNeedsFinishedBalanceAndResult {
+            get {
+                return ResourceManager.GetString("FinishedTradeNeedsFinishedBalanceAndResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ungültiger Link..
+        /// </summary>
+        public static string InvalidLink {
+            get {
+                return ResourceManager.GetString("InvalidLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link.
+        /// </summary>
+        public static string Link {
+            get {
+                return ResourceManager.GetString("Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Das Ergebnis muss &apos;Verlust&apos; sein, wenn die Bilanz kleiner als Null ist..
         /// </summary>
         public static string LossIfBalanceIsLessThanZero {
@@ -120,6 +183,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string MediocreOrWinIfBalanceAboveZero {
             get {
                 return ResourceManager.GetString("MediocreOrWinIfBalanceAboveZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anmerkungen.
+        /// </summary>
+        public static string Notes {
+            get {
+                return ResourceManager.GetString("Notes", resourceCulture);
             }
         }
         
@@ -142,6 +214,42 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Eröffnet.
+        /// </summary>
+        public static string OpenedAt {
+            get {
+                return ResourceManager.GetString("OpenedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sonstiges.
+        /// </summary>
+        public static string Other {
+            get {
+                return ResourceManager.GetString("Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profil.
+        /// </summary>
+        public static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Referenztyp.
+        /// </summary>
+        public static string ReferenceType {
+            get {
+                return ResourceManager.GetString("ReferenceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ergebnis.
         /// </summary>
         public static string Result {
@@ -151,11 +259,47 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop-Loss.
+        /// </summary>
+        public static string StopLoss {
+            get {
+                return ResourceManager.GetString("StopLoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take-Profit.
+        /// </summary>
+        public static string TakeProfit {
+            get {
+                return ResourceManager.GetString("TakeProfit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trade.
+        /// </summary>
+        public static string Trade {
+            get {
+                return ResourceManager.GetString("Trade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Der Trade wurde bereits am &apos;{0}&apos; beendet..
         /// </summary>
         public static string TradeAlreadyFinished {
             get {
                 return ResourceManager.GetString("TradeAlreadyFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handelsvolumen.
+        /// </summary>
+        public static string TradeSize {
+            get {
+                return ResourceManager.GetString("TradeSize", resourceCulture);
             }
         }
     }

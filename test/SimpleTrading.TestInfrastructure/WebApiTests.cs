@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.TestInfrastructure.Authentication;
 using SimpleTrading.WebApi;
 using Xunit;
 
@@ -10,15 +12,13 @@ namespace SimpleTrading.TestInfrastructure;
 public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    private IServiceScope? _serviceScope;
     private TradingDbContext? _dbContext;
-
-    protected TradingDbContext DbContext => _dbContext!;
+    private IServiceScope? _serviceScope;
     protected WebApplicationFactory<Program> Factory = factory;
 
-    protected IServiceProvider ServiceLocator => _serviceScope!.ServiceProvider;
+    protected TradingDbContext DbContext => _dbContext!;
 
-    protected virtual void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services) { }
+    protected IServiceProvider ServiceLocator => _serviceScope!.ServiceProvider;
 
     public async Task DisposeAsync()
     {
@@ -36,5 +36,18 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
         var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
         await dbMasterData.Seed();
+    }
+
+    protected virtual void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    {
+    }
+
+    public async Task<HttpClient> CreateClientWithAccessToken()
+    {
+        var accessToken = await TestIdentity.AccessToken;
+        var client = Factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        return client;
     }
 }

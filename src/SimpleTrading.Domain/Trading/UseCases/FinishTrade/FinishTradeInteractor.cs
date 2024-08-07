@@ -18,7 +18,7 @@ public class FinishTradeInteractor(
     {
         var validation = await validator.ValidateAsync(model);
         if (!validation.IsValid)
-            return BadInput(model.TradeId, validation);
+            return BadInput(validation);
 
         var trade = await dbContext.FindAsync<Trade>(model.TradeId);
 
