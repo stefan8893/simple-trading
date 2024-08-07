@@ -11,7 +11,7 @@ public static partial class TestData
         public string? Description { get; set; } = "";
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Profile Default => new();
+        public static Profile Default { get; } = new Lazy<Profile>(() => new Profile()).Value;
 
         public Domain.Trading.Profile Build()
         {
