@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.User;
 
 namespace SimpleTrading.Domain.DataAccess;
@@ -8,7 +7,7 @@ public class DbMasterData(TradingDbContext dbContext)
 {
     private static readonly DateTime InitialCreationDateTime = DateTime.Parse("2024-08-03T08:00:00Z");
 
-    public async Task Seed()
+    public async Task Populate()
     {
         var assets = CreateAssets();
         dbContext.Assets.AddRange(assets);
@@ -16,6 +15,13 @@ public class DbMasterData(TradingDbContext dbContext)
         var currencies = CreateCurrencies();
         dbContext.Currencies.AddRange(currencies);
 
+        await PopulateUserSettings();
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task PopulateUserSettings()
+    {
         var defaultProfile = new Profile
         {
             Id = Constants.DefaultProfileId,
@@ -38,7 +44,6 @@ public class DbMasterData(TradingDbContext dbContext)
         };
 
         dbContext.UserSettings.Add(userSettings);
-
         await dbContext.SaveChangesAsync();
     }
 

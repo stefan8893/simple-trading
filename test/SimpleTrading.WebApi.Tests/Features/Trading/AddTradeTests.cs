@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
+using SimpleTrading.Domain;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -138,7 +139,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync();
-
+        
         // act
         var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
         {
@@ -148,6 +149,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             FinishedAt = _utcNow,
             Result = ResultDto.Mediocre,
             Size = 5000,
+            Balance = null,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
         });

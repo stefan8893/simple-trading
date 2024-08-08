@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.TestInfrastructure.Authentication;
@@ -14,7 +15,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 {
     private TradingDbContext? _dbContext;
     private IServiceScope? _serviceScope;
-    protected WebApplicationFactory<Program> Factory = factory;
+    protected readonly WebApplicationFactory<Program> Factory = factory;
 
     protected TradingDbContext DbContext => _dbContext!;
 
@@ -32,17 +33,17 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         _serviceScope = Factory.Services.CreateScope();
         _dbContext = _serviceScope.ServiceProvider.GetRequiredService<TradingDbContext>();
 
-        await DbContext.Database.EnsureCreatedAsync();
+        await DbContext.Database.MigrateAsync();
 
         var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
-        await dbMasterData.Seed();
+        await dbMasterData.PopulateUserSettings();
     }
 
     protected virtual void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
     {
     }
 
-    public async Task<HttpClient> CreateClientWithAccessToken()
+    protected async Task<HttpClient> CreateClientWithAccessToken()
     {
         var accessToken = await TestIdentity.AccessToken;
         var client = Factory.CreateClient();

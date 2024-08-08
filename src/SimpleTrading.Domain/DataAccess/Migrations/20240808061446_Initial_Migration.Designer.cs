@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240807105458_Initial_Migration")]
+    [Migration("20240808061446_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -47,6 +47,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Symbol")
+                        .IsUnique();
+
                     b.ToTable("Asset");
                 });
 
@@ -71,6 +74,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IsoCode")
+                        .IsUnique();
+
                     b.ToTable("Currency");
                 });
 
@@ -93,6 +99,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Profile");
                 });

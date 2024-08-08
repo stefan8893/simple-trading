@@ -1,4 +1,5 @@
-﻿using SimpleTrading.Domain;
+﻿using OneOf;
+using SimpleTrading.Domain;
 using SimpleTrading.Domain.Extensions;
 
 namespace SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -8,7 +9,7 @@ public static partial class TestData
     public record UserSettings : ITestData<Domain.User.UserSettings, UserSettings>
     {
         public Guid Id { get; init; } = Constants.UserSettingsId;
-        public Profile SelectedProfile { get; set; } = Profile.Default;
+        public OneOf<Guid, Profile, Domain.Trading.Profile> SelectedProfileOrId { get; set; } = Profile.Default;
         public string Culture { get; set; } = Constants.DefaultCulture.Name;
         public string? Language { get; set; } = null;
         public string TimeZone { get; set; } = Constants.DefaultTimeZone;
@@ -18,7 +19,11 @@ public static partial class TestData
 
         public Domain.User.UserSettings Build()
         {
-            var selectedProfile = SelectedProfile.Build();
+            var selectedProfile = SelectedProfileOrId.Match(
+                id => (Profile.Default with {Id = id}).Build(),
+                profile => profile.Build(),
+                profileEntity => profileEntity
+            );
 
             return new Domain.User.UserSettings
             {
