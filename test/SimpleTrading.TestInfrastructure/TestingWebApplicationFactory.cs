@@ -39,6 +39,7 @@ public class TestingWebApplicationFactory<TProgram> : WebApplicationFactory<TPro
             {
                 var connection = sp.GetRequiredService<DbConnection>();
                 options.UseSqlite(connection);
+                options.EnableSensitiveDataLogging();
             });
         });
 

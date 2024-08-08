@@ -9,7 +9,7 @@ public static partial class TestData
 {
     public record Trade : ITestData<Domain.Trading.Trade, Trade>
     {
-        public Guid Id { get; init; } = Guid.Parse("f2cea6f6-3ce7-40f7-a901-b04a6feff5e8");
+        public Guid Id { get; init; } = Guid.NewGuid();
         public OneOf<Guid, Asset, Domain.Trading.Asset> AssetOrId { get; init; } = Asset.Default;
         public OneOf<Guid, Profile, Domain.Trading.Profile> ProfileOrId { get; init; } = Profile.Default;
         public decimal Size { get; init; } = 10_000m;
@@ -18,11 +18,10 @@ public static partial class TestData
         public Outcome? Outcome { get; init; } = null;
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
         public PositionPrices PositionPrices { get; init; } = new() {Entry = 1.0m};
-        public ICollection<Reference> Reference { get; init; } = [];
         public string Notes { get; init; } = "";
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Trade Default { get; } = new Lazy<Trade>(() => new Trade()).Value;
+        public static Trade Default => new ();
 
         public Domain.Trading.Trade Build()
         {
@@ -56,7 +55,7 @@ public static partial class TestData
                 CurrencyId = currency.Id,
                 Currency = currency,
                 PositionPrices = PositionPrices,
-                References = Reference,
+                References = [],
                 Notes = Notes,
                 CreatedAt = CreatedAt
             };

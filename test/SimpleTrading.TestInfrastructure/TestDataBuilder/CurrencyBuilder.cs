@@ -6,12 +6,14 @@ public static partial class TestData
 {
     public record Currency : ITestData<Domain.Trading.Currency, Currency>
     {
-        public Guid Id { get; init; } = Guid.Parse("a2adcda4-abb4-409b-a45c-97f5275dbfbc");
-        public string IsoCode { get; init; } = "EUR";
-        public string Name { get; set; } = "Euro";
+        private static short _currencyNumber = 1;
+
+        public Guid Id { get; init; } = Guid.NewGuid();
+        public string IsoCode { get; init; } = $"C{_currencyNumber++:00}";
+        public string Name { get; init; } = "Test Currency";
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
-        
-        public static Currency Default { get; } = new Lazy<Currency>(() => new Currency()).Value;
+
+        public static Currency Default => new();
 
         public Domain.Trading.Currency Build()
         {
