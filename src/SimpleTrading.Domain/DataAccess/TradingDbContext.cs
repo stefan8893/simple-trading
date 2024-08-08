@@ -10,17 +10,12 @@ namespace SimpleTrading.Domain.DataAccess;
 
 public class TradingDbContext(DbContextOptions<TradingDbContext> options) : DbContext(options)
 {
-    public DbSet<Asset> Assets { get; set; }
-
-    public DbSet<Currency> Currencies { get; set; }
-
-    public DbSet<Profile> Profiles { get; set; }
-
-    public DbSet<Reference> References { get; set; }
-
-    public DbSet<Trade> Trades { get; set; }
-
-    public DbSet<UserSettings> UserSettings { get; set; }
+    public required DbSet<Asset> Assets { get; set; }
+    public required DbSet<Currency> Currencies { get; set; }
+    public required DbSet<Profile> Profiles { get; set; }
+    public required DbSet<Reference> References { get; set; }
+    public required DbSet<Trade> Trades { get; set; }
+    public required DbSet<UserSettings> UserSettings { get; set; }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
