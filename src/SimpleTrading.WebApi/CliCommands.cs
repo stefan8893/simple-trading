@@ -88,7 +88,7 @@ public static class CliCommands
 
             logger.LogInformation("Seed Data into database ...");
 
-            await scope.ServiceProvider.GetRequiredService<DbMasterData>().Seed();
+            await scope.ServiceProvider.GetRequiredService<DbMasterData>().Populate();
 
             logger.LogInformation("Database successfully populated with master data");
         });
