@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 
-namespace SimpleTrading.WebApi.Features.Trading.DTOs;
+namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public record AddTradeDto
 {
@@ -17,7 +18,7 @@ public record AddTradeDto
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
     public string? Notes { get; set; }
-    public IReadOnlyList<ReferenceDto>? References { get; set; }
+    public IReadOnlyList<AddReferenceDto>? References { get; set; }
 }
 
 public class AddTradeDtoValidator : AbstractValidator<AddTradeDto>

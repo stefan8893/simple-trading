@@ -3,8 +3,6 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
-public record ReferenceModel(ReferenceType Type, string Link, string? Notes = null);
-
 public record AddTradeRequestModel
 {
     public Guid AssetId { get; init; }
@@ -20,6 +18,8 @@ public record AddTradeRequestModel
     public decimal? TakeProfit { get; set; }
     public string? Notes { get; set; }
     public IReadOnlyList<ReferenceModel> References { get; set; } = [];
+
+    public record ReferenceModel(ReferenceType Type, string Link, string? Notes = null);
 }
 
 public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
@@ -56,7 +56,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
     }
 }
 
-public class ReferenceModelValidator : AbstractValidator<ReferenceModel>
+public class ReferenceModelValidator : AbstractValidator<AddTradeRequestModel.ReferenceModel>
 {
     public ReferenceModelValidator()
     {

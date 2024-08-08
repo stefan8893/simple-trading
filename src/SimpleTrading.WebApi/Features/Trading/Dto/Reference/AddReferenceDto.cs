@@ -1,24 +1,18 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.WebApi.Features.Trading.DTOs;
+namespace SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 
-public enum ReferenceTypeDto
-{
-    TradingView,
-    Other
-}
-
-public record ReferenceDto
+public record AddReferenceDto
 {
     public ReferenceTypeDto? Type { get; set; }
     public string? Link { get; set; }
     public string? Notes { get; set; }
 }
 
-public class ReferenceDtoValidator : AbstractValidator<ReferenceDto>
+public class AddReferenceDtoValidator : AbstractValidator<AddReferenceDto>
 {
-    public ReferenceDtoValidator()
+    public AddReferenceDtoValidator()
     {
         RuleFor(x => x.Type)
             .NotNull()
