@@ -140,6 +140,24 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Asset_Symbol",
+                table: "Asset",
+                column: "Symbol",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Currency_IsoCode",
+                table: "Currency",
+                column: "IsoCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Profile_Name",
+                table: "Profile",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reference_TradeId",
                 table: "Reference",
                 column: "TradeId");
