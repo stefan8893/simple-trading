@@ -19,10 +19,10 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = Factory.CreateClient();
         var simpleTradingClient = new SimpleTradingClient(client);
 
-        var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
+        var tradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(notExistingTradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.FinishTradeAsync(tradeId, new FinishTradeDto
         {
             FinishedAt = _utcNow,
             Result = ResultDto.Loss,

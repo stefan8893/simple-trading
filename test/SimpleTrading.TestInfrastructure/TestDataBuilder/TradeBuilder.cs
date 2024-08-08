@@ -1,4 +1,5 @@
-﻿using SimpleTrading.Domain;
+﻿using OneOf;
+using SimpleTrading.Domain;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 
@@ -9,13 +10,13 @@ public static partial class TestData
     public record Trade : ITestData<Domain.Trading.Trade, Trade>
     {
         public Guid Id { get; init; } = Guid.Parse("f2cea6f6-3ce7-40f7-a901-b04a6feff5e8");
-        public Asset Asset { get; init; } = Asset.Default;
-        public Profile Profile { get; init; } = Profile.Default;
+        public OneOf<Guid, Asset, Domain.Trading.Asset> AssetOrId { get; init; } = Asset.Default;
+        public OneOf<Guid, Profile, Domain.Trading.Profile> ProfileOrId { get; init; } = Profile.Default;
         public decimal Size { get; init; } = 10_000m;
         public DateTime OpenedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
         public DateTime? FinishedAt { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
         public Outcome? Outcome { get; init; } = null;
-        public Currency Currency { get; init; } = Currency.Default;
+        public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
         public PositionPrices PositionPrices { get; init; } = new() {Entry = 1.0m};
         public ICollection<Reference> Reference { get; init; } = [];
         public string Notes { get; init; } = "";
@@ -25,9 +26,23 @@ public static partial class TestData
 
         public Domain.Trading.Trade Build()
         {
-            var asset = Asset.Build();
-            var profile = Profile.Build();
-            var currency = Currency.Build();
+            var asset = AssetOrId.Match(
+                id => (Asset.Default with {Id = id}).Build(),
+                asset => asset.Build(),
+                assetEntity => assetEntity
+            );
+
+            var profile = ProfileOrId.Match(
+                id => (Profile.Default with {Id = id}).Build(),
+                profile => profile.Build(),
+                profileEntity => profileEntity
+            );
+
+            var currency = CurrencyOrId.Match(
+                id => (Currency.Default with {Id = id}).Build(),
+                currency => currency.Build(),
+                currencyEntity => currencyEntity
+            );
 
             var trade = new Domain.Trading.Trade
             {

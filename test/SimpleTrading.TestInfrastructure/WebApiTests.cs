@@ -14,7 +14,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 {
     private TradingDbContext? _dbContext;
     private IServiceScope? _serviceScope;
-    protected WebApplicationFactory<Program> Factory = factory;
+    protected readonly WebApplicationFactory<Program> Factory = factory;
 
     protected TradingDbContext DbContext => _dbContext!;
 
@@ -35,14 +35,14 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.Database.EnsureCreatedAsync();
 
         var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
-        await dbMasterData.Seed();
+        await dbMasterData.PopulateUserSettings();
     }
 
     protected virtual void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
     {
     }
 
-    public async Task<HttpClient> CreateClientWithAccessToken()
+    protected async Task<HttpClient> CreateClientWithAccessToken()
     {
         var accessToken = await TestIdentity.AccessToken;
         var client = Factory.CreateClient();
