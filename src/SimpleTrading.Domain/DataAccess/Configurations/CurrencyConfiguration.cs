@@ -14,6 +14,10 @@ public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
             .Property(x => x.IsoCode)
             .IsRequired()
             .HasMaxLength(3);
+        
+        builder
+            .HasIndex(x => x.IsoCode)
+            .IsUnique();
 
         builder
             .Property(x => x.Name)

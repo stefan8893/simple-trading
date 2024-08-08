@@ -16,6 +16,10 @@ public class AssetConfiguration : IEntityTypeConfiguration<Asset>
             .HasMaxLength(10);
 
         builder
+            .HasIndex(x => x.Symbol)
+            .IsUnique();
+
+        builder
             .Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(50);
