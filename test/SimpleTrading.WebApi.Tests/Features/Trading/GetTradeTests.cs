@@ -48,16 +48,16 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var simpleTradingClient = new SimpleTradingClient(client);
 
         var trade = TestData.Trade.Default.Build();
-        var referenceOne = (TestData.Reference.Default with
+        var exampleReference = (TestData.Reference.Default with
             {
                 TradeOrId = trade,
-                Link = new Uri("http://example.org"),
+                Link = new Uri("https://example.org"),
                 Type = ReferenceType.Other,
                 Notes = "Link does not point to trading view."
             })
             .Build();
 
-        var referenceTwo = (TestData.Reference.Default with
+        var tradingViewReference = (TestData.Reference.Default with
             {
                 TradeOrId = trade,
                 Link = new Uri("https://www.tradingview.com/x/9MYkAogh/"),
@@ -65,7 +65,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             })
             .Build();
 
-        DbContext.AddRange(trade, referenceOne, referenceTwo);
+        DbContext.AddRange(trade, exampleReference, tradingViewReference);
         await DbContext.SaveChangesAsync();
 
         // act
@@ -73,7 +73,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         returnedTrade.References.Should().HaveCount(2)
-            .And.Contain(x => x.Id == referenceOne.Id)
-            .And.Contain(x => x.Id == referenceTwo.Id);
+            .And.Contain(x => x.Id == exampleReference.Id)
+            .And.Contain(x => x.Id == tradingViewReference.Id);
     }
 }

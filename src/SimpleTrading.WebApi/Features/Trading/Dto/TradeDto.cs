@@ -6,25 +6,25 @@ namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public class TradeDto
 {
-    public Guid Id { get; set; }
-    public Guid AssetId { get; set; }
-    public string Asset { get; set; } = null!;
-    public Guid ProfileId { get; set; }
-    public string Profile { get; set; } = null!;
-    public decimal Size { get; set; }
-    public DateTime OpenedAt { get; set; }
-    public DateTime? FinishedAt { get; set; }
-    public decimal? Balance { get; set; }
-    public ResultDto? Result { get; set; }
-    public bool IsFinished { get; set; }
-    public Guid CurrencyId { get; set; }
-    public string Currency { get; set; } = null!;
-    public decimal Entry { get; set; }
-    public decimal? StopLoss { get; set; }
-    public decimal? TakeProfit { get; set; }
-    public double? RiskRewardRatio { get; set; }
-    public IReadOnlyList<ReferenceDto> References { get; set; } = [];
-    public string? Notes { get; set; }
+    public required Guid Id { get; init; }
+    public required Guid AssetId { get; init; }
+    public required string Asset { get; init; }
+    public required Guid ProfileId { get; init; }
+    public required string Profile { get; init; }
+    public required decimal Size { get; init; }
+    public required DateTime OpenedAt { get; init; }
+    public required DateTime? FinishedAt { get; init; }
+    public required decimal? Balance { get; init; }
+    public required ResultDto? Result { get; init; }
+    public required bool IsFinished { get; init; }
+    public required Guid CurrencyId { get; init; }
+    public required string Currency { get; init; }
+    public required decimal Entry { get; init; }
+    public required decimal? StopLoss { get; init; }
+    public required decimal? TakeProfit { get; init; }
+    public required double? RiskRewardRatio { get; init; }
+    public required IReadOnlyList<ReferenceDto> References { get; init; }
+    public required string? Notes { get; init; }
 
     public static TradeDto From(TradeResponseModel model)
     {

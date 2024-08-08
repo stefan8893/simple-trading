@@ -17,12 +17,12 @@ public record ReferenceDto
         return new ReferenceDto
         {
             Id = referenceModel.Id,
-            Type = MapToResultDto(referenceModel.Type),
+            Type = MapToReferenceDto(referenceModel.Type),
             Link = referenceModel.Link,
             Notes = referenceModel.Notes
         };
 
-        ReferenceTypeDto MapToResultDto(ReferenceType type)
+        ReferenceTypeDto MapToReferenceDto(ReferenceType type)
         {
             return type switch
             {
