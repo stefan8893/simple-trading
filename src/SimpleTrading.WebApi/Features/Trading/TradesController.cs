@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
+using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.WebApi.Extensions;
-using SimpleTrading.WebApi.Features.Trading.DTOs;
+using SimpleTrading.WebApi.Features.Trading.Dto;
+using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading;
@@ -16,6 +18,21 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 public class TradesController : ControllerBase
 {
+    [HttpGet("{tradeId:Guid}", Name = nameof(GetTrade))]
+    [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> GetTrade(
+        [FromServices] IGetTrade getTrade,
+        Guid tradeId)
+    {
+        var result = await getTrade.Execute(tradeId);
+
+        return result.Match(
+            tradeModel => Ok(TradeDto.From(tradeModel)),
+            notFound => notFound.ToActionResult()
+        );
+    }
+
     [HttpPost(Name = nameof(AddTrade))]
     [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
@@ -45,7 +62,8 @@ public class TradesController : ControllerBase
             TakeProfit = dto.TakeProfit,
             Notes = dto.Notes,
             References = dto.References?
-                .Select(x => new ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
+                .Select(x =>
+                    new AddTradeRequestModel.ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
                 .ToList() ?? []
         };
 
@@ -96,7 +114,7 @@ public class TradesController : ControllerBase
             ResultDto.Mediocre => Result.Mediocre,
             ResultDto.BreakEven => Result.BreakEven,
             ResultDto.Loss => Result.Loss,
-            _ => throw new ArgumentOutOfRangeException(nameof(ResultDto))
+            _ => throw new ArgumentOutOfRangeException(nameof(resultDto), resultDto, null)
         };
         return tradeResult;
     }
@@ -107,7 +125,7 @@ public class TradesController : ControllerBase
         {
             ReferenceTypeDto.Other => ReferenceType.Other,
             ReferenceTypeDto.TradingView => ReferenceType.TradingView,
-            _ => throw new ArgumentOutOfRangeException(nameof(ResultDto))
+            _ => throw new ArgumentOutOfRangeException(nameof(typeDto), typeDto, null)
         };
 
         return tradeResult;

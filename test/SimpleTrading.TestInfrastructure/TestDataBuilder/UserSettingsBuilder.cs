@@ -9,13 +9,13 @@ public static partial class TestData
     public record UserSettings : ITestData<Domain.User.UserSettings, UserSettings>
     {
         public Guid Id { get; init; } = Constants.UserSettingsId;
-        public OneOf<Guid, Profile, Domain.Trading.Profile> SelectedProfileOrId { get; set; } = Profile.Default;
-        public string Culture { get; set; } = Constants.DefaultCulture.Name;
-        public string? Language { get; set; } = null;
-        public string TimeZone { get; set; } = Constants.DefaultTimeZone;
-        public DateTime UpdatedAt { get; set; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
+        public OneOf<Guid, Profile, Domain.Trading.Profile> SelectedProfileOrId { get; init; } = Profile.Default;
+        public string Culture { get; init; } = Constants.DefaultCulture.Name;
+        public string? Language { get; init; } = null;
+        public string TimeZone { get; init; } = Constants.DefaultTimeZone;
+        public DateTime UpdatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static UserSettings Default { get; } = new Lazy<UserSettings>(() => new UserSettings()).Value;
+        public static UserSettings Default => new ();
 
         public Domain.User.UserSettings Build()
         {

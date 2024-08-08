@@ -168,7 +168,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task Reference_link_must_be_a_valid_uri()
     {
-        var reference = new ReferenceModel(ReferenceType.Other, "foobar");
+        var reference = new AddTradeRequestModel.ReferenceModel(ReferenceType.Other, "foobar");
 
         var requestModel = new AddTradeRequestModel
         {
@@ -198,7 +198,10 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
-        var reference = new ReferenceModel(ReferenceType.Other, "http://example.org", new string('a', 40001));
+        var reference = new AddTradeRequestModel.ReferenceModel(ReferenceType.Other,
+            "http://example.org",
+            new string('a', 40001));
+
         var requestModel = new AddTradeRequestModel
         {
             AssetId = TestData.Asset.Default.Build().Id,
@@ -353,7 +356,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             OpenedAt = _utcNow,
             Size = 5000,
             CurrencyId = currency.Id,
-            References = [new ReferenceModel(ReferenceType.Other, "http://example.org", "some notes")]
+            References =
+                [new AddTradeRequestModel.ReferenceModel(ReferenceType.Other, "https://example.org", "some notes")]
         };
 
         // act

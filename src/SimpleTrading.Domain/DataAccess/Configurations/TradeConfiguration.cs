@@ -17,6 +17,10 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         builder
             .Navigation(x => x.Profile)
             .AutoInclude();
+        
+        builder
+            .Navigation(x => x.Currency)
+            .AutoInclude();
 
         builder
             .HasMany(x => x.References)

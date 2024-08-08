@@ -6,12 +6,13 @@ public static partial class TestData
 {
     public record Profile : ITestData<Domain.Trading.Profile, Profile>
     {
-        public Guid Id { get; init; } = Guid.Parse("0d44b0c7-1f1e-4e0b-b08e-4449e1fb40c8");
-        public string Name { get; set; } = "TestProfile";
-        public string? Description { get; set; } = "";
+        private static short _profileNumber = 1;
+        public Guid Id { get; init; } = Guid.NewGuid();
+        public string Name { get; init; } = $"Test Profile - {_profileNumber++:00}";
+        public string? Description { get; init; } = null;
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Profile Default { get; } = new Lazy<Profile>(() => new Profile()).Value;
+        public static Profile Default => new ();
 
         public Domain.Trading.Profile Build()
         {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SimpleTrading.WebApi.Features.Trading.DTOs;
+namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public enum ResultDto
 {
