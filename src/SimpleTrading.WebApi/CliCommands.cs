@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.WebApi.Clients;
 
@@ -23,7 +24,7 @@ public static class CliCommands
     public static Command CreateDatabaseCommand(WebApplication app)
     {
         var createDbCommand = new Command("create-db",
-            "Creates the schema without data. Run seed-data afterwards to add master data");
+            "Creates the database and the schema, but without data. Run seed-data afterwards to add master data");
 
         var dropExistingOption = new Option<bool>("--drop-existing",
             () => false,
@@ -60,7 +61,7 @@ public static class CliCommands
                 await DeleteExistingDb(dbContext, cancellationToken, logger);
 
             logger.LogInformation("New {dbProviderName} database will be created", dbContext.Database.ProviderName);
-            await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+            await dbContext.Database.MigrateAsync(cancellationToken);
             logger.LogInformation("New {dbProviderName} database successfully created",
                 dbContext.Database.ProviderName);
         }

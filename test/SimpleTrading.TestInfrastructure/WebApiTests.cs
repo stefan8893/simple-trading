@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.TestInfrastructure.Authentication;
@@ -32,7 +33,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         _serviceScope = Factory.Services.CreateScope();
         _dbContext = _serviceScope.ServiceProvider.GetRequiredService<TradingDbContext>();
 
-        await DbContext.Database.EnsureCreatedAsync();
+        await DbContext.Database.MigrateAsync();
 
         var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
         await dbMasterData.PopulateUserSettings();
