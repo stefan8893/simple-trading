@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240809065831_Initial_Migration")]
+    [Migration("20240809070526_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -92,6 +92,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(4000)
                         .HasColumnType("character varying(4000)");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
