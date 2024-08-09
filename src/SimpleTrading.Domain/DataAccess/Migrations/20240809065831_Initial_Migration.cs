@@ -54,6 +54,21 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserSettings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Culture = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Language = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TimeZone = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserSettings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trade",
                 columns: table => new
                 {
@@ -90,28 +105,6 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         column: x => x.ProfileId,
                         principalTable: "Profile",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserSettings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SelectedProfileId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Culture = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Language = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    TimeZone = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserSettings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserSettings_Profile_SelectedProfileId",
-                        column: x => x.SelectedProfileId,
-                        principalTable: "Profile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,12 +166,6 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                 name: "IX_Trade_ProfileId",
                 table: "Trade",
                 column: "ProfileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserSettings_SelectedProfileId",
-                table: "UserSettings",
-                column: "SelectedProfileId",
-                unique: true);
         }
 
         /// <inheritdoc />

@@ -6,10 +6,6 @@ public class UserSettings
 {
     public required Guid Id { get; init; }
 
-    public required Guid SelectedProfileId { get; set; }
-
-    public required Profile SelectedProfile { get; set; }
-
     public required string Culture { get; set; }
 
     public string? Language { get; set; }
