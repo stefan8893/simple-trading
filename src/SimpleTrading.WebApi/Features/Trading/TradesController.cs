@@ -60,6 +60,7 @@ public class TradesController : ControllerBase
             EntryPrice = dto.EntryPrice!.Value,
             StopLoss = dto.StopLoss,
             TakeProfit = dto.TakeProfit,
+            ExitPrice = dto.ExitPrice,
             Notes = dto.Notes,
             References = dto.References?
                 .Select(x =>
@@ -94,7 +95,10 @@ public class TradesController : ControllerBase
 
         var tradeResult = MapToDomainResult(dto.Result);
 
-        var finishTradeRequestModel = new FinishTradeRequestModel(tradeId, tradeResult, (decimal) dto.Balance!,
+        var finishTradeRequestModel = new FinishTradeRequestModel(tradeId,
+            tradeResult,
+            dto.Balance!.Value,
+            dto.ExitPrice!.Value,
             (DateTime) dto.FinishedAt!);
         var result = await finishTrade.Execute(finishTradeRequestModel);
 

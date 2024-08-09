@@ -150,8 +150,8 @@
     <value>The 'Finished' date must be after the 'Opened' date.</value>
   </data>
     <data name="FinishedTradeNeedsFinishedBalanceAndResult" xml:space="preserve">
-    <value>In order to add a finished trade, you must specify 'Finished', 'Balance' and 'Result'.</value>
-  </data>
+        <value>In order to add a finished trade, you must specify 'Finished', 'Balance', 'Exit price' and 'Result'.</value>
+    </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Invalid link.</value>
   </data>

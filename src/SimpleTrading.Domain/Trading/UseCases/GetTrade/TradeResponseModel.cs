@@ -18,6 +18,7 @@ public class TradeResponseModel
     public required decimal Entry { get; init; }
     public required decimal? StopLoss { get; init; }
     public required decimal? TakeProfit { get; init; }
+    public required decimal? ExitPrice { get; init; }
     public required double? RiskRewardRatio { get; init; }
     public required IReadOnlyList<ReferenceModel> References { get; init; }
     public required string? Notes { get; init; }
@@ -42,6 +43,7 @@ public class TradeResponseModel
             Entry = trade.PositionPrices.Entry,
             StopLoss = trade.PositionPrices.StopLoss,
             TakeProfit = trade.PositionPrices.TakeProfit,
+            ExitPrice = trade.PositionPrices.ExitPrice,
             RiskRewardRatio = trade.RiskRewardRatio,
             References = trade.References
                 .Select(ReferenceModel.From)

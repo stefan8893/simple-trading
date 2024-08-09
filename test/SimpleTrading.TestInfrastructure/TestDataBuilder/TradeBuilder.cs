@@ -17,11 +17,15 @@ public static partial class TestData
         public DateTime? FinishedAt { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
         public Outcome? Outcome { get; init; } = null;
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
-        public PositionPrices PositionPrices { get; init; } = new() {Entry = 1.0m};
+
+        // ReSharper disable once MemberHidesStaticFromOuterClass
+        public OneOf<PositionPrices, Domain.Trading.PositionPrices> PositionPrices { get; init; } =
+            TestData.PositionPrices.Default;
+
         public string Notes { get; init; } = "";
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Trade Default => new ();
+        public static Trade Default => new();
 
         public Domain.Trading.Trade Build()
         {
@@ -43,6 +47,11 @@ public static partial class TestData
                 currencyEntity => currencyEntity
             );
 
+            var positionPrices = PositionPrices.Match(
+                p => p.Build(),
+                p => p
+            );
+
             var trade = new Domain.Trading.Trade
             {
                 Id = Id,
@@ -54,15 +63,16 @@ public static partial class TestData
                 OpenedAt = OpenedAt,
                 CurrencyId = currency.Id,
                 Currency = currency,
-                PositionPrices = PositionPrices,
+                PositionPrices = positionPrices,
                 References = [],
                 Notes = Notes,
                 CreatedAt = CreatedAt
             };
 
-            if (Outcome is not null && FinishedAt.HasValue)
+            if (Outcome is not null && FinishedAt.HasValue && positionPrices.ExitPrice.HasValue)
                 trade.Finish(new Domain.Trading.Trade.FinishTradeDto(Outcome.Result,
                     Outcome.Balance,
+                    positionPrices.ExitPrice.Value,
                     FinishedAt.Value,
                     () => OpenedAt,
                     Constants.DefaultTimeZone));

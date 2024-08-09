@@ -85,6 +85,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     PositionPrices_Entry = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
+                    PositionPrices_ExitPrice = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
                     PositionPrices_StopLoss = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
                     PositionPrices_TakeProfit = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true)
                 },

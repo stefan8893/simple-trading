@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
@@ -16,6 +16,7 @@ public record AddTradeRequestModel
     public decimal EntryPrice { get; init; }
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
+    public decimal? ExitPrice { get; set; }
     public string? Notes { get; set; }
     public IReadOnlyList<ReferenceModel> References { get; set; } = [];
 

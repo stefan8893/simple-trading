@@ -23,7 +23,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task An_existing_trade_get_returned()
+    public async Task An_existing_trade_gets_returned()
     {
         // arrange
         var client = await CreateClientWithAccessToken();

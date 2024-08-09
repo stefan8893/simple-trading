@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -28,7 +29,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task Invalid_input_with_a_different_ui_culture_returns_a_localized_error_message()
+    public async Task Invalid_Result_input_with_a_different_ui_culture_returns_a_localized_error_message()
     {
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
@@ -36,6 +37,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var requestModel = new FinishTradeRequestModel(Guid.NewGuid(),
             (Result) 50,
             0m,
+            1.05m,
             DateTime.Parse("2024-08-03T16:00:00+00:00"));
 
         // act
@@ -54,7 +56,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
-            new FinishTradeRequestModel(tradeId, Result.Win, 500, DateTime.Parse("2024-08-03T16:00:00Z"));
+            new FinishTradeRequestModel(tradeId, Result.Win, 500, 1.05m, DateTime.Parse("2024-08-03T16:00:00Z"));
 
         var response = await CreateInteractor().Execute(requestModel);
 
@@ -72,12 +74,23 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new FinishTradeRequestModel(trade.Id, Result.Win, 500, _utcNow().AddHours(1));
+            new FinishTradeRequestModel(trade.Id, Result.Win, 500, 1.05m, _utcNow().AddHours(1));
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
+
+        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
+        var finishedTrade = await DbContext.Trades.AsNoTracking()
+            .FirstAsync(x => x.Id == trade.Id);
+
+        finishedTrade.Outcome.Should().NotBeNull();
+        finishedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
+        finishedTrade.Outcome.Result.Should().Be(requestModel.Result);
+        finishedTrade.FinishedAt.Should().NotBeNull();
+        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
+        finishedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
     }
 }

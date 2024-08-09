@@ -141,7 +141,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Um einen beendeten Trade hinzuzufügen, müssen Sie &apos;Beendet&apos;, &apos;Bilanz&apos; und &apos;Ergebnis&apos; angeben..
+        ///   Looks up a localized string similar to Um einen beendeten Trade hinzuzufügen, müssen Sie &apos;Beendet&apos;, &apos;Bilanz&apos;, &apos;Ausstiegspreis&apos; und &apos;Ergebnis&apos; angeben..
         /// </summary>
         public static string FinishedTradeNeedsFinishedBalanceAndResult {
             get {

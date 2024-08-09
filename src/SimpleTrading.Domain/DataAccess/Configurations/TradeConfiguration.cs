@@ -66,6 +66,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         positionPrices.Property(x => x.Entry).HasPrecision(24, 8);
         positionPrices.Property(x => x.StopLoss).HasPrecision(24, 8);
         positionPrices.Property(x => x.TakeProfit).HasPrecision(24, 8);
+        positionPrices.Property(x => x.ExitPrice).HasPrecision(24, 8);
 
         builder.Ignore(x => x.RiskRewardRatio);
 

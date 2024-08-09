@@ -150,8 +150,8 @@
     <value>Das Datum 'Beendet' muss nach dem Datum 'Eröffnet' liegen.</value>
   </data>
     <data name="FinishedTradeNeedsFinishedBalanceAndResult" xml:space="preserve">
-    <value>Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz' und 'Ergebnis' angeben.</value>
-  </data>
+        <value>Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.</value>
+    </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Ungültiger Link.</value>
   </data>

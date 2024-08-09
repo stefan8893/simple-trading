@@ -17,6 +17,7 @@ public record AddTradeDto
     public decimal? EntryPrice { get; set; }
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
+    public decimal? ExitPrice { get; set; }
     public string? Notes { get; set; }
     public IReadOnlyList<AddReferenceDto>? References { get; set; }
 }

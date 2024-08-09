@@ -19,7 +19,7 @@ public class TradeTests : TestBase
         var finishedAt = _utcNow.AddHours(-3);
 
         var trade = (TestData.Trade.Default with {OpenedAt = openedAt}).Build();
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, finishedAt, UtcNowStub, "Europe/Vienna");
+        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, finishedAt, UtcNowStub, "Europe/Vienna");
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -38,7 +38,7 @@ public class TradeTests : TestBase
         var finishedAt = _utcNow.AddDays(1).AddSeconds(1);
 
         var trade = (TestData.Trade.Default with {OpenedAt = openedAt}).Build();
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, finishedAt, UtcNowStub, "Europe/Vienna");
+        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, finishedAt, UtcNowStub, "Europe/Vienna");
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -57,7 +57,7 @@ public class TradeTests : TestBase
         var finishedAt = _utcNow.AddDays(1);
 
         var trade = (TestData.Trade.Default with {OpenedAt = openedAt}).Build();
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, finishedAt, UtcNowStub, "Europe/Vienna");
+        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, finishedAt, UtcNowStub, "Europe/Vienna");
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -74,10 +74,11 @@ public class TradeTests : TestBase
         {
             OpenedAt = _utcNow,
             FinishedAt = _utcNow,
+            PositionPrices = TestData.PositionPrices.Default with {ExitPrice = 1.05m},
             Outcome = new Outcome {Balance = 500, Result = Result.Win}
         }).Build();
 
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -97,7 +98,7 @@ public class TradeTests : TestBase
         // arrange
         var trade = TestData.Trade.Default.Build();
         var finishTradeDto =
-            new Trade.FinishTradeDto(invalidResult, 0m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+            new Trade.FinishTradeDto(invalidResult, 0m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -117,7 +118,7 @@ public class TradeTests : TestBase
         // arrange
         var trade = TestData.Trade.Default.Build();
         var finishTradeDto =
-            new Trade.FinishTradeDto(invalidResult, -1m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+            new Trade.FinishTradeDto(invalidResult, -1m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);
@@ -137,7 +138,7 @@ public class TradeTests : TestBase
         // arrange
         var trade = TestData.Trade.Default.Build();
         var finishTradeDto =
-            new Trade.FinishTradeDto(invalidResult, 1m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+            new Trade.FinishTradeDto(invalidResult, 1m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Finish(finishTradeDto);
