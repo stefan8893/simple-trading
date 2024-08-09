@@ -45,7 +45,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
@@ -78,7 +78,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = null,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
@@ -112,7 +112,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = notExistingAssetId,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
@@ -127,7 +127,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_finished_trade_cant_be_added_the_balance_is_missing()
+    public async Task A_closed_trade_cant_be_added_the_balance_is_missing()
     {
         // arrange
         var client = await CreateClientWithAccessToken();
@@ -144,8 +144,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
-            FinishedAt = _utcNow,
+            Opened = _utcNow,
+            Closed = _utcNow,
             Result = ResultDto.Mediocre,
             Size = 5000,
             Balance = null,
@@ -159,6 +159,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.CommonErrors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.");
+                x == "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Abgeschlossen', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.");
     }
 }

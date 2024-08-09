@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
-using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
+using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
@@ -51,8 +51,8 @@ public class TradesController : ControllerBase
         {
             AssetId = dto.AssetId!.Value,
             ProfileId = dto.ProfileId!.Value,
-            OpenedAt = dto.OpenedAt!.Value,
-            FinishedAt = dto.FinishedAt,
+            Opened = dto.Opened!.Value,
+            Closed = dto.Closed,
             Size = dto.Size!.Value,
             Result = dto.Result.HasValue ? MapToDomainResult(dto.Result) : null,
             Balance = dto.Balance,
@@ -78,16 +78,16 @@ public class TradesController : ControllerBase
         );
     }
 
-    [HttpPost("{tradeId:Guid}/finish", Name = nameof(FinishTrade))]
+    [HttpPost("{tradeId:Guid}/close", Name = nameof(CloseTrade))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
-    public async Task<ActionResult> FinishTrade(
-        [FromServices] IFinishTrade finishTrade,
-        [FromServices] IValidator<FinishTradeDto> validator,
+    public async Task<ActionResult> CloseTrade(
+        [FromServices] ICloseTrade closeTrade,
+        [FromServices] IValidator<CloseTradeDto> validator,
         Guid tradeId,
-        [FromBody] FinishTradeDto dto)
+        [FromBody] CloseTradeDto dto)
     {
         var validationResult = await validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
@@ -95,12 +95,12 @@ public class TradesController : ControllerBase
 
         var tradeResult = MapToDomainResult(dto.Result);
 
-        var finishTradeRequestModel = new FinishTradeRequestModel(tradeId,
+        var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
             tradeResult,
             dto.Balance!.Value,
             dto.ExitPrice!.Value,
-            (DateTime) dto.FinishedAt!);
-        var result = await finishTrade.Execute(finishTradeRequestModel);
+            (DateTime) dto.Closed!);
+        var result = await closeTrade.Execute(closeTradeRequestModel);
 
         return result.Match(
             completed => NoContent(),

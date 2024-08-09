@@ -8,8 +8,8 @@ public record AddTradeDto
 {
     public Guid? AssetId { get; set; }
     public Guid? ProfileId { get; set; }
-    public DateTime? OpenedAt { get; set; }
-    public DateTime? FinishedAt { get; set; }
+    public DateTime? Opened { get; set; }
+    public DateTime? Closed { get; set; }
     public decimal? Size { get; set; }
     public ResultDto? Result { get; set; }
     public decimal? Balance { get; set; }
@@ -34,9 +34,9 @@ public class AddTradeDtoValidator : AbstractValidator<AddTradeDto>
             .NotNull()
             .WithName(SimpleTradingStrings.Profile);
 
-        RuleFor(x => x.OpenedAt)
+        RuleFor(x => x.Opened)
             .NotNull()
-            .WithName(SimpleTradingStrings.OpenedAt);
+            .WithName(SimpleTradingStrings.Opened);
 
         RuleFor(x => x.Size)
             .NotNull()

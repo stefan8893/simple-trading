@@ -28,7 +28,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = Guid.Empty,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -50,7 +50,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = Guid.Empty,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -72,7 +72,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = Guid.Empty
@@ -98,7 +98,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 0,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -124,7 +124,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -143,7 +143,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Theory]
     [InlineData("de-AT", "Der Wert von 'Eröffnet' muss grösser oder gleich '01.01.2000 00:00:00' sein.")]
     [InlineData("en-US", "'Opened' must be greater than or equal to '01.01.2000 00:00:00'.")]
-    public async Task OpenedAt_must_not_be_before_min_date(string culture, string errorMessage)
+    public async Task Opened_must_not_be_before_min_date(string culture, string errorMessage)
     {
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
@@ -154,7 +154,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = longTimeAgo,
+            Opened = longTimeAgo,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -167,7 +167,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
             .Should().Contain(x => x.ErrorMessage == errorMessage)
-            .And.Contain(x => x.PropertyName == "OpenedAt")
+            .And.Contain(x => x.PropertyName == "Opened")
             .And.HaveCount(1);
     }
 
@@ -180,7 +180,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -213,7 +213,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -246,7 +246,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -276,7 +276,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -306,7 +306,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -335,7 +335,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -365,7 +365,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
+            Opened = _utcNow,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id,
@@ -387,7 +387,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_finished_trade_can_be_added_successfully()
+    public async Task A_closed_trade_can_be_added_successfully()
     {
         // arrange
         var currency = TestData.Currency.Default.Build();
@@ -400,8 +400,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
-            FinishedAt = _utcNow,
+            Opened = _utcNow,
+            Closed = _utcNow,
             Result = Result.Win,
             Balance = 10,
             EntryPrice = 1.00m,
@@ -417,7 +417,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
-        newlyAddedTrade.IsFinished.Should().BeTrue();
+        newlyAddedTrade.IsClosed.Should().BeTrue();
     }
 
     [Fact]
@@ -434,8 +434,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
-            FinishedAt = _utcNow,
+            Opened = _utcNow,
+            Closed = _utcNow,
             Result = Result.Win,
             Balance = 10m,
             EntryPrice = 0m,
@@ -463,7 +463,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_new_finished_trade_without_a_balance_cant_be_finished()
+    public async Task A_new_closed_trade_without_a_balance_cant_be_closed()
     {
         // arrange
         var currency = TestData.Currency.Default.Build();
@@ -476,8 +476,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = _utcNow,
-            FinishedAt = _utcNow,
+            Opened = _utcNow,
+            Closed = _utcNow,
             Result = Result.Win,
             Balance = null,
             Size = 5000,
@@ -491,7 +491,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.Reason.Should()
-            .Be("In order to add a finished trade, you must specify 'Finished', 'Balance', 'Exit price' and 'Result'.");
+            .Be("In order to add a closed trade, you must specify 'Closed', 'Balance', 'Exit price' and 'Result'.");
     }
 
     [Theory]
@@ -511,8 +511,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            OpenedAt = DateTime.SpecifyKind(_utcNow, kind),
-            FinishedAt = DateTime.SpecifyKind(_utcNow, kind),
+            Opened = DateTime.SpecifyKind(_utcNow, kind),
+            Closed = DateTime.SpecifyKind(_utcNow, kind),
             Size = 5000,
             Balance = 50,
             EntryPrice = 1.05m,
@@ -528,10 +528,10 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
-        newlyAddedTrade.OpenedAt.Should().Be(_utcNow);
-        newlyAddedTrade.OpenedAt.Kind.Should().Be(DateTimeKind.Utc);
+        newlyAddedTrade.Opened.Should().Be(_utcNow);
+        newlyAddedTrade.Opened.Kind.Should().Be(DateTimeKind.Utc);
 
-        newlyAddedTrade.FinishedAt.Should().Be(_utcNow);
-        newlyAddedTrade.FinishedAt!.Value.Kind.Should().Be(DateTimeKind.Utc);
+        newlyAddedTrade.Closed.Should().Be(_utcNow);
+        newlyAddedTrade.Closed!.Value.Kind.Should().Be(DateTimeKind.Utc);
     }
 }

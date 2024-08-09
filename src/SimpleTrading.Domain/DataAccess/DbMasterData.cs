@@ -45,6 +45,7 @@ public class DbMasterData(TradingDbContext dbContext)
             Id = Constants.DefaultProfileId,
             Name = "Default",
             Description = null,
+            IsSelected = true,
             CreatedAt = DateTime.Parse("2024-08-03T08:00:00Z")
         };
 

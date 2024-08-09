@@ -7,8 +7,8 @@ public record AddTradeRequestModel
 {
     public required Guid AssetId { get; init; }
     public required Guid ProfileId { get; init; }
-    public required DateTime OpenedAt { get; init; }
-    public DateTime? FinishedAt { get; set; }
+    public required DateTime Opened { get; init; }
+    public DateTime? Closed { get; set; }
     public required decimal Size { get; init; }
     public Result? Result { get; set; }
     public decimal? Balance { get; set; }
@@ -35,9 +35,9 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .NotEmpty()
             .WithName(SimpleTradingStrings.Profile);
 
-        RuleFor(x => x.OpenedAt)
+        RuleFor(x => x.Opened)
             .GreaterThanOrEqualTo(Constants.MinDate)
-            .WithName(SimpleTradingStrings.OpenedAt);
+            .WithName(SimpleTradingStrings.Opened);
 
         RuleFor(x => x.Size)
             .GreaterThan(0)
