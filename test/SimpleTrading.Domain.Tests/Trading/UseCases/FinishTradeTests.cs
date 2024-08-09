@@ -66,6 +66,26 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
+    public async Task A_trades_exit_price_must_be_greater_than_zero()
+    {
+        // arrange
+        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow()}).Build();
+        DbContext.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var requestModel =
+            new FinishTradeRequestModel(trade.Id, Result.Win, 500, 0m, _utcNow().AddHours(1));
+
+        // act
+        var response = await CreateInteractor().Execute(requestModel);
+
+        // assert
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "ExitPrice");
+    }
+    
+    [Fact]
     public async Task A_trade_can_be_finished_successfully()
     {
         // arrange

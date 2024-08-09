@@ -5,15 +5,15 @@ namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 public record AddTradeRequestModel
 {
-    public Guid AssetId { get; init; }
-    public Guid ProfileId { get; init; }
-    public DateTime OpenedAt { get; init; }
+    public required Guid AssetId { get; init; }
+    public required Guid ProfileId { get; init; }
+    public required DateTime OpenedAt { get; init; }
     public DateTime? FinishedAt { get; set; }
-    public decimal Size { get; init; }
+    public required decimal Size { get; init; }
     public Result? Result { get; set; }
     public decimal? Balance { get; set; }
-    public Guid CurrencyId { get; init; }
-    public decimal EntryPrice { get; init; }
+    public required Guid CurrencyId { get; init; }
+    public required decimal EntryPrice { get; init; }
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
     public decimal? ExitPrice { get; set; }
@@ -48,6 +48,25 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .WithName(SimpleTradingStrings.Result)
             .When(x => x.Result is not null);
 
+        RuleFor(x => x.EntryPrice)
+            .GreaterThan(0)
+            .WithName(SimpleTradingStrings.EntryPrice);
+
+        RuleFor(x => x.StopLoss)
+            .GreaterThan(0)
+            .WithName(SimpleTradingStrings.StopLoss)
+            .When(x => x.StopLoss.HasValue);
+        
+        RuleFor(x => x.TakeProfit)
+            .GreaterThan(0)
+            .WithName(SimpleTradingStrings.TakeProfit)
+            .When(x => x.TakeProfit.HasValue);
+        
+        RuleFor(x => x.ExitPrice)
+            .GreaterThan(0)
+            .WithName(SimpleTradingStrings.ExitPrice)
+            .When(x => x.ExitPrice.HasValue);
+        
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Currency);

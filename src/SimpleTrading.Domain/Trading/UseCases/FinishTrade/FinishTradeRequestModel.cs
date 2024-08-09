@@ -12,5 +12,9 @@ public class FinishTradeRequestModelValidator : AbstractValidator<FinishTradeReq
         RuleFor(x => x.Result)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result);
+
+        RuleFor(x => x.ExitPrice)
+            .GreaterThan(0)
+            .WithName(SimpleTradingStrings.ExitPrice);
     }
 }
