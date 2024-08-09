@@ -30,6 +30,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
@@ -51,6 +52,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = Guid.Empty,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
@@ -72,6 +74,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = Guid.Empty
         };
 
@@ -97,6 +100,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 0,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
@@ -122,6 +126,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
             Result = (Result) 50
         };
@@ -151,6 +156,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = longTimeAgo,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
@@ -176,6 +182,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
             References = [reference]
         };
@@ -208,6 +215,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = TestData.Profile.Default.Build().Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
             References = [reference]
         };
@@ -240,6 +248,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = currency.Id
         };
 
@@ -269,6 +278,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = currency.Id
         };
 
@@ -298,6 +308,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = currency.Id
         };
 
@@ -326,6 +337,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = currency.Id
         };
 
@@ -355,6 +367,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             OpenedAt = _utcNow,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = currency.Id,
             References =
                 [new AddTradeRequestModel.ReferenceModel(ReferenceType.Other, "https://example.org", "some notes")]
@@ -391,6 +404,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             FinishedAt = _utcNow,
             Result = Result.Win,
             Balance = 10,
+            EntryPrice = 1.00m,
             ExitPrice = 1.05m,
             Size = 5000,
             CurrencyId = currency.Id
@@ -404,6 +418,48 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
         newlyAddedTrade.IsFinished.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task PositionPrices_must_be_greater_than_zero()
+    {
+        // arrange
+        var currency = TestData.Currency.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var asset = TestData.Asset.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            OpenedAt = _utcNow,
+            FinishedAt = _utcNow,
+            Result = Result.Win,
+            Balance = 10m,
+            EntryPrice = 0m,
+            StopLoss = 0m,
+            TakeProfit = 0m,
+            ExitPrice = 0m,
+            Size = 5000,
+            CurrencyId = currency.Id
+        };
+
+        // act
+        var response = await CreateInteractor().Execute(requestModel);
+
+        // assert
+        var businessError = response.Value.Should().BeOfType<BadInput>();
+        businessError.Which.ValidationResult.Errors.Should().HaveCount(4)
+            .And.Contain(x =>
+                x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry price' must be greater than '0'.")
+            .And.Contain(x =>
+                x.PropertyName == "StopLoss" && x.ErrorMessage == "'Stop loss' must be greater than '0'.")
+            .And.Contain(x =>
+                x.PropertyName == "TakeProfit" && x.ErrorMessage == "'Take profit' must be greater than '0'.")
+            .And.Contain(x =>
+                x.PropertyName == "ExitPrice" && x.ErrorMessage == "'Exit price' must be greater than '0'.");
     }
 
     [Fact]
@@ -425,6 +481,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Result = Result.Win,
             Balance = null,
             Size = 5000,
+            EntryPrice = 1.05m,
             CurrencyId = currency.Id
         };
 
@@ -458,6 +515,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             FinishedAt = DateTime.SpecifyKind(_utcNow, kind),
             Size = 5000,
             Balance = 50,
+            EntryPrice = 1.05m,
             ExitPrice = 1.05m,
             Result = Result.Mediocre,
             CurrencyId = currency.Id
