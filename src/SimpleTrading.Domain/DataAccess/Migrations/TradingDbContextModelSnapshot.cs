@@ -47,7 +47,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.HasIndex("Symbol")
                         .IsUnique();
 
-                    b.ToTable("Asset", (string)null);
+                    b.ToTable("Asset");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Currency", b =>
@@ -74,7 +74,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.HasIndex("IsoCode")
                         .IsUnique();
 
-                    b.ToTable("Currency", (string)null);
+                    b.ToTable("Currency");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Profile", b =>
@@ -100,7 +100,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Profile", (string)null);
+                    b.ToTable("Profile");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Reference", b =>
@@ -133,7 +133,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
                     b.HasIndex("TradeId");
 
-                    b.ToTable("Reference", (string)null);
+                    b.ToTable("Reference");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>
@@ -193,7 +193,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Trade", (string)null);
+                    b.ToTable("Trade");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.User.UserSettings", b =>
@@ -227,7 +227,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.HasIndex("SelectedProfileId")
                         .IsUnique();
 
-                    b.ToTable("UserSettings", (string)null);
+                    b.ToTable("UserSettings");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Reference", b =>
@@ -246,22 +246,22 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.HasOne("SimpleTrading.Domain.Trading.Asset", "Asset")
                         .WithMany()
                         .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SimpleTrading.Domain.Trading.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SimpleTrading.Domain.Trading.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.OwnsOne("SimpleTrading.Domain.Trading.Trade.Outcome#SimpleTrading.Domain.Trading.Outcome", "Outcome", b1 =>
+                    b.OwnsOne("SimpleTrading.Domain.Trading.Outcome", "Outcome", b1 =>
                         {
                             b1.Property<Guid>("TradeId")
                                 .HasColumnType("uuid");
@@ -277,7 +277,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
 
                             b1.HasKey("TradeId");
 
-                            b1.ToTable("Trade", (string)null);
+                            b1.ToTable("Trade");
 
                             b1.WithOwner()
                                 .HasForeignKey("TradeId");

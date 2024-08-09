@@ -79,20 +79,17 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         name: "FK_Trade_Asset_AssetId",
                         column: x => x.AssetId,
                         principalTable: "Asset",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Trade_Currency_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currency",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Trade_Profile_ProfileId",
                         column: x => x.ProfileId,
                         principalTable: "Profile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240808061446_Initial_Migration")]
+    [Migration("20240809063820_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -249,19 +249,19 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.HasOne("SimpleTrading.Domain.Trading.Asset", "Asset")
                         .WithMany()
                         .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SimpleTrading.Domain.Trading.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SimpleTrading.Domain.Trading.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.OwnsOne("SimpleTrading.Domain.Trading.Outcome", "Outcome", b1 =>
