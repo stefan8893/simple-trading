@@ -140,17 +140,17 @@
     <data name="ExitPrice" xml:space="preserve">
     <value>Ausstiegspreis</value>
   </data>
-    <data name="FinishedAt" xml:space="preserve">
-    <value>Beendet</value>
-  </data>
-    <data name="FinishedAtTooFarInTheFuture" xml:space="preserve">
-    <value>Das Datum 'Beendet' kann maximal nur einen Tag in der Zukunft liegen.</value>
-  </data>
+    <data name="Closed" xml:space="preserve">
+        <value>Abgeschlossen</value>
+    </data>
+    <data name="ClosedTooFarInTheFuture" xml:space="preserve">
+        <value>Das Datum 'Abgeschlossen' kann maximal nur einen Tag in der Zukunft liegen.</value>
+    </data>
     <data name="FinishedBeforeOpenedError" xml:space="preserve">
-    <value>Das Datum 'Beendet' muss nach dem Datum 'Eröffnet' liegen.</value>
-  </data>
+        <value>Das Datum 'Abgeschlossen' muss nach dem Datum 'Eröffnet' sein.</value>
+    </data>
     <data name="FinishedTradeNeedsFinishedBalanceAndResult" xml:space="preserve">
-        <value>Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.</value>
+        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Abgeschlossen', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Ungültiger Link.</value>
@@ -173,7 +173,7 @@
     <data name="NotFoundNamed" xml:space="preserve">
     <value>{0} nicht gefunden.</value>
   </data>
-    <data name="OpenedAt" xml:space="preserve">
+    <data name="Opened" xml:space="preserve">
     <value>Eröffnet</value>
   </data>
     <data name="Other" xml:space="preserve">
@@ -198,8 +198,8 @@
     <value>Trade</value>
   </data>
     <data name="TradeAlreadyFinished" xml:space="preserve">
-    <value>Der Trade wurde bereits am '{0}' beendet.</value>
-  </data>
+        <value>Der Trade wurde bereits am '{0}' abgeschlossen.</value>
+    </data>
     <data name="TradeSize" xml:space="preserve">
     <value>Handelsvolumen</value>
   </data>

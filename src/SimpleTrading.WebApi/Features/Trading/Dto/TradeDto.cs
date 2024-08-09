@@ -12,8 +12,8 @@ public class TradeDto
     public Guid ProfileId { get; init; }
     public required string Profile { get; init; }
     public decimal Size { get; init; }
-    public DateTime OpenedAt { get; init; }
-    public DateTime? FinishedAt { get; init; }
+    public DateTime Opened { get; init; }
+    public DateTime? Closed { get; init; }
     public decimal? Balance { get; init; }
     public ResultDto? Result { get; init; }
     public bool IsFinished { get; init; }
@@ -37,8 +37,8 @@ public class TradeDto
             ProfileId = model.ProfileId,
             Profile = model.Profile,
             Size = model.Size,
-            OpenedAt = model.OpenedAt,
-            FinishedAt = model.FinishedAt,
+            Opened = model.Opened,
+            Closed = model.Closed,
             Balance = model.Balance,
             Result = MapToResultDto(model.Result),
             IsFinished = model.IsFinished,

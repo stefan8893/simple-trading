@@ -26,7 +26,7 @@ export interface ISimpleTradingClient {
      * @param body (optional)
      * @return No Content
      */
-    finishTrade(tradeId: string, body: FinishTradeDto | undefined): Promise<SwaggerResponse<void>>;
+    closeTrade(tradeId: string, body: FinishTradeDto | undefined): Promise<SwaggerResponse<void>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
@@ -86,8 +86,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param body (optional)
      * @return No Content
      */
-    finishTrade(tradeId: string, body: FinishTradeDto | undefined): Promise<SwaggerResponse<void>> {
-        let url_ = this.baseUrl + "/trades/{tradeId}/finish";
+    closeTrade(tradeId: string, body: FinishTradeDto | undefined): Promise<SwaggerResponse<void>> {
+        let url_ = this.baseUrl + "/trades/{tradeId}/close";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
         url_ = url_.replace("{tradeId}", encodeURIComponent("" + tradeId));
@@ -229,8 +229,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 export class AddTradeDto implements IAddTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
-    openedAt?: Date | undefined;
-    finishedAt?: Date | undefined;
+    opened?: Date | undefined;
+    Closed?: Date | undefined;
     size?: number | undefined;
     result?: ResultDto;
     balance?: number | undefined;
@@ -261,8 +261,8 @@ export class AddTradeDto implements IAddTradeDto {
         if (_data) {
             this.assetId = _data["assetId"];
             this.profileId = _data["profileId"];
-            this.openedAt = _data["openedAt"] ? new Date(_data["openedAt"].toString()) : <any>undefined;
-            this.finishedAt = _data["finishedAt"] ? new Date(_data["finishedAt"].toString()) : <any>undefined;
+            this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
+            this.Closed = _data["Closed"] ? new Date(_data["Closed"].toString()) : <any>undefined;
             this.size = _data["size"];
             this.result = _data["result"];
             this.balance = _data["balance"];
@@ -283,8 +283,8 @@ export class AddTradeDto implements IAddTradeDto {
         data = typeof data === 'object' ? data : {};
         data["assetId"] = this.assetId;
         data["profileId"] = this.profileId;
-        data["openedAt"] = this.openedAt ? this.openedAt.toISOString() : <any>undefined;
-        data["finishedAt"] = this.finishedAt ? this.finishedAt.toISOString() : <any>undefined;
+        data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
+        data["Closed"] = this.Closed ? this.Closed.toISOString() : <any>undefined;
         data["size"] = this.size;
         data["result"] = this.result;
         data["balance"] = this.balance;
@@ -305,8 +305,8 @@ export class AddTradeDto implements IAddTradeDto {
 export interface IAddTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
-    openedAt?: Date | undefined;
-    finishedAt?: Date | undefined;
+    opened?: Date | undefined;
+    Closed?: Date | undefined;
     size?: number | undefined;
     result?: ResultDto;
     balance?: number | undefined;
@@ -468,7 +468,7 @@ export interface IFieldError {
 
 export class FinishTradeDto implements IFinishTradeDto {
     balance?: number | undefined;
-    finishedAt?: Date | undefined;
+    Closed?: Date | undefined;
     result?: ResultDto;
 
     constructor(data?: IFinishTradeDto) {
@@ -490,7 +490,7 @@ export class FinishTradeDto implements IFinishTradeDto {
     init(_data?: any) {
         if (_data) {
             this.balance = _data["balance"];
-            this.finishedAt = _data["finishedAt"] ? new Date(_data["finishedAt"].toString()) : <any>undefined;
+            this.Closed = _data["Closed"] ? new Date(_data["Closed"].toString()) : <any>undefined;
             this.result = _data["result"];
         }
     }
@@ -498,7 +498,7 @@ export class FinishTradeDto implements IFinishTradeDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["balance"] = this.balance;
-        data["finishedAt"] = this.finishedAt ? this.finishedAt.toISOString() : <any>undefined;
+        data["Closed"] = this.Closed ? this.Closed.toISOString() : <any>undefined;
         data["result"] = this.result;
         return data;
     }
@@ -506,7 +506,7 @@ export class FinishTradeDto implements IFinishTradeDto {
 
 export interface IFinishTradeDto {
     balance?: number | undefined;
-    finishedAt?: Date | undefined;
+    Closed?: Date | undefined;
     result?: ResultDto;
 }
 

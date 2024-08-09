@@ -13,8 +13,8 @@ public static partial class TestData
         public OneOf<Guid, Asset, Domain.Trading.Asset> AssetOrId { get; init; } = Asset.Default;
         public OneOf<Guid, Profile, Domain.Trading.Profile> ProfileOrId { get; init; } = Profile.Default;
         public decimal Size { get; init; } = 10_000m;
-        public DateTime OpenedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
-        public DateTime? FinishedAt { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
+        public DateTime Opened { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
+        public DateTime? Closed { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
         public Outcome? Outcome { get; init; } = null;
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
 
@@ -60,7 +60,7 @@ public static partial class TestData
                 ProfileId = profile.Id,
                 Profile = profile,
                 Size = Size,
-                OpenedAt = OpenedAt,
+                Opened = Opened,
                 CurrencyId = currency.Id,
                 Currency = currency,
                 PositionPrices = positionPrices,
@@ -69,12 +69,12 @@ public static partial class TestData
                 CreatedAt = CreatedAt
             };
 
-            if (Outcome is not null && FinishedAt.HasValue && positionPrices.ExitPrice.HasValue)
-                trade.Finish(new Domain.Trading.Trade.FinishTradeDto(Outcome.Result,
+            if (Outcome is not null && Closed.HasValue && positionPrices.ExitPrice.HasValue)
+                trade.Close(new Domain.Trading.Trade.FinishTradeDto(Outcome.Result,
                     Outcome.Balance,
                     positionPrices.ExitPrice.Value,
-                    FinishedAt.Value,
-                    () => OpenedAt,
+                    Closed.Value,
+                    () => Opened,
                     Constants.DefaultTimeZone));
 
             return trade;

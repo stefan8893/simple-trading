@@ -51,8 +51,8 @@ public class TradesController : ControllerBase
         {
             AssetId = dto.AssetId!.Value,
             ProfileId = dto.ProfileId!.Value,
-            OpenedAt = dto.OpenedAt!.Value,
-            FinishedAt = dto.FinishedAt,
+            Opened = dto.Opened!.Value,
+            Closed = dto.Closed,
             Size = dto.Size!.Value,
             Result = dto.Result.HasValue ? MapToDomainResult(dto.Result) : null,
             Balance = dto.Balance,
@@ -78,13 +78,13 @@ public class TradesController : ControllerBase
         );
     }
 
-    [HttpPost("{tradeId:Guid}/finish", Name = nameof(FinishTrade))]
+    [HttpPost("{tradeId:Guid}/close", Name = nameof(FinishTrade))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> FinishTrade(
-        [FromServices] IFinishTrade finishTrade,
+        [FromServices] IFinishTrade closeTrade,
         [FromServices] IValidator<FinishTradeDto> validator,
         Guid tradeId,
         [FromBody] FinishTradeDto dto)
@@ -95,12 +95,12 @@ public class TradesController : ControllerBase
 
         var tradeResult = MapToDomainResult(dto.Result);
 
-        var finishTradeRequestModel = new FinishTradeRequestModel(tradeId,
+        var closeTradeRequestModel = new FinishTradeRequestModel(tradeId,
             tradeResult,
             dto.Balance!.Value,
             dto.ExitPrice!.Value,
-            (DateTime) dto.FinishedAt!);
-        var result = await finishTrade.Execute(finishTradeRequestModel);
+            (DateTime) dto.Closed!);
+        var result = await closeTrade.Execute(closeTradeRequestModel);
 
         return result.Match(
             completed => NoContent(),

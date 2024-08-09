@@ -39,9 +39,9 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         var trade = CreateTrade(model, asset, profile, currency);
 
         var userSettings = await dbContext.GetUserSettings();
-        var finishedTrade = FinishTrade(trade, model, userSettings.TimeZone);
+        var closedTrade = FinishTrade(trade, model, userSettings.TimeZone);
 
-        if (finishedTrade.Value is BusinessError businessError)
+        if (closedTrade.Value is BusinessError businessError)
             return businessError;
 
         dbContext.Add(trade);
@@ -60,7 +60,7 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
             ProfileId = profile.Id,
             Profile = profile,
             Size = model.Size,
-            OpenedAt = model.OpenedAt.ToUtcKind(),
+            Opened = model.Opened.ToUtcKind(),
             CurrencyId = currency.Id,
             Currency = currency,
             PositionPrices = new PositionPrices
@@ -92,15 +92,15 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
     {
         return model switch
         {
-            {Balance: not null, Result: not null, FinishedAt: not null, ExitPrice: not null} => Finish(),
-            {Balance: null, Result: null, FinishedAt: null, ExitPrice: null} => Completed(trade),
+            {Balance: not null, Result: not null, Closed: not null, ExitPrice: not null} => Finish(),
+            {Balance: null, Result: null, Closed: null, ExitPrice: null} => Completed(trade),
             _ => BusinessError(trade.Id, SimpleTradingStrings.FinishedTradeNeedsFinishedBalanceAndResult)
         };
 
         OneOf<Completed<Trade>, BusinessError> Finish()
         {
-            var result = trade.Finish(new Trade.FinishTradeDto(model.Result!.Value, model.Balance!.Value,
-                model.ExitPrice!.Value, model.FinishedAt!.Value, utcNow, timeZone));
+            var result = trade.Close(new Trade.FinishTradeDto(model.Result!.Value, model.Balance!.Value,
+                model.ExitPrice!.Value, model.Closed!.Value, utcNow, timeZone));
 
             return result.MapT0(x => Completed(trade));
         }

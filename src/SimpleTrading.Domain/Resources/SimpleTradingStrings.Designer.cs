@@ -87,6 +87,24 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abgeschlossen.
+        /// </summary>
+        public static string Closed {
+            get {
+                return ResourceManager.GetString("Closed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
+        /// </summary>
+        public static string ClosedTooFarInTheFuture {
+            get {
+                return ResourceManager.GetString("ClosedTooFarInTheFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Währung.
         /// </summary>
         public static string Currency {
@@ -114,25 +132,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Beendet.
-        /// </summary>
-        public static string FinishedAt {
-            get {
-                return ResourceManager.GetString("FinishedAt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Das Datum &apos;Beendet&apos; kann maximal nur einen Tag in der Zukunft liegen..
-        /// </summary>
-        public static string FinishedAtTooFarInTheFuture {
-            get {
-                return ResourceManager.GetString("FinishedAtTooFarInTheFuture", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Das Datum &apos;Beendet&apos; muss nach dem Datum &apos;Eröffnet&apos; liegen..
+        ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; muss nach dem Datum &apos;Eröffnet&apos; sein..
         /// </summary>
         public static string FinishedBeforeOpenedError {
             get {
@@ -141,7 +141,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Um einen beendeten Trade hinzuzufügen, müssen Sie &apos;Beendet&apos;, &apos;Bilanz&apos;, &apos;Ausstiegspreis&apos; und &apos;Ergebnis&apos; angeben..
+        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Abgeschlossen&apos;, &apos;Bilanz&apos;, &apos;Ausstiegspreis&apos; und &apos;Ergebnis&apos; angeben..
         /// </summary>
         public static string FinishedTradeNeedsFinishedBalanceAndResult {
             get {
@@ -215,9 +215,9 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Eröffnet.
         /// </summary>
-        public static string OpenedAt {
+        public static string Opened {
             get {
-                return ResourceManager.GetString("OpenedAt", resourceCulture);
+                return ResourceManager.GetString("Opened", resourceCulture);
             }
         }
         
@@ -285,7 +285,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Trade wurde bereits am &apos;{0}&apos; beendet..
+        ///   Looks up a localized string similar to Der Trade wurde bereits am &apos;{0}&apos; abgeschlossen..
         /// </summary>
         public static string TradeAlreadyFinished {
             get {

@@ -14,7 +14,7 @@ public class FinishTradeDto
 {
     public decimal? Balance { get; set; }
     public decimal? ExitPrice { get; set; }
-    public DateTime? FinishedAt { get; set; }
+    public DateTime? Closed { get; set; }
     public ResultDto? Result { get; set; }
 }
 
@@ -24,7 +24,7 @@ public class FinishTradeDtoValidator : AbstractValidator<FinishTradeDto>
     {
         RuleFor(x => x.Balance).NotNull();
         RuleFor(x => x.ExitPrice).NotNull();
-        RuleFor(x => x.FinishedAt).NotNull();
+        RuleFor(x => x.Closed).NotNull();
 
         RuleFor(x => x.Result)
             .NotNull()

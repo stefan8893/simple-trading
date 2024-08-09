@@ -399,10 +399,10 @@ namespace SimpleTrading.Client
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "trades/{tradeId}/finish"
+                    // Operation Path: "trades/{tradeId}/close"
                     urlBuilder_.Append("trades/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(tradeId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append("/finish");
+                    urlBuilder_.Append("/close");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -627,11 +627,11 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("profileId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ProfileId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("openedAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? OpenedAt { get; set; }
+        [Newtonsoft.Json.JsonProperty("opened", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Opened { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("finishedAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? FinishedAt { get; set; }
+        [Newtonsoft.Json.JsonProperty("closed", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Closed { get; set; }
 
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Size { get; set; }
@@ -654,6 +654,9 @@ namespace SimpleTrading.Client
 
         [Newtonsoft.Json.JsonProperty("takeProfit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? TakeProfit { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("exitPrice", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? ExitPrice { get; set; }
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Notes { get; set; }
@@ -708,8 +711,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("exitPrice", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? ExitPrice { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("finishedAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? FinishedAt { get; set; }
+        [Newtonsoft.Json.JsonProperty("closed", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Closed { get; set; }
 
         [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -815,11 +818,11 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Size { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("openedAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? OpenedAt { get; set; }
+        [Newtonsoft.Json.JsonProperty("opened", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Opened { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("finishedAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? FinishedAt { get; set; }
+        [Newtonsoft.Json.JsonProperty("closed", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Closed { get; set; }
 
         [Newtonsoft.Json.JsonProperty("balance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Balance { get; set; }

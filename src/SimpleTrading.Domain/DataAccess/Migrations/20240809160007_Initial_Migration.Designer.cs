@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240809085407_Initial_Migration")]
+    [Migration("20240809160007_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -151,20 +151,20 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("Closed")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CurrencyId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("FinishedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Notes")
                         .HasMaxLength(4000)
                         .HasColumnType("character varying(4000)");
 
-                    b.Property<DateTime>("OpenedAt")
+                    b.Property<DateTime>("Opened")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ProfileId")

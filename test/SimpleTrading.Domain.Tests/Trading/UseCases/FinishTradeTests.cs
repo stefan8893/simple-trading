@@ -52,7 +52,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task A_not_existing_trade_cannot_be_finished()
+    public async Task A_not_existing_trade_cannot_be_closed()
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
@@ -69,7 +69,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow()}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow()}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
@@ -86,10 +86,10 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
     
     [Fact]
-    public async Task A_trade_can_be_finished_successfully()
+    public async Task A_trade_can_be_closed_successfully()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow()}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow()}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
@@ -103,14 +103,14 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         response.Value.Should().BeOfType<Completed>();
 
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
-        var finishedTrade = await DbContext.Trades.AsNoTracking()
+        var closedTrade = await DbContext.Trades.AsNoTracking()
             .FirstAsync(x => x.Id == trade.Id);
 
-        finishedTrade.Outcome.Should().NotBeNull();
-        finishedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
-        finishedTrade.Outcome.Result.Should().Be(requestModel.Result);
-        finishedTrade.FinishedAt.Should().NotBeNull();
+        closedTrade.Outcome.Should().NotBeNull();
+        closedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
+        closedTrade.Outcome.Result.Should().Be(requestModel.Result);
+        closedTrade.Closed.Should().NotBeNull();
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
-        finishedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
+        closedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
     }
 }

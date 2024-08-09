@@ -32,14 +32,14 @@ public class FinishTradeInteractor(
     {
         var userSettings = await dbContext.GetUserSettings();
 
-        var finishTradeDto = new Trade.FinishTradeDto(model.Result!,
+        var closeTradeDto = new Trade.FinishTradeDto(model.Result!,
             model.Balance!,
             model.ExitPrice,
-            model.FinishedAt!,
+            model.Closed!,
             utcNow,
             userSettings.TimeZone);
 
-        var result = trade.Finish(finishTradeDto);
+        var result = trade.Close(closeTradeDto);
 
         if (result.Value is Completed)
             await dbContext.SaveChangesAsync();

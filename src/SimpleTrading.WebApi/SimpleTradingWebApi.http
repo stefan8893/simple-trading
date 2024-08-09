@@ -4,13 +4,13 @@ GET {{SimpleTrading_HostAddress}}/home/info
 Accept: application/json
 
 ###
-POST {{SimpleTrading_HostAddress}}/trades/F2CEA6F6-3CE7-40F7-A901-B04A6FEFF5E8/finish
+POST {{SimpleTrading_HostAddress}}/trades/F2CEA6F6-3CE7-40F7-A901-B04A6FEFF5E8/close
 Accept: application/json
 Content-Type: application/json
 
 {
   "balance": -500,
-  "finishedAt": "2024-08-03T11:51:11.527Z",
+  "Closed": "2024-08-03T11:51:11.527Z",
   "result": "Loss"
 }
 
