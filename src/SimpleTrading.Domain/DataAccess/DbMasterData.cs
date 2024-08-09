@@ -9,6 +9,9 @@ public class DbMasterData(TradingDbContext dbContext)
 
     public async Task Populate()
     {
+        var defaultProfile = CreateProfiles();
+        dbContext.Profiles.AddRange(defaultProfile);
+        
         var assets = CreateAssets();
         dbContext.Assets.AddRange(assets);
 
@@ -19,8 +22,23 @@ public class DbMasterData(TradingDbContext dbContext)
 
         await dbContext.SaveChangesAsync();
     }
-
+    
     public async Task PopulateUserSettings()
+    {
+        var userSettings = new UserSettings
+        {
+            Id = Constants.UserSettingsId,
+            Culture = Constants.DefaultCulture.Name,
+            Language = null,
+            TimeZone = Constants.DefaultTimeZone,
+            UpdatedAt = InitialCreationDateTime
+        };
+
+        dbContext.UserSettings.Add(userSettings);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private static IReadOnlyList<Profile> CreateProfiles()
     {
         var defaultProfile = new Profile
         {
@@ -30,21 +48,7 @@ public class DbMasterData(TradingDbContext dbContext)
             CreatedAt = DateTime.Parse("2024-08-03T08:00:00Z")
         };
 
-        dbContext.Profiles.Add(defaultProfile);
-
-        var userSettings = new UserSettings
-        {
-            Id = Constants.UserSettingsId,
-            SelectedProfileId = defaultProfile.Id,
-            SelectedProfile = defaultProfile,
-            Culture = Constants.DefaultCulture.Name,
-            Language = null,
-            TimeZone = Constants.DefaultTimeZone,
-            UpdatedAt = InitialCreationDateTime
-        };
-
-        dbContext.UserSettings.Add(userSettings);
-        await dbContext.SaveChangesAsync();
+        return [defaultProfile];
     }
 
     private static IReadOnlyList<Currency> CreateCurrencies()

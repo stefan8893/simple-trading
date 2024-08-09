@@ -10,6 +10,7 @@ public static partial class TestData
         public Guid Id { get; init; } = Guid.NewGuid();
         public string Name { get; init; } = $"Test Profile - {_profileNumber++:00}";
         public string? Description { get; init; } = null;
+        public bool IsSelected { get; init; }
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
         public static Profile Default => new ();
@@ -21,6 +22,7 @@ public static partial class TestData
                 Id = Id,
                 Name = Name,
                 Description = Description,
+                IsSelected = IsSelected,
                 CreatedAt = CreatedAt
             };
         }

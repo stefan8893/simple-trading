@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240809063820_Initial_Migration")]
+    [Migration("20240809070526_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -92,6 +92,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(4000)
                         .HasColumnType("character varying(4000)");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -214,9 +217,6 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<Guid>("SelectedProfileId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("TimeZone")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -226,9 +226,6 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SelectedProfileId")
-                        .IsUnique();
 
                     b.ToTable("UserSettings");
                 });
@@ -293,17 +290,6 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Navigation("Outcome");
 
                     b.Navigation("Profile");
-                });
-
-            modelBuilder.Entity("SimpleTrading.Domain.User.UserSettings", b =>
-                {
-                    b.HasOne("SimpleTrading.Domain.Trading.Profile", "SelectedProfile")
-                        .WithOne()
-                        .HasForeignKey("SimpleTrading.Domain.User.UserSettings", "SelectedProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SelectedProfile");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>

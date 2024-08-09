@@ -11,16 +11,6 @@ internal class UserSettingsConfiguration : IEntityTypeConfiguration<UserSettings
         builder.HasKey(x => x.Id);
 
         builder
-            .HasOne(x => x.SelectedProfile)
-            .WithOne()
-            .HasForeignKey<UserSettings>(x => x.SelectedProfileId)
-            .IsRequired();
-
-        builder
-            .Navigation(x => x.SelectedProfile)
-            .AutoInclude();
-
-        builder
             .Property(x => x.Culture)
             .HasMaxLength(100);
 
