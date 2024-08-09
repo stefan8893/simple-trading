@@ -22,7 +22,7 @@ public class Trade
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
-    public bool IsFinished => Outcome is not null && FinishedAt.HasValue;
+    public bool IsFinished => Outcome is not null && PositionPrices.ExitPrice.HasValue && FinishedAt.HasValue;
     public required DateTime CreatedAt { get; init; }
 
     internal OneOf<Completed, BusinessError> Finish(FinishTradeDto dto)
@@ -56,6 +56,7 @@ public class Trade
 
         Outcome = outcome;
         FinishedAt = dto.FinishedAt.ToUtcKind();
+        PositionPrices.ExitPrice = dto.ExitPrice;
 
         return new Completed();
 
@@ -68,5 +69,5 @@ public class Trade
         }
     }
 
-    internal record FinishTradeDto(Result Result, decimal Balance, DateTime FinishedAt, UtcNow UtcNow, string TimeZone);
+    internal record FinishTradeDto(Result Result, decimal Balance, decimal ExitPrice, DateTime FinishedAt, UtcNow UtcNow, string TimeZone);
 }

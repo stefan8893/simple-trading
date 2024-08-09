@@ -34,6 +34,7 @@ public class FinishTradeInteractor(
 
         var finishTradeDto = new Trade.FinishTradeDto(model.Result!,
             model.Balance!,
+            model.ExitPrice,
             model.FinishedAt!,
             utcNow,
             userSettings.TimeZone);

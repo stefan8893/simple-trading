@@ -26,7 +26,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow,
             Result = ResultDto.Loss,
-            Balance = -20d
+            Balance = -20d,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -48,7 +49,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow,
             Result = ResultDto.Loss,
-            Balance = -20d
+            Balance = -20d,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -74,7 +76,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow,
             Result = null,
-            Balance = -5d
+            Balance = -5d,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -103,7 +106,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow,
             Result = ResultDto.BreakEven,
-            Balance = null
+            Balance = null,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -132,7 +136,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = null,
             Result = ResultDto.BreakEven,
-            Balance = 0d
+            Balance = 0d,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -161,7 +166,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow,
             Result = ResultDto.Loss,
-            Balance = null
+            Balance = null,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -192,7 +198,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow.AddDays(-1),
             Result = ResultDto.Loss,
-            Balance = -50d
+            Balance = -50d,
+            ExitPrice = 1.05
         });
 
         // assert
@@ -220,7 +227,8 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             FinishedAt = _utcNow,
             Result = ResultDto.Loss,
-            Balance = -50d
+            Balance = -50d,
+            ExitPrice = 1.05
         });
 
         // assert

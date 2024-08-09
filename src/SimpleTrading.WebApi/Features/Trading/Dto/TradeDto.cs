@@ -6,25 +6,26 @@ namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public class TradeDto
 {
-    public required Guid Id { get; init; }
-    public required Guid AssetId { get; init; }
+    public Guid Id { get; init; }
+    public Guid AssetId { get; init; }
     public required string Asset { get; init; }
-    public required Guid ProfileId { get; init; }
+    public Guid ProfileId { get; init; }
     public required string Profile { get; init; }
-    public required decimal Size { get; init; }
-    public required DateTime OpenedAt { get; init; }
-    public required DateTime? FinishedAt { get; init; }
-    public required decimal? Balance { get; init; }
-    public required ResultDto? Result { get; init; }
-    public required bool IsFinished { get; init; }
-    public required Guid CurrencyId { get; init; }
+    public decimal Size { get; init; }
+    public DateTime OpenedAt { get; init; }
+    public DateTime? FinishedAt { get; init; }
+    public decimal? Balance { get; init; }
+    public ResultDto? Result { get; init; }
+    public bool IsFinished { get; init; }
+    public Guid CurrencyId { get; init; }
     public required string Currency { get; init; }
-    public required decimal Entry { get; init; }
-    public required decimal? StopLoss { get; init; }
-    public required decimal? TakeProfit { get; init; }
-    public required double? RiskRewardRatio { get; init; }
+    public decimal Entry { get; init; }
+    public decimal? StopLoss { get; init; }
+    public decimal? TakeProfit { get; init; }
+    public decimal? ExitPrice { get; init; }
+    public double? RiskRewardRatio { get; init; }
     public required IReadOnlyList<ReferenceDto> References { get; init; }
-    public required string? Notes { get; init; }
+    public string? Notes { get; init; }
 
     public static TradeDto From(TradeResponseModel model)
     {
@@ -46,6 +47,7 @@ public class TradeDto
             Entry = model.Entry,
             StopLoss = model.StopLoss,
             TakeProfit = model.TakeProfit,
+            ExitPrice = model.ExitPrice,
             RiskRewardRatio = model.RiskRewardRatio,
             References = model.References.Select(ReferenceDto.From).ToList(),
             Notes = model.Notes

@@ -391,6 +391,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             FinishedAt = _utcNow,
             Result = Result.Win,
             Balance = 10,
+            ExitPrice = 1.05m,
             Size = 5000,
             CurrencyId = currency.Id
         };
@@ -433,7 +434,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.Reason.Should()
-            .Be("In order to add a finished trade, you must specify 'Finished', 'Balance' and 'Result'.");
+            .Be("In order to add a finished trade, you must specify 'Finished', 'Balance', 'Exit price' and 'Result'.");
     }
 
     [Theory]
@@ -457,6 +458,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             FinishedAt = DateTime.SpecifyKind(_utcNow, kind),
             Size = 5000,
             Balance = 50,
+            ExitPrice = 1.05m,
             Result = Result.Mediocre,
             CurrencyId = currency.Id
         };

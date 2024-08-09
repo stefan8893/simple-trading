@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240809070526_Initial_Migration")]
+    [Migration("20240809085407_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -179,6 +179,10 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                             b1.IsRequired();
 
                             b1.Property<decimal>("Entry")
+                                .HasPrecision(24, 8)
+                                .HasColumnType("numeric(24,8)");
+
+                            b1.Property<decimal?>("ExitPrice")
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");
 

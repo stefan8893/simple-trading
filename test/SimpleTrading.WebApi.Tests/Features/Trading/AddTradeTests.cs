@@ -159,6 +159,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.CommonErrors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz' und 'Ergebnis' angeben.");
+                x == "Um einen beendeten Trade hinzuzufügen, müssen Sie 'Beendet', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.");
     }
 }

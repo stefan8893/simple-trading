@@ -5,6 +5,7 @@ public record PositionPrices
     public required decimal Entry { get; set; }
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
+    public decimal? ExitPrice { get; set; }
 
     public double? RiskRewardRatio =>
         !StopLoss.HasValue || !TakeProfit.HasValue

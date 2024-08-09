@@ -179,6 +179,10 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");
 
+                            b1.Property<decimal?>("ExitPrice")
+                                .HasPrecision(24, 8)
+                                .HasColumnType("numeric(24,8)");
+
                             b1.Property<decimal?>("StopLoss")
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");

@@ -92,15 +92,15 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
     {
         return model switch
         {
-            {Balance: not null, Result: not null, FinishedAt: not null} => Finish(),
-            {Balance: null, Result: null, FinishedAt: null} => Completed(trade),
+            {Balance: not null, Result: not null, FinishedAt: not null, ExitPrice: not null} => Finish(),
+            {Balance: null, Result: null, FinishedAt: null, ExitPrice: null} => Completed(trade),
             _ => BusinessError(trade.Id, SimpleTradingStrings.FinishedTradeNeedsFinishedBalanceAndResult)
         };
 
         OneOf<Completed<Trade>, BusinessError> Finish()
         {
             var result = trade.Finish(new Trade.FinishTradeDto(model.Result!.Value, model.Balance!.Value,
-                model.FinishedAt!.Value, utcNow, timeZone));
+                model.ExitPrice!.Value, model.FinishedAt!.Value, utcNow, timeZone));
 
             return result.MapT0(x => Completed(trade));
         }
