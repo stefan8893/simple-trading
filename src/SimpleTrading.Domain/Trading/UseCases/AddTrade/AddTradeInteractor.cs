@@ -39,9 +39,9 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         var trade = CreateTrade(model, asset, profile, currency);
 
         var userSettings = await dbContext.GetUserSettings();
-        var finishedTrade = FinishTrade(trade, model, userSettings.TimeZone);
+        var closedTrade = CloseTrade(trade, model, userSettings.TimeZone);
 
-        if (finishedTrade.Value is BusinessError businessError)
+        if (closedTrade.Value is BusinessError businessError)
             return businessError;
 
         dbContext.Add(trade);
@@ -60,7 +60,7 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
             ProfileId = profile.Id,
             Profile = profile,
             Size = model.Size,
-            OpenedAt = model.OpenedAt.ToUtcKind(),
+            Opened = model.Opened.ToUtcKind(),
             CurrencyId = currency.Id,
             Currency = currency,
             PositionPrices = new PositionPrices
@@ -88,19 +88,19 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         return newTrade;
     }
 
-    private OneOf<Completed<Trade>, BusinessError> FinishTrade(Trade trade, AddTradeRequestModel model, string timeZone)
+    private OneOf<Completed<Trade>, BusinessError> CloseTrade(Trade trade, AddTradeRequestModel model, string timeZone)
     {
         return model switch
         {
-            {Balance: not null, Result: not null, FinishedAt: not null, ExitPrice: not null} => Finish(),
-            {Balance: null, Result: null, FinishedAt: null, ExitPrice: null} => Completed(trade),
-            _ => BusinessError(trade.Id, SimpleTradingStrings.FinishedTradeNeedsFinishedBalanceAndResult)
+            {Balance: not null, Result: not null, Closed: not null, ExitPrice: not null} => Close(),
+            {Balance: null, Result: null, Closed: null, ExitPrice: null} => Completed(trade),
+            _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedBalanceAndResult)
         };
 
-        OneOf<Completed<Trade>, BusinessError> Finish()
+        OneOf<Completed<Trade>, BusinessError> Close()
         {
-            var result = trade.Finish(new Trade.FinishTradeDto(model.Result!.Value, model.Balance!.Value,
-                model.ExitPrice!.Value, model.FinishedAt!.Value, utcNow, timeZone));
+            var result = trade.Close(new Trade.CloseTradeDto(model.Result!.Value, model.Balance!.Value,
+                model.ExitPrice!.Value, model.Closed!.Value, utcNow, timeZone));
 
             return result.MapT0(x => Completed(trade));
         }

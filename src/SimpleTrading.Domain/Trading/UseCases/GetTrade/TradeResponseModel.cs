@@ -8,11 +8,11 @@ public class TradeResponseModel
     public required Guid ProfileId { get; init; }
     public required string Profile { get; init; }
     public required decimal Size { get; init; }
-    public required DateTime OpenedAt { get; init; }
-    public required DateTime? FinishedAt { get; init; }
+    public required DateTime Opened { get; init; }
+    public required DateTime? Closed { get; init; }
     public required decimal? Balance { get; init; }
     public required Result? Result { get; init; }
-    public required bool IsFinished { get; init; }
+    public required bool IsClosed { get; init; }
     public required Guid CurrencyId { get; init; }
     public required string Currency { get; init; }
     public required decimal Entry { get; init; }
@@ -33,11 +33,11 @@ public class TradeResponseModel
             ProfileId = trade.ProfileId,
             Profile = trade.Profile.Name,
             Size = trade.Size,
-            OpenedAt = trade.OpenedAt,
-            FinishedAt = trade.FinishedAt,
+            Opened = trade.Opened,
+            Closed = trade.Closed,
             Balance = trade.Outcome?.Balance,
             Result = trade.Outcome?.Result,
-            IsFinished = trade.IsFinished,
+            IsClosed = trade.IsClosed,
             CurrencyId = trade.CurrencyId,
             Currency = trade.Currency.IsoCode,
             Entry = trade.PositionPrices.Entry,

@@ -8,7 +8,7 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading;
 
-public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-04T12:00").ToUtcKind();
 
@@ -22,9 +22,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var tradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(tradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(tradeId, new CloseTradeDto
         {
-            FinishedAt = _utcNow,
+            Closed = _utcNow,
             Result = ResultDto.Loss,
             Balance = -20d,
             ExitPrice = 1.05
@@ -36,7 +36,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task The_trade_to_finish_was_not_found()
+    public async Task The_trade_to_close_was_not_found()
     {
         // arrange
         var client = await CreateClientWithAccessToken();
@@ -45,9 +45,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(notExistingTradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            FinishedAt = _utcNow,
+            Closed = _utcNow,
             Result = ResultDto.Loss,
             Balance = -20d,
             ExitPrice = 1.05
@@ -72,9 +72,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(notExistingTradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            FinishedAt = _utcNow,
+            Closed = _utcNow,
             Result = null,
             Balance = -5d,
             ExitPrice = 1.05
@@ -102,9 +102,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(notExistingTradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            FinishedAt = _utcNow,
+            Closed = _utcNow,
             Result = ResultDto.BreakEven,
             Balance = null,
             ExitPrice = 1.05
@@ -123,7 +123,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task The_finished_date_must_not_be_null()
+    public async Task The_closed_date_must_not_be_null()
     {
         // arrange
         var client = await CreateClientWithAccessToken();
@@ -132,9 +132,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(notExistingTradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            FinishedAt = null,
+            Closed = null,
             Result = ResultDto.BreakEven,
             Balance = 0d,
             ExitPrice = 1.05
@@ -147,9 +147,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         exception.Which.Result.FieldErrors
             .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "FinishedAt")
+            .And.Contain(x => x.Identifier == "Closed")
             .And.Contain(x => x.Messages.Count == 1)
-            .And.Contain(x => x.Messages.Single() == "'Beendet' darf kein Nullwert sein.");
+            .And.Contain(x => x.Messages.Single() == "'Abgeschlossen' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -162,9 +162,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(notExistingTradeId, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            FinishedAt = _utcNow,
+            Closed = _utcNow,
             Result = ResultDto.Loss,
             Balance = null,
             ExitPrice = 1.05
@@ -183,20 +183,20 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task Unprocessable_entity_response_if_finished_date_is_before_opened_date()
+    public async Task Unprocessable_entity_response_if_closed_date_is_before_opened_date()
     {
         // arrange
         var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
-        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(trade.Id, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
-            FinishedAt = _utcNow.AddDays(-1),
+            Closed = _utcNow.AddDays(-1),
             Result = ResultDto.Loss,
             Balance = -50d,
             ExitPrice = 1.05
@@ -208,24 +208,24 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.Result.FieldErrors.Should().BeEmpty();
         exception.Which.Result.CommonErrors
             .Should().HaveCount(1)
-            .And.Contain(x => x == "Das Datum 'Beendet' muss nach dem Datum 'Eröffnet' liegen.");
+            .And.Contain(x => x == "Das Datum 'Abgeschlossen' muss nach dem Datum 'Eröffnet' sein.");
     }
 
     [Fact]
-    public async Task A_trade_can_be_successfully_finished()
+    public async Task A_trade_can_be_successfully_closed()
     {
         // arrange
         var client = await CreateClientWithAccessToken();
         var simpleTradingClient = new SimpleTradingClient(client);
 
-        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.FinishTradeAsync(trade.Id, new FinishTradeDto
+        var act = () => simpleTradingClient.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
-            FinishedAt = _utcNow,
+            Closed = _utcNow,
             Result = ResultDto.Loss,
             Balance = -50d,
             ExitPrice = 1.05
@@ -234,11 +234,11 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         await act.Should().NotThrowAsync();
 
-        var tradeAfterFinishing = await DbContext.Trades
+        var tradeAfterCloseing = await DbContext.Trades
             .AsNoTracking()
             .FirstAsync(x => x.Id == trade.Id);
 
-        tradeAfterFinishing.Should().NotBeNull();
-        tradeAfterFinishing!.IsFinished.Should().BeTrue();
+        tradeAfterCloseing.Should().NotBeNull();
+        tradeAfterCloseing!.IsClosed.Should().BeTrue();
     }
 }

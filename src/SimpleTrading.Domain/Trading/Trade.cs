@@ -13,8 +13,8 @@ public class Trade
     public required Guid ProfileId { get; set; }
     public required Profile Profile { get; set; }
     public required decimal Size { get; set; }
-    public required DateTime OpenedAt { get; set; }
-    public DateTime? FinishedAt { get; private set; }
+    public required DateTime Opened { get; set; }
+    public DateTime? Closed { get; private set; }
     public Outcome? Outcome { get; private set; }
     public required Guid CurrencyId { get; init; }
     public required Currency Currency { get; init; }
@@ -22,18 +22,18 @@ public class Trade
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
-    public bool IsFinished => Outcome is not null && PositionPrices.ExitPrice.HasValue && FinishedAt.HasValue;
+    public bool IsClosed => Outcome is not null && PositionPrices.ExitPrice.HasValue && Closed.HasValue;
     public required DateTime CreatedAt { get; init; }
 
-    internal OneOf<Completed, BusinessError> Finish(FinishTradeDto dto)
+    internal OneOf<Completed, BusinessError> Close(CloseTradeDto dto)
     {
-        var finishedAtUpperBound = dto.UtcNow().AddDays(1);
+        var closedUpperBound = dto.UtcNow().AddDays(1);
 
-        if (dto.FinishedAt < OpenedAt)
-            return new BusinessError(Id, SimpleTradingStrings.FinishedBeforeOpenedError);
+        if (dto.Closed < Opened)
+            return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpenedError);
 
-        if (dto.FinishedAt > finishedAtUpperBound)
-            return new BusinessError(Id, SimpleTradingStrings.FinishedAtTooFarInTheFuture);
+        if (dto.Closed > closedUpperBound)
+            return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
         switch (dto.Balance)
         {
@@ -45,8 +45,8 @@ public class Trade
                 return new BusinessError(Id, SimpleTradingStrings.MediocreOrWinIfBalanceAboveZero);
         }
 
-        if (IsFinished)
-            return CreateTradeAlreadyFinishedError(dto.TimeZone);
+        if (IsClosed)
+            return CreateTradeAlreadyClosedError(dto.TimeZone);
 
         var outcome = new Outcome
         {
@@ -55,19 +55,19 @@ public class Trade
         };
 
         Outcome = outcome;
-        FinishedAt = dto.FinishedAt.ToUtcKind();
+        Closed = dto.Closed.ToUtcKind();
         PositionPrices.ExitPrice = dto.ExitPrice;
 
         return new Completed();
 
-        BusinessError CreateTradeAlreadyFinishedError(string timeZone)
+        BusinessError CreateTradeAlreadyClosedError(string timeZone)
         {
-            var finishedAtLocal = FinishedAt!.Value.ToLocal(timeZone);
-            var reason = string.Format(SimpleTradingStrings.TradeAlreadyFinished, finishedAtLocal);
+            var closedLocal = Closed!.Value.ToLocal(timeZone);
+            var reason = string.Format(SimpleTradingStrings.TradeAlreadyClosed, closedLocal);
 
             return new BusinessError(Id, reason);
         }
     }
 
-    internal record FinishTradeDto(Result Result, decimal Balance, decimal ExitPrice, DateTime FinishedAt, UtcNow UtcNow, string TimeZone);
+    internal record CloseTradeDto(Result Result, decimal Balance, decimal ExitPrice, DateTime Closed, UtcNow UtcNow, string TimeZone);
 }

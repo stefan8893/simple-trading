@@ -12,81 +12,81 @@ public class TradeTests : TestBase
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-04T12:00").ToUtcKind();
 
     [Fact]
-    public void You_cant_finish_a_trade_before_it_was_opened()
+    public void You_cant_close_a_trade_before_it_was_opened()
     {
         // arrange
-        var openedAt = _utcNow.AddHours(-2);
-        var finishedAt = _utcNow.AddHours(-3);
+        var opened = _utcNow.AddHours(-2);
+        var closed = _utcNow.AddHours(-3);
 
-        var trade = (TestData.Trade.Default with {OpenedAt = openedAt}).Build();
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, finishedAt, UtcNowStub, "Europe/Vienna");
+        var trade = (TestData.Trade.Default with {Opened = opened}).Build();
+        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Reason.Should().Be("The 'Finished' date must be after the 'Opened' date.");
+        businessError.Which.Reason.Should().Be("The 'Closed' date must be after the 'Opened' date.");
     }
 
     [Fact]
-    public void The_finished_date_cannot_be_greater_than_one_day_in_the_future()
+    public void The_closed_date_cannot_be_greater_than_one_day_in_the_future()
     {
         // arrange
-        var openedAt = _utcNow.AddHours(-2);
-        var finishedAt = _utcNow.AddDays(1).AddSeconds(1);
+        var opened = _utcNow.AddHours(-2);
+        var closed = _utcNow.AddDays(1).AddSeconds(1);
 
-        var trade = (TestData.Trade.Default with {OpenedAt = openedAt}).Build();
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, finishedAt, UtcNowStub, "Europe/Vienna");
+        var trade = (TestData.Trade.Default with {Opened = opened}).Build();
+        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Reason.Should().Be("The 'Finished' date must not be greater than one day in the future.");
+        businessError.Which.Reason.Should().Be("The 'Closed' date must not be greater than one day in the future.");
     }
 
     [Fact]
-    public void The_finished_date_can_at_maximum_one_day_in_the_future()
+    public void The_closed_date_can_at_maximum_one_day_in_the_future()
     {
         // arrange
-        var openedAt = _utcNow.AddHours(-2);
-        var finishedAt = _utcNow.AddDays(1);
+        var opened = _utcNow.AddHours(-2);
+        var closed = _utcNow.AddDays(1);
 
-        var trade = (TestData.Trade.Default with {OpenedAt = openedAt}).Build();
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, finishedAt, UtcNowStub, "Europe/Vienna");
+        var trade = (TestData.Trade.Default with {Opened = opened}).Build();
+        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
     }
 
     [Fact]
-    public void Already_finished_trades_cant_be_finished_again()
+    public void Already_closed_trades_cant_be_closed_again()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            OpenedAt = _utcNow,
-            FinishedAt = _utcNow,
+            Opened = _utcNow,
+            Closed = _utcNow,
             PositionPrices = TestData.PositionPrices.Default with {ExitPrice = 1.05m},
             Outcome = new Outcome {Balance = 500, Result = Result.Win}
         }).Build();
 
-        var finishTradeDto = new Trade.FinishTradeDto(Result.Win, 500m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Reason.Should().Be("The trade has already been finished on '04.08.2024 14:00:00'.");
+        businessError.Which.Reason.Should().Be("The trade has already been closed on '04.08.2024 14:00:00'.");
     }
 
     [Theory]
@@ -97,11 +97,11 @@ public class TradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var finishTradeDto =
-            new Trade.FinishTradeDto(invalidResult, 0m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var closeTradeDto =
+            new Trade.CloseTradeDto(invalidResult, 0m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
@@ -117,11 +117,11 @@ public class TradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var finishTradeDto =
-            new Trade.FinishTradeDto(invalidResult, -1m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var closeTradeDto =
+            new Trade.CloseTradeDto(invalidResult, -1m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
@@ -137,11 +137,11 @@ public class TradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var finishTradeDto =
-            new Trade.FinishTradeDto(invalidResult, 1m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var closeTradeDto =
+            new Trade.CloseTradeDto(invalidResult, 1m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
-        var response = trade.Finish(finishTradeDto);
+        var response = trade.Close(closeTradeDto);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();

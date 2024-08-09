@@ -4,17 +4,17 @@ using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 
-namespace SimpleTrading.Domain.Trading.UseCases.FinishTrade;
+namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
-using FinishTradeResponse = OneOf<Completed, BadInput, NotFound, BusinessError>;
+using CloseTradeResponse = OneOf<Completed, BadInput, NotFound, BusinessError>;
 
-public class FinishTradeInteractor(
-    IValidator<FinishTradeRequestModel> validator,
+public class CloseTradeInteractor(
+    IValidator<CloseTradeRequestModel> validator,
     TradingDbContext dbContext,
     UtcNow utcNow)
-    : BaseInteractor, IFinishTrade
+    : BaseInteractor, ICloseTrade
 {
-    public async Task<FinishTradeResponse> Execute(FinishTradeRequestModel model)
+    public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {
         var validation = await validator.ValidateAsync(model);
         if (!validation.IsValid)
@@ -25,26 +25,26 @@ public class FinishTradeInteractor(
         if (trade is null)
             return NotFound(model.TradeId, nameof(Trade));
 
-        return await FinishTrade(trade, model);
+        return await CloseTrade(trade, model);
     }
 
-    private async Task<FinishTradeResponse> FinishTrade(Trade trade, FinishTradeRequestModel model)
+    private async Task<CloseTradeResponse> CloseTrade(Trade trade, CloseTradeRequestModel model)
     {
         var userSettings = await dbContext.GetUserSettings();
 
-        var finishTradeDto = new Trade.FinishTradeDto(model.Result!,
+        var closeTradeDto = new Trade.CloseTradeDto(model.Result!,
             model.Balance!,
             model.ExitPrice,
-            model.FinishedAt!,
+            model.Closed!,
             utcNow,
             userSettings.TimeZone);
 
-        var result = trade.Finish(finishTradeDto);
+        var result = trade.Close(closeTradeDto);
 
         if (result.Value is Completed)
             await dbContext.SaveChangesAsync();
 
-        return result.Match<FinishTradeResponse>(
+        return result.Match<CloseTradeResponse>(
             completed => completed,
             businessError => businessError
         );

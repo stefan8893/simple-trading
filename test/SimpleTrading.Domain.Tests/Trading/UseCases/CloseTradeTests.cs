@@ -6,14 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
+using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly UtcNow _utcNow = () => DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
@@ -23,9 +23,9 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         services.AddSingleton<UtcNow>(_ => _utcNow);
     }
 
-    private IFinishTrade CreateInteractor()
+    private ICloseTrade CreateInteractor()
     {
-        return ServiceLocator.GetRequiredService<IFinishTrade>();
+        return ServiceLocator.GetRequiredService<ICloseTrade>();
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
 
-        var requestModel = new FinishTradeRequestModel(Guid.NewGuid(),
+        var requestModel = new CloseTradeRequestModel(Guid.NewGuid(),
             (Result) 50,
             0m,
             1.05m,
@@ -52,11 +52,11 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task A_not_existing_trade_cannot_be_finished()
+    public async Task A_not_existing_trade_cannot_be_closed()
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
-            new FinishTradeRequestModel(tradeId, Result.Win, 500, 1.05m, DateTime.Parse("2024-08-03T16:00:00Z"));
+            new CloseTradeRequestModel(tradeId, Result.Win, 500, 1.05m, DateTime.Parse("2024-08-03T16:00:00Z"));
 
         var response = await CreateInteractor().Execute(requestModel);
 
@@ -69,12 +69,12 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow()}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow()}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new FinishTradeRequestModel(trade.Id, Result.Win, 500, 0m, _utcNow().AddHours(1));
+            new CloseTradeRequestModel(trade.Id, Result.Win, 500, 0m, _utcNow().AddHours(1));
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
@@ -86,15 +86,15 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
     
     [Fact]
-    public async Task A_trade_can_be_finished_successfully()
+    public async Task A_trade_can_be_closed_successfully()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {OpenedAt = _utcNow()}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow()}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new FinishTradeRequestModel(trade.Id, Result.Win, 500, 1.05m, _utcNow().AddHours(1));
+            new CloseTradeRequestModel(trade.Id, Result.Win, 500, 1.05m, _utcNow().AddHours(1));
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
@@ -103,14 +103,14 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         response.Value.Should().BeOfType<Completed>();
 
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
-        var finishedTrade = await DbContext.Trades.AsNoTracking()
+        var closedTrade = await DbContext.Trades.AsNoTracking()
             .FirstAsync(x => x.Id == trade.Id);
 
-        finishedTrade.Outcome.Should().NotBeNull();
-        finishedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
-        finishedTrade.Outcome.Result.Should().Be(requestModel.Result);
-        finishedTrade.FinishedAt.Should().NotBeNull();
+        closedTrade.Outcome.Should().NotBeNull();
+        closedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
+        closedTrade.Outcome.Result.Should().Be(requestModel.Result);
+        closedTrade.Closed.Should().NotBeNull();
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
-        finishedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
+        closedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
     }
 }
