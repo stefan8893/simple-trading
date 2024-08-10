@@ -75,7 +75,8 @@ public class TradeTests : TestBase
             Opened = _utcNow,
             Closed = _utcNow,
             PositionPrices = TestData.PositionPrices.Default with {ExitPrice = 1.05m},
-            Outcome = new Outcome {Balance = 500, Result = Result.Win}
+            Balance = 500,
+            Result = Result.Win
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);

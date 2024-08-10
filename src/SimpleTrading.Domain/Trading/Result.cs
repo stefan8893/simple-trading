@@ -7,9 +7,3 @@ public enum Result
     BreakEven = 2,
     Loss = 3
 }
-
-public class Outcome
-{
-    public required decimal Balance { get; init; }
-    public required Result Result { get; init; }
-}

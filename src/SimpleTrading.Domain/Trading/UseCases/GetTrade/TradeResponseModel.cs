@@ -1,4 +1,4 @@
-﻿namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
+namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 
 public class TradeResponseModel
 {
@@ -35,8 +35,8 @@ public class TradeResponseModel
             Size = trade.Size,
             Opened = trade.Opened,
             Closed = trade.Closed,
-            Balance = trade.Outcome?.Balance,
-            Result = trade.Outcome?.Result,
+            Balance = trade.Balance,
+            Result = trade.Result,
             IsClosed = trade.IsClosed,
             CurrencyId = trade.CurrencyId,
             Currency = trade.Currency.IsoCode,

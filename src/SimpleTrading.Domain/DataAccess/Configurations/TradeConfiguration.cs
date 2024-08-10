@@ -70,15 +70,13 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
 
         builder.Ignore(x => x.RiskRewardRatio);
 
-        var outcome = builder.OwnsOne(x => x.Outcome);
-
-        outcome
-            .Property(x => x.Result)
-            .HasMaxLength(50);
-
-        outcome
+        builder
             .Property(x => x.Balance)
             .HasPrecision(24, 8);
+
+        builder
+            .Property(x => x.Result)
+            .HasMaxLength(50);
 
         builder
             .Property(x => x.Notes)

@@ -1,4 +1,4 @@
-﻿using OneOf;
+using OneOf;
 using SimpleTrading.Domain;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -15,7 +15,8 @@ public static partial class TestData
         public decimal Size { get; init; } = 10_000m;
         public DateTime Opened { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
         public DateTime? Closed { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
-        public Outcome? Outcome { get; init; } = null;
+        public decimal? Balance { get; init; } = null;
+        public Result? Result { get; init; } = null;
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
@@ -69,10 +70,10 @@ public static partial class TestData
                 CreatedAt = CreatedAt
             };
 
-            if (Outcome is not null && Closed.HasValue && positionPrices.ExitPrice.HasValue)
-                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Outcome.Result,
-                    Outcome.Balance,
-                    positionPrices.ExitPrice.Value,
+            if (Closed.HasValue && Balance.HasValue)
+                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Result!.Value,
+                    Balance.Value,
+                    positionPrices.ExitPrice!.Value,
                     Closed.Value,
                     () => Opened,
                     Constants.DefaultTimeZone));

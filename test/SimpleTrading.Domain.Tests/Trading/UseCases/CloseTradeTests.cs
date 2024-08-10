@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -106,9 +106,8 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var closedTrade = await DbContext.Trades.AsNoTracking()
             .FirstAsync(x => x.Id == trade.Id);
 
-        closedTrade.Outcome.Should().NotBeNull();
-        closedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
-        closedTrade.Outcome.Result.Should().Be(requestModel.Result);
+        closedTrade.Balance.Should().Be(requestModel.Balance);
+        closedTrade.Result.Should().Be(requestModel.Result);
         closedTrade.Closed.Should().NotBeNull();
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
         closedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
