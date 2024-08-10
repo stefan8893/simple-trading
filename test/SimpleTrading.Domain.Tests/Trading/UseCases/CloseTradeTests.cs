@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -35,7 +36,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
 
         var requestModel = new CloseTradeRequestModel(Guid.NewGuid(),
-            (Result) 50,
+            (ResultModel) 50,
             0m,
             1.05m,
             DateTime.Parse("2024-08-03T16:00:00+00:00"));
@@ -56,7 +57,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
-            new CloseTradeRequestModel(tradeId, Result.Win, 500, 1.05m, DateTime.Parse("2024-08-03T16:00:00Z"));
+            new CloseTradeRequestModel(tradeId, ResultModel.Win, 500, 1.05m, DateTime.Parse("2024-08-03T16:00:00Z"));
 
         var response = await CreateInteractor().Execute(requestModel);
 
@@ -74,7 +75,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, Result.Win, 500, 0m, _utcNow().AddHours(1));
+            new CloseTradeRequestModel(trade.Id, ResultModel.Win, 500, 0m, _utcNow().AddHours(1));
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
@@ -94,7 +95,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, Result.Win, 500, 1.05m, _utcNow().AddHours(1));
+            new CloseTradeRequestModel(trade.Id, ResultModel.Win, 500, 1.05m, _utcNow().AddHours(1));
 
         // act
         var response = await CreateInteractor().Execute(requestModel);

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -128,7 +129,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
-            Result = (Result) 50
+            Result = (ResultModel) 50
         };
 
         var response = await CreateInteractor().Execute(requestModel);
@@ -402,7 +403,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
-            Result = Result.Win,
+            Result = ResultModel.Win,
             Balance = 10,
             EntryPrice = 1.00m,
             ExitPrice = 1.05m,
@@ -436,7 +437,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
-            Result = Result.Win,
+            Result = ResultModel.Win,
             Balance = 10m,
             EntryPrice = 0m,
             StopLoss = 0m,
@@ -478,7 +479,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
-            Result = Result.Win,
+            Result = ResultModel.Win,
             Balance = null,
             Size = 5000,
             EntryPrice = 1.05m,
@@ -517,7 +518,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Balance = 50,
             EntryPrice = 1.05m,
             ExitPrice = 1.05m,
-            Result = Result.Mediocre,
+            Result = ResultModel.Mediocre,
             CurrencyId = currency.Id
         };
 

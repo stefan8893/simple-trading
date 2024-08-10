@@ -10,7 +10,7 @@ public record AddTradeRequestModel
     public required DateTime Opened { get; init; }
     public DateTime? Closed { get; set; }
     public required decimal Size { get; init; }
-    public Result? Result { get; set; }
+    public ResultModel? Result { get; set; }
     public decimal? Balance { get; set; }
     public required Guid CurrencyId { get; init; }
     public required decimal EntryPrice { get; init; }

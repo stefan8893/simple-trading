@@ -2,6 +2,7 @@ using OneOf;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.UseCases;
 
 namespace SimpleTrading.Domain.Trading;
 
@@ -66,5 +67,5 @@ public class Trade
         }
     }
 
-    internal record CloseTradeDto(Result Result, decimal Balance, decimal ExitPrice, DateTime Closed, UtcNow UtcNow, string TimeZone);
+    internal record CloseTradeDto(ResultModel Result, decimal Balance, decimal ExitPrice, DateTime Closed, UtcNow UtcNow, string TimeZone);
 }

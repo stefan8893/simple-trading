@@ -1,4 +1,5 @@
 ﻿using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 
@@ -53,14 +54,14 @@ public class TradeDto
             Notes = model.Notes
         };
 
-        ResultDto? MapToResultDto(Result? result)
+        ResultDto? MapToResultDto(ResultModel? result)
         {
             return result switch
             {
-                Domain.Trading.Result.Loss => ResultDto.Loss,
-                Domain.Trading.Result.BreakEven => ResultDto.BreakEven,
-                Domain.Trading.Result.Mediocre => ResultDto.Mediocre,
-                Domain.Trading.Result.Win => ResultDto.Win,
+                Domain.Trading.UseCases.ResultModel.Loss => ResultDto.Loss,
+                Domain.Trading.UseCases.ResultModel.BreakEven => ResultDto.BreakEven,
+                Domain.Trading.UseCases.ResultModel.Mediocre => ResultDto.Mediocre,
+                Domain.Trading.UseCases.ResultModel.Win => ResultDto.Win,
                 _ => null
             };
         }

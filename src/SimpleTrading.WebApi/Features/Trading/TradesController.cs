@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
@@ -110,14 +111,14 @@ public class TradesController : ControllerBase
         );
     }
 
-    private static Result MapToDomainResult(ResultDto? resultDto)
+    private static ResultModel MapToDomainResult(ResultDto? resultDto)
     {
         var tradeResult = resultDto switch
         {
-            ResultDto.Win => Result.Win,
-            ResultDto.Mediocre => Result.Mediocre,
-            ResultDto.BreakEven => Result.BreakEven,
-            ResultDto.Loss => Result.Loss,
+            ResultDto.Win => ResultModel.Win,
+            ResultDto.Mediocre => ResultModel.Mediocre,
+            ResultDto.BreakEven => ResultModel.BreakEven,
+            ResultDto.Loss => ResultModel.Loss,
             _ => throw new ArgumentOutOfRangeException(nameof(resultDto), resultDto, null)
         };
         return tradeResult;

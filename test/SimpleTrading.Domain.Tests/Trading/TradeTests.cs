@@ -2,6 +2,7 @@
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -19,7 +20,7 @@ public class TradeTests : TestBase
         var closed = _utcNow.AddHours(-3);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
+        var closeTradeDto = new Trade.CloseTradeDto(ResultModel.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -38,7 +39,7 @@ public class TradeTests : TestBase
         var closed = _utcNow.AddDays(1).AddSeconds(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
+        var closeTradeDto = new Trade.CloseTradeDto(ResultModel.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -57,7 +58,7 @@ public class TradeTests : TestBase
         var closed = _utcNow.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
+        var closeTradeDto = new Trade.CloseTradeDto(ResultModel.Win, 500m, 1.05m, closed, UtcNowStub, "Europe/Vienna");
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -76,10 +77,10 @@ public class TradeTests : TestBase
             Closed = _utcNow,
             PositionPrices = TestData.PositionPrices.Default with {ExitPrice = 1.05m},
             Balance = 500,
-            Result = Result.Win
+            Result = ResultModel.Win
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeDto(Result.Win, 500m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
+        var closeTradeDto = new Trade.CloseTradeDto(ResultModel.Win, 500m, 1.05m, _utcNow, UtcNowStub, Constants.DefaultTimeZone);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -91,10 +92,10 @@ public class TradeTests : TestBase
     }
 
     [Theory]
-    [InlineData(Result.Win)]
-    [InlineData(Result.Loss)]
-    [InlineData(Result.Mediocre)]
-    public void Zero_Balance_with_results_other_than_BreakEven_does_not_make_sense(Result invalidResult)
+    [InlineData(ResultModel.Win)]
+    [InlineData(ResultModel.Loss)]
+    [InlineData(ResultModel.Mediocre)]
+    public void Zero_Balance_with_results_other_than_BreakEven_does_not_make_sense(ResultModel invalidResult)
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -111,10 +112,10 @@ public class TradeTests : TestBase
     }
 
     [Theory]
-    [InlineData(Result.Win)]
-    [InlineData(Result.Mediocre)]
-    [InlineData(Result.BreakEven)]
-    public void Balance_below_zero_can_only_have_Loss_as_result(Result invalidResult)
+    [InlineData(ResultModel.Win)]
+    [InlineData(ResultModel.Mediocre)]
+    [InlineData(ResultModel.BreakEven)]
+    public void Balance_below_zero_can_only_have_Loss_as_result(ResultModel invalidResult)
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -132,9 +133,9 @@ public class TradeTests : TestBase
     }
 
     [Theory]
-    [InlineData(Result.Loss)]
-    [InlineData(Result.BreakEven)]
-    public void Balance_above_zero_can_only_be_the_results_Mediocre_and_Win(Result invalidResult)
+    [InlineData(ResultModel.Loss)]
+    [InlineData(ResultModel.BreakEven)]
+    public void Balance_above_zero_can_only_be_the_results_Mediocre_and_Win(ResultModel invalidResult)
     {
         // arrange
         var trade = TestData.Trade.Default.Build();

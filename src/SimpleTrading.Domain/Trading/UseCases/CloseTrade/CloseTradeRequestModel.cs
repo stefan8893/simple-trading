@@ -3,7 +3,7 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
-public record CloseTradeRequestModel(Guid TradeId, Result Result, decimal Balance, decimal ExitPrice, DateTime Closed);
+public record CloseTradeRequestModel(Guid TradeId, ResultModel Result, decimal Balance, decimal ExitPrice, DateTime Closed);
 
 public class CloseTradeRequestModelValidator : AbstractValidator<CloseTradeRequestModel>
 {
