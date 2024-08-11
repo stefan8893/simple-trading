@@ -56,17 +56,17 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.StopLoss)
             .When(x => x.StopLoss.HasValue);
-        
+
         RuleFor(x => x.TakeProfit)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.TakeProfit)
             .When(x => x.TakeProfit.HasValue);
-        
+
         RuleFor(x => x.ExitPrice)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.ExitPrice)
             .When(x => x.ExitPrice.HasValue);
-        
+
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Currency);

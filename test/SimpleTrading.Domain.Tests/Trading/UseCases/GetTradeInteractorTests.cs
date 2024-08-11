@@ -9,7 +9,7 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private IGetTrade CreateInteractor()
     {

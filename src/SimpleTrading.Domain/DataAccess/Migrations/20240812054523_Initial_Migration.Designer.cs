@@ -13,7 +13,7 @@ using SimpleTrading.Domain.DataAccess;
 namespace SimpleTrading.Domain.DataAccess.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240810063235_Initial_Migration")]
+    [Migration("20240812054523_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -59,7 +59,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IsoCode")
@@ -86,7 +86,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -115,7 +115,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Link")
@@ -158,7 +158,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<DateTime?>("Closed")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CurrencyId")
@@ -175,8 +175,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Result")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Size")
                         .HasPrecision(24, 8)
@@ -190,7 +189,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");
 
-                            b1.Property<decimal?>("ExitPrice")
+                            b1.Property<decimal?>("Exit")
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");
 

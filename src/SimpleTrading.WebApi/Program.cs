@@ -38,8 +38,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
-ValidatorOptions.Global.DisplayNameResolver =
-    (_, memberInfo, _) => SimpleTradingStrings.ResourceManager.GetString(memberInfo.Name);
 
 builder.Services.AddTradingDbContext(builder.Environment, connectionString);
 builder.Services.AddDateTimeProvider();

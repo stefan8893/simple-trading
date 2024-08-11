@@ -6,7 +6,7 @@ using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Extensions;
 
-public static class ErrorResponseExtension
+public static class ResponseExtension
 {
     public static ActionResult ToActionResult(this BadInput badInput)
     {

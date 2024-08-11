@@ -1,4 +1,4 @@
-﻿using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
@@ -17,6 +17,7 @@ public class TradeDto
     public DateTime? Closed { get; init; }
     public decimal? Balance { get; init; }
     public ResultDto? Result { get; init; }
+    public short? Performance { get; init; }
     public bool IsClosed { get; init; }
     public Guid CurrencyId { get; init; }
     public required string Currency { get; init; }
@@ -42,10 +43,11 @@ public class TradeDto
             Closed = model.Closed,
             Balance = model.Balance,
             Result = MapToResultDto(model.Result),
+            Performance = model.Performance,
             IsClosed = model.IsClosed,
             CurrencyId = model.CurrencyId,
             Currency = model.Currency,
-            Entry = model.Entry,
+            Entry = model.EntryPrice,
             StopLoss = model.StopLoss,
             TakeProfit = model.TakeProfit,
             ExitPrice = model.ExitPrice,
@@ -58,10 +60,10 @@ public class TradeDto
         {
             return result switch
             {
-                Domain.Trading.UseCases.ResultModel.Loss => ResultDto.Loss,
-                Domain.Trading.UseCases.ResultModel.BreakEven => ResultDto.BreakEven,
-                Domain.Trading.UseCases.ResultModel.Mediocre => ResultDto.Mediocre,
-                Domain.Trading.UseCases.ResultModel.Win => ResultDto.Win,
+                ResultModel.Loss => ResultDto.Loss,
+                ResultModel.BreakEven => ResultDto.BreakEven,
+                ResultModel.Mediocre => ResultDto.Mediocre,
+                ResultModel.Win => ResultDto.Win,
                 _ => null
             };
         }

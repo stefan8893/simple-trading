@@ -68,16 +68,17 @@ public static partial class TestData
                 PositionPrices = positionPrices,
                 References = [],
                 Notes = Notes,
-                CreatedAt = CreatedAt
+                Created = CreatedAt
             };
 
             if (Closed.HasValue && Balance.HasValue)
-                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Result!.Value,
+                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Closed.Value,
                     Balance.Value,
-                    positionPrices.ExitPrice!.Value,
-                    Closed.Value,
-                    () => Opened,
-                    Constants.DefaultTimeZone));
+                    () => Opened)
+                {
+                    ExitPrice = positionPrices.Exit,
+                    Result = Result
+                });
 
             return trade;
         }

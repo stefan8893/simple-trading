@@ -78,11 +78,38 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Ergebnis muss &apos;Kostendeckend&apos; sein, wenn die Bilanz gleich Null ist..
+        ///   Looks up a localized string similar to Die Bilanz ist nicht 0, aber Ein- und Ausstiegspreise sind gleich..
         /// </summary>
-        public static string BreakEvenIfBalanceIsZero {
+        public static string BalanceNotZeroAndExitEntryPricesSame {
             get {
-                return ResourceManager.GetString("BreakEvenIfBalanceIsZero", resourceCulture);
+                return ResourceManager.GetString("BalanceNotZeroAndExitEntryPricesSame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist 0, aber Ein- und Ausstiegspreise sind nicht gleich..
+        /// </summary>
+        public static string BalanceZeroAndExitEntryPricesNotTheSame {
+            get {
+                return ResourceManager.GetString("BalanceZeroAndExitEntryPricesNotTheSame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kostendeckend.
+        /// </summary>
+        public static string BreakEven {
+            get {
+                return ResourceManager.GetString("BreakEven", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ihr Trade deutet auf das Ergebnis &apos;{0}&apos; hin, aber Sie haben &apos;{1}&apos; angegeben..
+        /// </summary>
+        public static string CalculatedAndManualResultMismatch {
+            get {
+                return ResourceManager.GetString("CalculatedAndManualResultMismatch", resourceCulture);
             }
         }
         
@@ -107,18 +134,18 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
         /// </summary>
-        public static string ClosedTooFarInTheFuture {
+        public static string ClosedTooFarInTheFutureError {
             get {
-                return ResourceManager.GetString("ClosedTooFarInTheFuture", resourceCulture);
+                return ResourceManager.GetString("ClosedTooFarInTheFutureError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Abgeschlossen&apos;, &apos;Bilanz&apos;, &apos;Ausstiegspreis&apos; und &apos;Ergebnis&apos; angeben..
+        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie die &apos;Bilanz&apos; und das Datum &apos;Abgeschlossen&apos; angeben..
         /// </summary>
-        public static string ClosedTradeNeedsClosedBalanceAndResult {
+        public static string ClosedTradeNeedsClosedAndBalance {
             get {
-                return ResourceManager.GetString("ClosedTradeNeedsClosedBalanceAndResult", resourceCulture);
+                return ResourceManager.GetString("ClosedTradeNeedsClosedAndBalance", resourceCulture);
             }
         }
         
@@ -168,20 +195,56 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Ergebnis muss &apos;Verlust&apos; sein, wenn die Bilanz kleiner als Null ist..
+        ///   Looks up a localized string similar to Die Bilanz ist negativ, aber Ihre Long-Position deutet auf eine positive Bilanz hin..
         /// </summary>
-        public static string LossIfBalanceIsLessThanZero {
+        public static string LongPositionExitGreaterThanEntryAndNegativeBalance {
             get {
-                return ResourceManager.GetString("LossIfBalanceIsLessThanZero", resourceCulture);
+                return ResourceManager.GetString("LongPositionExitGreaterThanEntryAndNegativeBalance", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Ergebnis muss &apos;Mittelmäßig&apos; oder &apos;Gewinn&apos; sein, wenn die Bilanz größer als Null ist..
+        ///   Looks up a localized string similar to Die Bilanz ist 0, aber Ihre Long-Position deutet auf eine positive Bilanz hin..
         /// </summary>
-        public static string MediocreOrWinIfBalanceAboveZero {
+        public static string LongPositionExitGreaterThanEntryAndZeroBalance {
             get {
-                return ResourceManager.GetString("MediocreOrWinIfBalanceAboveZero", resourceCulture);
+                return ResourceManager.GetString("LongPositionExitGreaterThanEntryAndZeroBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist positiv, aber Ihre Long-Position deutet auf eine negative Bilanz hin..
+        /// </summary>
+        public static string LongPositionExitLessThanEntryAndPositiveBalance {
+            get {
+                return ResourceManager.GetString("LongPositionExitLessThanEntryAndPositiveBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist 0, aber Ihre Long-Position deutet auf eine negative Bilanz hin..
+        /// </summary>
+        public static string LongPositionExitLessThanEntryAndZeroBalance {
+            get {
+                return ResourceManager.GetString("LongPositionExitLessThanEntryAndZeroBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verlust.
+        /// </summary>
+        public static string Loss {
+            get {
+                return ResourceManager.GetString("Loss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mittelmäßig.
+        /// </summary>
+        public static string Mediocre {
+            get {
+                return ResourceManager.GetString("Mediocre", resourceCulture);
             }
         }
         
@@ -222,15 +285,6 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sonstiges.
-        /// </summary>
-        public static string Other {
-            get {
-                return ResourceManager.GetString("Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Profil.
         /// </summary>
         public static string Profile {
@@ -254,6 +308,42 @@ namespace SimpleTrading.Domain.Resources {
         public static string Result {
             get {
                 return ResourceManager.GetString("Result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist positiv, aber Ihre Short-Position deutet auf eine negative Bilanz hin..
+        /// </summary>
+        public static string ShortPositionExitGreaterThanEntryAndPositiveBalance {
+            get {
+                return ResourceManager.GetString("ShortPositionExitGreaterThanEntryAndPositiveBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist 0, aber Ihre Short-Position deutet auf eine negative Bilanz hin..
+        /// </summary>
+        public static string ShortPositionExitGreaterThanEntryAndZeroBalance {
+            get {
+                return ResourceManager.GetString("ShortPositionExitGreaterThanEntryAndZeroBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist negativ, aber Ihre Short-Position deutet auf eine positive Bilanz hin..
+        /// </summary>
+        public static string ShortPositionExitLessThanEntryAndNegativeBalance {
+            get {
+                return ResourceManager.GetString("ShortPositionExitLessThanEntryAndNegativeBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Bilanz ist 0, aber Ihre Short-Position deutet auf eine positive Bilanz hin..
+        /// </summary>
+        public static string ShortPositionExitLessThanEntryAndZeroBalance {
+            get {
+                return ResourceManager.GetString("ShortPositionExitLessThanEntryAndZeroBalance", resourceCulture);
             }
         }
         
@@ -285,20 +375,20 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Trade wurde bereits am &apos;{0}&apos; abgeschlossen..
-        /// </summary>
-        public static string TradeAlreadyClosed {
-            get {
-                return ResourceManager.GetString("TradeAlreadyClosed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Handelsvolumen.
         /// </summary>
         public static string TradeSize {
             get {
                 return ResourceManager.GetString("TradeSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gewinn.
+        /// </summary>
+        public static string Win {
+            get {
+                return ResourceManager.GetString("Win", resourceCulture);
             }
         }
     }

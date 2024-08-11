@@ -3,7 +3,12 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
-public record CloseTradeRequestModel(Guid TradeId, ResultModel Result, decimal Balance, decimal ExitPrice, DateTime Closed);
+public record CloseTradeRequestModel(
+    Guid TradeId,
+    DateTime Closed,
+    decimal Balance,
+    ResultModel? Result = null,
+    decimal? ExitPrice = null);
 
 public class CloseTradeRequestModelValidator : AbstractValidator<CloseTradeRequestModel>
 {
@@ -11,10 +16,12 @@ public class CloseTradeRequestModelValidator : AbstractValidator<CloseTradeReque
     {
         RuleFor(x => x.Result)
             .IsInEnum()
-            .WithName(SimpleTradingStrings.Result);
+            .WithName(SimpleTradingStrings.Result)
+            .When(x => x.Result.HasValue);
 
         RuleFor(x => x.ExitPrice)
             .GreaterThan(0)
-            .WithName(SimpleTradingStrings.ExitPrice);
+            .WithName(SimpleTradingStrings.ExitPrice)
+            .When(x => x.ExitPrice.HasValue);
     }
 }

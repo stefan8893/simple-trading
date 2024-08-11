@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
@@ -63,36 +63,6 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     }
 
     [Fact]
-    public async Task The_result_must_not_be_null()
-    {
-        // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
-
-        var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
-
-        // act
-        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
-        {
-            Closed = _utcNow,
-            Result = null,
-            Balance = -5d,
-            ExitPrice = 1.05
-        });
-
-        // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.CommonErrors.Should().BeEmpty();
-
-        exception.Which.Result.FieldErrors
-            .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Result")
-            .And.Contain(x => x.Messages.Count == 1)
-            .And.Contain(x => x.Messages.First() == "'Ergebnis' darf kein Nullwert sein.");
-    }
-
-    [Fact]
     public async Task The_balance_must_not_be_null()
     {
         // arrange
@@ -153,36 +123,6 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     }
 
     [Fact]
-    public async Task Bad_request_response_if_balance_is_null()
-    {
-        // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
-
-        var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
-
-        // act
-        var act = () => simpleTradingClient.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
-        {
-            Closed = _utcNow,
-            Result = ResultDto.Loss,
-            Balance = null,
-            ExitPrice = 1.05
-        });
-
-        // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.CommonErrors.Should().BeEmpty();
-
-        exception.Which.Result.FieldErrors
-            .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Balance")
-            .And.Contain(x => x.Messages.Count == 1)
-            .And.Contain(x => x.Messages.First() == "'Bilanz' darf kein Nullwert sein.");
-    }
-
-    [Fact]
     public async Task Unprocessable_entity_response_if_closed_date_is_before_opened_date()
     {
         // arrange
@@ -233,12 +173,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         // assert
         await act.Should().NotThrowAsync();
-
-        var tradeAfterCloseing = await DbContext.Trades
+        var tradeAfterClosing = await DbContext.Trades
             .AsNoTracking()
             .FirstAsync(x => x.Id == trade.Id);
 
-        tradeAfterCloseing.Should().NotBeNull();
-        tradeAfterCloseing!.IsClosed.Should().BeTrue();
+        tradeAfterClosing.Should().NotBeNull();
+        tradeAfterClosing!.IsClosed.Should().BeTrue();
     }
 }

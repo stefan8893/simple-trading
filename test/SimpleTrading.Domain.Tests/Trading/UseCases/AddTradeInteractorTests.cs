@@ -13,7 +13,7 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind();
 
@@ -346,7 +346,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
@@ -378,7 +378,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
@@ -415,7 +415,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
         newlyAddedTrade.IsClosed.Should().BeTrue();
@@ -492,7 +492,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.Reason.Should()
-            .Be("In order to add a closed trade, you must specify 'Closed', 'Balance', 'Exit price' and 'Result'.");
+            .Be("In order to add a closed trade, you must specify the 'Balance' and the 'Closed' date.");
     }
 
     [Theory]
@@ -517,8 +517,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             Balance = 50,
             EntryPrice = 1.05m,
-            ExitPrice = 1.05m,
-            Result = ResultModel.Mediocre,
+            ExitPrice = 1.15m,
             CurrencyId = currency.Id
         };
 
@@ -526,7 +525,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
         newlyAddedTrade.Opened.Should().Be(_utcNow);

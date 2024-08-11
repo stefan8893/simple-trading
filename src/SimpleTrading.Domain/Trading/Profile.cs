@@ -7,8 +7,8 @@ public class Profile
     public required string Name { get; set; }
 
     public string? Description { get; set; }
-    
+
     public bool IsSelected { get; set; }
 
-    public required DateTime CreatedAt { get; init; }
+    public required DateTime Created { get; init; }
 }

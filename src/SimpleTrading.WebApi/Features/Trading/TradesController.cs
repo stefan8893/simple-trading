@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
@@ -35,7 +36,7 @@ public class TradesController : ControllerBase
     }
 
     [HttpPost(Name = nameof(AddTrade))]
-    [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
+    [ProducesResponseType<SuccessResponse<TradeAddedDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
@@ -55,7 +56,7 @@ public class TradesController : ControllerBase
             Opened = dto.Opened!.Value,
             Closed = dto.Closed,
             Size = dto.Size!.Value,
-            Result = dto.Result.HasValue ? MapToDomainResult(dto.Result) : null,
+            Result = dto.Result.HasValue ? MapToResultModel(dto.Result) : null,
             Balance = dto.Balance,
             CurrencyId = dto.CurrencyId!.Value,
             EntryPrice = dto.EntryPrice!.Value,
@@ -72,15 +73,27 @@ public class TradesController : ControllerBase
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
-            completed => Ok(completed.Data),
+            completed => Ok(MapToSuccessResponse(completed)),
+            completedWithWarnings => Ok(MapToSuccessResponseWithWarnings(completedWithWarnings)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
         );
+
+        SuccessResponse<TradeAddedDto> MapToSuccessResponse(Completed<AddTradeResponseModel> completed)
+        {
+            return SuccessResponse<TradeAddedDto>.From(TradeAddedDto.From(completed.Data));
+        }
+
+        SuccessResponse<TradeAddedDto> MapToSuccessResponseWithWarnings(CompletedWithWarnings<AddTradeResponseModel> completedWithWarnings)
+        {
+            return SuccessResponse<TradeAddedDto>.From(TradeAddedDto.From(completedWithWarnings.Data),
+                completedWithWarnings.Warnings);
+        }
     }
 
     [HttpPost("{tradeId:Guid}/close", Name = nameof(CloseTrade))]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
@@ -94,24 +107,37 @@ public class TradesController : ControllerBase
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
-        var tradeResult = MapToDomainResult(dto.Result);
+        var tradeResult = MapToResultModel(dto.Result);
 
         var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
-            tradeResult,
+            (DateTime) dto.Closed!,
             dto.Balance!.Value,
-            dto.ExitPrice!.Value,
-            (DateTime) dto.Closed!);
+            tradeResult,
+            dto.ExitPrice);
         var result = await closeTrade.Execute(closeTradeRequestModel);
 
         return result.Match(
-            completed => NoContent(),
+            completed => Ok(MapToSuccessResponse(completed)),
+            completedWithWarnings => Ok(MapToSuccessResponseWithWarnings(completedWithWarnings)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
         );
+
+        SuccessResponse<TradeResultDto> MapToSuccessResponse(Completed<CloseTradeResponseModel> completed)
+        {
+            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data));
+        }
+
+        SuccessResponse<TradeResultDto> MapToSuccessResponseWithWarnings(
+            CompletedWithWarnings<CloseTradeResponseModel> completedWithWarnings)
+        {
+            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completedWithWarnings.Data),
+                completedWithWarnings.Warnings);
+        }
     }
 
-    private static ResultModel MapToDomainResult(ResultDto? resultDto)
+    private static ResultModel? MapToResultModel(ResultDto? resultDto)
     {
         var tradeResult = resultDto switch
         {
@@ -119,7 +145,7 @@ public class TradesController : ControllerBase
             ResultDto.Mediocre => ResultModel.Mediocre,
             ResultDto.BreakEven => ResultModel.BreakEven,
             ResultDto.Loss => ResultModel.Loss,
-            _ => throw new ArgumentOutOfRangeException(nameof(resultDto), resultDto, null)
+            _ => (ResultModel?) null
         };
         return tradeResult;
     }

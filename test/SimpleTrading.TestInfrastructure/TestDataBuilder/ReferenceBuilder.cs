@@ -32,7 +32,7 @@ public static partial class TestData
                 Type = Type,
                 Link = Link,
                 Notes = Notes,
-                CreatedAt = CreatedAt
+                Created = CreatedAt
             };
         }
     }

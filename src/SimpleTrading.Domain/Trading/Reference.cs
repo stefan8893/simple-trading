@@ -14,5 +14,5 @@ public class Reference
     public required ReferenceType Type { get; init; }
     public required Uri Link { get; set; }
     public string? Notes { get; set; }
-    public required DateTime CreatedAt { get; init; }
+    public required DateTime Created { get; init; }
 }

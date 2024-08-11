@@ -11,11 +11,12 @@ public class TradeResponseModel
     public required DateTime Opened { get; init; }
     public required DateTime? Closed { get; init; }
     public required decimal? Balance { get; init; }
-    public required Result? Result { get; init; }
+    public required ResultModel? Result { get; init; }
+    public required short? Performance { get; init; }
     public required bool IsClosed { get; init; }
     public required Guid CurrencyId { get; init; }
     public required string Currency { get; init; }
-    public required decimal Entry { get; init; }
+    public required decimal EntryPrice { get; init; }
     public required decimal? StopLoss { get; init; }
     public required decimal? TakeProfit { get; init; }
     public required decimal? ExitPrice { get; init; }
@@ -36,14 +37,15 @@ public class TradeResponseModel
             Opened = trade.Opened,
             Closed = trade.Closed,
             Balance = trade.Balance,
-            Result = trade.Result,
+            Result = trade.Result?.ToResultModel(),
+            Performance = trade.Result?.Performance,
             IsClosed = trade.IsClosed,
             CurrencyId = trade.CurrencyId,
             Currency = trade.Currency.IsoCode,
-            Entry = trade.PositionPrices.Entry,
+            EntryPrice = trade.PositionPrices.Entry,
             StopLoss = trade.PositionPrices.StopLoss,
             TakeProfit = trade.PositionPrices.TakeProfit,
-            ExitPrice = trade.PositionPrices.ExitPrice,
+            ExitPrice = trade.PositionPrices.Exit,
             RiskRewardRatio = trade.RiskRewardRatio,
             References = trade.References
                 .Select(ReferenceModel.From)

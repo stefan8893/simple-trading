@@ -59,7 +59,8 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -128,9 +129,6 @@
     <data name="Balance" xml:space="preserve">
     <value>Bilanz</value>
   </data>
-    <data name="BreakEvenIfBalanceIsZero" xml:space="preserve">
-    <value>Das Ergebnis muss 'Kostendeckend' sein, wenn die Bilanz gleich Null ist.</value>
-  </data>
     <data name="Currency" xml:space="preserve">
     <value>Währung</value>
   </data>
@@ -143,26 +141,20 @@
     <data name="Closed" xml:space="preserve">
         <value>Abgeschlossen</value>
     </data>
-    <data name="ClosedTooFarInTheFuture" xml:space="preserve">
+    <data name="ClosedTooFarInTheFutureError" xml:space="preserve">
         <value>Das Datum 'Abgeschlossen' kann maximal nur einen Tag in der Zukunft liegen.</value>
     </data>
     <data name="ClosedBeforeOpenedError" xml:space="preserve">
         <value>Das Datum 'Abgeschlossen' muss nach dem Datum 'Eröffnet' sein.</value>
     </data>
-    <data name="ClosedTradeNeedsClosedBalanceAndResult" xml:space="preserve">
-        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Abgeschlossen', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.</value>
+    <data name="ClosedTradeNeedsClosedAndBalance" xml:space="preserve">
+        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie die 'Bilanz' und das Datum 'Abgeschlossen' angeben.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Ungültiger Link.</value>
   </data>
     <data name="Link" xml:space="preserve">
     <value>Link</value>
-  </data>
-    <data name="LossIfBalanceIsLessThanZero" xml:space="preserve">
-    <value>Das Ergebnis muss 'Verlust' sein, wenn die Bilanz kleiner als Null ist.</value>
-  </data>
-    <data name="MediocreOrWinIfBalanceAboveZero" xml:space="preserve">
-    <value>Das Ergebnis muss 'Mittelmäßig' oder 'Gewinn' sein, wenn die Bilanz größer als Null ist.</value>
   </data>
     <data name="Notes" xml:space="preserve">
     <value>Anmerkungen</value>
@@ -175,9 +167,6 @@
   </data>
     <data name="Opened" xml:space="preserve">
     <value>Eröffnet</value>
-  </data>
-    <data name="Other" xml:space="preserve">
-    <value>Sonstiges</value>
   </data>
     <data name="Profile" xml:space="preserve">
     <value>Profil</value>
@@ -194,13 +183,55 @@
     <data name="TakeProfit" xml:space="preserve">
     <value>Take-Profit</value>
   </data>
-    <data name="Trade" xml:space="preserve">
-    <value>Trade</value>
-  </data>
-    <data name="TradeAlreadyClosed" xml:space="preserve">
-        <value>Der Trade wurde bereits am '{0}' abgeschlossen.</value>
-    </data>
     <data name="TradeSize" xml:space="preserve">
     <value>Handelsvolumen</value>
   </data>
+    <data name="Trade" xml:space="preserve">
+        <value>Trade</value>
+    </data>
+    <data name="Loss" xml:space="preserve">
+        <value>Verlust</value>
+    </data>
+    <data name="BreakEven" xml:space="preserve">
+        <value>Kostendeckend</value>
+    </data>
+    <data name="Mediocre" xml:space="preserve">
+        <value>Mittelmäßig</value>
+    </data>
+    <data name="Win" xml:space="preserve">
+        <value>Gewinn</value>
+    </data>
+    <data name="CalculatedAndManualResultMismatch" xml:space="preserve">
+        <value>Ihr Trade deutet auf das Ergebnis '{0}' hin, aber Sie haben '{1}' angegeben.</value>
+    </data>
+    <data name="BalanceNotZeroAndExitEntryPricesSame" xml:space="preserve">
+        <value>Die Bilanz ist nicht 0, aber Ein- und Ausstiegspreise sind gleich.</value>
+    </data>
+    <data name="BalanceZeroAndExitEntryPricesNotTheSame" xml:space="preserve">
+        <value>Die Bilanz ist 0, aber Ein- und Ausstiegspreise sind nicht gleich.</value>
+    </data>
+    <data name="LongPositionExitGreaterThanEntryAndNegativeBalance" xml:space="preserve">
+        <value>Die Bilanz ist negativ, aber Ihre Long-Position deutet auf eine positive Bilanz hin.</value>
+    </data>
+    <data name="LongPositionExitLessThanEntryAndPositiveBalance" xml:space="preserve">
+        <value>Die Bilanz ist positiv, aber Ihre Long-Position deutet auf eine negative Bilanz hin.</value>
+    </data>
+    <data name="ShortPositionExitGreaterThanEntryAndPositiveBalance" xml:space="preserve">
+        <value>Die Bilanz ist positiv, aber Ihre Short-Position deutet auf eine negative Bilanz hin.</value>
+    </data>
+    <data name="ShortPositionExitLessThanEntryAndNegativeBalance" xml:space="preserve">
+        <value>Die Bilanz ist negativ, aber Ihre Short-Position deutet auf eine positive Bilanz hin.</value>
+    </data>
+    <data name="LongPositionExitGreaterThanEntryAndZeroBalance" xml:space="preserve">
+        <value>Die Bilanz ist 0, aber Ihre Long-Position deutet auf eine positive Bilanz hin.</value>
+    </data>
+    <data name="LongPositionExitLessThanEntryAndZeroBalance" xml:space="preserve">
+        <value>Die Bilanz ist 0, aber Ihre Long-Position deutet auf eine negative Bilanz hin.</value>
+    </data>
+    <data name="ShortPositionExitLessThanEntryAndZeroBalance" xml:space="preserve">
+        <value>Die Bilanz ist 0, aber Ihre Short-Position deutet auf eine positive Bilanz hin.</value>
+    </data>
+    <data name="ShortPositionExitGreaterThanEntryAndZeroBalance" xml:space="preserve">
+        <value>Die Bilanz ist 0, aber Ihre Short-Position deutet auf eine negative Bilanz hin.</value>
+    </data>
 </root>

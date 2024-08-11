@@ -1,6 +1,4 @@
-﻿using SimpleTrading.Domain.Trading;
-
-namespace SimpleTrading.Domain.User;
+﻿namespace SimpleTrading.Domain.User;
 
 public class UserSettings
 {
