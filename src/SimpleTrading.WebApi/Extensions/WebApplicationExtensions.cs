@@ -16,23 +16,25 @@ public static class WebApplicationExtensions
             options.SupportedUICultures = Constants.SupportedCultures.ToList();
             options.SetDefaultCulture(Constants.DefaultCulture.Name);
 
-            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
-            {
-                var dbContext = context.RequestServices.GetRequiredService<TradingDbContext>();
-                var userSettings = await dbContext.GetUserSettingsOrDefault();
-
-                if (userSettings is null)
-                    return new ProviderCultureResult(Constants.DefaultCulture.Name);
-
-                if (userSettings.Language is null)
-                    return new ProviderCultureResult(userSettings.Culture);
-
-                return new ProviderCultureResult(userSettings.Culture,
-                    Constants.SupportedCultures
-                        .Select(x => x.Name)
-                        .FirstOrDefault(x => x.StartsWith(userSettings.Language))
-                    ?? Constants.DefaultCulture.Name);
-            }));
+            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(GetCurrentRequestCulture));
         });
+    }
+
+    private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
+    {
+        var dbContext = context.RequestServices.GetRequiredService<TradingDbContext>();
+        var userSettings = await dbContext.GetUserSettingsOrDefault();
+
+        if (userSettings is null)
+            return new ProviderCultureResult(Constants.DefaultCulture.Name);
+
+        if (userSettings.Language is null)
+            return new ProviderCultureResult(userSettings.Culture);
+
+        return new ProviderCultureResult(userSettings.Culture,
+            Constants.SupportedCultures
+                .Select(x => x.Name)
+                .FirstOrDefault(x => x.StartsWith(userSettings.Language))
+            ?? Constants.DefaultCulture.Name);
     }
 }

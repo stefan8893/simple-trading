@@ -21,8 +21,7 @@ public static class Constants
         "en"
     ];
 
-    public static readonly string DefaultTimeZone = "Europe/Vienna";
+    public const string DefaultTimeZone = "Europe/Vienna";
 
-    public static readonly Guid DefaultProfileId = Guid.Parse("adf868b2-d0ba-4805-8f05-c813310580af");
     public static readonly Guid UserSettingsId = Guid.Parse("401c519b-956a-4a5f-bd84-77e716817771");
 }

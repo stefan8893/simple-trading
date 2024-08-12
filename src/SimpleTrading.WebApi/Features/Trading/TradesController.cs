@@ -49,27 +49,7 @@ public class TradesController : ControllerBase
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
-        var addTradeRequestModel = new AddTradeRequestModel
-        {
-            AssetId = dto.AssetId!.Value,
-            ProfileId = dto.ProfileId!.Value,
-            Opened = dto.Opened!.Value,
-            Closed = dto.Closed,
-            Size = dto.Size!.Value,
-            Result = dto.Result.HasValue ? MapToResultModel(dto.Result) : null,
-            Balance = dto.Balance,
-            CurrencyId = dto.CurrencyId!.Value,
-            EntryPrice = dto.EntryPrice!.Value,
-            StopLoss = dto.StopLoss,
-            TakeProfit = dto.TakeProfit,
-            ExitPrice = dto.ExitPrice,
-            Notes = dto.Notes,
-            References = dto.References?
-                .Select(x =>
-                    new AddTradeRequestModel.ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
-                .ToList() ?? []
-        };
-
+        var addTradeRequestModel = MapToRequestModel(dto);
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
@@ -136,6 +116,31 @@ public class TradesController : ControllerBase
             return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completedWithWarnings.Data),
                 completedWithWarnings.Warnings);
         }
+    }
+
+    private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto)
+    {
+        var addTradeRequestModel = new AddTradeRequestModel
+        {
+            AssetId = dto.AssetId!.Value,
+            ProfileId = dto.ProfileId!.Value,
+            Opened = dto.Opened!.Value,
+            Closed = dto.Closed,
+            Size = dto.Size!.Value,
+            Result = dto.Result.HasValue ? MapToResultModel(dto.Result) : null,
+            Balance = dto.Balance,
+            CurrencyId = dto.CurrencyId!.Value,
+            EntryPrice = dto.EntryPrice!.Value,
+            StopLoss = dto.StopLoss,
+            TakeProfit = dto.TakeProfit,
+            ExitPrice = dto.ExitPrice,
+            Notes = dto.Notes,
+            References = dto.References?
+                .Select(x =>
+                    new AddTradeRequestModel.ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
+                .ToList() ?? []
+        };
+        return addTradeRequestModel;
     }
 
     private static ResultModel? MapToResultModel(ResultDto? resultDto)

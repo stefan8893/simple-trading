@@ -42,7 +42,7 @@ public class DbMasterData(TradingDbContext dbContext)
     {
         var defaultProfile = new Profile
         {
-            Id = Constants.DefaultProfileId,
+            Id = Guid.Parse("401c519b-956a-4a5f-bd84-77e716817771"),
             Name = "Default",
             Description = null,
             IsSelected = true,
