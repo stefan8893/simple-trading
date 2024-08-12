@@ -9,8 +9,24 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "balance": -500,
-  "Closed": "2024-08-03T11:51:11.527Z",
-  "result": "Loss"
+  "assetId": "0c275c78-0508-4836-81d5-342e2445d60c",
+  "profileId": "adf868b2-d0ba-4805-8f05-c813310580af",
+  "opened": "2024-08-07T10:26:02.570Z",
+  "closed": "2024-08-07T10:26:02.570Z",
+  "size": 5000,
+  "result": null,
+  "balance": 0,
+  "currencyId": "dd1f1281-7ec9-450e-8dd8-da1f4eb78629",
+  "entryPrice": 1,
+  "stopLoss": 0.95,
+  "takeProfit": 1.4,
+  "exitPrice": 1.2,
+  "notes": "Some notes",
+  "references": [
+    {
+      "type": "TradingView",
+      "link": "https://www.tradingview.com/x/EttfeAMS/",
+      "notes": null
+    }
+  ]
 }
-
