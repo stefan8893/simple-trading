@@ -46,7 +46,7 @@ public static class OpenApiExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.RoutePrefix = "swagger";
+            c.RoutePrefix = "";
             c.DocumentTitle = "Simple Trading - Web Api";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimpleTrading - WebApi");
             c.OAuthClientId(clientAppEntraIdConfig.ClientId);
