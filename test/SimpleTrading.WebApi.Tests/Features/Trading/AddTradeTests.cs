@@ -142,7 +142,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync();
-        
+
         // act
         var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
         {
@@ -163,6 +163,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.CommonErrors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.");
+                x ==
+                "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.");
     }
 }

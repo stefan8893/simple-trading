@@ -13,7 +13,7 @@ public static partial class TestData
         public bool IsSelected { get; init; }
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Profile Default => new ();
+        public static Profile Default => new();
 
         public Domain.Trading.Profile Build()
         {

@@ -85,7 +85,7 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.PropertyName == "ExitPrice");
     }
-    
+
     [Fact]
     public async Task A_trade_can_be_closed_successfully()
     {

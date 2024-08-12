@@ -25,7 +25,8 @@ internal class EnteredResultDiffersFromCalculatedAnalyser : ITradeResultAnalyser
     private static Warning CreateMismatchBetweenCalculatedResultsWarning(TradeResultAnalyserConfiguration config)
     {
         var balanceResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByBalance!.Name);
-        var positionResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByPositionPrices!.Name);
+        var positionResultName =
+            SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByPositionPrices!.Name);
 
         return new Warning(string.Format(SimpleTradingStrings.CalculatedResultsMismatch,
             positionResultName, balanceResultName));

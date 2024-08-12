@@ -15,7 +15,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     {
         return ServiceLocator.GetRequiredService<IGetTrade>();
     }
-    
+
     [Fact]
     public async Task A_not_existing_trade_cant_be_returned()
     {
@@ -26,7 +26,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         response.Value.Should().BeOfType<NotFound<Trade>>()
             .Which.ResourceId.Should().Be(notExistingAssetId);
     }
-    
+
     [Fact]
     public async Task An_existing_trade_gets_returned()
     {
@@ -39,7 +39,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Id.Should().Be(trade.Id);
     }
-    
+
     [Fact]
     public async Task The_Currency_property_must_contain_the_currencys_iso_code()
     {

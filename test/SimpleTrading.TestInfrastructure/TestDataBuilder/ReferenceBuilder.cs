@@ -15,7 +15,7 @@ public static partial class TestData
         public string? Notes { get; init; } = null;
         public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-        public static Reference Default => new ();
+        public static Reference Default => new();
 
         public Domain.Trading.Reference Build()
         {

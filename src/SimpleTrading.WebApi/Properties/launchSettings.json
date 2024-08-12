@@ -59,7 +59,7 @@
       },
       "dotnetRunMessages": true,
       "commandLineArgs": "generate-client --target TypeScript --file-name SimpleTrading.Client.ts --output-dir ./Clients/Generated"
-    }, 
+    },
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchBrowser": true,

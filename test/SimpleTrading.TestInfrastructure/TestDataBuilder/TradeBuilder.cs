@@ -1,7 +1,5 @@
 using OneOf;
-using SimpleTrading.Domain;
 using SimpleTrading.Domain.Extensions;
-using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 
 namespace SimpleTrading.TestInfrastructure.TestDataBuilder;

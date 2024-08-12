@@ -34,7 +34,7 @@ public class CloseTradeTests : TestBase
         businessError.Which.ResourceId.Should().Be(trade.Id);
         businessError.Which.Reason.Should().Be("The 'Closed' date must be after the 'Opened' date.");
     }
-    
+
     [Fact]
     public void A_trade_is_considered_as_closed_when_closed_date_and_balance_are_specified()
     {
@@ -87,7 +87,7 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<Completed>();
     }
-    
+
     [Fact]
     public void
         The_result_gets_calculated_by_the_balance_if_ExitPrice_SL_and_TP_are_missing_and_the_user_has_not_entered_the_result_manually()
@@ -215,7 +215,7 @@ public class CloseTradeTests : TestBase
             .And.BeOfType<TradingResult.BreakEven>()
             .Which.Source.Should().Be(TradingResultSource.CalculatedByBalance);
     }
-    
+
     [Fact]
     public void
         The_result_gets_calculated_by_the_position_prices_if_ExitPrice_and_TP_are_set_and_the_user_has_not_entered_the_result_manually()
@@ -223,7 +223,10 @@ public class CloseTradeTests : TestBase
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.2m, TakeProfit = 1.4m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.1m, ExitPrice = 1.2m, TakeProfit = 1.4m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 10m, UtcNowStub);
@@ -289,7 +292,7 @@ public class CloseTradeTests : TestBase
             .And.BeOfType<TradingResult.BreakEven>()
             .Which.Source.Should().Be(TradingResultSource.ManuallyEntered);
     }
-    
+
     [Fact]
     public void
         A_BreakEven_result_given_as_input_overrides_all_calculated_results_and_a_warning_gets_returned_because_the_result_differs_from_the_calculated_by_position_prices_result()
@@ -297,7 +300,10 @@ public class CloseTradeTests : TestBase
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with{ EntryPrice = 1.1m, StopLoss = 1.2m, TakeProfit = 0.9m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.1m, StopLoss = 1.2m, TakeProfit = 0.9m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 10m, UtcNowStub)
@@ -317,7 +323,7 @@ public class CloseTradeTests : TestBase
             .And.BeOfType<TradingResult.BreakEven>()
             .Which.Source.Should().Be(TradingResultSource.ManuallyEntered);
     }
-    
+
     [Fact]
     public void
         A_Mediocre_result_given_as_input_overrides_all_calculated_results_but_returns_a_warning_because_the_result_differs_from_the_calculated_by_position_prices_result()
@@ -325,7 +331,10 @@ public class CloseTradeTests : TestBase
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, -10m, UtcNowStub)
@@ -371,7 +380,7 @@ public class CloseTradeTests : TestBase
             .And.BeOfType<TradingResult.BreakEven>()
             .Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
     }
-    
+
     [Fact]
     public void
         The_result_gets_calculated_by_the_position_prices_if_SL_is_missing_and_remaining_prices_indicate_a_win_result()
@@ -403,134 +412,141 @@ public class CloseTradeTests : TestBase
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.0m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.0m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, -10m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
-        
+
         // assert
         response.Value.Should().BeOfType<Completed>();
         trade.Result.Should().BeOfType<TradingResult.Loss>()
             .Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
     }
-    
+
     [Fact]
     public void PositionPrices_are_present_and_lead_to_a_minus_50_percent_loss_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.05m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.05m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, -10m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
-        
+
         // assert
         var loss = trade.Result.Should().BeOfType<TradingResult.Loss>();
         loss.Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
         loss.Which.Performance.Should().Be(-50);
     }
-    
+
     [Fact]
     public void PositionPrices_are_present_and_lead_to_a_minus_150_percent_loss_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 0.95m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 0.95m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, -10m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
-        
+
         // assert
         var loss = trade.Result.Should().BeOfType<TradingResult.Loss>();
         loss.Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
         loss.Which.Performance.Should().Be(-150);
     }
-    
+
     [Fact]
     public void PositionPrices_are_present_and_lead_to_a_25_percent_mediocre_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.175m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.175m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 5m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
-        
+
         // assert
         var loss = trade.Result.Should().BeOfType<TradingResult.Mediocre>();
         loss.Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
         loss.Which.Performance.Should().Be(25);
     }
-    
+
     [Fact]
     public void PositionPrices_are_present_and_lead_to_a_99_percent_mediocre_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.397m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.397m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 30m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
-        
+
         // assert
         var loss = trade.Result.Should().BeOfType<TradingResult.Mediocre>();
         loss.Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
         loss.Which.Performance.Should().Be(99);
     }
-    
+
     [Fact]
     public void PositionPrices_are_present_and_lead_to_a_100_percent_win_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.4m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.4m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 30m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
-        
+
         // assert
         var loss = trade.Result.Should().BeOfType<TradingResult.Win>();
         loss.Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
         loss.Which.Performance.Should().Be(100);
     }
-    
+
     [Fact]
     public void PositionPrices_are_present_and_lead_to_a_120_percent_win_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.46m}
+            PositionPrices = new TestData.PositionPrices
+                {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.46m}
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 30m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
-        
+
         // assert
         var loss = trade.Result.Should().BeOfType<TradingResult.Win>();
         loss.Which.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
@@ -546,13 +562,13 @@ public class CloseTradeTests : TestBase
             PositionPrices = new TestData.PositionPrices
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m}
         }).Build();
-        
+
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 30m, UtcNowStub)
         {
             Balance = 10m,
             ExitPrice = 1.0m
         };
-        
+
         // act
         var response = trade.Close(closeTradeDto);
 
@@ -561,12 +577,16 @@ public class CloseTradeTests : TestBase
     }
 
     [Fact]
-    public void If_position_prices_indicate_a_mediocre_result_but_balance_is_negative_the_trade_gets_negatively_closed_but_warnings_are_returned()
+    public void
+        If_position_prices_indicate_a_mediocre_result_but_balance_is_negative_the_trade_gets_negatively_closed_but_warnings_are_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with{ EntryPrice = 1.1m, TakeProfit = 1.4m, ExitPrice = 1.25m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.1m, TakeProfit = 1.4m, ExitPrice = 1.25m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, -30m, UtcNowStub);
@@ -579,11 +599,13 @@ public class CloseTradeTests : TestBase
         trade.Result.Should().BeOfType<TradingResult.Loss>();
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
+            .And.Contain(x =>
+                x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
     }
 
     [Fact]
-    public void If_position_prices_indicate_a_loss_but_balance_is_positive_the_trade_gets_closed_without_a_result_and_a_warning_gets_returned()
+    public void
+        If_position_prices_indicate_a_loss_but_balance_is_positive_the_trade_gets_closed_without_a_result_and_a_warning_gets_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -608,7 +630,8 @@ public class CloseTradeTests : TestBase
     }
 
     [Fact]
-    public void If_position_prices_indicate_a_loss_of_a_long_position_but_balance_is_positive_the_trade_gets_closed_without_a_result_and_a_warning_gets_returned()
+    public void
+        If_position_prices_indicate_a_loss_of_a_long_position_but_balance_is_positive_the_trade_gets_closed_without_a_result_and_a_warning_gets_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -646,12 +669,16 @@ public class CloseTradeTests : TestBase
     }
 
     [Fact]
-    public void A_short_position_with_an_exit_price_below_entry_and_a_negative_balance_has_no_result_and_a_warning_gets_returned()
+    public void
+        A_short_position_with_an_exit_price_below_entry_and_a_negative_balance_has_no_result_and_a_warning_gets_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.0m, StopLoss = 1.1m, TakeProfit = 0.7m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.0m, StopLoss = 1.1m, TakeProfit = 0.7m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, -10m, UtcNowStub)
@@ -665,11 +692,13 @@ public class CloseTradeTests : TestBase
         //assert
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
+            .And.Contain(x =>
+                x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
     }
 
     [Fact]
-    public void The_given_result_is_BreakEven_the_balance_is_negative_and_the_position_prices_indicate_a_mediocre_result_in_this_case_the_given_result_is_taken_and_warnings_will_be_returned()
+    public void
+        The_given_result_is_BreakEven_the_balance_is_negative_and_the_position_prices_indicate_a_mediocre_result_in_this_case_the_given_result_is_taken_and_warnings_will_be_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -690,23 +719,28 @@ public class CloseTradeTests : TestBase
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(2)
             .And.Contain(x => x.Reason == "Your trade indicates a 'Loss' result, but you have entered 'Break-even'.")
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
+            .And.Contain(x =>
+                x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
     }
 
     [Fact]
-    public void Long_position_indicates_a_mediocre_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
+    public void
+        Long_position_indicates_a_mediocre_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.0m, StopLoss = 0.9m, TakeProfit = 1.3m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.0m, StopLoss = 0.9m, TakeProfit = 1.3m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 1.25m
         };
-        
+
         // act
         var response = trade.Close(closeTradeDto);
 
@@ -714,23 +748,29 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Break-even'.");
+            .And.Contain(x =>
+                x.Reason ==
+                "Your position indicates the result 'Mediocre', but based on the balance it is 'Break-even'.");
     }
-    
+
     [Fact]
-    public void Long_position_indicates_a_loss_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
+    public void
+        Long_position_indicates_a_loss_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.0m, StopLoss = 0.9m, TakeProfit = 1.3m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.0m, StopLoss = 0.9m, TakeProfit = 1.3m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 0.9m
         };
-        
+
         // act
         var response = trade.Close(closeTradeDto);
 
@@ -738,23 +778,28 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
+            .And.Contain(x =>
+                x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
     }
-    
+
     [Fact]
-    public void Short_position_indicates_a_win_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
+    public void
+        Short_position_indicates_a_win_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.0m, StopLoss = 1.1m, TakeProfit = 0.7m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.0m, StopLoss = 1.1m, TakeProfit = 0.7m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 0.7m
         };
-        
+
         // act
         var response = trade.Close(closeTradeDto);
 
@@ -762,23 +807,28 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Win', but based on the balance it is 'Break-even'.");
+            .And.Contain(x =>
+                x.Reason == "Your position indicates the result 'Win', but based on the balance it is 'Break-even'.");
     }
-    
+
     [Fact]
-    public void Short_position_indicates_a_loss_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
+    public void
+        Short_position_indicates_a_loss_result_but_the_balance_is_zero_the_trade_gets_closed_as_BreakEven_but_a_warning_gets_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.0m, StopLoss = 1.1m, TakeProfit = 0.7m}
+            PositionPrices = TestData.PositionPrices.Default with
+            {
+                EntryPrice = 1.0m, StopLoss = 1.1m, TakeProfit = 0.7m
+            }
         }).Build();
 
         var closeTradeDto = new Trade.CloseTradeDto(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 1.1m
         };
-        
+
         // act
         var response = trade.Close(closeTradeDto);
 
@@ -786,7 +836,8 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<CompletedWithWarnings>()
             .Which.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
+            .And.Contain(x =>
+                x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
     }
 
     private DateTime UtcNowStub()

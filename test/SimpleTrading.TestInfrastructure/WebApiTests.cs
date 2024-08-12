@@ -13,9 +13,9 @@ namespace SimpleTrading.TestInfrastructure;
 public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
 {
+    protected readonly WebApplicationFactory<Program> Factory = factory;
     private TradingDbContext? _dbContext;
     private IServiceScope? _serviceScope;
-    protected readonly WebApplicationFactory<Program> Factory = factory;
 
     protected TradingDbContext DbContext => _dbContext!;
 

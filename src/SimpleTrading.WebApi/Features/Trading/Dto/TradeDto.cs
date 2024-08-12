@@ -1,4 +1,3 @@
-using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;

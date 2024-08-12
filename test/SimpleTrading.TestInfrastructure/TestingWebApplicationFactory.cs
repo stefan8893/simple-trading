@@ -45,10 +45,7 @@ public class TestingWebApplicationFactory<TProgram> : WebApplicationFactory<TPro
 
         builder.UseEnvironment("Development");
 
-        builder.ConfigureLogging(lb =>
-        {
-            lb.SetMinimumLevel(LogLevel.Error);
-        });
+        builder.ConfigureLogging(lb => { lb.SetMinimumLevel(LogLevel.Error); });
 
         if (OverrideServices is not null)
             builder.ConfigureServices(OverrideServices);

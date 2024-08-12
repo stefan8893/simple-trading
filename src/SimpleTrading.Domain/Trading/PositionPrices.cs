@@ -8,7 +8,9 @@ public enum PositionType
 
 public record PositionPrices
 {
-    private static readonly TradingResult.BreakEven BreakEvenResult = new (TradingResultSource.CalculatedByPositionPrices, 0);
+    private static readonly TradingResult.BreakEven BreakEvenResult =
+        new(TradingResultSource.CalculatedByPositionPrices, 0);
+
     public required decimal Entry { get; set; }
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
@@ -59,7 +61,7 @@ public record PositionPrices
     {
         if (Exit == Entry)
             return BreakEvenResult;
-        
+
         if (Exit < Entry)
             return Exit > TakeProfit
                 ? CalculateMediocreResult()

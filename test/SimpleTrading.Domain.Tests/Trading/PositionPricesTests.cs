@@ -97,7 +97,7 @@ public class PositionPricesTests
         positionType.Should().NotBeNull()
             .And.Be(PositionType.Long);
     }
-    
+
     [Fact]
     public void It_is_a_long_position_when_TP_is_above_entry_independent_of_the_SL_value()
     {
@@ -113,7 +113,7 @@ public class PositionPricesTests
         positionType.Should().NotBeNull()
             .And.Be(PositionType.Long);
     }
-    
+
     [Fact]
     public void It_is_a_short_position_when_TP_is_below_entry()
     {
@@ -129,7 +129,7 @@ public class PositionPricesTests
         positionType.Should().NotBeNull()
             .And.Be(PositionType.Short);
     }
-    
+
     [Fact]
     public void It_is_a_short_position_when_TP_is_entry_entry_independent_of_the_SL_value()
     {
@@ -179,5 +179,4 @@ public class PositionPricesTests
 
         result.Should().BeNull();
     }
-
 }

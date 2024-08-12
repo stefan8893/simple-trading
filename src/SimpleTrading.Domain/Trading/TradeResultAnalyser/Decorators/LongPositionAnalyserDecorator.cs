@@ -23,7 +23,7 @@ internal class LongPositionAnalyserDecorator(ITradeResultAnalyser innerComponent
         var prices = trade.PositionPrices;
         var balance = trade.Balance!.Value;
 
-        if (balance > 0 && prices.Exit.HasValue && prices.Exit < prices.Entry) 
+        if (balance > 0 && prices.Exit.HasValue && prices.Exit < prices.Entry)
             yield return new Warning(SimpleTradingStrings.LongPositionExitLessThanEntryAndPositiveBalance);
     }
 }

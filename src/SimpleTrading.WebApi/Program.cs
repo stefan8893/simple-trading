@@ -4,7 +4,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi;
 using SimpleTrading.WebApi.Clients;
 using SimpleTrading.WebApi.Configuration;

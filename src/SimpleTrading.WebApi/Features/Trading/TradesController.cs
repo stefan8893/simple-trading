@@ -85,7 +85,8 @@ public class TradesController : ControllerBase
             return SuccessResponse<TradeAddedDto>.From(TradeAddedDto.From(completed.Data));
         }
 
-        SuccessResponse<TradeAddedDto> MapToSuccessResponseWithWarnings(CompletedWithWarnings<AddTradeResponseModel> completedWithWarnings)
+        SuccessResponse<TradeAddedDto> MapToSuccessResponseWithWarnings(
+            CompletedWithWarnings<AddTradeResponseModel> completedWithWarnings)
         {
             return SuccessResponse<TradeAddedDto>.From(TradeAddedDto.From(completedWithWarnings.Data),
                 completedWithWarnings.Warnings);
