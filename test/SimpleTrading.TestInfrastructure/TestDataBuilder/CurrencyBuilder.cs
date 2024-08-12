@@ -22,7 +22,7 @@ public static partial class TestData
                 Id = Id,
                 IsoCode = IsoCode,
                 Name = Name,
-                CreatedAt = CreatedAt
+                Created = CreatedAt
             };
         }
     }

@@ -22,7 +22,7 @@ public static partial class TestData
                 Id = Id,
                 Symbol = Symbol,
                 Name = Name,
-                CreatedAt = CreatedAt
+                Created = CreatedAt
             };
         }
     }

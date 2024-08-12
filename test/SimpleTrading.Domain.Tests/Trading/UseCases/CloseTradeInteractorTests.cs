@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -13,7 +14,7 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly UtcNow _utcNow = () => DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
@@ -35,10 +36,10 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
 
         var requestModel = new CloseTradeRequestModel(Guid.NewGuid(),
-            (Result) 50,
+            DateTime.Parse("2024-08-03T16:00:00+00:00"),
             0m,
-            1.05m,
-            DateTime.Parse("2024-08-03T16:00:00+00:00"));
+            (ResultModel) 50,
+            1.05m);
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
@@ -56,11 +57,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
-            new CloseTradeRequestModel(tradeId, Result.Win, 500, 1.05m, DateTime.Parse("2024-08-03T16:00:00Z"));
+            new CloseTradeRequestModel(tradeId, DateTime.Parse("2024-08-03T16:00:00Z"), 500, ResultModel.Win, 1.05m);
 
         var response = await CreateInteractor().Execute(requestModel);
 
-        var notFound = response.Value.Should().BeOfType<NotFound>();
+        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
         notFound.Which.ResourceType.Should().Be("Trade");
         notFound.Which.ResourceId.Should().Be(tradeId);
     }
@@ -74,7 +75,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, Result.Win, 500, 0m, _utcNow().AddHours(1));
+            new CloseTradeRequestModel(trade.Id, _utcNow().AddHours(1), 500, ResultModel.Win, 0m);
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
@@ -89,28 +90,34 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     public async Task A_trade_can_be_closed_successfully()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {Opened = _utcNow()}).Build();
+        var trade = (TestData.Trade.Default with
+        {
+            PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m},
+            Opened = _utcNow()
+        }).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, Result.Win, 500, 1.05m, _utcNow().AddHours(1));
+            new CloseTradeRequestModel(trade.Id, _utcNow().AddHours(1), 500)
+                {ExitPrice = 1.2m};
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        var responseModel = response.Value.Should().BeOfType<Completed<CloseTradeResponseModel>>();
+        responseModel.Which.Data.Performance.Should().Be(50);
+        responseModel.Which.Data.Result.Should().Be(ResultModel.Mediocre);
 
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
         var closedTrade = await DbContext.Trades.AsNoTracking()
             .FirstAsync(x => x.Id == trade.Id);
 
-        closedTrade.Outcome.Should().NotBeNull();
-        closedTrade.Outcome!.Balance.Should().Be(requestModel.Balance);
-        closedTrade.Outcome.Result.Should().Be(requestModel.Result);
+        closedTrade.Balance.Should().Be(requestModel.Balance);
         closedTrade.Closed.Should().NotBeNull();
+        closedTrade.IsClosed.Should().BeTrue();
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
-        closedTrade.PositionPrices.ExitPrice.Should().NotBeNull().And.Be(requestModel.ExitPrice);
+        closedTrade.PositionPrices.Exit.Should().NotBeNull().And.Be(requestModel.ExitPrice);
     }
 }

@@ -81,4 +81,103 @@ public class PositionPricesTests
 
         prices.RiskRewardRatio.Should().BeNull();
     }
+
+    [Fact]
+    public void It_is_a_long_position_when_TP_is_above_entry()
+    {
+        var prices = new PositionPrices
+        {
+            StopLoss = 1.0m,
+            Entry = 1.1m,
+            TakeProfit = 1.4m
+        };
+
+        var positionType = prices.Type;
+
+        positionType.Should().NotBeNull()
+            .And.Be(PositionType.Long);
+    }
+    
+    [Fact]
+    public void It_is_a_long_position_when_TP_is_above_entry_independent_of_the_SL_value()
+    {
+        var prices = new PositionPrices
+        {
+            StopLoss = 1.3m,
+            Entry = 1.1m,
+            TakeProfit = 1.4m
+        };
+
+        var positionType = prices.Type;
+
+        positionType.Should().NotBeNull()
+            .And.Be(PositionType.Long);
+    }
+    
+    [Fact]
+    public void It_is_a_short_position_when_TP_is_below_entry()
+    {
+        var prices = new PositionPrices
+        {
+            StopLoss = 1.5m,
+            Entry = 1.4m,
+            TakeProfit = 1.1m
+        };
+
+        var positionType = prices.Type;
+
+        positionType.Should().NotBeNull()
+            .And.Be(PositionType.Short);
+    }
+    
+    [Fact]
+    public void It_is_a_short_position_when_TP_is_entry_entry_independent_of_the_SL_value()
+    {
+        var prices = new PositionPrices
+        {
+            StopLoss = 1.2m,
+            Entry = 1.4m,
+            TakeProfit = 1.1m
+        };
+
+        var positionType = prices.Type;
+
+        positionType.Should().NotBeNull()
+            .And.Be(PositionType.Short);
+    }
+
+    [Fact]
+    public void Short_position_win_result_get_properly_calculated()
+    {
+        var prices = new PositionPrices
+        {
+            Entry = 1.0m,
+            StopLoss = 1.1m,
+            TakeProfit = 0.7m,
+            Exit = 0.7m
+        };
+
+        var result = prices.CalculateResult();
+
+        result.Should().NotBeNull();
+        result!.Name.Should().Be(nameof(TradingResult.Win));
+        result.Performance.Should().Be(100);
+    }
+
+    [Fact]
+    public void Short_position_without_SL_and_exit_above_entry_leads_to_no_result()
+    {
+        var prices = new PositionPrices
+        {
+            Entry = 1.0m,
+            StopLoss = null,
+            TakeProfit = 0.7m,
+            Exit = 1.1m
+        };
+
+        var result = prices.CalculateResult();
+
+        result.Should().BeNull();
+    }
+
 }

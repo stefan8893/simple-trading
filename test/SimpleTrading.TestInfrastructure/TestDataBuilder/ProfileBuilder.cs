@@ -23,7 +23,7 @@ public static partial class TestData
                 Name = Name,
                 Description = Description,
                 IsSelected = IsSelected,
-                CreatedAt = CreatedAt
+                Created = CreatedAt
             };
         }
     }

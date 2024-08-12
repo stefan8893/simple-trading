@@ -29,7 +29,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -56,7 +56,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IsoCode")
@@ -83,7 +83,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -112,7 +112,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Link")
@@ -148,10 +148,14 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uuid");
 
+                    b.Property<decimal?>("Balance")
+                        .HasPrecision(24, 8)
+                        .HasColumnType("numeric(24,8)");
+
                     b.Property<DateTime?>("Closed")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CurrencyId")
@@ -167,6 +171,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Result")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("Size")
                         .HasPrecision(24, 8)
                         .HasColumnType("numeric(24,8)");
@@ -179,7 +186,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");
 
-                            b1.Property<decimal?>("ExitPrice")
+                            b1.Property<decimal?>("Exit")
                                 .HasPrecision(24, 8)
                                 .HasColumnType("numeric(24,8)");
 
@@ -262,33 +269,9 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.OwnsOne("SimpleTrading.Domain.Trading.Outcome", "Outcome", b1 =>
-                        {
-                            b1.Property<Guid>("TradeId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<decimal>("Balance")
-                                .HasPrecision(24, 8)
-                                .HasColumnType("numeric(24,8)");
-
-                            b1.Property<string>("Result")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("character varying(50)");
-
-                            b1.HasKey("TradeId");
-
-                            b1.ToTable("Trade");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TradeId");
-                        });
-
                     b.Navigation("Asset");
 
                     b.Navigation("Currency");
-
-                    b.Navigation("Outcome");
 
                     b.Navigation("Profile");
                 });

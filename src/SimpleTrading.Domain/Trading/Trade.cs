@@ -1,7 +1,10 @@
-﻿using OneOf;
+using OneOf;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.TradeResultAnalyser;
+using SimpleTrading.Domain.Trading.TradeResultAnalyser.Decorators;
+using SimpleTrading.Domain.Trading.UseCases;
 
 namespace SimpleTrading.Domain.Trading;
 
@@ -12,62 +15,143 @@ public class Trade
     public required Asset Asset { get; set; }
     public required Guid ProfileId { get; set; }
     public required Profile Profile { get; set; }
-    public required decimal Size { get; set; }
     public required DateTime Opened { get; set; }
+    public required decimal Size { get; set; }
+    public decimal? Balance { get; private set; }
+    public ITradingResult? Result { get; private set; }
     public DateTime? Closed { get; private set; }
-    public Outcome? Outcome { get; private set; }
     public required Guid CurrencyId { get; init; }
     public required Currency Currency { get; init; }
     public required PositionPrices PositionPrices { get; init; }
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
-    public bool IsClosed => Outcome is not null && PositionPrices.ExitPrice.HasValue && Closed.HasValue;
-    public required DateTime CreatedAt { get; init; }
+    public bool IsClosed => Closed.HasValue && Balance.HasValue;
+    public required DateTime Created { get; init; }
 
-    internal OneOf<Completed, BusinessError> Close(CloseTradeDto dto)
+    internal OneOf<Completed, CompletedWithWarnings, BusinessError> Close(CloseTradeDto dto)
     {
-        var closedUpperBound = dto.UtcNow().AddDays(1);
-
         if (dto.Closed < Opened)
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpenedError);
 
+        var closedUpperBound = dto.UtcNow().AddDays(1);
         if (dto.Closed > closedUpperBound)
-            return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
+            return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFutureError);
 
-        switch (dto.Balance)
-        {
-            case < 0m when dto.Result != Result.Loss:
-                return new BusinessError(Id, SimpleTradingStrings.LossIfBalanceIsLessThanZero);
-            case 0m when dto.Result != Result.BreakEven:
-                return new BusinessError(Id, SimpleTradingStrings.BreakEvenIfBalanceIsZero);
-            case > 0m when dto.Result is Result.Loss or Result.BreakEven:
-                return new BusinessError(Id, SimpleTradingStrings.MediocreOrWinIfBalanceAboveZero);
-        }
-
-        if (IsClosed)
-            return CreateTradeAlreadyClosedError(dto.TimeZone);
-
-        var outcome = new Outcome
-        {
-            Balance = dto.Balance,
-            Result = dto.Result
-        };
-
-        Outcome = outcome;
         Closed = dto.Closed.ToUtcKind();
-        PositionPrices.ExitPrice = dto.ExitPrice;
+        Balance = dto.Balance;
 
-        return new Completed();
+        if (dto.ExitPrice.HasValue)
+            PositionPrices.Exit = dto.ExitPrice;
 
-        BusinessError CreateTradeAlreadyClosedError(string timeZone)
-        {
-            var closedLocal = Closed!.Value.ToLocal(timeZone);
-            var reason = string.Format(SimpleTradingStrings.TradeAlreadyClosed, closedLocal);
+        var results = CalculateResults(dto);
+        var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
+        Result = results.ManuallyEntered ?? calculatedResult;
 
-            return new BusinessError(Id, reason);
-        }
+        return AnalyseResults(results, calculatedResult)
+            .Match<OneOf<Completed, CompletedWithWarnings, BusinessError>>(x => x, x => x);
     }
 
-    internal record CloseTradeDto(Result Result, decimal Balance, decimal ExitPrice, DateTime Closed, UtcNow UtcNow, string TimeZone);
+    private TradingResultsDto CalculateResults(CloseTradeDto dto)
+    {
+        var manuallyEnteredResult = dto.Result.HasValue
+            ? CreateManuallyEnteredResult(dto.Result.Value)
+            : null;
+
+        var calculatedByBalance = CalculateResultByBalance(Balance!.Value);
+        var calculatedByPositionPrices = PositionPrices.CalculateResult();
+
+        return new TradingResultsDto(manuallyEnteredResult, calculatedByBalance, calculatedByPositionPrices);
+    }
+
+    private ITradingResult? PickAppropriateResult(ITradingResult? balanceResult,
+        ITradingResult? positionPricesResult)
+    {
+        var hasBalanceResult = balanceResult is not null;
+        var hasPositionPricesResult = positionPricesResult is not null;
+        var isPositiveBalance = Balance!.Value > 0m;
+
+        var positionPricesResultIsLossOrBreakEven =
+            hasPositionPricesResult &&
+            positionPricesResult?.Name is nameof(TradingResult.Loss) or nameof(TradingResult.BreakEven);
+
+        if (isPositiveBalance && positionPricesResultIsLossOrBreakEven)
+            return null;
+
+        if (!hasBalanceResult)
+            return positionPricesResult;
+
+        if (!hasPositionPricesResult)
+            return balanceResult;
+
+        return positionPricesResult!.Name == balanceResult!.Name
+            // pick the result from the position prices if both are equal
+            // it contains more information (performance indicator)
+            ? positionPricesResult
+            // prefer the result by balance if there is a difference to the result by position prices
+            : balanceResult;
+    }
+
+    private OneOf<Completed, CompletedWithWarnings> AnalyseResults(TradingResultsDto results,
+        ITradingResult? calculatedResult)
+    {
+        var enteredResultDiffersFromCalculatedResultAnalysis =
+            new EnteredResultDiffersFromCalculatedAnalyser();
+        var longPositionResultAnalysisDecorator =
+            new LongPositionAnalyserDecorator(enteredResultDiffersFromCalculatedResultAnalysis);
+        var shortPositionResultAnalysisDecorator =
+            new ShortPositionTradeResultAnalyserDecorator(longPositionResultAnalysisDecorator);
+        var balanceDiffersFromPositionPricesAnalysisDecorator =
+            new BalanceDiffersFromPositionPricesAnalyserDecorator(shortPositionResultAnalysisDecorator);
+
+        var analyseResultsConfiguration = new TradeResultAnalyserConfiguration
+        {
+            ManuallyEntered = results.ManuallyEntered,
+            CalculatedByBalance = results.CalculatedByBalance,
+            CalculatedByPositionPrices = results.CalculatedByPositionPrices,
+            CalculatedResult = calculatedResult
+        };
+
+        var analysisResult = balanceDiffersFromPositionPricesAnalysisDecorator
+            .AnalyseResults(this, analyseResultsConfiguration)
+            .ToList();
+
+        if (analysisResult.Count != 0)
+            return new CompletedWithWarnings(analysisResult);
+
+        return new Completed();
+    }
+
+    private static ITradingResult CreateManuallyEnteredResult(ResultModel resultModel)
+    {
+        return resultModel switch
+        {
+            ResultModel.Loss => new TradingResult.Loss(TradingResultSource.ManuallyEntered),
+            ResultModel.BreakEven => new TradingResult.BreakEven(TradingResultSource.ManuallyEntered),
+            ResultModel.Mediocre => new TradingResult.Mediocre(TradingResultSource.ManuallyEntered),
+            ResultModel.Win => new TradingResult.Win(TradingResultSource.ManuallyEntered),
+            _ => throw new ArgumentOutOfRangeException(nameof(resultModel), resultModel, null)
+        };
+    }
+
+    private static ITradingResult? CalculateResultByBalance(decimal balance)
+    {
+        return balance switch
+        {
+            0m => new TradingResult.BreakEven(TradingResultSource.CalculatedByBalance, 0),
+            < 0m => new TradingResult.Loss(TradingResultSource.CalculatedByBalance),
+            _ => null
+        };
+    }
+
+    internal record CloseTradeDto(DateTime Closed, decimal Balance, UtcNow UtcNow)
+    {
+        public decimal? ExitPrice { get; init; }
+        public ResultModel? Result { get; init; }
+    }
+
+    private record TradingResultsDto(
+        ITradingResult? ManuallyEntered,
+        ITradingResult? CalculatedByBalance,
+        ITradingResult? CalculatedByPositionPrices);
 }

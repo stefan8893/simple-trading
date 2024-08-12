@@ -7,7 +7,12 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
-using AddTradeResponse = OneOf<Completed<Guid>, BadInput, NotFound, BusinessError>;
+using AddTradeResponse =
+    OneOf<Completed<AddTradeResponseModel>,
+        CompletedWithWarnings<AddTradeResponseModel>,
+        BadInput,
+        NotFound,
+        BusinessError>;
 
 public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, TradingDbContext dbContext, UtcNow utcNow)
     : BaseInteractor, IAddTrade
@@ -38,16 +43,24 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
     {
         var trade = CreateTrade(model, asset, profile, currency);
 
-        var userSettings = await dbContext.GetUserSettings();
-        var closedTrade = CloseTrade(trade, model, userSettings.TimeZone);
+        var potentiallyClosedTrade = TryCloseTrade(trade, model);
 
-        if (closedTrade.Value is BusinessError businessError)
+        if (potentiallyClosedTrade.Value is BusinessError businessError)
             return businessError;
 
         dbContext.Add(trade);
         await dbContext.SaveChangesAsync();
 
-        return Completed(trade.Id);
+        return potentiallyClosedTrade.Match<AddTradeResponse>(
+            x => Completed(CreateResponseModel(x.Data)),
+            x => CompletedWithWarnings(CreateResponseModel(x.Data), x.Warnings),
+            x => Completed(CreateResponseModel(x.Trade)),
+            x => x);
+
+        AddTradeResponseModel CreateResponseModel(Trade t)
+        {
+            return new AddTradeResponseModel(t.Id, t.Result?.ToResultModel(), t.Result?.Performance);
+        }
     }
 
     private Trade CreateTrade(AddTradeRequestModel model, Asset asset, Profile profile, Currency currency)
@@ -67,10 +80,11 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
             {
                 Entry = model.EntryPrice,
                 StopLoss = model.StopLoss,
-                TakeProfit = model.TakeProfit
+                TakeProfit = model.TakeProfit,
+                Exit = model.ExitPrice
             },
             Notes = model.Notes,
-            CreatedAt = utcNow()
+            Created = utcNow()
         };
 
         foreach (var m in model.References)
@@ -82,27 +96,47 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
                 Type = m.Type,
                 Link = new Uri(m.Link),
                 Notes = m.Notes,
-                CreatedAt = utcNow()
+                Created = utcNow()
             });
 
         return newTrade;
     }
 
-    private OneOf<Completed<Trade>, BusinessError> CloseTrade(Trade trade, AddTradeRequestModel model, string timeZone)
+    private OneOf<Completed<Trade>, CompletedWithWarnings<Trade>, NothingToClose, BusinessError> TryCloseTrade(
+        Trade trade,
+        AddTradeRequestModel model)
     {
         return model switch
         {
-            {Balance: not null, Result: not null, Closed: not null, ExitPrice: not null} => Close(),
-            {Balance: null, Result: null, Closed: null, ExitPrice: null} => Completed(trade),
-            _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedBalanceAndResult)
+            {Balance: not null, Closed: not null} => Map(Close()),
+            {Balance: null, Closed: null} => new NothingToClose(trade),
+            _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndBalance)
         };
 
-        OneOf<Completed<Trade>, BusinessError> Close()
+        OneOf<Completed<Trade>, CompletedWithWarnings<Trade>, BusinessError> Close()
         {
-            var result = trade.Close(new Trade.CloseTradeDto(model.Result!.Value, model.Balance!.Value,
-                model.ExitPrice!.Value, model.Closed!.Value, utcNow, timeZone));
+            var result = trade.Close(new Trade.CloseTradeDto(model.Closed!.Value, model.Balance!.Value,
+                utcNow)
+            {
+                ExitPrice = model.ExitPrice,
+                Result = model.Result
+            });
 
-            return result.MapT0(x => Completed(trade));
+            return result
+                .MapT0(_ => Completed(trade))
+                .MapT1(x => CompletedWithWarnings(trade, x.Warnings));
+        }
+
+        OneOf<Completed<Trade>, CompletedWithWarnings<Trade>, NothingToClose, BusinessError> Map(
+            OneOf<Completed<Trade>, CompletedWithWarnings<Trade>, BusinessError> closeTradeResult)
+        {
+            return closeTradeResult
+                .Match<OneOf<Completed<Trade>, CompletedWithWarnings<Trade>, NothingToClose, BusinessError>>(
+                    _ => Completed(trade),
+                    x => CompletedWithWarnings(trade, x.Warnings),
+                    x => x);
         }
     }
+
+    private record NothingToClose(Trade Trade);
 }

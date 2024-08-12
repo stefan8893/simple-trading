@@ -18,7 +18,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Symbol = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     IsoCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
                     IsSelected = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,15 +77,15 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     AssetId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProfileId = table.Column<Guid>(type: "uuid", nullable: false),
                     Size = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
+                    Balance = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    Result = table.Column<string>(type: "text", nullable: true),
                     Opened = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Closed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Outcome_Balance = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
-                    Outcome_Result = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
                     Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     PositionPrices_Entry = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
-                    PositionPrices_ExitPrice = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    PositionPrices_Exit = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
                     PositionPrices_StopLoss = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
                     PositionPrices_TakeProfit = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true)
                 },
@@ -118,7 +118,7 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Link = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: false),
                     Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

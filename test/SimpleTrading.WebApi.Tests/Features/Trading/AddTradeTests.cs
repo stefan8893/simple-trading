@@ -41,7 +41,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var tradeId = await simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var response = await simpleTradingClient.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
@@ -52,10 +52,14 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
+        response.Should().NotBeNull();
+        response.Warnings.Should().BeEmpty();
+        response.Data.Should().NotBeNull();
+        response.Data.TradeResult.Should().NotBeNull();
         var newlyAddedTrade = DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == tradeId);
+            .FirstAsync(x => x.Id == response.Data!.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -127,7 +131,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_closed_trade_cant_be_added_the_balance_is_missing()
+    public async Task A_closed_trade_cant_be_added_if_the_balance_is_missing()
     {
         // arrange
         var client = await CreateClientWithAccessToken();
@@ -159,6 +163,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.CommonErrors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Abgeschlossen', 'Bilanz', 'Ausstiegspreis' und 'Ergebnis' angeben.");
+                x == "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.");
     }
 }

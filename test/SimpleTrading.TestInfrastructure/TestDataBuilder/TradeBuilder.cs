@@ -1,7 +1,8 @@
-﻿using OneOf;
+using OneOf;
 using SimpleTrading.Domain;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.UseCases;
 
 namespace SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -15,7 +16,8 @@ public static partial class TestData
         public decimal Size { get; init; } = 10_000m;
         public DateTime Opened { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
         public DateTime? Closed { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
-        public Outcome? Outcome { get; init; } = null;
+        public decimal? Balance { get; init; } = null;
+        public ResultModel? Result { get; init; } = null;
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
@@ -66,16 +68,17 @@ public static partial class TestData
                 PositionPrices = positionPrices,
                 References = [],
                 Notes = Notes,
-                CreatedAt = CreatedAt
+                Created = CreatedAt
             };
 
-            if (Outcome is not null && Closed.HasValue && positionPrices.ExitPrice.HasValue)
-                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Outcome.Result,
-                    Outcome.Balance,
-                    positionPrices.ExitPrice.Value,
-                    Closed.Value,
-                    () => Opened,
-                    Constants.DefaultTimeZone));
+            if (Closed.HasValue && Balance.HasValue)
+                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Closed.Value,
+                    Balance.Value,
+                    () => Opened)
+                {
+                    ExitPrice = positionPrices.Exit,
+                    Result = Result
+                });
 
             return trade;
         }
