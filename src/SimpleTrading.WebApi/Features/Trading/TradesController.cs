@@ -6,6 +6,7 @@ using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
@@ -116,6 +117,21 @@ public class TradesController : ControllerBase
             return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completedWithWarnings.Data),
                 completedWithWarnings.Warnings);
         }
+    }
+
+    [HttpDelete("{tradeId:Guid}", Name = nameof(DeleteTrade))]
+    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    public async Task<ActionResult> DeleteTrade(
+        [FromServices] IDeleteTrade deleteTrade,
+        Guid tradeId)
+    {
+        var result = await deleteTrade.Execute(tradeId);
+
+        return result.Match(
+            completed => Ok(SuccessResponse.Empty),
+            notFound => Ok(SuccessResponse.Empty)
+        );
     }
 
     private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto)
