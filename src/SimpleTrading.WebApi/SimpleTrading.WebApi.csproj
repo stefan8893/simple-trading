@@ -32,6 +32,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\SimpleTrading.DataAccess.Postgres\SimpleTrading.DataAccess.Postgres.csproj" />
+        <ProjectReference Include="..\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj" />
+        <ProjectReference Include="..\SimpleTrading.DataAccess.SqlServer\SimpleTrading.DataAccess.SqlServer.csproj" />
         <ProjectReference Include="..\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
     </ItemGroup>
 

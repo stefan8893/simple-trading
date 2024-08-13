@@ -20,9 +20,6 @@ var clientAppEntraIdConfig = builder.Configuration
                                  .Get<ClientAppEntraIdConfig>()
                              ?? throw new Exception("Missing Entra ID settings");
 
-var connectionString = builder.Configuration.GetConnectionString("TradingDb")
-                       ?? throw new Exception("Missing Connection String");
-
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(
         o => o.InvalidModelStateResponseFactory = ctx => ctx.ModelState.ToCustomErrorResponse())
@@ -38,7 +35,7 @@ builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
 
-builder.Services.AddTradingDbContext(builder.Environment, connectionString);
+builder.Services.AddTradingDbContext(builder.Configuration);
 builder.Services.AddDateTimeProvider();
 builder.Services.AddUseCases();
 builder.Services.AddSingleton<ClientGenerator>();
