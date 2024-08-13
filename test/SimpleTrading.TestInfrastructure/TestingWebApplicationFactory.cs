@@ -38,7 +38,8 @@ public class TestingWebApplicationFactory<TProgram> : WebApplicationFactory<TPro
             services.AddDbContext<TradingDbContext>((sp, options) =>
             {
                 var connection = sp.GetRequiredService<DbConnection>();
-                options.UseSqlite(connection);
+                options.UseSqlite(connection, 
+                    x => x.MigrationsAssembly("SimpleTrading.DataAccess.Sqlite"));
                 options.EnableSensitiveDataLogging();
             });
         });

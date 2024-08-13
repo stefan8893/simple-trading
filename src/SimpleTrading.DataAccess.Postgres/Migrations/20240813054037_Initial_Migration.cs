@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SimpleTrading.Domain.DataAccess.Migrations
+namespace SimpleTrading.DataAccess.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class Initial_Migration : Migration
@@ -76,10 +76,10 @@ namespace SimpleTrading.Domain.DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AssetId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Opened = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Size = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
                     Balance = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
                     Result = table.Column<string>(type: "text", nullable: true),
-                    Opened = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Closed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
                     Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),

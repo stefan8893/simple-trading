@@ -18,13 +18,38 @@ public static class ServiceCollectionExtensions
     }
 
     public static IServiceCollection AddTradingDbContext(this IServiceCollection services,
-        IWebHostEnvironment environment, string connectionString)
+        IConfiguration configuration)
     {
-        if (environment.IsDevelopment())
-            services.AddDbContext<TradingDbContext>(o => o.UseNpgsql(connectionString));
-        else
-            services.AddDbContext<TradingDbContext>(o => o.UseSqlServer(connectionString));
+        var dbProvider = configuration.GetValue<string>("DbProvider")
+                         ?? throw new Exception("Missing DbProvider");
 
+        var connectionString = configuration.GetConnectionString(dbProvider);
+
+        const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
+        const string postgresMigrationsAssembly = "SimpleTrading.DataAccess.Postgres";
+        const string sqliteMigrationsAssembly = "SimpleTrading.DataAccess.Sqlite";
+
+        var dbContextOptionsBuilderByProvider =
+            new Dictionary<string, Action<DbContextOptionsBuilder>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["SqlServer"] = o =>
+                {
+                    o.UseSqlServer(connectionString,
+                        x => x.MigrationsAssembly(sqlServerMigrationsAssembly));
+                },
+                ["Postgres"] = o =>
+                {
+                    o.UseNpgsql(connectionString,
+                        x => x.MigrationsAssembly(postgresMigrationsAssembly));
+                },
+                ["Sqlite"] = o =>
+                {
+                    o.UseSqlite(connectionString,
+                        x => x.MigrationsAssembly(sqliteMigrationsAssembly));
+                }
+            };
+
+        services.AddDbContext<TradingDbContext>(dbContextOptionsBuilderByProvider[dbProvider]);
         services.AddScoped<DbMasterData>();
 
         return services;
