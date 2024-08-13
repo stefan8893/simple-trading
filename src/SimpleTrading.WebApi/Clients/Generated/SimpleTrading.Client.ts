@@ -6,7 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
 
 export interface ISimpleTradingClient {
@@ -17,22 +16,27 @@ export interface ISimpleTradingClient {
     getAppInfo(): Promise<SwaggerResponse<ApiInfo>>;
 
     /**
-     * @param body (optional)
      * @return OK
      */
-    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<string>>;
+    getTrade(tradeId: string): Promise<SwaggerResponse<TradeDto>>;
 
     /**
-     * @param body (optional)
-     * @return No Content
+     * @param body (optional) 
+     * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<void>>;
+    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>>;
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -58,11 +62,83 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
+    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiInfo.fromJS(resultData200);
+            return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<ApiInfo>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
     /**
-     * @param body (optional)
      * @return OK
      */
-    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<string>> {
+    getTrade(tradeId: string): Promise<SwaggerResponse<TradeDto>> {
+        let url_ = this.baseUrl + "/trades/{tradeId}";
+        if (tradeId === undefined || tradeId === null)
+            throw new Error("The parameter 'tradeId' must be defined.");
+        url_ = url_.replace("{tradeId}", encodeURIComponent("" + tradeId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetTrade(_response);
+        });
+    }
+
+    protected processGetTrade(response: Response): Promise<SwaggerResponse<TradeDto>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TradeDto.fromJS(resultData200);
+            return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<TradeDto>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>> {
         let url_ = this.baseUrl + "/trades";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -82,11 +158,57 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
+    protected processAddTrade(response: Response): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TradeAddedDtoSuccessResponse.fromJS(resultData200);
+            return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+            let result422: any = null;
+            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result422 = ErrorResponse.fromJS(resultData422);
+            return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<TradeAddedDtoSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
     /**
-     * @param body (optional)
-     * @return No Content
+     * @param body (optional) 
+     * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<void>> {
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/close";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -100,6 +222,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/json"
             }
         };
 
@@ -108,129 +231,102 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>> {
+    protected processCloseTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
         const status = response.status;
-        let _headers: any = {};
-        if (response.headers && response.headers.forEach) {
-            response.headers.forEach((v: any, k: any) => _headers[k] = v);
-        }
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = ApiInfo.fromJS(resultData200);
-                return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<ApiInfo>>(new SwaggerResponse(status, _headers, null as any));
-    }
-
-    protected processAddTrade(response: Response): Promise<SwaggerResponse<string>> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && response.headers.forEach) {
-            response.headers.forEach((v: any, k: any) => _headers[k] = v);
-        }
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-                let result401: any = null;
-                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result401 = ProblemDetails.fromJS(resultData401);
-                return throwException("Unauthorized", status, _responseText, _headers, result401);
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-
-                return new SwaggerResponse(status, _headers, result200);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SuccessResponse.fromJS(resultData200);
+            return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
-                let result400: any = null;
-                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result400 = ErrorResponse.fromJS(resultData400);
-                return throwException("Bad Request", status, _responseText, _headers, result400);
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
-                let result404: any = null;
-                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result404 = ErrorResponse.fromJS(resultData404);
-                return throwException("Not Found", status, _responseText, _headers, result404);
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
             });
         } else if (status === 422) {
             return response.text().then((_responseText) => {
-                let result422: any = null;
-                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result422 = ErrorResponse.fromJS(resultData422);
-                return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+            let result422: any = null;
+            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result422 = ErrorResponse.fromJS(resultData422);
+            return throwException("Unprocessable Content", status, _responseText, _headers, result422);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<string>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+    }
+}
+
+export class AddReferenceDto implements IAddReferenceDto {
+    type?: ReferenceTypeDto;
+    link?: string | undefined;
+    notes?: string | undefined;
+
+    constructor(data?: IAddReferenceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
-    protected processCloseTrade(response: Response): Promise<SwaggerResponse<void>> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && response.headers.forEach) {
-            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.link = _data["link"];
+            this.notes = _data["notes"];
         }
-        if (status === 401) {
-            return response.text().then((_responseText) => {
-                let result401: any = null;
-                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result401 = ProblemDetails.fromJS(resultData401);
-                return throwException("Unauthorized", status, _responseText, _headers, result401);
-            });
-        } else if (status === 204) {
-            return response.text().then((_responseText) => {
-                return new SwaggerResponse(status, _headers, null as any);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-                let result400: any = null;
-                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result400 = ErrorResponse.fromJS(resultData400);
-                return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-                let result404: any = null;
-                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result404 = ErrorResponse.fromJS(resultData404);
-                return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-                let result422: any = null;
-                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result422 = ErrorResponse.fromJS(resultData422);
-                return throwException("Unprocessable Content", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
     }
+
+    static fromJS(data: any): AddReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddReferenceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["link"] = this.link;
+        data["notes"] = this.notes;
+        return data;
+    }
+}
+
+export interface IAddReferenceDto {
+    type?: ReferenceTypeDto;
+    link?: string | undefined;
+    notes?: string | undefined;
 }
 
 export class AddTradeDto implements IAddTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
-    Closed?: Date | undefined;
+    closed?: Date | undefined;
     size?: number | undefined;
     result?: ResultDto;
     balance?: number | undefined;
@@ -238,14 +334,38 @@ export class AddTradeDto implements IAddTradeDto {
     entryPrice?: number | undefined;
     stopLoss?: number | undefined;
     takeProfit?: number | undefined;
+    exitPrice?: number | undefined;
     notes?: string | undefined;
-    references?: ReferenceDto[] | undefined;
+    references?: AddReferenceDto[] | undefined;
 
     constructor(data?: IAddTradeDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.assetId = _data["assetId"];
+            this.profileId = _data["profileId"];
+            this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
+            this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
+            this.size = _data["size"];
+            this.result = _data["result"];
+            this.balance = _data["balance"];
+            this.currencyId = _data["currencyId"];
+            this.entryPrice = _data["entryPrice"];
+            this.stopLoss = _data["stopLoss"];
+            this.takeProfit = _data["takeProfit"];
+            this.exitPrice = _data["exitPrice"];
+            this.notes = _data["notes"];
+            if (Array.isArray(_data["references"])) {
+                this.references = [] as any;
+                for (let item of _data["references"])
+                    this.references!.push(AddReferenceDto.fromJS(item));
             }
         }
     }
@@ -257,34 +377,12 @@ export class AddTradeDto implements IAddTradeDto {
         return result;
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.assetId = _data["assetId"];
-            this.profileId = _data["profileId"];
-            this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
-            this.Closed = _data["Closed"] ? new Date(_data["Closed"].toString()) : <any>undefined;
-            this.size = _data["size"];
-            this.result = _data["result"];
-            this.balance = _data["balance"];
-            this.currencyId = _data["currencyId"];
-            this.entryPrice = _data["entryPrice"];
-            this.stopLoss = _data["stopLoss"];
-            this.takeProfit = _data["takeProfit"];
-            this.notes = _data["notes"];
-            if (Array.isArray(_data["references"])) {
-                this.references = [] as any;
-                for (let item of _data["references"])
-                    this.references!.push(ReferenceDto.fromJS(item));
-            }
-        }
-    }
-
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["assetId"] = this.assetId;
         data["profileId"] = this.profileId;
         data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
-        data["Closed"] = this.Closed ? this.Closed.toISOString() : <any>undefined;
+        data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
         data["size"] = this.size;
         data["result"] = this.result;
         data["balance"] = this.balance;
@@ -292,6 +390,7 @@ export class AddTradeDto implements IAddTradeDto {
         data["entryPrice"] = this.entryPrice;
         data["stopLoss"] = this.stopLoss;
         data["takeProfit"] = this.takeProfit;
+        data["exitPrice"] = this.exitPrice;
         data["notes"] = this.notes;
         if (Array.isArray(this.references)) {
             data["references"] = [];
@@ -306,7 +405,7 @@ export interface IAddTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
-    Closed?: Date | undefined;
+    closed?: Date | undefined;
     size?: number | undefined;
     result?: ResultDto;
     balance?: number | undefined;
@@ -314,8 +413,9 @@ export interface IAddTradeDto {
     entryPrice?: number | undefined;
     stopLoss?: number | undefined;
     takeProfit?: number | undefined;
+    exitPrice?: number | undefined;
     notes?: string | undefined;
-    references?: ReferenceDto[] | undefined;
+    references?: AddReferenceDto[] | undefined;
 }
 
 export class ApiInfo implements IApiInfo {
@@ -332,19 +432,19 @@ export class ApiInfo implements IApiInfo {
         }
     }
 
-    static fromJS(data: any): ApiInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiInfo();
-        result.init(data);
-        return result;
-    }
-
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
             this.version = _data["version"];
             this.environment = _data["environment"];
         }
+    }
+
+    static fromJS(data: any): ApiInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiInfo();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -362,6 +462,54 @@ export interface IApiInfo {
     environment?: string | undefined;
 }
 
+export class CloseTradeDto implements ICloseTradeDto {
+    balance?: number | undefined;
+    exitPrice?: number | undefined;
+    closed?: Date | undefined;
+    result?: ResultDto;
+
+    constructor(data?: ICloseTradeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.balance = _data["balance"];
+            this.exitPrice = _data["exitPrice"];
+            this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
+            this.result = _data["result"];
+        }
+    }
+
+    static fromJS(data: any): CloseTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CloseTradeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["balance"] = this.balance;
+        data["exitPrice"] = this.exitPrice;
+        data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
+        data["result"] = this.result;
+        return data;
+    }
+}
+
+export interface ICloseTradeDto {
+    balance?: number | undefined;
+    exitPrice?: number | undefined;
+    closed?: Date | undefined;
+    result?: ResultDto;
+}
+
 export class ErrorResponse implements IErrorResponse {
     fieldErrors!: FieldError[] | undefined;
     commonErrors!: string[] | undefined;
@@ -373,13 +521,6 @@ export class ErrorResponse implements IErrorResponse {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
-    }
-
-    static fromJS(data: any): ErrorResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorResponse();
-        result.init(data);
-        return result;
     }
 
     init(_data?: any) {
@@ -395,6 +536,13 @@ export class ErrorResponse implements IErrorResponse {
                     this.commonErrors!.push(item);
             }
         }
+    }
+
+    static fromJS(data: any): ErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorResponse();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -431,13 +579,6 @@ export class FieldError implements IFieldError {
         }
     }
 
-    static fromJS(data: any): FieldError {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldError();
-        result.init(data);
-        return result;
-    }
-
     init(_data?: any) {
         if (_data) {
             this.identifier = _data["identifier"];
@@ -447,6 +588,13 @@ export class FieldError implements IFieldError {
                     this.messages!.push(item);
             }
         }
+    }
+
+    static fromJS(data: any): FieldError {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldError();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -464,50 +612,6 @@ export class FieldError implements IFieldError {
 export interface IFieldError {
     identifier: string | undefined;
     messages: string[] | undefined;
-}
-
-export class CloseTradeDto implements ICloseTradeDto {
-    balance?: number | undefined;
-    Closed?: Date | undefined;
-    result?: ResultDto;
-
-    constructor(data?: ICloseTradeDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    static fromJS(data: any): CloseTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CloseTradeDto();
-        result.init(data);
-        return result;
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.balance = _data["balance"];
-            this.Closed = _data["Closed"] ? new Date(_data["Closed"].toString()) : <any>undefined;
-            this.result = _data["result"];
-        }
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["balance"] = this.balance;
-        data["Closed"] = this.Closed ? this.Closed.toISOString() : <any>undefined;
-        data["result"] = this.result;
-        return data;
-    }
-}
-
-export interface ICloseTradeDto {
-    balance?: number | undefined;
-    Closed?: Date | undefined;
-    result?: ResultDto;
 }
 
 export class ProblemDetails implements IProblemDetails {
@@ -528,13 +632,6 @@ export class ProblemDetails implements IProblemDetails {
         }
     }
 
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
-
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -547,6 +644,13 @@ export class ProblemDetails implements IProblemDetails {
             this.detail = _data["detail"];
             this.instance = _data["instance"];
         }
+    }
+
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -575,8 +679,9 @@ export interface IProblemDetails {
 }
 
 export class ReferenceDto implements IReferenceDto {
+    id?: string;
     type?: ReferenceTypeDto;
-    link?: string | undefined;
+    link!: string | undefined;
     notes?: string | undefined;
 
     constructor(data?: IReferenceDto) {
@@ -588,6 +693,15 @@ export class ReferenceDto implements IReferenceDto {
         }
     }
 
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.link = _data["link"];
+            this.notes = _data["notes"];
+        }
+    }
+
     static fromJS(data: any): ReferenceDto {
         data = typeof data === 'object' ? data : {};
         let result = new ReferenceDto();
@@ -595,16 +709,9 @@ export class ReferenceDto implements IReferenceDto {
         return result;
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.type = _data["type"];
-            this.link = _data["link"];
-            this.notes = _data["notes"];
-        }
-    }
-
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["type"] = this.type;
         data["link"] = this.link;
         data["notes"] = this.notes;
@@ -613,8 +720,9 @@ export class ReferenceDto implements IReferenceDto {
 }
 
 export interface IReferenceDto {
+    id?: string;
     type?: ReferenceTypeDto;
-    link?: string | undefined;
+    link: string | undefined;
     notes?: string | undefined;
 }
 
@@ -630,12 +738,309 @@ export enum ResultDto {
     Loss = "Loss",
 }
 
+export class SuccessResponse implements ISuccessResponse {
+    warnings?: string[] | undefined;
+
+    constructor(data?: ISuccessResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): SuccessResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuccessResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ISuccessResponse {
+    warnings?: string[] | undefined;
+}
+
+export class TradeAddedDto implements ITradeAddedDto {
+    tradeId?: string;
+    tradeResult?: TradeResultDto;
+
+    constructor(data?: ITradeAddedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tradeId = _data["tradeId"];
+            this.tradeResult = _data["tradeResult"] ? TradeResultDto.fromJS(_data["tradeResult"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): TradeAddedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeAddedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tradeId"] = this.tradeId;
+        data["tradeResult"] = this.tradeResult ? this.tradeResult.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ITradeAddedDto {
+    tradeId?: string;
+    tradeResult?: TradeResultDto;
+}
+
+export class TradeAddedDtoSuccessResponse implements ITradeAddedDtoSuccessResponse {
+    data?: TradeAddedDto;
+    warnings?: string[] | undefined;
+
+    constructor(data?: ITradeAddedDtoSuccessResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data = _data["data"] ? TradeAddedDto.fromJS(_data["data"]) : <any>undefined;
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): TradeAddedDtoSuccessResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeAddedDtoSuccessResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ITradeAddedDtoSuccessResponse {
+    data?: TradeAddedDto;
+    warnings?: string[] | undefined;
+}
+
+export class TradeDto implements ITradeDto {
+    id?: string;
+    assetId?: string;
+    asset!: string | undefined;
+    profileId?: string;
+    profile!: string | undefined;
+    size?: number;
+    opened?: Date;
+    closed?: Date | undefined;
+    balance?: number | undefined;
+    result?: ResultDto;
+    performance?: number | undefined;
+    isClosed?: boolean;
+    currencyId?: string;
+    currency!: string | undefined;
+    entry?: number;
+    stopLoss?: number | undefined;
+    takeProfit?: number | undefined;
+    exitPrice?: number | undefined;
+    riskRewardRatio?: number | undefined;
+    references!: ReferenceDto[] | undefined;
+    notes?: string | undefined;
+
+    constructor(data?: ITradeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.assetId = _data["assetId"];
+            this.asset = _data["asset"];
+            this.profileId = _data["profileId"];
+            this.profile = _data["profile"];
+            this.size = _data["size"];
+            this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
+            this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
+            this.balance = _data["balance"];
+            this.result = _data["result"];
+            this.performance = _data["performance"];
+            this.isClosed = _data["isClosed"];
+            this.currencyId = _data["currencyId"];
+            this.currency = _data["currency"];
+            this.entry = _data["entry"];
+            this.stopLoss = _data["stopLoss"];
+            this.takeProfit = _data["takeProfit"];
+            this.exitPrice = _data["exitPrice"];
+            this.riskRewardRatio = _data["riskRewardRatio"];
+            if (Array.isArray(_data["references"])) {
+                this.references = [] as any;
+                for (let item of _data["references"])
+                    this.references!.push(ReferenceDto.fromJS(item));
+            }
+            this.notes = _data["notes"];
+        }
+    }
+
+    static fromJS(data: any): TradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["assetId"] = this.assetId;
+        data["asset"] = this.asset;
+        data["profileId"] = this.profileId;
+        data["profile"] = this.profile;
+        data["size"] = this.size;
+        data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
+        data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
+        data["balance"] = this.balance;
+        data["result"] = this.result;
+        data["performance"] = this.performance;
+        data["isClosed"] = this.isClosed;
+        data["currencyId"] = this.currencyId;
+        data["currency"] = this.currency;
+        data["entry"] = this.entry;
+        data["stopLoss"] = this.stopLoss;
+        data["takeProfit"] = this.takeProfit;
+        data["exitPrice"] = this.exitPrice;
+        data["riskRewardRatio"] = this.riskRewardRatio;
+        if (Array.isArray(this.references)) {
+            data["references"] = [];
+            for (let item of this.references)
+                data["references"].push(item.toJSON());
+        }
+        data["notes"] = this.notes;
+        return data;
+    }
+}
+
+export interface ITradeDto {
+    id?: string;
+    assetId?: string;
+    asset: string | undefined;
+    profileId?: string;
+    profile: string | undefined;
+    size?: number;
+    opened?: Date;
+    closed?: Date | undefined;
+    balance?: number | undefined;
+    result?: ResultDto;
+    performance?: number | undefined;
+    isClosed?: boolean;
+    currencyId?: string;
+    currency: string | undefined;
+    entry?: number;
+    stopLoss?: number | undefined;
+    takeProfit?: number | undefined;
+    exitPrice?: number | undefined;
+    riskRewardRatio?: number | undefined;
+    references: ReferenceDto[] | undefined;
+    notes?: string | undefined;
+}
+
+export class TradeResultDto implements ITradeResultDto {
+    result?: ResultDto;
+    performance?: number | undefined;
+
+    constructor(data?: ITradeResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"];
+            this.performance = _data["performance"];
+        }
+    }
+
+    static fromJS(data: any): TradeResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result;
+        data["performance"] = this.performance;
+        return data;
+    }
+}
+
+export interface ITradeResultDto {
+    result?: ResultDto;
+    performance?: number | undefined;
+}
+
 export class SwaggerResponse<TResult> {
     status: number;
     headers: { [key: string]: any; };
     result: TResult;
 
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult) {
+    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
+    {
         this.status = status;
         this.headers = headers;
         this.result = result;
@@ -648,7 +1053,6 @@ export class SimpleTradingClientException extends Error {
     response: string;
     headers: { [key: string]: any; };
     result: any;
-    protected isSimpleTradingClientException = true;
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -660,13 +1064,13 @@ export class SimpleTradingClientException extends Error {
         this.result = result;
     }
 
+    protected isSimpleTradingClientException = true;
+
     static isSimpleTradingClientException(obj: any): obj is SimpleTradingClientException {
         return obj.isSimpleTradingClientException === true;
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: {
-    [key: string]: any;
-}, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
     throw new SimpleTradingClientException(message, status, response, headers, result);
 }

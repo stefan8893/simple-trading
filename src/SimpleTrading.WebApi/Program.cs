@@ -4,7 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.WebApi;
+using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Clients;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
@@ -52,11 +52,11 @@ app.UseAuthorization();
 app.MapControllers()
     .RequireAuthorization();
 
-var rootCommand = CliCommands.RootCommand(app);
-rootCommand.AddCommand(CliCommands.CreateDatabaseCommand(app));
-rootCommand.AddCommand(CliCommands.SeedDatabaseCommand(app));
-rootCommand.AddCommand(CliCommands.DropDatabaseCommand(app));
-rootCommand.AddCommand(CliCommands.GenerateClientCommand(app));
+var rootCommand = AppRootCommand.Create(app);
+rootCommand.AddCommand(CreateDatabaseCommand.Create(app));
+rootCommand.AddCommand(SeedDatabaseCommand.Create(app));
+rootCommand.AddCommand(DropDatabaseCommand.Create(app));
+rootCommand.AddCommand(GenerateClientCommand.Create(app));
 
 await rootCommand.InvokeAsync(args);
 

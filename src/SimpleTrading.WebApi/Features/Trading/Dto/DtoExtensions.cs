@@ -1,5 +1,4 @@
 ﻿using SimpleTrading.Domain.Trading.UseCases;
-using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
