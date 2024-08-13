@@ -326,9 +326,9 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     public async Task A_trade_can_be_added_successfully()
     {
         // arrange
-        var currency = TestData.Currency.Default.Build();
-        var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync();
 
@@ -347,7 +347,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -379,10 +379,10 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade.References
+        newlyAddedTrade!.References
             .Should().HaveCount(1)
             .And.Contain(x => x.Notes == "some notes");
     }
@@ -416,9 +416,10 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        newlyAddedTrade.Should().NotBeNull();
 
-        newlyAddedTrade.IsClosed.Should().BeTrue();
+        newlyAddedTrade!.IsClosed.Should().BeTrue();
     }
 
     [Fact]
@@ -526,9 +527,10 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        newlyAddedTrade.Should().NotBeNull();
 
-        newlyAddedTrade.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
+        newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
         newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
     }
 }

@@ -112,9 +112,10 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
 
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
         var closedTrade = await DbContext.Trades.AsNoTracking()
-            .FirstAsync(x => x.Id == trade.Id);
+            .SingleOrDefaultAsync(x => x.Id == trade.Id);
+        closedTrade.Should().NotBeNull();
 
-        closedTrade.Balance.Should().Be(requestModel.Balance);
+        closedTrade!.Balance.Should().Be(requestModel.Balance);
         closedTrade.Closed.Should().NotBeNull();
         closedTrade.IsClosed.Should().BeTrue();
         // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
