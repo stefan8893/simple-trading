@@ -2,7 +2,7 @@
 
 public static class DateTimeExtensions
 {
-    public static DateTime ToLocal(this DateTime dateTime, string timeZone)
+    public static DateTimeOffset ToLocal(this DateTime dateTime, string timeZone)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(timeZone, nameof(timeZone));
 
@@ -10,8 +10,9 @@ public static class DateTimeExtensions
             throw new ArgumentException("The given dateTime is not in UTC");
 
         var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+        var dateTimeOffset = new DateTimeOffset(dateTime);
 
-        return TimeZoneInfo.ConvertTime(dateTime, timeZoneInfo).ToLocalKind();
+        return TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo);
     }
 
     public static DateTime ToUnspecifiedKind(this DateTime dateTime)

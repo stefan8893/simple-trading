@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
@@ -12,6 +13,8 @@ public class GetTradeInteractor(TradingDbContext dbContext) : BaseInteractor, IG
         if (trade is null)
             return NotFound<Trade>(tradeId);
 
-        return TradeResponseModel.From(trade);
+        var userSettings = await dbContext.GetUserSettings();
+
+        return TradeResponseModel.From(trade, userSettings.TimeZone);
     }
 }

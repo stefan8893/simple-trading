@@ -142,8 +142,8 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     }
 
     [Theory]
-    [InlineData("de-AT", "Der Wert von 'Eröffnet' muss grösser oder gleich '01.01.2000 00:00:00' sein.")]
-    [InlineData("en-US", "'Opened' must be greater than or equal to '01.01.2000 00:00:00'.")]
+    [InlineData("de-AT", "Der Wert von 'Eröffnet' muss grösser oder gleich '01.01.2000 00:00:00 +00:00' sein.")]
+    [InlineData("en-US", "'Opened' must be greater than or equal to '01.01.2000 00:00:00 +00:00'.")]
     public async Task Opened_must_not_be_before_min_date(string culture, string errorMessage)
     {
         // arrange
@@ -495,11 +495,8 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             .Be("In order to add a closed trade, you must specify 'Balance' and the 'Closed' date.");
     }
 
-    [Theory]
-    [InlineData(DateTimeKind.Local)]
-    [InlineData(DateTimeKind.Unspecified)]
-    [InlineData(DateTimeKind.Utc)]
-    public async Task Trade_dates_are_always_considered_as_utc(DateTimeKind kind)
+    [Fact]
+    public async Task Opened_passed_as_utc_and_closed_as_local_time_will_both_stored_in_utc()
     {
         // arrange
         var currency = TestData.Currency.Default.Build();
@@ -508,12 +505,15 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync();
 
+        var opened = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
+        var closed = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
+
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = DateTime.SpecifyKind(_utcNow, kind),
-            Closed = DateTime.SpecifyKind(_utcNow, kind),
+            Opened = opened,
+            Closed = closed,
             Size = 5000,
             Balance = 50,
             EntryPrice = 1.05m,
@@ -528,10 +528,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
 
-        newlyAddedTrade.Opened.Should().Be(_utcNow);
-        newlyAddedTrade.Opened.Kind.Should().Be(DateTimeKind.Utc);
-
-        newlyAddedTrade.Closed.Should().Be(_utcNow);
-        newlyAddedTrade.Closed!.Value.Kind.Should().Be(DateTimeKind.Utc);
+        newlyAddedTrade.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
+        newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
     }
 }

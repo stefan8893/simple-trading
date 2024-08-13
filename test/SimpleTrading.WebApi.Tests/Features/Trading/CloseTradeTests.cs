@@ -180,4 +180,39 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         tradeAfterClosing.Should().NotBeNull();
         tradeAfterClosing!.IsClosed.Should().BeTrue();
     }
+    
+    
+    [Fact]
+    public async Task A_trade_gets_closed_in_new_york_local_time_but_the_date_is_stored_in_utc()
+    {
+        // arrange
+        var client = await CreateClientWithAccessToken();
+        var simpleTradingClient = new SimpleTradingClient(client);
+
+        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var closedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
+
+        // act
+        var act = () => simpleTradingClient.CloseTradeAsync(trade.Id, new CloseTradeDto
+        {
+            Closed = closedInNewYork,
+            Result = ResultDto.Loss,
+            Balance = -50d,
+            ExitPrice = 1.05
+        });
+
+        // assert
+        await act.Should().NotThrowAsync();
+        var tradeAfterClosing = await DbContext.Trades
+            .AsNoTracking()
+            .FirstAsync(x => x.Id == trade.Id);
+
+        tradeAfterClosing.Should().NotBeNull();
+        var expectedClosedDate = DateTime.Parse("2024-08-05T16:00:00");
+        tradeAfterClosing.Closed.Should().HaveValue()
+            .And.Be(expectedClosedDate);
+    }
 }

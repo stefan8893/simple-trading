@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 
@@ -73,7 +72,7 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
             ProfileId = profile.Id,
             Profile = profile,
             Size = model.Size,
-            Opened = model.Opened.ToUtcKind(),
+            Opened = model.Opened.UtcDateTime,
             CurrencyId = currency.Id,
             Currency = currency,
             PositionPrices = new PositionPrices
@@ -115,7 +114,9 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
 
         OneOf<Completed<Trade>, CompletedWithWarnings<Trade>, BusinessError> Close()
         {
-            var result = trade.Close(new Trade.CloseTradeDto(model.Closed!.Value, model.Balance!.Value,
+            var result = trade.Close(new Trade.CloseTradeDto(
+                model.Closed!.Value.UtcDateTime,
+                model.Balance!.Value,
                 utcNow)
             {
                 ExitPrice = model.ExitPrice,

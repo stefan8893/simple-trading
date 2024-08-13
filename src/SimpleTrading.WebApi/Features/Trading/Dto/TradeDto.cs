@@ -12,8 +12,8 @@ public class TradeDto
     public Guid ProfileId { get; init; }
     public required string Profile { get; init; }
     public decimal Size { get; init; }
-    public DateTime Opened { get; init; }
-    public DateTime? Closed { get; init; }
+    public DateTimeOffset Opened { get; init; }
+    public DateTimeOffset? Closed { get; init; }
     public decimal? Balance { get; init; }
     public ResultDto? Result { get; init; }
     public short? Performance { get; init; }

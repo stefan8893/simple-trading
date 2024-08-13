@@ -17,7 +17,7 @@ public class CloseTradeDto
 {
     public decimal? Balance { get; set; }
     public decimal? ExitPrice { get; set; }
-    public DateTime? Closed { get; set; }
+    public DateTimeOffset? Closed { get; set; }
     public ResultDto? Result { get; set; }
 }
 
