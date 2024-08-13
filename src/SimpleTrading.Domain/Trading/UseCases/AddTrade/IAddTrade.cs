@@ -5,7 +5,9 @@ namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 public interface
     IAddTrade : IInteractor<AddTradeRequestModel,
-    OneOf<Completed<AddTradeResponseModel>, CompletedWithWarnings<AddTradeResponseModel>, BadInput, NotFound,
+    OneOf<Completed<AddTradeResponseModel>, 
+        BadInput,
+        NotFound,
         BusinessError>>
 {
 }

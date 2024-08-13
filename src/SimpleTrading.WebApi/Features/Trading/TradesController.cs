@@ -55,22 +55,15 @@ public class TradesController : ControllerBase
 
         return result.Match(
             completed => Ok(MapToSuccessResponse(completed)),
-            completedWithWarnings => Ok(MapToSuccessResponseWithWarnings(completedWithWarnings)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
         );
-
+        
         SuccessResponse<TradeAddedDto> MapToSuccessResponse(Completed<AddTradeResponseModel> completed)
         {
-            return SuccessResponse<TradeAddedDto>.From(TradeAddedDto.From(completed.Data));
-        }
-
-        SuccessResponse<TradeAddedDto> MapToSuccessResponseWithWarnings(
-            CompletedWithWarnings<AddTradeResponseModel> completedWithWarnings)
-        {
-            return SuccessResponse<TradeAddedDto>.From(TradeAddedDto.From(completedWithWarnings.Data),
-                completedWithWarnings.Warnings);
+            return SuccessResponse<TradeAddedDto>
+                .From(TradeAddedDto.From(completed.Data), completed.Warnings);
         }
     }
 
@@ -100,7 +93,6 @@ public class TradesController : ControllerBase
 
         return result.Match(
             completed => Ok(MapToSuccessResponse(completed)),
-            completedWithWarnings => Ok(MapToSuccessResponseWithWarnings(completedWithWarnings)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
@@ -108,14 +100,8 @@ public class TradesController : ControllerBase
 
         SuccessResponse<TradeResultDto> MapToSuccessResponse(Completed<CloseTradeResponseModel> completed)
         {
-            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data));
-        }
-
-        SuccessResponse<TradeResultDto> MapToSuccessResponseWithWarnings(
-            CompletedWithWarnings<CloseTradeResponseModel> completedWithWarnings)
-        {
-            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completedWithWarnings.Data),
-                completedWithWarnings.Warnings);
+            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data),
+                completed.Warnings);
         }
     }
 

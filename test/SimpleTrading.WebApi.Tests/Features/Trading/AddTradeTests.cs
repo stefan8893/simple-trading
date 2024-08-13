@@ -59,7 +59,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == response.Data!.TradeId);
+            .SingleOrDefaultAsync(x => x.Id == response.Data!.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -197,12 +197,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == response.Data!.TradeId);
+            .SingleOrDefaultAsync(x => x.Id == response.Data!.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
         var expected = DateTime.Parse("2024-08-05T12:00:00");
         expected.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade.Opened.Should().Be(expected);
+        newlyAddedTrade!.Opened.Should().Be(expected);
     }
 
 
@@ -236,11 +236,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == response.Data!.TradeId);
+            .SingleOrDefaultAsync(x => x.Id == response.Data!.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");
         expectedOpenedDate.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade.Opened.Should().Be(expectedOpenedDate);
+        newlyAddedTrade!.Opened.Should().Be(expectedOpenedDate);
     }
 }

@@ -29,7 +29,7 @@ public class Trade
     public bool IsClosed => Closed.HasValue && Balance.HasValue;
     public required DateTime Created { get; init; }
 
-    internal OneOf<Completed, CompletedWithWarnings, BusinessError> Close(CloseTradeDto dto)
+    internal OneOf<Completed, BusinessError> Close(CloseTradeDto dto)
     {
         if (dto.Closed < Opened)
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpenedError);
@@ -48,8 +48,7 @@ public class Trade
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
         Result = results.ManuallyEntered ?? calculatedResult;
 
-        return AnalyseResults(results, calculatedResult)
-            .Match<OneOf<Completed, CompletedWithWarnings, BusinessError>>(x => x, x => x);
+        return AnalyseResults(results, calculatedResult);
     }
 
     private TradingResultsDto CalculateResults(CloseTradeDto dto)
@@ -92,7 +91,7 @@ public class Trade
             : balanceResult;
     }
 
-    private OneOf<Completed, CompletedWithWarnings> AnalyseResults(TradingResultsDto results,
+    private Completed AnalyseResults(TradingResultsDto results,
         ITradingResult? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
@@ -116,10 +115,7 @@ public class Trade
             .AnalyseResults(this, analyseResultsConfiguration)
             .ToList();
 
-        if (analysisResult.Count != 0)
-            return new CompletedWithWarnings(analysisResult);
-
-        return new Completed();
+        return new Completed(analysisResult);
     }
 
     private static ITradingResult CreateManuallyEnteredResult(ResultModel resultModel)

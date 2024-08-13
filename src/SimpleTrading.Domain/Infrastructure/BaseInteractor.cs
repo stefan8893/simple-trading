@@ -13,33 +13,35 @@ public abstract class BaseInteractor
     {
         return new Completed<T>(data);
     }
-
-    protected static CompletedWithWarnings CompletedWithWarnings(IEnumerable<Warning> warnings)
+    
+    protected static Completed<T> Completed<T>(T data, IEnumerable<Warning> warnings) where T : notnull
     {
-        return new CompletedWithWarnings(warnings);
+        return new Completed<T>(data, warnings);
     }
 
-    protected static CompletedWithWarnings CompletedWithWarnings(IEnumerable<string> warnings)
+    protected static Completed<T> Completed<T>(T data, IEnumerable<string> warnings) where T : notnull
     {
-        return new CompletedWithWarnings(warnings);
+        return new Completed<T>(data, warnings);
+    }
+    
+    protected static Completed<T> Completed<T>(T data, string singleWarning) where T : notnull
+    {
+        return new Completed<T>(data, singleWarning);
+    }
+    
+    protected static Completed Completed(IEnumerable<Warning> warnings)
+    {
+        return new Completed(warnings);
     }
 
-    protected static CompletedWithWarnings CompletedWithWarnings(string singleWarning)
+    protected static Completed Completed(IEnumerable<string> warnings)
     {
-        return new CompletedWithWarnings(singleWarning);
+        return new Completed(warnings);
     }
 
-    protected static CompletedWithWarnings<T> CompletedWithWarnings<T>(T data, IReadOnlyList<Warning> warnings)
-        where T : notnull
+    protected static Completed Completed(string singleWarning)
     {
-        return new CompletedWithWarnings<T>(data, warnings);
-    }
-
-    protected static CompletedWithWarnings<T> CompletedWithWarnings<T>(T data,
-        CompletedWithWarnings completedWithWarnings)
-        where T : notnull
-    {
-        return new CompletedWithWarnings<T>(data, completedWithWarnings.Warnings);
+        return new Completed(singleWarning);
     }
 
     protected static BadInput BadInput(ValidationResult validationResult)

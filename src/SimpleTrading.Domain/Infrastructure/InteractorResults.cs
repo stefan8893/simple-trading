@@ -2,52 +2,54 @@
 
 namespace SimpleTrading.Domain.Infrastructure;
 
-public record Completed;
-
-public record CompletedWithWarnings
+public record Completed
 {
-    public CompletedWithWarnings(string singleWarning)
+    public Completed()
+    { }
+    
+    public Completed(string singleWarning)
     {
         Warnings = [new Warning(singleWarning)];
     }
 
-    public CompletedWithWarnings(IEnumerable<Warning> warnings)
+    public Completed(IEnumerable<Warning> warnings)
     {
         Warnings = warnings.ToList();
     }
-
-    public CompletedWithWarnings(IEnumerable<string> warnings)
+    
+    public Completed(IEnumerable<string> warnings)
     {
         Warnings = warnings
             .Select(x => new Warning(x))
             .ToList();
     }
 
-    public IReadOnlyList<Warning> Warnings { get; init; }
+    public IReadOnlyList<Warning> Warnings { get; init; } = [];
 }
 
-public record Completed<TData>(TData Data) : Completed;
-
-public record CompletedWithWarnings<TData> : Completed<TData>
+public record Completed<TData> : Completed where TData : notnull
 {
-    public CompletedWithWarnings(TData data, string singleWarning) : base(data)
+    public Completed(TData data)
     {
-        Warnings = [new Warning(singleWarning)];
+        Data = data;
+    }
+    
+    public Completed(TData data, string singleWarning) : base(singleWarning)
+    {
+        Data = data;
     }
 
-    public CompletedWithWarnings(TData data, IReadOnlyList<Warning> warnings) : base(data)
+    public Completed(TData data, IEnumerable<Warning> warnings) : base(warnings)
     {
-        Warnings = warnings;
+        Data = data;
+    }
+    
+    public Completed(TData data, IEnumerable<string> warnings) : base(warnings)
+    {
+        Data = data;
     }
 
-    public CompletedWithWarnings(TData data, IEnumerable<string> warnings) : base(data)
-    {
-        Warnings = warnings
-            .Select(x => new Warning(x))
-            .ToList();
-    }
-
-    public IReadOnlyList<Warning> Warnings { get; init; }
+    public TData Data { get; init; }
 }
 
 public record BadInput(ValidationResult ValidationResult);

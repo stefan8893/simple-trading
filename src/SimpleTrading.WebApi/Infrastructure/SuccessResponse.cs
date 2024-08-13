@@ -47,11 +47,6 @@ public record SuccessResponse<T> where T : notnull
 
     public static SuccessResponse<T> From(Completed<T> completed)
     {
-        return new SuccessResponse<T>(completed.Data);
-    }
-
-    public static SuccessResponse<T> From(CompletedWithWarnings<T> completed)
-    {
         return new SuccessResponse<T>(completed.Data, completed.Warnings.Select(x => x.Reason));
     }
 }
