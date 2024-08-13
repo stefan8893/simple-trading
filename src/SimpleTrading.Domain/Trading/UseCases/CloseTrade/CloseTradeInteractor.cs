@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;

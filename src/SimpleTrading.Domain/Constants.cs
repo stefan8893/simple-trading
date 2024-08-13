@@ -5,6 +5,7 @@ namespace SimpleTrading.Domain;
 
 public static class Constants
 {
+    public const string DefaultTimeZone = "Europe/Vienna";
     public static readonly DateTime MinDate = DateTime.Parse("2000-01-01T00:00:00").ToUtcKind();
 
     public static readonly CultureInfo DefaultCulture = new("de-AT");
@@ -20,8 +21,6 @@ public static class Constants
         "de",
         "en"
     ];
-
-    public const string DefaultTimeZone = "Europe/Vienna";
 
     public static readonly Guid UserSettingsId = Guid.Parse("401c519b-956a-4a5f-bd84-77e716817771");
 }

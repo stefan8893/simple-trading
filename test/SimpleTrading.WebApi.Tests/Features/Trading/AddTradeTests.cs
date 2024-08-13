@@ -166,7 +166,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 x ==
                 "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.");
     }
-    
+
     [Fact]
     public async Task A_trade_with_opened_date_in_utc_will_be_stored_like_that_there_is_no_implicit_conversion()
     {
@@ -204,8 +204,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         expected.Kind.Should().NotBe(DateTimeKind.Local);
         newlyAddedTrade.Opened.Should().Be(expected);
     }
-    
-        
+
+
     [Fact]
     public async Task A_trade_with_opened_date_in_local_time_will_be_stored_as_utc_there_is_no_implicit_conversion()
     {

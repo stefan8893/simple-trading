@@ -6,6 +6,7 @@
 
 /* tslint:disable */
 /* eslint-disable */
+
 // ReSharper disable InconsistentNaming
 
 export interface ISimpleTradingClient {
@@ -21,22 +22,22 @@ export interface ISimpleTradingClient {
     getTrade(tradeId: string): Promise<SwaggerResponse<TradeDto>>;
 
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return OK
      */
     addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>>;
 
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return OK
      */
     closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -62,24 +63,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiInfo.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<ApiInfo>>(new SwaggerResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -102,40 +85,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetTrade(response: Response): Promise<SwaggerResponse<TradeDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeDto.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<TradeDto>>(new SwaggerResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return OK
      */
     addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>> {
@@ -158,54 +109,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddTrade(response: Response): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeAddedDtoSuccessResponse.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Content", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SwaggerResponse<TradeAddedDtoSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param body (optional) 
+     * @param body (optional)
      * @return OK
      */
     closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>> {
@@ -231,47 +136,155 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processCloseTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 401) {
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ApiInfo.fromJS(resultData200);
+                return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<ApiInfo>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    protected processGetTrade(response: Response): Promise<SwaggerResponse<TradeDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TradeDto.fromJS(resultData200);
+                return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<TradeDto>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    protected processAddTrade(response: Response): Promise<SwaggerResponse<TradeAddedDtoSuccessResponse>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TradeAddedDtoSuccessResponse.fromJS(resultData200);
+                return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<TradeAddedDtoSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    protected processCloseTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+                let result401: any = null;
+                let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result401 = ProblemDetails.fromJS(resultData401);
+                return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = SuccessResponse.fromJS(resultData200);
+                return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Content", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
@@ -292,19 +305,19 @@ export class AddReferenceDto implements IAddReferenceDto {
         }
     }
 
+    static fromJS(data: any): AddReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.type = _data["type"];
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
-    }
-
-    static fromJS(data: any): AddReferenceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddReferenceDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -347,6 +360,13 @@ export class AddTradeDto implements IAddTradeDto {
         }
     }
 
+    static fromJS(data: any): AddTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.assetId = _data["assetId"];
@@ -368,13 +388,6 @@ export class AddTradeDto implements IAddTradeDto {
                     this.references!.push(AddReferenceDto.fromJS(item));
             }
         }
-    }
-
-    static fromJS(data: any): AddTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -432,19 +445,19 @@ export class ApiInfo implements IApiInfo {
         }
     }
 
+    static fromJS(data: any): ApiInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiInfo();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
             this.version = _data["version"];
             this.environment = _data["environment"];
         }
-    }
-
-    static fromJS(data: any): ApiInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiInfo();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -477,6 +490,13 @@ export class CloseTradeDto implements ICloseTradeDto {
         }
     }
 
+    static fromJS(data: any): CloseTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CloseTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.balance = _data["balance"];
@@ -484,13 +504,6 @@ export class CloseTradeDto implements ICloseTradeDto {
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
             this.result = _data["result"];
         }
-    }
-
-    static fromJS(data: any): CloseTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CloseTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -523,6 +536,13 @@ export class ErrorResponse implements IErrorResponse {
         }
     }
 
+    static fromJS(data: any): ErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             if (Array.isArray(_data["fieldErrors"])) {
@@ -536,13 +556,6 @@ export class ErrorResponse implements IErrorResponse {
                     this.commonErrors!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): ErrorResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorResponse();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -579,6 +592,13 @@ export class FieldError implements IFieldError {
         }
     }
 
+    static fromJS(data: any): FieldError {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldError();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.identifier = _data["identifier"];
@@ -588,13 +608,6 @@ export class FieldError implements IFieldError {
                     this.messages!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): FieldError {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldError();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -632,6 +645,13 @@ export class ProblemDetails implements IProblemDetails {
         }
     }
 
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -644,13 +664,6 @@ export class ProblemDetails implements IProblemDetails {
             this.detail = _data["detail"];
             this.instance = _data["instance"];
         }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -693,6 +706,13 @@ export class ReferenceDto implements IReferenceDto {
         }
     }
 
+    static fromJS(data: any): ReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
@@ -700,13 +720,6 @@ export class ReferenceDto implements IReferenceDto {
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
-    }
-
-    static fromJS(data: any): ReferenceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ReferenceDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -750,6 +763,13 @@ export class SuccessResponse implements ISuccessResponse {
         }
     }
 
+    static fromJS(data: any): SuccessResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuccessResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             if (Array.isArray(_data["warnings"])) {
@@ -758,13 +778,6 @@ export class SuccessResponse implements ISuccessResponse {
                     this.warnings!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): SuccessResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new SuccessResponse();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -795,18 +808,18 @@ export class TradeAddedDto implements ITradeAddedDto {
         }
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.tradeId = _data["tradeId"];
-            this.tradeResult = _data["tradeResult"] ? TradeResultDto.fromJS(_data["tradeResult"]) : <any>undefined;
-        }
-    }
-
     static fromJS(data: any): TradeAddedDto {
         data = typeof data === 'object' ? data : {};
         let result = new TradeAddedDto();
         result.init(data);
         return result;
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tradeId = _data["tradeId"];
+            this.tradeResult = _data["tradeResult"] ? TradeResultDto.fromJS(_data["tradeResult"]) : <any>undefined;
+        }
     }
 
     toJSON(data?: any) {
@@ -835,6 +848,13 @@ export class TradeAddedDtoSuccessResponse implements ITradeAddedDtoSuccessRespon
         }
     }
 
+    static fromJS(data: any): TradeAddedDtoSuccessResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeAddedDtoSuccessResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.data = _data["data"] ? TradeAddedDto.fromJS(_data["data"]) : <any>undefined;
@@ -844,13 +864,6 @@ export class TradeAddedDtoSuccessResponse implements ITradeAddedDtoSuccessRespon
                     this.warnings!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): TradeAddedDtoSuccessResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new TradeAddedDtoSuccessResponse();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -902,6 +915,13 @@ export class TradeDto implements ITradeDto {
         }
     }
 
+    static fromJS(data: any): TradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
@@ -930,13 +950,6 @@ export class TradeDto implements ITradeDto {
             }
             this.notes = _data["notes"];
         }
-    }
-
-    static fromJS(data: any): TradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1007,18 +1020,18 @@ export class TradeResultDto implements ITradeResultDto {
         }
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.result = _data["result"];
-            this.performance = _data["performance"];
-        }
-    }
-
     static fromJS(data: any): TradeResultDto {
         data = typeof data === 'object' ? data : {};
         let result = new TradeResultDto();
         result.init(data);
         return result;
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.result = _data["result"];
+            this.performance = _data["performance"];
+        }
     }
 
     toJSON(data?: any) {
@@ -1039,8 +1052,7 @@ export class SwaggerResponse<TResult> {
     headers: { [key: string]: any; };
     result: TResult;
 
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
-    {
+    constructor(status: number, headers: { [key: string]: any; }, result: TResult) {
         this.status = status;
         this.headers = headers;
         this.result = result;
@@ -1053,6 +1065,7 @@ export class SimpleTradingClientException extends Error {
     response: string;
     headers: { [key: string]: any; };
     result: any;
+    protected isSimpleTradingClientException = true;
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -1064,13 +1077,13 @@ export class SimpleTradingClientException extends Error {
         this.result = result;
     }
 
-    protected isSimpleTradingClientException = true;
-
     static isSimpleTradingClientException(obj: any): obj is SimpleTradingClientException {
         return obj.isSimpleTradingClientException === true;
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: {
+    [key: string]: any;
+}, result?: any): any {
     throw new SimpleTradingClientException(message, status, response, headers, result);
 }

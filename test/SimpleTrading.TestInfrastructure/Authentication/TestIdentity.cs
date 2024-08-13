@@ -13,8 +13,8 @@ public static class TestIdentity
 
         var tokenClient = new ClientCredentialsFlow();
         var tokenResponse = await tokenClient.AcquireTokenAsync(testIdentity);
-        
-        return tokenResponse.AccessToken 
+
+        return tokenResponse.AccessToken
                ?? throw new Exception("Error while loading access token");
     }
 

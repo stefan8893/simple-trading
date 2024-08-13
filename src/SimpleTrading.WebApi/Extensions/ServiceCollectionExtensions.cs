@@ -64,7 +64,7 @@ public static class ServiceCollectionExtensions
             var userSettings = await scope.ServiceProvider
                 .GetRequiredService<TradingDbContext>()
                 .GetUserSettings();
-            
+
             return DateTime.UtcNow.ToLocal(userSettings.TimeZone).DateTime.ToLocalKind();
         });
 

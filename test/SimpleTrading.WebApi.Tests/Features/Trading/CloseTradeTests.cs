@@ -180,8 +180,8 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         tradeAfterClosing.Should().NotBeNull();
         tradeAfterClosing!.IsClosed.Should().BeTrue();
     }
-    
-    
+
+
     [Fact]
     public async Task A_trade_gets_closed_in_new_york_local_time_but_the_date_is_stored_in_utc()
     {

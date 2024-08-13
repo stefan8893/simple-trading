@@ -40,7 +40,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         returnedTrade.Id.Should().Be(trade.Id);
     }
-    
+
     [Fact]
     public async Task An_trades_opened_date_gets_converted_to_the_users_timezone()
     {
