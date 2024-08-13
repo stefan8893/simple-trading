@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -38,6 +39,32 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         returnedTrade.Id.Should().Be(trade.Id);
+    }
+    
+    [Fact]
+    public async Task An_trades_opened_date_gets_converted_to_the_users_timezone()
+    {
+        // arrange
+        var client = await CreateClientWithAccessToken();
+        var simpleTradingClient = new SimpleTradingClient(client);
+        var trade = (TestData.Trade.Default with
+            {
+                Opened = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind()
+            })
+            .Build();
+
+        var userSettings = await DbContext.GetUserSettings();
+        userSettings.TimeZone = "America/New_York";
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var returnedTrade = await simpleTradingClient.GetTradeAsync(trade.Id);
+
+        // assert
+        var expectedOpenedDate = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
+        returnedTrade.Opened.Should().Be(expectedOpenedDate);
     }
 
     [Fact]

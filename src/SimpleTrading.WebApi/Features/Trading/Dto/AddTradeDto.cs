@@ -8,8 +8,8 @@ public record AddTradeDto
 {
     public Guid? AssetId { get; set; }
     public Guid? ProfileId { get; set; }
-    public DateTime? Opened { get; set; }
-    public DateTime? Closed { get; set; }
+    public DateTimeOffset? Opened { get; set; }
+    public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; set; }
     public ResultDto? Result { get; set; }
     public decimal? Balance { get; set; }

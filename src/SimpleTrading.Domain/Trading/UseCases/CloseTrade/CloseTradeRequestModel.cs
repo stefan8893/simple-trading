@@ -5,7 +5,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
 public record CloseTradeRequestModel(
     Guid TradeId,
-    DateTime Closed,
+    DateTimeOffset Closed,
     decimal Balance,
     ResultModel? Result = null,
     decimal? ExitPrice = null);

@@ -91,7 +91,7 @@ public class TradesController : ControllerBase
         var tradeResult = MapToResultModel(dto.Result);
 
         var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
-            (DateTime) dto.Closed!,
+            dto.Closed!.Value,
             dto.Balance!.Value,
             tradeResult,
             dto.ExitPrice);

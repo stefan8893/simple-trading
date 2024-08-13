@@ -56,7 +56,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         response.Warnings.Should().BeEmpty();
         response.Data.Should().NotBeNull();
         response.Data.TradeResult.Should().NotBeNull();
-        var newlyAddedTrade = DbContext
+        var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
             .FirstAsync(x => x.Id == response.Data!.TradeId);
@@ -165,5 +165,82 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             .And.Contain(x =>
                 x ==
                 "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.");
+    }
+    
+    [Fact]
+    public async Task A_trade_with_opened_date_in_utc_will_be_stored_like_that_there_is_no_implicit_conversion()
+    {
+        // arrange
+        var client = await CreateClientWithAccessToken();
+        var simpleTradingClient = new SimpleTradingClient(client);
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var opened = DateTimeOffset.Parse("2024-08-05T12:00:00Z");
+
+        // act
+        var response = await simpleTradingClient.AddTradeAsync(new AddTradeDto
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = opened,
+            Size = 5000,
+            CurrencyId = currency.Id,
+            EntryPrice = 1.08
+        });
+
+        // assert
+        var newlyAddedTrade = await DbContext
+            .Trades
+            .AsNoTracking()
+            .FirstAsync(x => x.Id == response.Data!.TradeId);
+
+        newlyAddedTrade.Should().NotBeNull();
+        var expected = DateTime.Parse("2024-08-05T12:00:00");
+        expected.Kind.Should().NotBe(DateTimeKind.Local);
+        newlyAddedTrade.Opened.Should().Be(expected);
+    }
+    
+        
+    [Fact]
+    public async Task A_trade_with_opened_date_in_local_time_will_be_stored_as_utc_there_is_no_implicit_conversion()
+    {
+        // arrange
+        var client = await CreateClientWithAccessToken();
+        var simpleTradingClient = new SimpleTradingClient(client);
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var openedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
+
+        // act
+        var response = await simpleTradingClient.AddTradeAsync(new AddTradeDto
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = openedInNewYork,
+            Size = 5000,
+            CurrencyId = currency.Id,
+            EntryPrice = 1.08
+        });
+
+        // assert
+        var newlyAddedTrade = await DbContext
+            .Trades
+            .AsNoTracking()
+            .FirstAsync(x => x.Id == response.Data!.TradeId);
+
+        newlyAddedTrade.Should().NotBeNull();
+        var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");
+        expectedOpenedDate.Kind.Should().NotBe(DateTimeKind.Local);
+        newlyAddedTrade.Opened.Should().Be(expectedOpenedDate);
     }
 }

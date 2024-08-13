@@ -1,3 +1,5 @@
+using SimpleTrading.Domain.Extensions;
+
 namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 
 public class TradeResponseModel
@@ -8,8 +10,8 @@ public class TradeResponseModel
     public required Guid ProfileId { get; init; }
     public required string Profile { get; init; }
     public required decimal Size { get; init; }
-    public required DateTime Opened { get; init; }
-    public required DateTime? Closed { get; init; }
+    public required DateTimeOffset Opened { get; init; }
+    public required DateTimeOffset? Closed { get; init; }
     public required decimal? Balance { get; init; }
     public required ResultModel? Result { get; init; }
     public required short? Performance { get; init; }
@@ -24,7 +26,7 @@ public class TradeResponseModel
     public required IReadOnlyList<ReferenceModel> References { get; init; }
     public required string? Notes { get; init; }
 
-    public static TradeResponseModel From(Trade trade)
+    public static TradeResponseModel From(Trade trade, string timeZone)
     {
         return new TradeResponseModel
         {
@@ -34,8 +36,8 @@ public class TradeResponseModel
             ProfileId = trade.ProfileId,
             Profile = trade.Profile.Name,
             Size = trade.Size,
-            Opened = trade.Opened,
-            Closed = trade.Closed,
+            Opened = trade.Opened.ToLocal(timeZone),
+            Closed = trade.Closed?.ToLocal(timeZone),
             Balance = trade.Balance,
             Result = trade.Result?.ToResultModel(),
             Performance = trade.Result?.Performance,

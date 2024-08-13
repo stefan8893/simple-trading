@@ -60,8 +60,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<UtcNow>(_ => () => DateTime.UtcNow);
         services.AddSingleton<LocalNow>(sp => async () =>
         {
-            var userSettings = await sp.GetRequiredService<TradingDbContext>().GetUserSettings();
-            return DateTime.UtcNow.ToLocal(userSettings.TimeZone);
+            using var scope = sp.CreateScope();
+            var userSettings = await scope.ServiceProvider
+                .GetRequiredService<TradingDbContext>()
+                .GetUserSettings();
+            
+            return DateTime.UtcNow.ToLocal(userSettings.TimeZone).DateTime.ToLocalKind();
         });
 
         return services;

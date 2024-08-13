@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
@@ -31,7 +32,7 @@ public class CloseTradeInteractor(
 
     private async Task<CloseTradeResponse> CloseTrade(Trade trade, CloseTradeRequestModel model)
     {
-        var closeTradeDto = new Trade.CloseTradeDto(model.Closed,
+        var closeTradeDto = new Trade.CloseTradeDto(model.Closed.UtcDateTime,
             model.Balance,
             utcNow)
         {

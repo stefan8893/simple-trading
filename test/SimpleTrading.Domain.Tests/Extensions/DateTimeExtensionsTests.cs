@@ -12,9 +12,8 @@ public class DateTimeExtensionsTests
 
         var newYork = utc.ToLocal("America/New_York");
 
-        var expected = DateTime.Parse("2024-08-03T14:00:00");
+        var expected = DateTimeOffset.Parse("2024-08-03T14:00:00-04:00");
         newYork.Should().Be(expected);
-        newYork.Kind.Should().Be(DateTimeKind.Local);
     }
 
     [Fact]

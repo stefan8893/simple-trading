@@ -7,8 +7,8 @@ public record AddTradeRequestModel
 {
     public required Guid AssetId { get; init; }
     public required Guid ProfileId { get; init; }
-    public required DateTime Opened { get; init; }
-    public DateTime? Closed { get; set; }
+    public required DateTimeOffset Opened { get; init; }
+    public DateTimeOffset? Closed { get; set; }
     public required decimal Size { get; init; }
     public ResultModel? Result { get; set; }
     public decimal? Balance { get; set; }
