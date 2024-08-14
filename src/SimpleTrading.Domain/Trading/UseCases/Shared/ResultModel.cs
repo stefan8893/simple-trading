@@ -1,4 +1,4 @@
-﻿namespace SimpleTrading.Domain.Trading.UseCases;
+﻿namespace SimpleTrading.Domain.Trading.UseCases.Shared;
 
 public enum ResultModel
 {

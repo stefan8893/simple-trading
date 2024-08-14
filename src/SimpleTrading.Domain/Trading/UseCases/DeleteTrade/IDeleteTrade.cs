@@ -3,6 +3,6 @@ using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 
-public interface IDeleteTrade : IInteractor<Guid, OneOf<Completed, NotFound>>
+public interface IDeleteTrade : IInteractor<DeleteTradeRequestModel, OneOf<Completed, NotFound>>
 {
 }

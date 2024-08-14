@@ -1,5 +1,5 @@
-using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;

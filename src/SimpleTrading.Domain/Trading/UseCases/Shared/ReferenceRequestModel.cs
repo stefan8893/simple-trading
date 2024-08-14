@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
+namespace SimpleTrading.Domain.Trading.UseCases.Shared;
 
-public record ReferenceModel(ReferenceType Type, string Link, string? Notes = null);
+public record ReferenceRequestModel(ReferenceType Type, string Link, string? Notes = null);
 
-public class ReferenceModelValidator : AbstractValidator<ReferenceModel>
+public class ReferenceRequestModelValidator : AbstractValidator<ReferenceRequestModel>
 {
-    public ReferenceModelValidator()
+    public ReferenceRequestModelValidator()
     {
         RuleFor(x => x.Type)
             .IsInEnum()

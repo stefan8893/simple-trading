@@ -228,4 +228,10 @@
     <data name="BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades" xml:space="preserve">
         <value>Updating 'Balance' and 'Closed' is only possible when a trade has already been closed.</value>
     </data>
+    <data name="Reference" xml:space="preserve">
+        <value>Reference</value>
+    </data>
+    <data name="MoreThan50ReferencesNotAllowed" xml:space="preserve">
+        <value>You can't add more than {0} references per trade.</value>
+    </data>
 </root>

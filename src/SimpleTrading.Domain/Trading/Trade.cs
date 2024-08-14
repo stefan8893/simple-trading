@@ -5,6 +5,7 @@ using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.TradeResultAnalyser;
 using SimpleTrading.Domain.Trading.TradeResultAnalyser.Decorators;
 using SimpleTrading.Domain.Trading.UseCases;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading;
 

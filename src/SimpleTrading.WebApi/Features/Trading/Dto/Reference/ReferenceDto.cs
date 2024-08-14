@@ -1,14 +1,12 @@
 ﻿using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 
-using ReferenceModel = TradeResponseModel.ReferenceModel;
-
 public record ReferenceDto
 {
-    public Guid Id { get; init; }
-    public ReferenceTypeDto Type { get; init; }
+    public required Guid Id { get; init; }
+    public required ReferenceTypeDto Type { get; init; }
     public required string Link { get; init; }
     public string? Notes { get; set; }
 

@@ -24,7 +24,7 @@ public record Completed
             .ToList();
     }
 
-    public IReadOnlyList<Warning> Warnings { get; init; } = [];
+    public IEnumerable<Warning> Warnings { get; init; } = [];
 }
 
 public record Completed<TData> : Completed where TData : notnull

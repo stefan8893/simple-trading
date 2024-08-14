@@ -7,6 +7,7 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 using SimpleTrading.WebApi;
@@ -175,7 +176,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     [Fact]
     public async Task Reference_link_must_be_a_valid_uri()
     {
-        var reference = new ReferenceModel(ReferenceType.Other, "foobar");
+        var reference = new ReferenceRequestModel(ReferenceType.Other, "foobar");
 
         var requestModel = new AddTradeRequestModel
         {
@@ -206,7 +207,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
-        var reference = new ReferenceModel(ReferenceType.Other,
+        var reference = new ReferenceRequestModel(ReferenceType.Other,
             "http://example.org",
             new string('a', 40001));
 
@@ -397,7 +398,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             EntryPrice = 1.05m,
             CurrencyId = currency.Id,
             References =
-                [new ReferenceModel(ReferenceType.Other, "https://example.org", "some notes")]
+                [new ReferenceRequestModel(ReferenceType.Other, "https://example.org", "some notes")]
         };
 
         // act

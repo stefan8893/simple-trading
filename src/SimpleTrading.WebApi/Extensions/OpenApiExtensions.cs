@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.OpenApi.Models;
 using SimpleTrading.WebApi.Configuration;
+using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Extensions;
 
@@ -35,6 +37,20 @@ public static class OpenApiExtensions
                         clientAppEntraIdConfig.Scopes.Select(x => x.Value).ToArray()
                     }
                 });
+                
+                c.OrderActionsBy(api =>
+                {
+                    if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
+
+                    var orderAttribute = descriptor
+                        .EndpointMetadata.OfType<SwaggerUiControllerOrderAttribute>()
+                        .FirstOrDefault();
+
+                    return orderAttribute is null
+                        ? descriptor.ControllerName
+                        : orderAttribute.Position.ToString();
+                });
+
             });
 
         return services;

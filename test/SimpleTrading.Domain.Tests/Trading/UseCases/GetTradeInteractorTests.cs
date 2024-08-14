@@ -19,12 +19,12 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     [Fact]
     public async Task A_not_existing_trade_cant_be_returned()
     {
-        var notExistingAssetId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
+        var notExistingTradeId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
 
-        var response = await CreateInteractor().Execute(notExistingAssetId);
+        var response = await CreateInteractor().Execute(new GetTradeRequestModel(notExistingTradeId));
 
         response.Value.Should().BeOfType<NotFound<Trade>>()
-            .Which.ResourceId.Should().Be(notExistingAssetId);
+            .Which.ResourceId.Should().Be(notExistingTradeId);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        var response = await CreateInteractor().Execute(trade.Id);
+        var response = await CreateInteractor().Execute(new GetTradeRequestModel(trade.Id));
 
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Id.Should().Be(trade.Id);
@@ -48,7 +48,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        var response = await CreateInteractor().Execute(trade.Id);
+        var response = await CreateInteractor().Execute(new GetTradeRequestModel(trade.Id));
 
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Currency.Should().Be(currency.IsoCode);
@@ -62,7 +62,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        var response = await CreateInteractor().Execute(trade.Id);
+        var response = await CreateInteractor().Execute(new GetTradeRequestModel(trade.Id));
 
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Asset.Should().Be(asset.Symbol);

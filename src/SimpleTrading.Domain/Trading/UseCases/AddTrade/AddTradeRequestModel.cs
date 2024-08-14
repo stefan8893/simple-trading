@@ -1,8 +1,11 @@
 using FluentValidation;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
+
+public record AddTradeReferenceRequestModel(Guid Id, ReferenceType Type, string Link, string? Notes = null)
+    : ReferenceModel(Id, Type, Link, Notes);
 
 public record AddTradeRequestModel
 {
@@ -19,12 +22,12 @@ public record AddTradeRequestModel
     public decimal? TakeProfit { get; set; }
     public decimal? ExitPrice { get; set; }
     public string? Notes { get; set; }
-    public IReadOnlyList<ReferenceModel> References { get; set; } = [];
+    public IReadOnlyList<ReferenceRequestModel> References { get; set; } = [];
 }
 
 public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
 {
-    public AddTradeRequestModelValidator(ReferenceModelValidator referenceModelValidator)
+    public AddTradeRequestModelValidator(ReferenceRequestModelValidator referenceRequestModelValidator)
     {
         RuleFor(x => x.AssetId)
             .NotEmpty()
@@ -87,7 +90,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .WithName(SimpleTradingStrings.Notes);
 
         RuleForEach(x => x.References)
-            .SetValidator(referenceModelValidator);
+            .SetValidator(referenceRequestModelValidator);
     }
 }
 

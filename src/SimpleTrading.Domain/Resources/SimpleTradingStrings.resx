@@ -228,4 +228,10 @@
     <data name="BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades" xml:space="preserve">
         <value>Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen wurde.</value>
     </data>
+    <data name="Reference" xml:space="preserve">
+        <value>Referenz</value>
+    </data>
+    <data name="MoreThan50ReferencesNotAllowed" xml:space="preserve">
+        <value>Sie können nicht mehr als {0} Referenzen zu einem Trade hinzufügen.</value>
+    </data>
 </root>

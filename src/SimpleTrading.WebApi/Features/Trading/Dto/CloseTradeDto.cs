@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
-using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 

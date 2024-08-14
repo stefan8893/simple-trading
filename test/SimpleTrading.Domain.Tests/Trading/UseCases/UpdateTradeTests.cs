@@ -6,6 +6,7 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -324,6 +325,31 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Balance.Should().Be(newBalance);
     }
+    
+    [Fact]
+    public async Task Notes_must_not_contain_more_than_4000_chars()
+    {
+        // arrange
+        var trade = TestData.Trade.Default.Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            Notes = new string('a', 4001)
+        };
+        
+        // act
+        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        
+        // assert
+        response.Value.Should().BeOfType<BadInput>()
+            .Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.ErrorMessage == "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.");
+    }
+
     
     [Fact]
     public async Task Position_prices_can_be_successfully_updated()
