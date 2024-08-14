@@ -4,16 +4,26 @@ namespace SimpleTrading.WebApi.Infrastructure;
 
 public record SuccessResponse
 {
-    public static readonly SuccessResponse Empty = From([]);
+    public static readonly SuccessResponse Empty = From(Enumerable.Empty<string>());
 
     private SuccessResponse(IEnumerable<string> warnings)
     {
         Warnings = warnings;
     }
 
+    private SuccessResponse(IEnumerable<Warning> warnings)
+    {
+        Warnings = warnings.Select(x => x.Reason);
+    }
+
     public IEnumerable<string> Warnings { get; init; } = [];
 
     public static SuccessResponse From(IEnumerable<string> warnings)
+    {
+        return new SuccessResponse(warnings);
+    }
+    
+    public static SuccessResponse From(IEnumerable<Warning> warnings)
     {
         return new SuccessResponse(warnings);
     }

@@ -2,6 +2,7 @@
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
@@ -21,16 +22,11 @@ public class CloseTradeDto
     public ResultDto? Result { get; set; }
 }
 
-public record TradeResultDto(ResultDto? Result, short? Performance)
+public record TradeResultDto(Guid TradeId, ResultDto? Result, short? Performance)
 {
     public static TradeResultDto From(CloseTradeResponseModel model)
     {
-        return new TradeResultDto(model.Result.ToResultDto(), model.Performance);
-    }
-
-    public static TradeResultDto From(AddTradeResponseModel model)
-    {
-        return new TradeResultDto(model.Result.ToResultDto(), model.Performance);
+        return new TradeResultDto(model.TradeId, model.Result.ToResultDto(), model.Performance);
     }
 }
 

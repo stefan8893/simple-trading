@@ -7,7 +7,7 @@ using SimpleTrading.Domain.Resources;
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 using AddTradeResponse =
-    OneOf<Completed<AddTradeResponseModel>,
+    OneOf<Completed<Guid>,
         BadInput,
         NotFound,
         BusinessError>;
@@ -50,14 +50,10 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         await dbContext.SaveChangesAsync();
 
         return potentiallyClosedTrade.Match<AddTradeResponse>(
-            x => Completed(CreateResponseModel(x.Data), x.Warnings),
-            x => Completed(CreateResponseModel(x.Trade)),
+            x => Completed(x.Data.Id, x.Warnings),
+            x => Completed(x.Trade.Id),
             x => x);
 
-        AddTradeResponseModel CreateResponseModel(Trade t)
-        {
-            return new AddTradeResponseModel(t.Id, t.Result?.ToResultModel(), t.Result?.Performance);
-        }
     }
 
     private Trade CreateTrade(AddTradeRequestModel model, Asset asset, Profile profile, Currency currency)

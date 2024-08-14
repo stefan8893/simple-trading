@@ -78,6 +78,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; ist nur möglich, wenn ein Trade bereits abgeschlossen wurde..
+        /// </summary>
+        public static string BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades {
+            get {
+                return ResourceManager.GetString("BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Die Bilanz ist nicht 0, aber die Position deutet auf eine Bilanz gleich 0 hin..
         /// </summary>
         public static string BalanceNotZeroAndExitEntryPricesSame {
@@ -134,18 +143,18 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; muss nach dem Datum &apos;Eröffnet&apos; sein..
         /// </summary>
-        public static string ClosedBeforeOpenedError {
+        public static string ClosedBeforeOpened {
             get {
-                return ResourceManager.GetString("ClosedBeforeOpenedError", resourceCulture);
+                return ResourceManager.GetString("ClosedBeforeOpened", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
         /// </summary>
-        public static string ClosedTooFarInTheFutureError {
+        public static string ClosedTooFarInTheFuture {
             get {
-                return ResourceManager.GetString("ClosedTooFarInTheFutureError", resourceCulture);
+                return ResourceManager.GetString("ClosedTooFarInTheFuture", resourceCulture);
             }
         }
         
@@ -294,6 +303,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher..
+        /// </summary>
+        public static string ResultOfAnOpenedTradeCannotBeReset {
+            get {
+                return ResourceManager.GetString("ResultOfAnOpenedTradeCannotBeReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Die Bilanz ist positiv, aber Ihre Short-Position deutet auf einen Verlust hin..
         /// </summary>
         public static string ShortPositionExitGreaterThanEntryAndPositiveBalance {
@@ -344,6 +362,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string Win {
             get {
                 return ResourceManager.GetString("Win", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; darf nicht leer sein, wenn &apos;{1}&apos; angegeben ist..
+        /// </summary>
+        public static string XMustNotBeEmptyIfYIsThere {
+            get {
+                return ResourceManager.GetString("XMustNotBeEmptyIfYIsThere", resourceCulture);
             }
         }
     }

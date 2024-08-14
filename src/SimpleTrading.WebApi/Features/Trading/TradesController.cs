@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases;
@@ -8,6 +9,7 @@ using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
@@ -21,12 +23,10 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 public class TradesController : ControllerBase
 {
-    [HttpGet("{tradeId:Guid}", Name = nameof(GetTrade))]
+    [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
     [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> GetTrade(
-        [FromServices] IGetTrade getTrade,
-        Guid tradeId)
+    public async Task<ActionResult> GetTrade([FromServices] IGetTrade getTrade, [FromRoute] Guid tradeId)
     {
         var result = await getTrade.Execute(tradeId);
 
@@ -37,7 +37,7 @@ public class TradesController : ControllerBase
     }
 
     [HttpPost(Name = nameof(AddTrade))]
-    [ProducesResponseType<SuccessResponse<TradeAddedDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<SuccessResponse<Guid>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
@@ -54,20 +54,35 @@ public class TradesController : ControllerBase
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
-            completed => Ok(MapToSuccessResponse(completed)),
+            completed => Ok(SuccessResponse<Guid>.From(completed.Data, completed.Warnings)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
         );
-        
-        SuccessResponse<TradeAddedDto> MapToSuccessResponse(Completed<AddTradeResponseModel> completed)
-        {
-            return SuccessResponse<TradeAddedDto>
-                .From(TradeAddedDto.From(completed.Data), completed.Warnings);
-        }
     }
 
-    [HttpPost("{tradeId:Guid}/close", Name = nameof(CloseTrade))]
+    [HttpPatch("{tradeId:guid}", Name = nameof(UpdateTrade))]
+    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<ActionResult> UpdateTrade(
+        [FromServices] IUpdateTrade updateTrade,
+        [FromRoute] Guid tradeId,
+        [FromBody] UpdateTradeDto dto)
+    {
+        var updateTradeRequestModel = MapToRequestModel(tradeId, dto);
+        var result = await updateTrade.Execute(updateTradeRequestModel);
+
+        return result
+            .Match(
+                completed => Ok(SuccessResponse.From(completed.Warnings)),
+                badInput => badInput.ToActionResult(),
+                notFound => notFound.ToActionResult(),
+                businessError => businessError.ToActionResult());
+    }
+
+    [HttpPut("{tradeId:guid}/close", Name = nameof(CloseTrade))]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
@@ -75,7 +90,7 @@ public class TradesController : ControllerBase
     public async Task<ActionResult> CloseTrade(
         [FromServices] ICloseTrade closeTrade,
         [FromServices] IValidator<CloseTradeDto> validator,
-        Guid tradeId,
+        [FromRoute] Guid tradeId,
         [FromBody] CloseTradeDto dto)
     {
         var validationResult = await validator.ValidateAsync(dto);
@@ -105,12 +120,12 @@ public class TradesController : ControllerBase
         }
     }
 
-    [HttpDelete("{tradeId:Guid}", Name = nameof(DeleteTrade))]
+    [HttpDelete("{tradeId:guid}", Name = nameof(DeleteTrade))]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult> DeleteTrade(
         [FromServices] IDeleteTrade deleteTrade,
-        Guid tradeId)
+        [FromRoute] Guid tradeId)
     {
         var result = await deleteTrade.Execute(tradeId);
 
@@ -139,10 +154,32 @@ public class TradesController : ControllerBase
             Notes = dto.Notes,
             References = dto.References?
                 .Select(x =>
-                    new AddTradeRequestModel.ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
+                    new ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
                 .ToList() ?? []
         };
         return addTradeRequestModel;
+    }
+
+    private static UpdateTradeRequestModel MapToRequestModel(Guid tradeId, UpdateTradeDto dto)
+    {
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = tradeId,
+            AssetId = dto.AssetId,
+            ProfileId = dto.ProfileId,
+            Opened = dto.Opened,
+            Closed = dto.Closed,
+            Size = dto.Size,
+            Result = dto.Result is null ? new None() : MapToResultModel(dto.Result.Value),
+            Balance = dto.Balance,
+            CurrencyId = dto.CurrencyId,
+            EntryPrice = dto.EntryPrice,
+            StopLoss = dto.StopLoss is null ? new None() : dto.StopLoss.Value,
+            TakeProfit = dto.TakeProfit is null ? new None() : dto.TakeProfit.Value,
+            ExitPrice = dto.ExitPrice is null ? new None() : dto.ExitPrice.Value,
+            Notes = dto.Notes is null ? new None() : dto.Notes.Value
+        };
+        return updateTradeRequestModel;
     }
 
     private static ResultModel? MapToResultModel(ResultDto? resultDto)

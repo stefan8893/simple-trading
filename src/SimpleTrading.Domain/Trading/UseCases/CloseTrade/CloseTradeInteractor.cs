@@ -43,7 +43,8 @@ public class CloseTradeInteractor(
         if (result.Value is Completed)
             await dbContext.SaveChangesAsync();
 
-        var closeTradeResponseModel = new CloseTradeResponseModel(trade.Result?.ToResultModel(),
+        var closeTradeResponseModel = new CloseTradeResponseModel(trade.Id,
+            trade.Result?.ToResultModel(),
             trade.Result?.Performance);
 
         return result.Match<CloseTradeResponse>(

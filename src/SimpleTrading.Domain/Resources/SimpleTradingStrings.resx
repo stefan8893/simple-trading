@@ -141,10 +141,10 @@
     <data name="Closed" xml:space="preserve">
         <value>Abgeschlossen</value>
     </data>
-    <data name="ClosedTooFarInTheFutureError" xml:space="preserve">
+    <data name="ClosedTooFarInTheFuture" xml:space="preserve">
         <value>Das Datum 'Abgeschlossen' kann maximal nur einen Tag in der Zukunft liegen.</value>
     </data>
-    <data name="ClosedBeforeOpenedError" xml:space="preserve">
+    <data name="ClosedBeforeOpened" xml:space="preserve">
         <value>Das Datum 'Abgeschlossen' muss nach dem Datum 'Eröffnet' sein.</value>
     </data>
     <data name="ClosedTradeNeedsClosedAndBalance" xml:space="preserve">
@@ -218,5 +218,14 @@
     </data>
     <data name="CalculatedResultsMismatch" xml:space="preserve">
         <value>Ihre Position deutet auf das Ergebnis '{0}' hin, aber anhand der Bilanz ist es '{1}'.</value>
+    </data>
+    <data name="XMustNotBeEmptyIfYIsThere" xml:space="preserve">
+        <value>'{0}' darf nicht leer sein, wenn '{1}' angegeben ist.</value>
+    </data>
+    <data name="ResultOfAnOpenedTradeCannotBeReset" xml:space="preserve">
+        <value>Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher.</value>
+    </data>
+    <data name="BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades" xml:space="preserve">
+        <value>Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen wurde.</value>
     </data>
 </root>
