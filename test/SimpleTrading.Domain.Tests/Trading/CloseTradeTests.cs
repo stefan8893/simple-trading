@@ -146,7 +146,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "The balance is 0, but the position indicates a balance not equal to 0.");
         trade.IsClosed.Should().BeTrue();
@@ -168,7 +168,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "The balance is not 0, but the position indicates a balance equal to 0.");
         trade.IsClosed.Should().BeTrue();
@@ -285,7 +285,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "Your trade indicates a 'Loss' result, but you have entered 'Break-even'.");
         trade.Result.Should().NotBeNull()
@@ -316,7 +316,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "Your trade indicates a 'Win' result, but you have entered 'Break-even'.");
         trade.Result.Should().NotBeNull()
@@ -347,7 +347,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "Your trade indicates a 'Loss' result, but you have entered 'Mediocre'.");
         trade.Result.Should().NotBeNull()
@@ -572,7 +572,7 @@ public class CloseTradeTests : TestBase
         // act
         var response = trade.Close(closeTradeDto);
 
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1);
     }
 
@@ -597,7 +597,7 @@ public class CloseTradeTests : TestBase
         // assert
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().BeOfType<TradingResult.Loss>();
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
@@ -624,7 +624,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result.Should().BeNull();
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "The balance is positive, but your short position indicates a loss.");
     }
@@ -650,7 +650,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result.Should().BeNull();
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x => x.Reason == "The balance is positive, but your long position indicates a loss.");
     }
@@ -690,7 +690,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         //assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
@@ -716,7 +716,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(2)
             .And.Contain(x => x.Reason == "Your trade indicates a 'Loss' result, but you have entered 'Break-even'.")
             .And.Contain(x =>
@@ -746,7 +746,7 @@ public class CloseTradeTests : TestBase
 
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason ==
@@ -776,7 +776,7 @@ public class CloseTradeTests : TestBase
 
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
@@ -805,7 +805,7 @@ public class CloseTradeTests : TestBase
 
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason == "Your position indicates the result 'Win', but based on the balance it is 'Break-even'.");
@@ -834,7 +834,7 @@ public class CloseTradeTests : TestBase
 
 
         // assert
-        response.Value.Should().BeOfType<CompletedWithWarnings>()
+        response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");

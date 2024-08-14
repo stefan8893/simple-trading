@@ -17,27 +17,39 @@ public class Trade
     public required Profile Profile { get; set; }
     public required DateTime Opened { get; set; }
     public required decimal Size { get; set; }
+    public DateTime? Closed { get; private set; }
     public decimal? Balance { get; private set; }
     public ITradingResult? Result { get; private set; }
-    public DateTime? Closed { get; private set; }
-    public required Guid CurrencyId { get; init; }
-    public required Currency Currency { get; init; }
-    public required PositionPrices PositionPrices { get; init; }
+    public required Guid CurrencyId { get; set; }
+    public required Currency Currency { get; set; }
+    public required PositionPrices PositionPrices { get; set; }
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
     public bool IsClosed => Closed.HasValue && Balance.HasValue;
     public required DateTime Created { get; init; }
 
-    internal OneOf<Completed, CompletedWithWarnings, BusinessError> Close(CloseTradeDto dto)
+    internal OneOf<Completed, BusinessError> ResetManuallyEnteredResult(UtcNow utcNow)
+    {
+        if (!IsClosed)
+            return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
+        
+        Result = null;
+        return Close(new CloseTradeDto(Closed!.Value, Balance!.Value, utcNow));
+    }
+    
+    internal OneOf<Completed, BusinessError> Close(CloseTradeDto dto)
     {
         if (dto.Closed < Opened)
-            return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpenedError);
+            return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
 
-        var closedUpperBound = dto.UtcNow().AddDays(1);
-        if (dto.Closed > closedUpperBound)
-            return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFutureError);
+        var closedDateUpperBound = dto.UtcNow().AddDays(1);
+        if (dto.Closed > closedDateUpperBound)
+            return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
+        if (IsClosed && Result?.Source == TradingResultSource.ManuallyEntered)
+            return new Completed();
+        
         Closed = dto.Closed.ToUtcKind();
         Balance = dto.Balance;
 
@@ -48,15 +60,17 @@ public class Trade
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
         Result = results.ManuallyEntered ?? calculatedResult;
 
-        return AnalyseResults(results, calculatedResult)
-            .Match<OneOf<Completed, CompletedWithWarnings, BusinessError>>(x => x, x => x);
+        return AnalyseResults(results, calculatedResult);
     }
 
     private TradingResultsDto CalculateResults(CloseTradeDto dto)
     {
         var manuallyEnteredResult = dto.Result.HasValue
             ? CreateManuallyEnteredResult(dto.Result.Value)
-            : null;
+            // do not lose a manual result that was previously entered
+            : Result?.Source == TradingResultSource.ManuallyEntered
+                ? Result
+                : null;
 
         var calculatedByBalance = CalculateResultByBalance(Balance!.Value);
         var calculatedByPositionPrices = PositionPrices.CalculateResult();
@@ -92,7 +106,7 @@ public class Trade
             : balanceResult;
     }
 
-    private OneOf<Completed, CompletedWithWarnings> AnalyseResults(TradingResultsDto results,
+    private Completed AnalyseResults(TradingResultsDto results,
         ITradingResult? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
@@ -116,10 +130,7 @@ public class Trade
             .AnalyseResults(this, analyseResultsConfiguration)
             .ToList();
 
-        if (analysisResult.Count != 0)
-            return new CompletedWithWarnings(analysisResult);
-
-        return new Completed();
+        return new Completed(analysisResult);
     }
 
     private static ITradingResult CreateManuallyEnteredResult(ResultModel resultModel)
@@ -127,7 +138,7 @@ public class Trade
         return resultModel switch
         {
             ResultModel.Loss => new TradingResult.Loss(TradingResultSource.ManuallyEntered),
-            ResultModel.BreakEven => new TradingResult.BreakEven(TradingResultSource.ManuallyEntered),
+            ResultModel.BreakEven => new TradingResult.BreakEven(TradingResultSource.ManuallyEntered, 0),
             ResultModel.Mediocre => new TradingResult.Mediocre(TradingResultSource.ManuallyEntered),
             ResultModel.Win => new TradingResult.Win(TradingResultSource.ManuallyEntered),
             _ => throw new ArgumentOutOfRangeException(nameof(resultModel), resultModel, null)

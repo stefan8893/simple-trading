@@ -1,4 +1,5 @@
 using FluentValidation;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
@@ -19,8 +20,6 @@ public record AddTradeRequestModel
     public decimal? ExitPrice { get; set; }
     public string? Notes { get; set; }
     public IReadOnlyList<ReferenceModel> References { get; set; } = [];
-
-    public record ReferenceModel(ReferenceType Type, string Link, string? Notes = null);
 }
 
 public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
@@ -46,7 +45,19 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
         RuleFor(x => x.Result)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
-            .When(x => x.Result is not null);
+            .When(x => x.Result.HasValue);
+
+        RuleFor(x => x.Balance)
+            .NotEmpty()
+            .WithName(SimpleTradingStrings.Balance)
+            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}", SimpleTradingStrings.Closed))
+            .When(x => x.Closed.HasValue);
+
+        RuleFor(x => x.Closed)
+            .NotEmpty()
+            .WithName(SimpleTradingStrings.Closed)
+            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}", SimpleTradingStrings.Balance))
+            .When(x => x.Balance.HasValue);
 
         RuleFor(x => x.EntryPrice)
             .GreaterThan(0)
@@ -71,25 +82,12 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .NotEmpty()
             .WithName(SimpleTradingStrings.Currency);
 
+        RuleFor(x => x.Notes)
+            .MaximumLength(4000)
+            .WithName(SimpleTradingStrings.Notes);
+
         RuleForEach(x => x.References)
             .SetValidator(referenceModelValidator);
     }
 }
 
-public class ReferenceModelValidator : AbstractValidator<AddTradeRequestModel.ReferenceModel>
-{
-    public ReferenceModelValidator()
-    {
-        RuleFor(x => x.Type)
-            .IsInEnum()
-            .WithName(SimpleTradingStrings.ReferenceType);
-
-        RuleFor(x => x.Link)
-            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
-            .WithMessage(SimpleTradingStrings.InvalidLink);
-
-        RuleFor(x => x.Notes)
-            .MaximumLength(4000)
-            .WithName(SimpleTradingStrings.Notes);
-    }
-}

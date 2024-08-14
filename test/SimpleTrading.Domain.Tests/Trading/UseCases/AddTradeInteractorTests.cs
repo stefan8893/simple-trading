@@ -175,7 +175,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     [Fact]
     public async Task Reference_link_must_be_a_valid_uri()
     {
-        var reference = new AddTradeRequestModel.ReferenceModel(ReferenceType.Other, "foobar");
+        var reference = new ReferenceModel(ReferenceType.Other, "foobar");
 
         var requestModel = new AddTradeRequestModel
         {
@@ -201,12 +201,12 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     [InlineData("en-US", "The length of 'Notes' must be 4000 characters or fewer. You entered 40001 characters.")]
     [InlineData("de-AT",
         "Die Länge von 'Anmerkungen' muss kleiner oder gleich 4000 sein. Sie haben 40001 Zeichen eingegeben.")]
-    public async Task Notes_with_more_than_4000_chars_are_not_allowed(string culture, string errorMessage)
+    public async Task Reference_notes_with_more_than_4000_chars_are_not_allowed(string culture, string errorMessage)
     {
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
-        var reference = new AddTradeRequestModel.ReferenceModel(ReferenceType.Other,
+        var reference = new ReferenceModel(ReferenceType.Other,
             "http://example.org",
             new string('a', 40001));
 
@@ -229,6 +229,32 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             .Which.ValidationResult.Errors
             .Should().Contain(x => x.ErrorMessage == errorMessage)
             .And.Contain(x => x.PropertyName == "References[0].Notes")
+            .And.HaveCount(1);
+    }
+    
+    [Fact]
+    public async Task Notes_with_more_than_4000_chars_are_not_allowed()
+    {
+        // arrange
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = TestData.Asset.Default.Build().Id,
+            ProfileId = TestData.Profile.Default.Build().Id,
+            Opened = _utcNow,
+            Size = 5000,
+            EntryPrice = 1.05m,
+            CurrencyId = TestData.Currency.Default.Build().Id,
+            Notes = new string('a', 4001)
+        };
+
+        // act
+        var response = await CreateInteractor().Execute(requestModel);
+
+        // assert
+        response.Value.Should().BeOfType<BadInput>()
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
+            .And.Contain(x => x.PropertyName == "Notes")
             .And.HaveCount(1);
     }
 
@@ -326,9 +352,9 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     public async Task A_trade_can_be_added_successfully()
     {
         // arrange
-        var currency = TestData.Currency.Default.Build();
-        var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync();
 
@@ -346,8 +372,8 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -371,18 +397,18 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             EntryPrice = 1.05m,
             CurrencyId = currency.Id,
             References =
-                [new AddTradeRequestModel.ReferenceModel(ReferenceType.Other, "https://example.org", "some notes")]
+                [new ReferenceModel(ReferenceType.Other, "https://example.org", "some notes")]
         };
 
         // act
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade.References
+        newlyAddedTrade!.References
             .Should().HaveCount(1)
             .And.Contain(x => x.Notes == "some notes");
     }
@@ -415,10 +441,11 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        newlyAddedTrade.Should().NotBeNull();
 
-        newlyAddedTrade.IsClosed.Should().BeTrue();
+        newlyAddedTrade!.IsClosed.Should().BeTrue();
     }
 
     [Fact]
@@ -490,9 +517,11 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var businessError = response.Value.Should().BeOfType<BusinessError>();
-        businessError.Which.Reason.Should()
-            .Be("In order to add a closed trade, you must specify 'Balance' and the 'Closed' date.");
+        var businessError = response.Value.Should().BeOfType<BadInput>();
+        businessError.Which.ValidationResult
+            .Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "Balance" &&
+                              x.ErrorMessage == "'Balance' must not be empty, if 'Closed' is specified.");
     }
 
     [Fact]
@@ -525,10 +554,11 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         var response = await CreateInteractor().Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().FirstAsync(x => x.Id == newId);
+        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        newlyAddedTrade.Should().NotBeNull();
 
-        newlyAddedTrade.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
+        newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
         newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
     }
 }

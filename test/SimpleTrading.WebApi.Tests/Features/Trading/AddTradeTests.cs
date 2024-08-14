@@ -55,11 +55,10 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
         response.Data.Should().NotBeNull();
-        response.Data.TradeResult.Should().NotBeNull();
         var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == response.Data!.TradeId);
+            .SingleOrDefaultAsync(x => x.Id == response.Data);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -159,14 +158,51 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.CommonErrors
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.FieldErrors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x ==
-                "Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.");
+                x.Messages.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
+                x.Identifier == "Balance");
     }
 
+    [Fact]
+    public async Task A_closed_trade_cant_be_added_if_the_closed_date_is_missing()
+    {
+        // arrange
+        var client = await CreateClientWithAccessToken();
+        var simpleTradingClient = new SimpleTradingClient(client);
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = _utcNow,
+            Closed = null,
+            Result = ResultDto.Mediocre,
+            Size = 5000,
+            Balance = 50,
+            CurrencyId = currency.Id,
+            EntryPrice = 1.08
+        });
+
+        // assert
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.FieldErrors
+            .Should().HaveCount(1)
+            .And.Contain(x =>
+                x.Messages.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
+                x.Identifier == "Closed");
+    }
+    
     [Fact]
     public async Task A_trade_with_opened_date_in_utc_will_be_stored_like_that_there_is_no_implicit_conversion()
     {
@@ -197,12 +233,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == response.Data!.TradeId);
+            .SingleOrDefaultAsync(x => x.Id == response.Data);
 
         newlyAddedTrade.Should().NotBeNull();
         var expected = DateTime.Parse("2024-08-05T12:00:00");
         expected.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade.Opened.Should().Be(expected);
+        newlyAddedTrade!.Opened.Should().Be(expected);
     }
 
 
@@ -236,11 +272,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContext
             .Trades
             .AsNoTracking()
-            .FirstAsync(x => x.Id == response.Data!.TradeId);
+            .SingleOrDefaultAsync(x => x.Id == response.Data);
 
         newlyAddedTrade.Should().NotBeNull();
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");
         expectedOpenedDate.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade.Opened.Should().Be(expectedOpenedDate);
+        newlyAddedTrade!.Opened.Should().Be(expectedOpenedDate);
     }
 }

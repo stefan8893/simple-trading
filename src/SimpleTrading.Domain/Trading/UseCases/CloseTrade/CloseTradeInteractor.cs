@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Infrastructure;
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
 using CloseTradeResponse =
-    OneOf<Completed<CloseTradeResponseModel>, CompletedWithWarnings<CloseTradeResponseModel>, BadInput, NotFound,
+    OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound,
         BusinessError>;
 
 public class CloseTradeInteractor(
@@ -22,7 +22,6 @@ public class CloseTradeInteractor(
             return BadInput(validation);
 
         var trade = await dbContext.FindAsync<Trade>(model.TradeId);
-
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
@@ -44,12 +43,12 @@ public class CloseTradeInteractor(
         if (result.Value is Completed)
             await dbContext.SaveChangesAsync();
 
-        var closeTradeResponseModel = new CloseTradeResponseModel(trade.Result?.ToResultModel(),
+        var closeTradeResponseModel = new CloseTradeResponseModel(trade.Id,
+            trade.Result?.ToResultModel(),
             trade.Result?.Performance);
 
         return result.Match<CloseTradeResponse>(
-            completed => Completed(closeTradeResponseModel),
-            warnings => CompletedWithWarnings(closeTradeResponseModel, warnings),
+            completed => Completed(closeTradeResponseModel, completed.Warnings),
             businessError => businessError
         );
     }
