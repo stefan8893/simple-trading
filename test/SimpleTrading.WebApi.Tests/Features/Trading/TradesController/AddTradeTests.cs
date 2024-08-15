@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Extensions;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
-namespace SimpleTrading.WebApi.Tests.Features.Trading;
+namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
 
 public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {

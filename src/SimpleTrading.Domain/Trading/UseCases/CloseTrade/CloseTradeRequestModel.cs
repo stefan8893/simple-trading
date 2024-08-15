@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 

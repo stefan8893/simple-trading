@@ -3,6 +3,7 @@ using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 
@@ -81,6 +82,12 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .NotEmpty()
             .WithName(SimpleTradingStrings.Currency)
             .When(x => x.CurrencyId.HasValue);
+        
+        RuleFor(x => x.Notes.AsT0)
+            .MaximumLength(4000)
+            .WithName(SimpleTradingStrings.Notes)
+            .WithState(x => new CustomPropertyName(nameof(x.Notes)))
+            .When(x => x.Notes is {IsT0: true, AsT0: not null});
         
     }
 }

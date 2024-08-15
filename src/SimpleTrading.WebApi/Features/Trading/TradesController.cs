@@ -9,6 +9,7 @@ using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
@@ -21,6 +22,7 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+[SwaggerUiControllerOrder(1)]
 public class TradesController : ControllerBase
 {
     [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
@@ -28,7 +30,7 @@ public class TradesController : ControllerBase
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetTrade([FromServices] IGetTrade getTrade, [FromRoute] Guid tradeId)
     {
-        var result = await getTrade.Execute(tradeId);
+        var result = await getTrade.Execute(new GetTradeRequestModel(tradeId));
 
         return result.Match(
             tradeModel => Ok(TradeDto.From(tradeModel)),
@@ -127,10 +129,10 @@ public class TradesController : ControllerBase
         [FromServices] IDeleteTrade deleteTrade,
         [FromRoute] Guid tradeId)
     {
-        var result = await deleteTrade.Execute(tradeId);
+        var result = await deleteTrade.Execute(new DeleteTradeRequestModel(tradeId));
 
         return result.Match(
-            completed => Ok(SuccessResponse.Empty),
+            completed => Ok(SuccessResponse.From(completed.Warnings)),
             notFound => Ok(SuccessResponse.Empty)
         );
     }
@@ -154,9 +156,10 @@ public class TradesController : ControllerBase
             Notes = dto.Notes,
             References = dto.References?
                 .Select(x =>
-                    new ReferenceModel(MapToDomainReferenceType(x.Type!.Value), x.Link!, x.Notes))
+                    new ReferenceRequestModel(x.Type.ToDomainReferenceType(), x.Link!, x.Notes))
                 .ToList() ?? []
         };
+
         return addTradeRequestModel;
     }
 
@@ -192,18 +195,6 @@ public class TradesController : ControllerBase
             ResultDto.Loss => ResultModel.Loss,
             _ => (ResultModel?) null
         };
-        return tradeResult;
-    }
-
-    private static ReferenceType MapToDomainReferenceType(ReferenceTypeDto? typeDto)
-    {
-        var tradeResult = typeDto switch
-        {
-            ReferenceTypeDto.Other => ReferenceType.Other,
-            ReferenceTypeDto.TradingView => ReferenceType.TradingView,
-            _ => throw new ArgumentOutOfRangeException(nameof(typeDto), typeDto, null)
-        };
-
         return tradeResult;
     }
 }

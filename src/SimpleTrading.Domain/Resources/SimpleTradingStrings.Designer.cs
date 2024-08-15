@@ -240,6 +240,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sie können nicht mehr als {0} Referenzen zu einem Trade hinzufügen..
+        /// </summary>
+        public static string MoreThan50ReferencesNotAllowed {
+            get {
+                return ResourceManager.GetString("MoreThan50ReferencesNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anmerkungen.
         /// </summary>
         public static string Notes {
@@ -281,6 +290,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Referenz.
+        /// </summary>
+        public static string Reference {
+            get {
+                return ResourceManager.GetString("Reference", resourceCulture);
             }
         }
         

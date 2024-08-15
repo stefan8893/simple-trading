@@ -22,7 +22,7 @@ public class DeleteTradeInteractorTests(TestingWebApplicationFactory<Program> fa
     {
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        var response = await CreateInteractor().Execute(notExistingTradeId);
+        var response = await CreateInteractor().Execute(new DeleteTradeRequestModel(notExistingTradeId));
 
         response.Value.Should().BeOfType<NotFound<Trade>>()
             .Which.ResourceId.Should().Be(notExistingTradeId);
@@ -38,7 +38,7 @@ public class DeleteTradeInteractorTests(TestingWebApplicationFactory<Program> fa
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor().Execute(trade.Id);
+        var response = await CreateInteractor().Execute(new DeleteTradeRequestModel(trade.Id));
 
         // assert
         response.Value.Should().BeOfType<Completed>();
