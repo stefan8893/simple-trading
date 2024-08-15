@@ -37,7 +37,7 @@ public static class OpenApiExtensions
                         clientAppEntraIdConfig.Scopes.Select(x => x.Value).ToArray()
                     }
                 });
-                
+
                 c.OrderActionsBy(api =>
                 {
                     if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
@@ -50,7 +50,6 @@ public static class OpenApiExtensions
                         ? descriptor.ControllerName
                         : orderAttribute.Position.ToString();
                 });
-
             });
 
         return services;

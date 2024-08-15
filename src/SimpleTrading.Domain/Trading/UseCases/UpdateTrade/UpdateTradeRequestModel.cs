@@ -82,12 +82,11 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .NotEmpty()
             .WithName(SimpleTradingStrings.Currency)
             .When(x => x.CurrencyId.HasValue);
-        
+
         RuleFor(x => x.Notes.AsT0)
             .MaximumLength(4000)
             .WithName(SimpleTradingStrings.Notes)
             .WithState(x => new CustomPropertyName(nameof(x.Notes)))
             .When(x => x.Notes is {IsT0: true, AsT0: not null});
-        
     }
 }

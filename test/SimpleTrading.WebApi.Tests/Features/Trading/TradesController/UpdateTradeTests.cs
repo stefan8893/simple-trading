@@ -7,7 +7,7 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
 
-public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory): WebApiTests(factory)
+public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     [Fact]
     public async Task A_trades_size_can_be_successfully_updated()
@@ -40,7 +40,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory): We
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Size.Should().Be(50_000);
     }
-    
+
     [Fact]
     public async Task An_non_existing_trade_cannot_be_updated()
     {
@@ -57,7 +57,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory): We
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
     }
-    
+
     [Fact]
     public async Task The_closed_date_of_a_non_closed_trade_cannot_be_updated()
     {
@@ -80,7 +80,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory): We
         exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
         exception.Which.Result.CommonErrors.Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen wurde.");
+                x ==
+                "Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen wurde.");
     }
-
 }

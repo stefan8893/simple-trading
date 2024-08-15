@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -14,7 +13,7 @@ public class ResetManuallyEnteredResult : TestBase
     public void A_manually_entered_result_gets_successfully_reset()
     {
         var trade = TestData.Trade.Default.Build();
-        trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub){Result = ResultModel.Mediocre});
+        trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub) {Result = ResultModel.Mediocre});
 
         trade.ResetManuallyEnteredResult(UtcNowStub);
 
