@@ -330,6 +330,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suchbegriff.
+        /// </summary>
+        public static string SearchTerm {
+            get {
+                return ResourceManager.GetString("SearchTerm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Die Bilanz ist positiv, aber Ihre Short-Position deutet auf einen Verlust hin..
         /// </summary>
         public static string ShortPositionExitGreaterThanEntryAndPositiveBalance {

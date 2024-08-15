@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 
@@ -42,7 +41,7 @@ public class UpdateTradeInteractor(
         var updatePropertiesResult = UpdateTradeProperties(trade, model);
         if (updatePropertiesResult.Value is BusinessError propertiesBusinessError)
             return propertiesBusinessError;
-        
+
         var hasChanges = UpdatePositionPrices(trade, model);
         var closeTradeResult = CloseTrade(trade, model, hasChanges);
 
@@ -51,7 +50,7 @@ public class UpdateTradeInteractor(
 
         await dbContext.SaveChangesAsync();
         return closeTradeResult
-            .Match<UpdateTradeResponse>(x => Completed(warnings: x.Warnings),
+            .Match<UpdateTradeResponse>(x => Completed(x.Warnings),
                 x => Completed(),
                 x => x);
     }
@@ -95,11 +94,12 @@ public class UpdateTradeInteractor(
     private static OneOf<Completed, BusinessError> UpdateTradeProperties(Trade trade, UpdateTradeRequestModel model)
     {
         var updateOpenedDate = model.Opened.HasValue && model.Opened.Value.UtcDateTime != trade.Opened;
-        var isClosedBeforeOpened = updateOpenedDate && trade.Closed.HasValue && trade.Closed.Value < model.Opened!.Value.UtcDateTime;
+        var isClosedBeforeOpened = updateOpenedDate && trade.Closed.HasValue &&
+                                   trade.Closed.Value < model.Opened!.Value.UtcDateTime;
 
         if (isClosedBeforeOpened)
             return BusinessError(trade.Id, SimpleTradingStrings.ClosedBeforeOpened);
-        
+
         if (updateOpenedDate)
             trade.Opened = model.Opened!.Value.UtcDateTime;
 
@@ -150,7 +150,7 @@ public class UpdateTradeInteractor(
 
         if (resultHasChanged && shouldResetResult)
             trade.ResetManuallyEnteredResult(utcNow);
-        
+
         // ReSharper disable once InvertIf
         if (trade.IsClosed &&
             (hasPositionPricesChanges || balanceHasChanged || closedHasChanged || resultHasChanged))
@@ -158,7 +158,7 @@ public class UpdateTradeInteractor(
             var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
             var balance = model.Balance ?? trade.Balance!.Value;
             var result = model.Result.IsT0 ? model.Result.AsT0 : null;
-            
+
             return trade.Close(new Trade.CloseTradeDto(closedDate, balance, utcNow) {Result = result})
                 .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
         }

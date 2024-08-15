@@ -3,8 +3,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
@@ -13,7 +11,6 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
-using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading;

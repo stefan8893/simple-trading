@@ -234,4 +234,7 @@
     <data name="MoreThan50ReferencesNotAllowed" xml:space="preserve">
         <value>You can't add more than {0} references per trade.</value>
     </data>
+    <data name="SearchTerm" xml:space="preserve">
+        <value>Search term</value>
+    </data>
 </root>

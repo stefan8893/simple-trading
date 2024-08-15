@@ -53,13 +53,15 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
         RuleFor(x => x.Balance)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Balance)
-            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}", SimpleTradingStrings.Closed))
+            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}",
+                SimpleTradingStrings.Closed))
             .When(x => x.Closed.HasValue);
 
         RuleFor(x => x.Closed)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Closed)
-            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}", SimpleTradingStrings.Balance))
+            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}",
+                SimpleTradingStrings.Balance))
             .When(x => x.Balance.HasValue);
 
         RuleFor(x => x.EntryPrice)
@@ -93,4 +95,3 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .SetValidator(referenceRequestModelValidator);
     }
 }
-

@@ -202,7 +202,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 x.Messages.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
                 x.Identifier == "Closed");
     }
-    
+
     [Fact]
     public async Task A_trade_with_opened_date_in_utc_will_be_stored_like_that_there_is_no_implicit_conversion()
     {

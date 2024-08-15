@@ -13,7 +13,7 @@ public abstract class BaseInteractor
     {
         return new Completed<T>(data);
     }
-    
+
     protected static Completed<T> Completed<T>(T data, IEnumerable<Warning> warnings) where T : notnull
     {
         return new Completed<T>(data, warnings);
@@ -23,12 +23,12 @@ public abstract class BaseInteractor
     {
         return new Completed<T>(data, warnings);
     }
-    
+
     protected static Completed<T> Completed<T>(T data, string singleWarning) where T : notnull
     {
         return new Completed<T>(data, singleWarning);
     }
-    
+
     protected static Completed Completed(IEnumerable<Warning> warnings)
     {
         return new Completed(warnings);

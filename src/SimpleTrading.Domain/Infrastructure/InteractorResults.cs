@@ -5,8 +5,9 @@ namespace SimpleTrading.Domain.Infrastructure;
 public record Completed
 {
     public Completed()
-    { }
-    
+    {
+    }
+
     public Completed(string singleWarning)
     {
         Warnings = [new Warning(singleWarning)];
@@ -16,7 +17,7 @@ public record Completed
     {
         Warnings = warnings.ToList();
     }
-    
+
     public Completed(IEnumerable<string> warnings)
     {
         Warnings = warnings
@@ -33,7 +34,7 @@ public record Completed<TData> : Completed where TData : notnull
     {
         Data = data;
     }
-    
+
     public Completed(TData data, string singleWarning) : base(singleWarning)
     {
         Data = data;
@@ -43,7 +44,7 @@ public record Completed<TData> : Completed where TData : notnull
     {
         Data = data;
     }
-    
+
     public Completed(TData data, IEnumerable<string> warnings) : base(warnings)
     {
         Data = data;

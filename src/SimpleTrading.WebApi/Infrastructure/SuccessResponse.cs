@@ -22,7 +22,7 @@ public record SuccessResponse
     {
         return new SuccessResponse(warnings);
     }
-    
+
     public static SuccessResponse From(IEnumerable<Warning> warnings)
     {
         return new SuccessResponse(warnings);

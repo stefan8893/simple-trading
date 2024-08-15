@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
@@ -232,7 +231,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             .And.Contain(x => x.PropertyName == "References[0].Notes")
             .And.HaveCount(1);
     }
-    
+
     [Fact]
     public async Task Notes_with_more_than_4000_chars_are_not_allowed()
     {
@@ -254,7 +253,9 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         // assert
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
+            .Should().Contain(x =>
+                x.ErrorMessage ==
+                "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
             .And.Contain(x => x.PropertyName == "Notes")
             .And.HaveCount(1);
     }

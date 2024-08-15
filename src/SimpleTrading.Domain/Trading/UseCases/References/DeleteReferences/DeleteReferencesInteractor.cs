@@ -12,7 +12,7 @@ public class DeleteReferencesInteractor(TradingDbContext dbContext) : BaseIntera
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
-        var referencesCount = (ushort)trade.References.Count;
+        var referencesCount = (ushort) trade.References.Count;
         dbContext.References.RemoveRange(trade.References);
         await dbContext.SaveChangesAsync();
 

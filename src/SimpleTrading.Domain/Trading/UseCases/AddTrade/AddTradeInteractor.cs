@@ -53,7 +53,6 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
             x => Completed(x.Data.Id, x.Warnings),
             x => Completed(x.Trade.Id),
             x => x);
-
     }
 
     private Trade CreateTrade(AddTradeRequestModel model, Asset asset, Profile profile, Currency currency)

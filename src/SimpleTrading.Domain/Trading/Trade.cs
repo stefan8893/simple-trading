@@ -4,7 +4,6 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.TradeResultAnalyser;
 using SimpleTrading.Domain.Trading.TradeResultAnalyser.Decorators;
-using SimpleTrading.Domain.Trading.UseCases;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading;
@@ -34,11 +33,11 @@ public class Trade
     {
         if (!IsClosed)
             return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
-        
+
         Result = null;
         return Close(new CloseTradeDto(Closed!.Value, Balance!.Value, utcNow));
     }
-    
+
     internal OneOf<Completed, BusinessError> Close(CloseTradeDto dto)
     {
         if (dto.Closed < Opened)
@@ -50,7 +49,7 @@ public class Trade
 
         if (IsClosed && Result?.Source == TradingResultSource.ManuallyEntered)
             return new Completed();
-        
+
         Closed = dto.Closed.ToUtcKind();
         Balance = dto.Balance;
 
