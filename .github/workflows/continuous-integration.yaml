@@ -1,4 +1,4 @@
-name: CI/CD
+﻿name: Continuous Integration
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Run Conventional Commits check
         uses: webiny/action-conventional-commits@v1.3.0
-        
+
       - name: Checkout repo
         uses: actions/checkout@v4
 

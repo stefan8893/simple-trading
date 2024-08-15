@@ -1,0 +1,98 @@
+﻿name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    branches: ["main"]
+    types: ["completed"]
+
+jobs:
+  has_next_version:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: write
+    outputs:
+      HasNextVersion: ${{ steps.get_next_version.outputs.hasNextVersion }}
+      Version: ${{ steps.get_next_version.outputs.version }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get next version
+        id: get_next_version
+        uses: thenativeweb/get-next-version@2.6.2
+
+      - name: Tag new version
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        shell: pwsh
+        run: |
+          $nextVersion = '${{ steps.get_next_version.outputs.version }}'
+          git tag $nextVersion
+          git push origin $nextVersion
+
+  package:
+    runs-on: ubuntu-latest
+    needs: has_next_version
+    if: ${{ needs.has_next_version.outputs.HasNextVersion == 'true' }}
+    permissions:
+      contents: read
+      packages: write
+    env:
+      Version: ${{ needs.has_next_version.outputs.Version }}
+      Registry: ghcr.io
+      ImageName: stefan8893/simple-trading
+    outputs: 
+      ImageTag: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.Registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.Registry }}/${{ env.ImageName }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ env.Version }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: src/SimpleTrading.WebApi/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: Version=${{ env.Version }}
+          
+  deploy:
+    runs-on: ubuntu-latest
+    needs: package
+    permissions:
+      id-token: write
+    env: 
+      AzureAppName: "simple-trading-web-api"
+      ImageTag: ${{ needs.package.outputs.ImageTag }}
+
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy Web Api
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AzureAppName }}
+          images: ${{ env.ImageTag }}
