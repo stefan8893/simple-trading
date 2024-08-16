@@ -1,4 +1,4 @@
-name: Continuous Deployment
+﻿name: Continuous Deployment
 
 on:
   workflow_run:
@@ -141,7 +141,7 @@ jobs:
         shell: bash
         run: |
           command="dotnet ef database update --startup-project ../SimpleTrading.WebApi/ --project ../SimpleTrading.DataAccess.SqlServer/ -- --dbprovider SqlServer"
-          timeout 10m bash -c "until ${command}; do sleep 10; done"
+          timeout 5m bash -c "until ${command}; do sleep 10; done"
           
       - name: Deploy Web Api
         uses: azure/webapps-deploy@v3
