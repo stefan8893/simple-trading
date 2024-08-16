@@ -24,4 +24,4 @@ RUN dotnet publish "./SimpleTrading.WebApi.csproj" -c $BuildConfiguration -Prope
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SimpleTrading.WebApi.dll", "--urls http://+:80"]
+ENTRYPOINT ["dotnet", "SimpleTrading.WebApi.dll"]
