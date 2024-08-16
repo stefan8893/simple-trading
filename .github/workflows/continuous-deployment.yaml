@@ -1,4 +1,4 @@
-﻿name: Continuous Deployment
+name: Continuous Deployment
 
 on:
   workflow_run:
@@ -116,6 +116,8 @@ jobs:
     env: 
       AzureAppName: "simple-trading-web-api"
       ImageTag: ${{ needs.package_app.outputs.ImageTag }}
+    environment:
+      name: Production
 
     steps:
       - uses: actions/checkout@v4
