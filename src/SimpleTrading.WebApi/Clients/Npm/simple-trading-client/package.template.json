@@ -1,5 +1,5 @@
 {
-  "name": "@stefan8893/simple-trading",
+  "name": "@stefan8893/simple-trading-client",
   "version": "0.0.0",
   "description": "A client for the SimpleTrading Backend",
   "main": "lib/index.js",
@@ -9,9 +9,7 @@
     "type": "git",
     "url": "https://github.com/stefan8893/simple-trading.git"
   },
-  "keywords": [
-    "simple-trading"
-  ],
+  "keywords": ["simple-trading"],
   "author": "stefan8893",
   "license": "MIT",
   "bugs": {
