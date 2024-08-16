@@ -15,11 +15,6 @@ Push-Location Npm/simple-trading-client
 
 npm run build
 
-if (-not( Test-Path -Path .\dist\package.json)) {
-    Copy-Item -Path .\package.template.json -Destination .\dist
-    Rename-Item -Path .\dist\package.template.json -NewName package.json
-}
-
 Push-Location .\dist
 
 npm version $Version
