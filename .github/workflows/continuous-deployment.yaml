@@ -99,10 +99,12 @@ jobs:
           dotnet tool update --global dotnet-ef
         
       - name: Update Database
-        working-directory: src\SimpleTrading.Domain
+        working-directory: src/SimpleTrading.Domain
+        env: 
+          ConnectionStrings__SqlServer: ${{ secrets.CONNECTION_STRING_SQLSERVER }}
         shell: bash
         run: |
-          command="dotnet ef database update --startup-project ..\SimpleTrading.WebApi\ --project ..\SimpleTrading.DataAccess.SqlServer\ -- --dbprovider SqlServer"
+          command="dotnet ef database update --startup-project ../SimpleTrading.WebApi/ --project ../SimpleTrading.DataAccess.SqlServer/ -- --dbprovider SqlServer"
           timeout 10m bash -c "until ${command}; do sleep 10; done"
           
       - name: Deploy Web Api
