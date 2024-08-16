@@ -35,7 +35,9 @@ public static class ServiceCollectionExtensions
                 ["SqlServer"] = o =>
                 {
                     o.UseSqlServer(connectionString,
-                        x => x.MigrationsAssembly(sqlServerMigrationsAssembly));
+                        x =>
+                            x.MigrationsAssembly(sqlServerMigrationsAssembly)
+                                .UseAzureSqlDefaults());
                 },
                 ["Postgres"] = o =>
                 {
