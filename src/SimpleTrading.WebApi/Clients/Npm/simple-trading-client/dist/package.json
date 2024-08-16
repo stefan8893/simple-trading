@@ -7,7 +7,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stefan8893/simple-trading.git"
+    "url": "git+https://github.com/stefan8893/simple-trading.git"
   },
   "keywords": [
     "simple-trading"
@@ -20,6 +20,5 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "homepage": "https://github.com/stefan8893/simple-trading#readme",
-  "devDependencies": {}
+  "homepage": "https://github.com/stefan8893/simple-trading#readme"
 }
