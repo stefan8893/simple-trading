@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -173,9 +174,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         // assert
         await act.Should().NotThrowAsync();
-        var tradeAfterClosing = await DbContext.Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
         tradeAfterClosing.Should().NotBeNull();
         tradeAfterClosing!.IsClosed.Should().BeTrue();
@@ -206,9 +205,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         // assert
         await act.Should().NotThrowAsync();
-        var tradeAfterClosing = await DbContext.Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
         tradeAfterClosing.Should().NotBeNull();
         var expectedClosedDate = DateTime.Parse("2024-08-05T16:00:00");

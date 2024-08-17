@@ -88,9 +88,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
 
         // assert
         var referenceId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
-        var tradeWithAddedReference = await DbContext.Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var tradeWithAddedReference = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         tradeWithAddedReference.Should().NotBeNull();
         tradeWithAddedReference!.References.Should().HaveCount(1)
             .And.Contain(x => x.Id == referenceId);

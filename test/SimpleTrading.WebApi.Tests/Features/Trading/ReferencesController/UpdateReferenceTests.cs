@@ -32,10 +32,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         // assert
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
-        var updatedReference = await DbContext
-            .References
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == reference.Id);
+        var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
 
         updatedReference.Should().NotBeNull();
         updatedReference!.Type.Should().Be(ReferenceType.TradingView);

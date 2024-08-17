@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq.Expressions;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
@@ -42,7 +43,9 @@ public class DeleteTradeInteractorTests(TestingWebApplicationFactory<Program> fa
 
         // assert
         response.Value.Should().BeOfType<Completed>();
-        var storedTrade = await DbContext.Trades.AsNoTracking().FirstOrDefaultAsync(x => x.Id == trade.Id);
+        var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         storedTrade.Should().BeNull();
     }
+
+
 }

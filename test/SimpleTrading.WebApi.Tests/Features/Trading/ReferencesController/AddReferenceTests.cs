@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -31,10 +32,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
         response.Data.Should().NotBeNull();
-        var newlyAddedReference = await DbContext
-            .References
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == response.Data);
+        var newlyAddedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == response.Data);
 
         newlyAddedReference.Should().NotBeNull();
     }

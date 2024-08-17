@@ -375,7 +375,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -407,7 +407,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
         newlyAddedTrade!.References
@@ -444,7 +444,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
         newlyAddedTrade!.IsClosed.Should().BeTrue();
@@ -557,7 +557,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
-        var newlyAddedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == newId);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
         newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));

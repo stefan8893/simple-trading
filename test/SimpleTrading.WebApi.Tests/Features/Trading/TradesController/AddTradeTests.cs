@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -55,10 +56,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
         response.Data.Should().NotBeNull();
-        var newlyAddedTrade = await DbContext
-            .Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == response.Data);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -230,10 +228,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var newlyAddedTrade = await DbContext
-            .Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == response.Data);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
 
         newlyAddedTrade.Should().NotBeNull();
         var expected = DateTime.Parse("2024-08-05T12:00:00");
@@ -269,10 +264,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var newlyAddedTrade = await DbContext
-            .Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == response.Data);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
 
         newlyAddedTrade.Should().NotBeNull();
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");

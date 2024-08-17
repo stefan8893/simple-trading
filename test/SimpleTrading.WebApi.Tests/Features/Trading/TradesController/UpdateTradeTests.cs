@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -32,10 +33,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
-        var updatedTrade = await DbContext
-            .Trades
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Size.Should().Be(50_000);

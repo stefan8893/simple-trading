@@ -33,7 +33,7 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
 
         // assert
         response.Value.Should().BeOfType<Completed>();
-        var updatedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.References.Should().HaveCount(1)
             .And.Contain(x => x.Id == reference2.Id);

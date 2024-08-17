@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -36,7 +37,7 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Should().BeOfType<SuccessResponse>();
-        var storedTrade = await DbContext.Trades.AsNoTracking().FirstOrDefaultAsync(x => x.Id == trade.Id);
+        var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         storedTrade.Should().BeNull();
     }
 }

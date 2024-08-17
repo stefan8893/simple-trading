@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -50,5 +51,12 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         return client;
+    }
+    
+    protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class
+    {
+        return await DbContext.Set<T>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(predicate);
     }
 }

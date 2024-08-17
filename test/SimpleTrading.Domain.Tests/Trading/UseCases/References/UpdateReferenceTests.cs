@@ -45,9 +45,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         // assert
         response.Value.Should().BeOfType<Completed>();
 
-        var updatedReference = await DbContext.References
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == reference.Id);
+        var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
 
         updatedReference.Should().NotBeNull();
         updatedReference!.Notes.Should().BeNull();

@@ -191,7 +191,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<Completed>();
 
-        var updatedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.AssetId.Should().Be(newAsset.Id);
     }
@@ -218,7 +218,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<Completed>();
 
-        var updatedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.ProfileId.Should().Be(newProfile.Id);
     }
@@ -245,7 +245,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<Completed>();
 
-        var updatedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.CurrencyId.Should().Be(newCurrency.Id);
     }
@@ -320,7 +320,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<Completed>();
-        var updatedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Balance.Should().Be(newBalance);
     }
@@ -383,8 +383,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<Completed>();
-        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
-        var updatedTrade = await DbContext.Trades.AsNoTracking().SingleOrDefaultAsync(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.PositionPrices.Should().Be(newPositionPrices);
     }
