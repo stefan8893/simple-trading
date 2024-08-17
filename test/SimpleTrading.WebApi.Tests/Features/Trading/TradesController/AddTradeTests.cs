@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -17,11 +16,10 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_request_without_an_access_token_is_not_authorized()
     {
         // arrange
-        var client = Factory.CreateClient();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient(false);
 
         // act
-        var act = () => simpleTradingClient.AddTradeAsync();
+        var act = () => client.AddTradeAsync();
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException>();
@@ -32,8 +30,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_trade_can_be_successfully_added()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -42,7 +39,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
@@ -65,8 +62,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task TradeSize_must_not_be_null()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -75,7 +71,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var act = () => client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
@@ -99,8 +95,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_trade_cant_be_added_if_the_asset_is_missing()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var notExistingAssetId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
         var profile = TestData.Profile.Default.Build();
@@ -109,7 +104,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var act = () => client.AddTradeAsync(new AddTradeDto
         {
             AssetId = notExistingAssetId,
             ProfileId = profile.Id,
@@ -131,8 +126,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_closed_trade_cant_be_added_if_the_balance_is_missing()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -141,7 +135,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var act = () => client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
@@ -168,8 +162,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_closed_trade_cant_be_added_if_the_closed_date_is_missing()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -178,7 +171,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var act = () => client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
@@ -205,8 +198,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_trade_with_opened_date_in_utc_will_be_stored_like_that_there_is_no_implicit_conversion()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -217,7 +209,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var opened = DateTimeOffset.Parse("2024-08-05T12:00:00Z");
 
         // act
-        var response = await simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
@@ -241,8 +233,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_trade_with_opened_date_in_local_time_will_be_stored_as_utc_there_is_no_implicit_conversion()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -253,7 +244,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var openedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
 
         // act
-        var response = await simpleTradingClient.AddTradeAsync(new AddTradeDto
+        var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,

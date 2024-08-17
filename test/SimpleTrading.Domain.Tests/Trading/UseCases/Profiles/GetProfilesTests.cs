@@ -10,10 +10,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.Profiles;
 
 public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IGetProfiles CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IGetProfiles>();
-    }
+    private IGetProfiles Interactor => ServiceLocator.GetRequiredService<IGetProfiles>();
 
     [Fact]
     public async Task Get_profiles_without_search_term_returns_all_profiles()
@@ -26,7 +23,7 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor().Execute(new GetProfilesRequestModel(null));
+        var response = await Interactor.Execute(new GetProfilesRequestModel(null));
 
         // assert
         var profiles = response.Value.Should().BeAssignableTo<IReadOnlyList<GetProfilesResponseModel>>();
@@ -38,7 +35,7 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
     {
         var tooLongSearchTerm = new string('a', 51);
 
-        var response = await CreateInteractor().Execute(new GetProfilesRequestModel(tooLongSearchTerm));
+        var response = await Interactor.Execute(new GetProfilesRequestModel(tooLongSearchTerm));
 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)

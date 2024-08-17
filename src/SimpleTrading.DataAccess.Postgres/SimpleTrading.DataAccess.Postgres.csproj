@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SimpleTrading.DataAccess\SimpleTrading.DataAccess.csproj" />
+        <ProjectReference Include="..\SimpleTrading.DataAccess\SimpleTrading.DataAccess.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -12,11 +11,10 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task When_deleting_a_non_existing_trade_the_api_returns_success_in_order_to_be_idempotent()
     {
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        var response = await simpleTradingClient.DeleteTradeAsync(notExistingTradeId);
+        var response = await client.DeleteTradeAsync(notExistingTradeId);
 
         response.Should().BeOfType<SuccessResponse>();
     }
@@ -25,15 +23,14 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task A_trade_can_be_successfully_deleted()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.DeleteTradeAsync(trade.Id);
+        var response = await client.DeleteTradeAsync(trade.Id);
 
         // assert
         response.Should().BeOfType<SuccessResponse>();

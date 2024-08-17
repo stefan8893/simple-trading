@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -13,10 +12,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
 public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IUpdateReference CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IUpdateReference>();
-    }
+    private IUpdateReference Interactor => ServiceLocator.GetRequiredService<IUpdateReference>();
 
     [Fact]
     public async Task A_trades_reference_can_be_successfully_updated()
@@ -40,7 +36,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateReferenceRequestModel);
+        var response = await Interactor.Execute(updateReferenceRequestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
@@ -72,7 +68,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateReferenceRequestModel);
+        var response = await Interactor.Execute(updateReferenceRequestModel);
 
         // assert
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
@@ -97,7 +93,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateReferenceRequestModel);
+        var response = await Interactor.Execute(updateReferenceRequestModel);
 
         // assert
         var notFound = response.Value.Should().BeOfType<NotFound<Reference>>();
@@ -127,7 +123,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             };
 
         // act
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -159,7 +155,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             };
 
         // act
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -191,7 +187,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             };
 
         // act
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();

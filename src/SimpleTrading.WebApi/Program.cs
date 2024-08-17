@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Clients;
@@ -38,7 +39,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
 builder.Services.AddTradingDbContext(builder.Configuration);
 builder.Services.AddDateTimeProvider();
 builder.Services.AddUseCases();
-builder.Services.AddRepositories();
+builder.Services.AddDataAccess();
 builder.Services.AddSingleton<ClientGenerator>();
 
 

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -12,10 +11,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
 public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IAddReference CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IAddReference>();
-    }
+    private IAddReference Interactor => ServiceLocator.GetRequiredService<IAddReference>();
 
     [Fact]
     public async Task A_reference_type_out_of_enum_range_is_not_allowed()
@@ -24,7 +20,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, (ReferenceType) 50, "https://example.org", "some notes");
 
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
@@ -38,7 +34,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var referenceRequestModel =
             new AddReferenceRequestModel(notExistingTradeId, ReferenceType.Other, "https://example.org", "some notes");
 
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
         notFound.Which.ResourceId.Should().Be(notExistingTradeId);
@@ -62,7 +58,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
 
         // act
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
@@ -84,7 +80,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
 
         // act
-        var response = await CreateInteractor().Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
         var referenceId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Infrastructure;
@@ -43,13 +44,16 @@ public static class OpenApiExtensions
                     if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
 
                     var orderAttribute = descriptor
-                        .EndpointMetadata.OfType<SwaggerUiControllerOrderAttribute>()
+                        .EndpointMetadata.OfType<SwaggerUiControllerPositionAttribute>()
                         .FirstOrDefault();
 
                     return orderAttribute is null
                         ? descriptor.ControllerName
                         : orderAttribute.Position.ToString();
                 });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
         return services;
@@ -69,6 +73,7 @@ public static class OpenApiExtensions
             c.OAuthScopeSeparator(" ");
             c.OAuth2RedirectUrl(clientAppEntraIdConfig.RedirectUrl);
         });
+
 
         return app;
     }

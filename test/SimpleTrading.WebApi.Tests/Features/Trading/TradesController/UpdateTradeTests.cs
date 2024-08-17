@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -14,8 +13,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task A_trades_size_can_be_successfully_updated()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = (TestData.Trade.Default with
         {
@@ -25,7 +23,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.UpdateTradeAsync(trade.Id, new UpdateTradeDto
+        var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             Size = 50_000
         });
@@ -43,13 +41,12 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task An_non_existing_trade_cannot_be_updated()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var notExistingTradeId = Guid.Parse("74af4aee-9582-49ab-956a-1fd7d6f8609d");
 
         // act
-        var act = () => simpleTradingClient.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
+        var act = () => client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
@@ -60,15 +57,14 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task The_closed_date_of_a_non_closed_trade_cannot_be_updated()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.UpdateTradeAsync(trade.Id, new UpdateTradeDto
+        var act = () => client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")
         });

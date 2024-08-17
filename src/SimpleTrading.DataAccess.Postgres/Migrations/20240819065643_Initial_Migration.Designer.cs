@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using SimpleTrading.DataAccess;
 
 #nullable disable
 
 namespace SimpleTrading.DataAccess.Postgres.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    [Migration("20240813054037_Initial_Migration")]
+    [Migration("20240819065643_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />
@@ -20,7 +21,10 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -173,9 +177,6 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Result")
-                        .HasColumnType("text");
-
                     b.Property<decimal>("Size")
                         .HasPrecision(24, 8)
                         .HasColumnType("numeric(24,8)");
@@ -271,11 +272,42 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.OwnsOne("SimpleTrading.Domain.Trading.Result", "Result", b1 =>
+                        {
+                            b1.Property<Guid>("TradeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<short?>("Performance")
+                                .HasColumnType("smallint");
+
+                            b1.Property<string>("Source")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("TradeId");
+
+                            b1.ToTable("Trade");
+
+                            b1.ToJson("Result");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TradeId");
+                        });
+
                     b.Navigation("Asset");
 
                     b.Navigation("Currency");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Result");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>

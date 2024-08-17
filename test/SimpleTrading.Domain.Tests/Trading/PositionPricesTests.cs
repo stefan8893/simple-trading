@@ -160,7 +160,7 @@ public class PositionPricesTests
         var result = prices.CalculateResult();
 
         result.Should().NotBeNull();
-        result!.Name.Should().Be(nameof(TradingResult.Win));
+        result!.Name.Should().Be(Result.Win);
         result.Performance.Should().Be(100);
     }
 

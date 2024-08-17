@@ -11,7 +11,7 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[SwaggerUiControllerOrder(5)]
+[SwaggerUiControllerPosition(5)]
 public class CurrenciesController : ControllerBase
 {
     [HttpGet(Name = nameof(GetCurrencies))]

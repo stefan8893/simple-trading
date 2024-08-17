@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using SimpleTrading.Client;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -11,8 +10,7 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task Existing_assets_will_be_returned()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var asset1 = TestData.Asset.Default.Build();
         var asset2 = TestData.Asset.Default.Build();
@@ -21,7 +19,7 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var assets = await simpleTradingClient.GetAssetsAsync();
+        var assets = await client.GetAssetsAsync();
 
         // assert
         assets.Should().NotBeNull();

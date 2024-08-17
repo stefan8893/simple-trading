@@ -20,7 +20,7 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [Route("trades/{tradeId:guid}/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[SwaggerUiControllerOrder(2)]
+[SwaggerUiControllerPosition(2)]
 public class ReferencesController : ControllerBase
 {
     [HttpGet("{referenceId:guid}", Name = nameof(GetReference))]

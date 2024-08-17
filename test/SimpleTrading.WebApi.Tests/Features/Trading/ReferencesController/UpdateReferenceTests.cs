@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -14,8 +13,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     public async Task A_reference_can_be_successfully_updated()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -23,7 +21,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
+        var response = await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
             Type = ReferenceTypeDto.TradingView,
             Link = "https://www.tradingview.com/x/RRJnEMaI/"
@@ -43,8 +41,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     public async Task An_update_with_an_invalid_types_is_a_bad_request()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -52,7 +49,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
+        var act = () => client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
             Type = (ReferenceTypeDto) 50
         });
@@ -69,8 +66,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     public async Task References_of_a_non_existing_trade_cannot_be_updated()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var notExistingTradeId = Guid.Parse("c2e4edf0-8fa9-492b-9f9f-be883c7ad3ed");
         var reference = TestData.Reference.Default.Build();
@@ -79,7 +75,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.UpdateReferenceAsync(notExistingTradeId, reference.Id,
+        var act = () => client.UpdateReferenceAsync(notExistingTradeId, reference.Id,
             new UpdateReferenceDto
             {
                 Type = ReferenceTypeDto.Other,
@@ -97,8 +93,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     public async Task A_non_existing_reference_cannot_be_updated()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var notExistingReference = Guid.Parse("cab4f9ae-c690-4875-8560-7121e73e1183");
@@ -107,7 +102,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => simpleTradingClient.UpdateReferenceAsync(trade.Id, notExistingReference, new UpdateReferenceDto
+        var act = () => client.UpdateReferenceAsync(trade.Id, notExistingReference, new UpdateReferenceDto
         {
             Type = ReferenceTypeDto.Other,
             Link = "https://example.org"

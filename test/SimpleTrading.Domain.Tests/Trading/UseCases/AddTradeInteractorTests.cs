@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -17,10 +16,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind();
 
-    private IAddTrade CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IAddTrade>();
-    }
+    private IAddTrade Interactor => ServiceLocator.GetRequiredService<IAddTrade>();
 
     [Fact]
     public async Task Asset_id_must_not_be_empty()
@@ -35,7 +31,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
@@ -57,7 +53,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
@@ -79,7 +75,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             CurrencyId = Guid.Empty
         };
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
@@ -105,7 +101,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
@@ -132,7 +128,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             Result = (ResultModel) 50
         };
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
@@ -162,7 +158,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
@@ -188,7 +184,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             References = [reference]
         };
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
@@ -222,7 +218,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
@@ -248,7 +244,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
@@ -282,7 +278,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var notFound = response.Value.Should().BeAssignableTo<NotFound>();
@@ -312,7 +308,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var notFound = response.Value.Should().BeAssignableTo<NotFound>();
@@ -342,7 +338,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var notFound = response.Value.Should().BeAssignableTo<NotFound>();
@@ -371,7 +367,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
@@ -403,7 +399,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
@@ -440,7 +436,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
@@ -477,7 +473,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BadInput>();
@@ -516,7 +512,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BadInput>();
@@ -553,7 +549,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         };
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;

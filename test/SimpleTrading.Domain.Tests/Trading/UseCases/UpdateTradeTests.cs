@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -14,10 +13,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IUpdateTrade CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IUpdateTrade>();
-    }
+    private IUpdateTrade Interactor => ServiceLocator.GetRequiredService<IUpdateTrade>();
 
     [Fact]
     public async Task A_trades_size_must_be_greater_than_zero_if_specified()
@@ -32,7 +28,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -53,7 +49,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -75,7 +71,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -97,7 +93,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -119,7 +115,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -141,7 +137,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -162,7 +158,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
@@ -186,7 +182,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
@@ -213,7 +209,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
@@ -240,7 +236,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
@@ -267,7 +263,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
@@ -290,7 +286,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
@@ -316,7 +312,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();
@@ -341,7 +337,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
@@ -379,7 +375,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         };
 
         // act
-        var response = await CreateInteractor().Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         response.Value.Should().BeOfType<Completed>();

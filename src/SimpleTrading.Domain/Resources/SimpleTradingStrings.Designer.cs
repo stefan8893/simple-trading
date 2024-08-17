@@ -168,6 +168,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vergleichswert.
+        /// </summary>
+        public static string ComparisonValue {
+            get {
+                return ResourceManager.GetString("ComparisonValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Währung.
         /// </summary>
         public static string Currency {
@@ -191,6 +200,33 @@ namespace SimpleTrading.Domain.Resources {
         public static string ExitPrice {
             get {
                 return ResourceManager.GetString("ExitPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feld.
+        /// </summary>
+        public static string Field {
+            get {
+                return ResourceManager.GetString("Field", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Filter {
+            get {
+                return ResourceManager.GetString("Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{PropertyValue}&apos; kann nicht als Filter benutzt werden..
+        /// </summary>
+        public static string FilterNotSupported {
+            get {
+                return ResourceManager.GetString("FilterNotSupported", resourceCulture);
             }
         }
         
@@ -285,6 +321,42 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operator.
+        /// </summary>
+        public static string Operator {
+            get {
+                return ResourceManager.GetString("Operator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Der Operator &apos;{PropertyValue}&apos; wird nicht unterstützt..
+        /// </summary>
+        public static string OperatorNotSupported {
+            get {
+                return ResourceManager.GetString("OperatorNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seite.
+        /// </summary>
+        public static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einträge pro Seite.
+        /// </summary>
+        public static string PageSize {
+            get {
+                return ResourceManager.GetString("PageSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profil.
         /// </summary>
         public static string Profile {
@@ -348,6 +420,24 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sortierung.
+        /// </summary>
+        public static string Sort {
+            get {
+                return ResourceManager.GetString("Sort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Sortierung anhand von &apos;{PropertyValue}&apos; ist nicht möglich..
+        /// </summary>
+        public static string SortingNotSupported {
+            get {
+                return ResourceManager.GetString("SortingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop-Loss.
         /// </summary>
         public static string StopLoss {
@@ -380,6 +470,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string TradeSize {
             get {
                 return ResourceManager.GetString("TradeSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Der Wert &apos;{PropertyValue}&apos; ist nicht zulässig..
+        /// </summary>
+        public static string ValueNotAllowed {
+            get {
+                return ResourceManager.GetString("ValueNotAllowed", resourceCulture);
             }
         }
         

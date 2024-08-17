@@ -1,4 +1,6 @@
-﻿namespace SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain.Abstractions;
+
+namespace SimpleTrading.Domain.Trading;
 
 public enum ReferenceType
 {
@@ -6,7 +8,7 @@ public enum ReferenceType
     Other = 1
 }
 
-public class Reference
+public class Reference  : IEntity
 {
     public required Guid Id { get; set; }
     public required Guid TradeId { get; set; }

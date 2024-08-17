@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -14,13 +13,12 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
     public async Task References_of_a_non_existing_trade_cannot_be_deleted()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
         var notExistingReferenceId = Guid.Parse("d5b9a98d-b4b0-44b7-9ae2-f4aac2edfde1");
 
         // act
-        var act = () => simpleTradingClient.DeleteReferenceAsync(notExistingTradeId, notExistingReferenceId);
+        var act = () => client.DeleteReferenceAsync(notExistingTradeId, notExistingReferenceId);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
@@ -33,8 +31,7 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
     public async Task References_can_be_successfully_deleted()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -43,7 +40,7 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.DeleteReferencesAsync(trade.Id);
+        var response = await client.DeleteReferencesAsync(trade.Id);
 
         // assert
         response.Should().NotBeNull();

@@ -12,17 +12,14 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
 public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IGetReferences CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IGetReferences>();
-    }
+    private IGetReferences Interactor => ServiceLocator.GetRequiredService<IGetReferences>();
 
     [Fact]
     public async Task A_non_existing_references_cant_be_returned()
     {
         var notExistingTradeId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
 
-        var response = await CreateInteractor()
+        var response = await Interactor
             .Execute(new GetReferencesRequestModel(notExistingTradeId));
 
         response.Value.Should().BeOfType<NotFound<Trade>>()
@@ -41,7 +38,7 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor()
+        var response = await Interactor
             .Execute(new GetReferencesRequestModel(trade.Id));
 
         // assert

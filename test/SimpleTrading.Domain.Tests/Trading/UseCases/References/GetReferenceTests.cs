@@ -12,10 +12,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
 public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IGetReference CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IGetReference>();
-    }
+    private IGetReference Interactor => ServiceLocator.GetRequiredService<IGetReference>();
 
     [Fact]
     public async Task A_not_existing_reference_cant_be_returned()
@@ -23,7 +20,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var notExistingTradeId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
         var notExistingReferenceId = Guid.Parse("5fb9a049-a309-4617-981e-49de0e86bc86");
 
-        var response = await CreateInteractor()
+        var response = await Interactor
             .Execute(new GetReferenceRequestModel(notExistingTradeId, notExistingReferenceId));
 
         response.Value.Should().BeOfType<NotFound<Trade>>()
@@ -42,7 +39,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor()
+        var response = await Interactor
             .Execute(new GetReferenceRequestModel(trade.Id, reference1.Id));
 
         // assert

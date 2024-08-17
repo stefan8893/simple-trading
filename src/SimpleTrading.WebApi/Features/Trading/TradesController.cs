@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using System.Text.RegularExpressions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
@@ -7,6 +8,7 @@ using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.WebApi.Extensions;
@@ -19,9 +21,37 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[SwaggerUiControllerOrder(1)]
-public class TradesController : ControllerBase
+[SwaggerUiControllerPosition(1)]
+public partial class TradesController : ControllerBase
 {
+    [HttpGet(Name = nameof(SearchTrades))]
+    [ProducesResponseType<PageDto<TradeDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> SearchTrades(
+        [FromServices] IValidator<SearchQuery> validator,
+        [FromServices] ISearchTrades searchTrades,
+        [FromQuery] SearchQuery query)
+    {
+        var validationResult = await validator.ValidateAsync(query);
+        if (!validationResult.IsValid)
+            return validationResult.ToActionResult();
+
+        var searchTradesRequestModel = MapToRequestModel(query);
+
+        var result = await searchTrades.Execute(searchTradesRequestModel);
+
+        return result.Match(
+            page => Ok(new PageDto<TradeDto>(
+                page.Select(TradeDto.From),
+                page.Count,
+                page.TotalCount,
+                page.Page,
+                page.PageSize)),
+            badInput => badInput.ToActionResult()
+        );
+    }
+
+
     [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
     [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
@@ -134,6 +164,47 @@ public class TradesController : ControllerBase
         );
     }
 
+    private static SearchTradesRequestModel MapToRequestModel(SearchQuery query)
+    {
+        var searchTradesRequestModel = new SearchTradesRequestModel
+        {
+            Sort = query.Sort?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(ParseSorting)
+                .ToList() ?? [],
+            Filter = query.Filter?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x =>
+                {
+                    var match = PropertyFilterSyntaxRegex().Match(x);
+                    return new FilterModel
+                    {
+                        PropertyName = match.Groups["property"].Value,
+                        Operator = match.Groups["operator"].Value[1..],
+                        ComparisonValue = match.Groups["comparisonValue"].Value
+                    };
+                })
+                .ToList() ?? []
+        };
+
+        if (query.Page.HasValue)
+            searchTradesRequestModel.Page = query.Page.Value;
+
+        if (query.PageSize.HasValue)
+            searchTradesRequestModel.PageSize = query.PageSize.Value;
+
+        return searchTradesRequestModel;
+
+        SortModel ParseSorting(string sortBy)
+        {
+            var sortByTrimmed = sortBy.Trim();
+
+            return sortByTrimmed.StartsWith('-')
+                ? new SortModel(sortByTrimmed[1..], false)
+                : new SortModel(sortByTrimmed);
+        }
+    }
+
     private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto)
     {
         var addTradeRequestModel = new AddTradeRequestModel
@@ -194,4 +265,7 @@ public class TradesController : ControllerBase
         };
         return tradeResult;
     }
+
+    [GeneratedRegex(@"\s*(?<property>.*?)\s+(?<operator>-.*?)\s+\[(?<comparisonValue>.*?)\]\s*$")]
+    public static partial Regex PropertyFilterSyntaxRegex();
 }

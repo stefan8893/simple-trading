@@ -237,4 +237,37 @@
     <data name="SearchTerm" xml:space="preserve">
         <value>Suchbegriff</value>
     </data>
+    <data name="Sort" xml:space="preserve">
+        <value>Sortierung</value>
+    </data>
+    <data name="SortingNotSupported" xml:space="preserve">
+        <value>Die Sortierung anhand von '{PropertyValue}' ist nicht möglich.</value>
+    </data>
+    <data name="OperatorNotSupported" xml:space="preserve">
+        <value>Der Operator '{PropertyValue}' wird nicht unterstützt.</value>
+    </data>
+    <data name="FilterNotSupported" xml:space="preserve">
+        <value>'{PropertyValue}' kann nicht als Filter benutzt werden.</value>
+    </data>
+    <data name="ValueNotAllowed" xml:space="preserve">
+        <value>Der Wert '{PropertyValue}' ist nicht zulässig.</value>
+    </data>
+    <data name="ComparisonValue" xml:space="preserve">
+        <value>Vergleichswert</value>
+    </data>
+    <data name="Page" xml:space="preserve">
+        <value>Seite</value>
+    </data>
+    <data name="PageSize" xml:space="preserve">
+        <value>Einträge pro Seite</value>
+    </data>
+    <data name="Filter" xml:space="preserve">
+        <value>Filter</value>
+    </data>
+    <data name="Operator" xml:space="preserve">
+        <value>Operator</value>
+    </data>
+    <data name="Field" xml:space="preserve">
+        <value>Feld</value>
+    </data>
 </root>

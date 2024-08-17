@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Abstractions.DataAccess;
+using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
-public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : class
+public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : class, IEntity
 {
     public async ValueTask<T> Get(Guid id)
     {
@@ -19,11 +21,30 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
         return dbContext.FindAsync<T>(id);
     }
 
-    public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+    public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> predicate, IEnumerable<ISort<T>>? sorting = null)
     {
-        return await dbContext.Set<T>()
-            .Where(predicate)
+        return await FindInternal(predicate, sorting)
             .ToListAsync();
+    }
+
+    public async Task<PagedList<T>> Find(PaginationConfiguration pagination, Expression<Func<T, bool>> predicate,
+        IEnumerable<ISort<T>>? sorting = null)
+    {
+        var page = pagination.Page;
+        var pageSize = pagination.PageSize;
+        var sortingAsList = sorting.AsList();
+
+        var count = await FindInternal(predicate, sortingAsList).CountAsync();
+
+        if (count == 0)
+            return new PagedList<T>(Enumerable.Empty<T>(), 0, 0, 0);
+
+        var result = await FindInternal(predicate, sortingAsList)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedList<T>(result, count, page, pageSize);
     }
 
     public void Add(T entity)
@@ -39,5 +60,29 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
     public void RemoveMany(IEnumerable<T> entities)
     {
         dbContext.RemoveRange(entities);
+    }
+
+    private IQueryable<T> FindInternal(Expression<Func<T, bool>> predicate, IEnumerable<ISort<T>>? sorting = null)
+    {
+        var filtered = dbContext
+            .Set<T>()
+            .Where(predicate);
+
+        var sortingAsList = sorting.AsList();
+        if (sortingAsList.Count == 0)
+            return filtered;
+
+        var firstSorting = sortingAsList.First();
+
+        var first = firstSorting.IsAscendingOrder
+            ? filtered.OrderBy(firstSorting.Selector)
+            : filtered.OrderByDescending(firstSorting.Selector);
+
+        return sortingAsList
+            .Skip(1)
+            .Aggregate(first, (acc, next)
+                => next.IsAscendingOrder
+                    ? acc.ThenBy(next.Selector)
+                    : acc.ThenByDescending(next.Selector));
     }
 }

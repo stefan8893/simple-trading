@@ -10,10 +10,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.Assets;
 
 public class GetAssetsTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IGetAssets CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IGetAssets>();
-    }
+    private IGetAssets Interactor => ServiceLocator.GetRequiredService<IGetAssets>();
 
     [Fact]
     public async Task Get_assets_without_search_term_returns_all_assets()
@@ -26,7 +23,7 @@ public class GetAssetsTests(TestingWebApplicationFactory<Program> factory) : Web
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor().Execute(new GetAssetsRequestModel(null));
+        var response = await Interactor.Execute(new GetAssetsRequestModel(null));
 
         // assert
         var assets = response.Value.Should().BeAssignableTo<IReadOnlyList<GetAssetsResponseModel>>();
@@ -38,7 +35,7 @@ public class GetAssetsTests(TestingWebApplicationFactory<Program> factory) : Web
     {
         var tooLongSearchTerm = new string('a', 51);
 
-        var response = await CreateInteractor().Execute(new GetAssetsRequestModel(tooLongSearchTerm));
+        var response = await Interactor.Execute(new GetAssetsRequestModel(tooLongSearchTerm));
 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
