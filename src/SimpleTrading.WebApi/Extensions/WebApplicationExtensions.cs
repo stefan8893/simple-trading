@@ -22,8 +22,8 @@ public static class WebApplicationExtensions
 
     private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
     {
-        var dbContext = context.RequestServices.GetRequiredService<TradingDbContext>();
-        var userSettings = await dbContext.GetUserSettingsOrDefault();
+        var dbContext = context.RequestServices.GetRequiredService<IUserSettingsRepository>();
+        var userSettings = await dbContext.GetOrDefault();
 
         if (userSettings is null)
             return new ProviderCultureResult(Constants.DefaultCulture.Name);

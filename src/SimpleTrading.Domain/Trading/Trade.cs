@@ -12,19 +12,19 @@ public class Trade
 {
     public required Guid Id { get; init; }
     public required Guid AssetId { get; set; }
-    public required Asset Asset { get; set; }
+    public virtual required Asset Asset { get; set; }
     public required Guid ProfileId { get; set; }
-    public required Profile Profile { get; set; }
+    public virtual required Profile Profile { get; set; }
     public required DateTime Opened { get; set; }
     public required decimal Size { get; set; }
     public DateTime? Closed { get; private set; }
     public decimal? Balance { get; private set; }
     public ITradingResult? Result { get; private set; }
     public required Guid CurrencyId { get; set; }
-    public required Currency Currency { get; set; }
+    public virtual required Currency Currency { get; set; }
     public required PositionPrices PositionPrices { get; set; }
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
-    public ICollection<Reference> References { get; set; } = [];
+    public virtual ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
     public bool IsClosed => Closed.HasValue && Balance.HasValue;
     public required DateTime Created { get; init; }

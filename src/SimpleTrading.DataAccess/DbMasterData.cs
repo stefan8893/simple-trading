@@ -1,7 +1,9 @@
-﻿using SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain;
+using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.User;
 
-namespace SimpleTrading.Domain.DataAccess;
+namespace SimpleTrading.DataAccess;
 
 public class DbMasterData(TradingDbContext dbContext)
 {

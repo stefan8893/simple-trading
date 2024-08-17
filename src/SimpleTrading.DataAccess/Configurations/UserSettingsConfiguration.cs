@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleTrading.Domain.User;
 
-namespace SimpleTrading.Domain.DataAccess.Configurations;
+namespace SimpleTrading.DataAccess.Configurations;
 
 internal class UserSettingsConfiguration : IEntityTypeConfiguration<UserSettings>
 {

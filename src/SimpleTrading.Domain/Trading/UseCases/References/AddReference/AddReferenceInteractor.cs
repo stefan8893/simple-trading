@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
@@ -11,7 +12,8 @@ using AddReferenceResponse = OneOf<Completed<Guid>, BadInput, NotFound, Business
 
 public class AddReferenceInteractor(
     IValidator<AddReferenceRequestModel> validator,
-    TradingDbContext dbContext,
+    ITradeRepository tradeRepository,
+    UowCommit uowCommit,
     UtcNow utcNow) : BaseInteractor, IAddReference
 {
     private const ushort MaxReferencesPerTrade = 50;
@@ -22,13 +24,13 @@ public class AddReferenceInteractor(
         if (!validationResult.IsValid)
             return BadInput(validationResult);
 
-        var trade = await dbContext.Trades.FindAsync(model.TradeId);
+        var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
         if (trade.References.Count >= MaxReferencesPerTrade)
             return BusinessError(trade.Id,
-                string.Format(SimpleTradingStrings.MoreThan50ReferencesNotAllowed, MaxReferencesPerTrade));
+                string.Format(SimpleTradingStrings.MoreThanXReferencesNotAllowed, MaxReferencesPerTrade));
 
         return await AddReference(trade, model);
     }
@@ -47,8 +49,8 @@ public class AddReferenceInteractor(
         };
 
         trade.References.Add(reference);
-        dbContext.References.Add(reference);
-        await dbContext.SaveChangesAsync();
+        tradeRepository.AddReference(reference);
+        await uowCommit();
 
         return Completed(reference.Id);
     }

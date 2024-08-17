@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleTrading.DataAccess;
+using SimpleTrading.DataAccess.Repositories;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -17,6 +20,18 @@ public static class ServiceCollectionExtensions
                 .WithScopedLifetime());
     }
 
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        return services
+            .AddScoped<ITradeRepository, TradeRepository>()
+            .AddScoped<IAssetRepository, AssetRepository>()
+            .AddScoped<IProfileRepository, ProfileRepository>()
+            .AddScoped<ICurrencyRepository, CurrencyRepository>()
+            .AddScoped<IUserSettingsRepository, UserSettingsRepository>()
+            .AddScoped<UowCommit>(sp => 
+                () => sp.GetRequiredService<TradingDbContext>().SaveChangesAsync());
+    }
+
     public static IServiceCollection AddTradingDbContext(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -28,7 +43,7 @@ public static class ServiceCollectionExtensions
         const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
         const string postgresMigrationsAssembly = "SimpleTrading.DataAccess.Postgres";
         const string sqliteMigrationsAssembly = "SimpleTrading.DataAccess.Sqlite";
-
+        
         var dbContextOptionsBuilderByProvider =
             new Dictionary<string, Action<DbContextOptionsBuilder>>(StringComparer.OrdinalIgnoreCase)
             {
@@ -64,8 +79,8 @@ public static class ServiceCollectionExtensions
         {
             using var scope = sp.CreateScope();
             var userSettings = await scope.ServiceProvider
-                .GetRequiredService<TradingDbContext>()
-                .GetUserSettings();
+                .GetRequiredService<IUserSettingsRepository>()
+                .Get();
 
             return DateTime.UtcNow.ToLocal(userSettings.TimeZone).DateTime.ToLocalKind();
         });

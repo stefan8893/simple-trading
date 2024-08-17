@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.Domain.Trading.UseCases.Assets;
+namespace SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 
 public record GetAssetsRequestModel(string? SearchTerm);
 

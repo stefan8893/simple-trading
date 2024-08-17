@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -12,7 +13,8 @@ using CloseTradeResponse =
 
 public class CloseTradeInteractor(
     IValidator<CloseTradeRequestModel> validator,
-    TradingDbContext dbContext,
+    ITradeRepository tradeRepository,
+    UowCommit uowCommit,
     UtcNow utcNow)
     : BaseInteractor, ICloseTrade
 {
@@ -22,7 +24,7 @@ public class CloseTradeInteractor(
         if (!validation.IsValid)
             return BadInput(validation);
 
-        var trade = await dbContext.FindAsync<Trade>(model.TradeId);
+        var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
@@ -42,7 +44,7 @@ public class CloseTradeInteractor(
         var result = trade.Close(closeTradeDto);
 
         if (result.Value is Completed)
-            await dbContext.SaveChangesAsync();
+            await uowCommit();
 
         var closeTradeResponseModel = new CloseTradeResponseModel(trade.Id,
             trade.Result?.ToResultModel(),

@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
-namespace SimpleTrading.Domain.Trading.UseCases.Currencies;
+namespace SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 
-public class GetCurrenciesInteractor(IValidator<GetCurrenciesRequestModel> validator, TradingDbContext dbContext)
+public class GetCurrenciesInteractor(
+    IValidator<GetCurrenciesRequestModel> validator,
+    ICurrencyRepository currencyRepository)
     : BaseInteractor, IGetCurrencies
 {
     public async Task<OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>> Execute(
@@ -17,11 +18,10 @@ public class GetCurrenciesInteractor(IValidator<GetCurrenciesRequestModel> valid
             return BadInput(validation);
 
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
-        var searchTerm = model.SearchTerm?.Trim().ToLower();
 
-        var result = await dbContext.Currencies
-            .Where(x => !useSearchTerm || EF.Functions.Like(x.Name.ToLower(), $"%{searchTerm}%"))
-            .ToListAsync();
+        var result = useSearchTerm
+            ? await currencyRepository.Find(model.SearchTerm!)
+            : await currencyRepository.GetAll();
 
         return result
             .Select(x => new GetCurrenciesResponseModel(x.Id, x.IsoCode, x.Name))

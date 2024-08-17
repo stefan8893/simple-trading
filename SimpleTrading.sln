@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess.Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess.Sqlite", "src\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj", "{19DD4699-2960-4507-9C53-147809036481}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess", "src\SimpleTrading.DataAccess\SimpleTrading.DataAccess.csproj", "{847DB03A-1251-4357-9D64-F4AE23E9EA4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{19DD4699-2960-4507-9C53-147809036481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19DD4699-2960-4507-9C53-147809036481}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19DD4699-2960-4507-9C53-147809036481}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{256E1672-4070-43E0-9E71-D3ED1BD1560C} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 		{CE1C6E35-68B2-4C42-866C-1C7D6D4FFFD3} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 		{19DD4699-2960-4507-9C53-147809036481} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
+		{847DB03A-1251-4357-9D64-F4AE23E9EA4F} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55851CC1-01BD-4314-B287-376AA406F433}

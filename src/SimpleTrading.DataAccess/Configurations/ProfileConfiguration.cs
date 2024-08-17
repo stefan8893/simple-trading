@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleTrading.Domain.Trading;
 
-namespace SimpleTrading.Domain.DataAccess.Configurations;
+namespace SimpleTrading.DataAccess.Configurations;
 
 public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {

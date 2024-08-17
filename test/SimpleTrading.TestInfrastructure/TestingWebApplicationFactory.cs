@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.DataAccess;
 
 namespace SimpleTrading.TestInfrastructure;

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleTrading.Domain.Trading;
 
-namespace SimpleTrading.Domain.DataAccess.Configurations;
+namespace SimpleTrading.DataAccess.Configurations;
 
 public class TradeConfiguration : IEntityTypeConfiguration<Trade>
 {
@@ -26,20 +26,12 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
             .IsRequired();
 
         builder
-            .Navigation(x => x.Asset)
-            .AutoInclude();
-
-        builder
             .HasOne(x => x.Profile)
             .WithMany()
             .HasForeignKey(x => x.ProfileId)
             .HasPrincipalKey(x => x.Id)
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
-
-        builder
-            .Navigation(x => x.Profile)
-            .AutoInclude();
 
         builder
             .HasOne(x => x.Currency)
@@ -56,11 +48,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         builder
             .Property(x => x.Balance)
             .HasPrecision(24, 8);
-
-        builder
-            .Navigation(x => x.Currency)
-            .AutoInclude();
-
+        
         builder
             .Property(x => x.Result)
             .HasConversion<string?>(
@@ -74,10 +62,6 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         positionPrices.Property(x => x.Exit).HasPrecision(24, 8);
 
         builder.Ignore(x => x.RiskRewardRatio);
-
-        builder
-            .Navigation(x => x.References)
-            .AutoInclude();
 
         builder
             .HasMany(x => x.References)

@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using SimpleTrading.Domain.Trading.UseCases.Assets;
+using SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Infrastructure;

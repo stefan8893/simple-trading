@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.Domain.Trading.UseCases.Currencies;
+namespace SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 
 public record GetCurrenciesRequestModel(string? SearchTerm);
 

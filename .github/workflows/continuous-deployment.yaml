@@ -135,7 +135,7 @@ jobs:
           dotnet tool update --global dotnet-ef
         
       - name: Update Database
-        working-directory: src/SimpleTrading.Domain
+        working-directory: src/SimpleTrading.DataAccess
         env: 
           ConnectionStrings__SqlServer: ${{ secrets.CONNECTION_STRING_SQLSERVER }}
         shell: bash

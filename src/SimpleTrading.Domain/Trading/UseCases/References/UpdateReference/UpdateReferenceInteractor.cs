@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
@@ -7,7 +8,10 @@ namespace SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
 
 using UpdateReferenceResponse = OneOf<Completed, BadInput, NotFound>;
 
-public class UpdateReferenceInteractor(IValidator<UpdateReferenceRequestModel> validator, TradingDbContext dbContext)
+public class UpdateReferenceInteractor(
+    IValidator<UpdateReferenceRequestModel> validator,
+    ITradeRepository tradeRepository,
+    UowCommit uowCommit)
     : BaseInteractor, IUpdateReference
 {
     public async Task<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model)
@@ -16,7 +20,7 @@ public class UpdateReferenceInteractor(IValidator<UpdateReferenceRequestModel> v
         if (!validationResult.IsValid)
             return BadInput(validationResult);
 
-        var trade = await dbContext.Trades.FindAsync(model.TradeId);
+        var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
@@ -25,7 +29,7 @@ public class UpdateReferenceInteractor(IValidator<UpdateReferenceRequestModel> v
             return NotFound<Reference>(model.ReferenceId);
 
         _ = UpdateReference(reference, model);
-        await dbContext.SaveChangesAsync();
+        await uowCommit();
 
         return Completed();
     }
