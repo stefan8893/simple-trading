@@ -2,7 +2,7 @@
 using SimpleTrading.DataAccess;
 using SimpleTrading.DataAccess.Repositories;
 using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;

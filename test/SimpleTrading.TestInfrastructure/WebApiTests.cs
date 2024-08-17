@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.DataAccess;
-using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.TestInfrastructure.Authentication;
 using SimpleTrading.WebApi;
 using Xunit;

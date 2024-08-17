@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Abstractions.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 

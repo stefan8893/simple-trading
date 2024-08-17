@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Client;
-using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;

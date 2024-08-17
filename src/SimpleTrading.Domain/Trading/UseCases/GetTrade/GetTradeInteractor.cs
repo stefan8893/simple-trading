@@ -1,5 +1,5 @@
 ﻿using OneOf;
-using SimpleTrading.Domain.DataAccess;
+using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;

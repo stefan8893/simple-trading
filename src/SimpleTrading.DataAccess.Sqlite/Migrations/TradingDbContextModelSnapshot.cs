@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleTrading.Domain.DataAccess;
 
 #nullable disable
 

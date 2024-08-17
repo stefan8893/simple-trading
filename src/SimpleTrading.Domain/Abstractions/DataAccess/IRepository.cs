@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace SimpleTrading.Domain.Abstractions;
+namespace SimpleTrading.Domain.Abstractions.DataAccess;
 
 public interface IRepository<T>
 {
