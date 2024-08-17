@@ -231,7 +231,7 @@
     <data name="Reference" xml:space="preserve">
         <value>Referenz</value>
     </data>
-    <data name="MoreThan50ReferencesNotAllowed" xml:space="preserve">
+    <data name="MoreThanXReferencesNotAllowed" xml:space="preserve">
         <value>Sie können nicht mehr als {0} Referenzen zu einem Trade hinzufügen.</value>
     </data>
     <data name="SearchTerm" xml:space="preserve">

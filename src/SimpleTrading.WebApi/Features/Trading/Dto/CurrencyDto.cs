@@ -1,4 +1,4 @@
-﻿using SimpleTrading.Domain.Trading.UseCases.Currencies;
+﻿using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 

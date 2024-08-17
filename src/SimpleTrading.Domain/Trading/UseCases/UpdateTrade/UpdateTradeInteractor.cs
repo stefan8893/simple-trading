@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
@@ -14,7 +15,8 @@ using UpdateTradeResponse =
 
 public class UpdateTradeInteractor(
     IValidator<UpdateTradeRequestModel> validator,
-    TradingDbContext dbContext,
+    ITradeRepository tradeRepository,
+    UowCommit uowCommit,
     UtcNow utcNow)
     : BaseInteractor, IUpdateTrade
 {
@@ -24,7 +26,7 @@ public class UpdateTradeInteractor(
         if (!validationResult.IsValid)
             return BadInput(validationResult);
 
-        var trade = await dbContext.Trades.FindAsync(model.TradeId);
+        var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
@@ -48,7 +50,7 @@ public class UpdateTradeInteractor(
         if (closeTradeResult.Value is BusinessError closeTradeBusinessError)
             return closeTradeBusinessError;
 
-        await dbContext.SaveChangesAsync();
+        await uowCommit();
         return closeTradeResult
             .Match<UpdateTradeResponse>(x => Completed(x.Warnings),
                 x => Completed(),
@@ -60,7 +62,7 @@ public class UpdateTradeInteractor(
     {
         if (model.AssetId.HasValue && model.AssetId.Value != trade.AssetId)
         {
-            var newAsset = await dbContext.Assets.FindAsync(model.AssetId.Value);
+            var newAsset = await tradeRepository.FindAsset(model.AssetId.Value);
             if (newAsset is null)
                 return NotFound<Asset>(model.AssetId.Value);
 
@@ -70,7 +72,7 @@ public class UpdateTradeInteractor(
 
         if (model.ProfileId.HasValue && model.ProfileId.Value != trade.ProfileId)
         {
-            var newProfile = await dbContext.Profiles.FindAsync(model.ProfileId.Value);
+            var newProfile = await tradeRepository.FindProfile(model.ProfileId.Value);
             if (newProfile is null)
                 return NotFound<Profile>(model.ProfileId.Value);
 
@@ -80,7 +82,7 @@ public class UpdateTradeInteractor(
 
         if (model.CurrencyId.HasValue && model.CurrencyId.Value != trade.CurrencyId)
         {
-            var newCurrency = await dbContext.Currencies.FindAsync(model.CurrencyId.Value);
+            var newCurrency = await tradeRepository.FindCurrency(model.CurrencyId.Value);
             if (newCurrency is null)
                 return NotFound<Currency>(model.CurrencyId.Value);
 

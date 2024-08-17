@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using SimpleTrading.Domain.Trading.UseCases.Currencies;
+using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Infrastructure;

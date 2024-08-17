@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using SimpleTrading.Domain.Trading.UseCases.Profiles;
+using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Infrastructure;

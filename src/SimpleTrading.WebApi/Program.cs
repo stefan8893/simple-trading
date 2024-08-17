@@ -38,6 +38,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
 builder.Services.AddTradingDbContext(builder.Configuration);
 builder.Services.AddDateTimeProvider();
 builder.Services.AddUseCases();
+builder.Services.AddRepositories();
 builder.Services.AddSingleton<ClientGenerator>();
 
 

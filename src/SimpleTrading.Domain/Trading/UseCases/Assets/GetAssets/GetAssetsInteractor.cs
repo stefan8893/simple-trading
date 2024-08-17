@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
-namespace SimpleTrading.Domain.Trading.UseCases.Assets;
+namespace SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 
-public class GetAssetsInteractor(IValidator<GetAssetsRequestModel> validator, TradingDbContext dbContext)
+public class GetAssetsInteractor(IValidator<GetAssetsRequestModel> validator, IAssetRepository assetRepository)
     : BaseInteractor, IGetAssets
 {
     public async Task<OneOf<IReadOnlyList<GetAssetsResponseModel>, BadInput>> Execute(GetAssetsRequestModel model)
@@ -16,11 +15,10 @@ public class GetAssetsInteractor(IValidator<GetAssetsRequestModel> validator, Tr
             return BadInput(validation);
 
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
-        var searchTerm = model.SearchTerm?.Trim().ToLower();
 
-        var result = await dbContext.Assets
-            .Where(x => !useSearchTerm || EF.Functions.Like(x.Name.ToLower(), $"%{searchTerm}%"))
-            .ToListAsync();
+        var result = useSearchTerm
+            ? await assetRepository.Find(model.SearchTerm!)
+            : await assetRepository.GetAll();
 
         return result
             .Select(x => new GetAssetsResponseModel(x.Id, x.Symbol, x.Name))

@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Client;
+using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -53,7 +55,9 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             })
             .Build();
 
-        var userSettings = await DbContext.GetUserSettings();
+        var userSettings = await ServiceLocator
+            .GetRequiredService<IUserSettingsRepository>()
+            .Get();
         userSettings.TimeZone = "America/New_York";
 
         DbContext.Trades.Add(trade);

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Trading.UseCases.Assets;
+using SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 using SimpleTrading.WebApi;

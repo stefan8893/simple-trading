@@ -5,11 +5,11 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.GetReference;
 
-public class GetReferenceInteractor(TradingDbContext dbContext) : BaseInteractor, IGetReference
+public class GetReferenceInteractor(ITradeRepository tradeRepository) : BaseInteractor, IGetReference
 {
     public async Task<OneOf<ReferenceModel, NotFound>> Execute(GetReferenceRequestModel model)
     {
-        var trade = await dbContext.Trades.FindAsync(model.TradeId);
+        var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 

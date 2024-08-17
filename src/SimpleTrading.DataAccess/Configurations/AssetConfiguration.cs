@@ -2,21 +2,21 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleTrading.Domain.Trading;
 
-namespace SimpleTrading.Domain.DataAccess.Configurations;
+namespace SimpleTrading.DataAccess.Configurations;
 
-public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
+public class AssetConfiguration : IEntityTypeConfiguration<Asset>
 {
-    public void Configure(EntityTypeBuilder<Currency> builder)
+    public void Configure(EntityTypeBuilder<Asset> builder)
     {
         builder.HasKey(x => x.Id);
 
         builder
-            .Property(x => x.IsoCode)
+            .Property(x => x.Symbol)
             .IsRequired()
-            .HasMaxLength(3);
+            .HasMaxLength(10);
 
         builder
-            .HasIndex(x => x.IsoCode)
+            .HasIndex(x => x.Symbol)
             .IsUnique();
 
         builder

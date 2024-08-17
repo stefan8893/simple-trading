@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
-namespace SimpleTrading.Domain.Trading.UseCases.Profiles;
+namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
-public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator, TradingDbContext dbContext)
+public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator, IProfileRepository profileRepository)
     : BaseInteractor, IGetProfiles
 {
     public async Task<OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>> Execute(GetProfilesRequestModel model)
@@ -16,11 +15,10 @@ public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator
             return BadInput(validation);
 
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
-        var searchTerm = model.SearchTerm?.Trim().ToLower();
 
-        var result = await dbContext.Profiles
-            .Where(x => !useSearchTerm || EF.Functions.Like(x.Name.ToLower(), $"%{searchTerm}%"))
-            .ToListAsync();
+        var result = useSearchTerm
+            ? await profileRepository.Find(model.SearchTerm!)
+            : await profileRepository.GetAll();
 
         return result
             .Select(x => new GetProfilesResponseModel(x.Id, x.Name, x.Description, x.IsSelected))

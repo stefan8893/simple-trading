@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
@@ -12,7 +13,11 @@ using AddTradeResponse =
         NotFound,
         BusinessError>;
 
-public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, TradingDbContext dbContext, UtcNow utcNow)
+public class AddTradeInteractor(
+    IValidator<AddTradeRequestModel> validator,
+    ITradeRepository tradeRepository,
+    UowCommit uowCommit,
+    UtcNow utcNow)
     : BaseInteractor, IAddTrade
 {
     public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
@@ -21,15 +26,15 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         if (!validationResult.IsValid)
             return BadInput(validationResult);
 
-        var asset = await dbContext.Assets.FindAsync(model.AssetId);
+        var asset = await tradeRepository.FindAsset(model.AssetId);
         if (asset is null)
             return NotFound<Asset>(model.AssetId);
 
-        var profile = await dbContext.Profiles.FindAsync(model.ProfileId);
+        var profile = await tradeRepository.FindProfile(model.ProfileId);
         if (profile is null)
             return NotFound<Profile>(model.ProfileId);
 
-        var currency = await dbContext.Currencies.FindAsync(model.CurrencyId);
+        var currency = await tradeRepository.FindCurrency(model.CurrencyId);
         if (currency is null)
             return NotFound<Currency>(model.CurrencyId);
 
@@ -46,8 +51,8 @@ public class AddTradeInteractor(IValidator<AddTradeRequestModel> validator, Trad
         if (potentiallyClosedTrade.Value is BusinessError businessError)
             return businessError;
 
-        dbContext.Add(trade);
-        await dbContext.SaveChangesAsync();
+        tradeRepository.Add(trade);
+        await uowCommit();
 
         return potentiallyClosedTrade.Match<AddTradeResponse>(
             x => Completed(x.Data.Id, x.Warnings),

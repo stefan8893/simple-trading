@@ -1,4 +1,4 @@
-﻿using SimpleTrading.Domain.Trading.UseCases.Assets;
+﻿using SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 

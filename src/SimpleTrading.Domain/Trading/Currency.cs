@@ -2,7 +2,7 @@
 
 public class Currency
 {
-    public required Guid Id { get; init; }
+    public virtual required Guid Id { get; init; }
     public required string IsoCode { get; init; }
     public required string Name { get; set; }
     public required DateTime Created { get; init; }

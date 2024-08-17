@@ -242,9 +242,9 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Sie können nicht mehr als {0} Referenzen zu einem Trade hinzufügen..
         /// </summary>
-        public static string MoreThan50ReferencesNotAllowed {
+        public static string MoreThanXReferencesNotAllowed {
             get {
-                return ResourceManager.GetString("MoreThan50ReferencesNotAllowed", resourceCulture);
+                return ResourceManager.GetString("MoreThanXReferencesNotAllowed", resourceCulture);
             }
         }
         

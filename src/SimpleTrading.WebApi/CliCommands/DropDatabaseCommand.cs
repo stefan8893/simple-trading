@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
+using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.DataAccess;
 
 namespace SimpleTrading.WebApi.CliCommands;

@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.User;
 
-namespace SimpleTrading.Domain.DataAccess;
+namespace SimpleTrading.DataAccess;
 
 public class TradingDbContext(DbContextOptions<TradingDbContext> options) : DbContext(options)
 {
@@ -21,6 +21,11 @@ public class TradingDbContext(DbContextOptions<TradingDbContext> options) : DbCo
     {
         configurationBuilder.Conventions.Remove(typeof(TableNameFromDbSetConvention));
         configurationBuilder.Properties<Enum>().HaveConversion<string>();
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

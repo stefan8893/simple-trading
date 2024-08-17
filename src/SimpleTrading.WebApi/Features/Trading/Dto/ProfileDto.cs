@@ -1,4 +1,4 @@
-﻿using SimpleTrading.Domain.Trading.UseCases.Profiles;
+﻿using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 

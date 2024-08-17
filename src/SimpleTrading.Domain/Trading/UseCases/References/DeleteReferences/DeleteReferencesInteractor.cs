@@ -1,20 +1,22 @@
 ﻿using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
 
-public class DeleteReferencesInteractor(TradingDbContext dbContext) : BaseInteractor, IDeleteReferences
+public class DeleteReferencesInteractor(ITradeRepository tradeRepository, UowCommit uowCommit)
+    : BaseInteractor, IDeleteReferences
 {
     public async Task<OneOf<Completed<ushort>, NotFound>> Execute(DeleteReferencesRequestModel model)
     {
-        var trade = await dbContext.Trades.FindAsync(model.TradeId);
+        var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
         var referencesCount = (ushort) trade.References.Count;
-        dbContext.References.RemoveRange(trade.References);
-        await dbContext.SaveChangesAsync();
+        tradeRepository.RemoveReferences(trade.References);
+        await uowCommit();
 
         return Completed(referencesCount);
     }
