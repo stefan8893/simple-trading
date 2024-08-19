@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 using SimpleTrading.WebApi;
@@ -11,17 +12,14 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IGetTrade CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IGetTrade>();
-    }
+    private IGetTrade Interactor => ServiceLocator.GetRequiredService<IGetTrade>();
 
     [Fact]
     public async Task A_not_existing_trade_cant_be_returned()
     {
         var notExistingTradeId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
 
-        var response = await CreateInteractor().Execute(new GetTradeRequestModel(notExistingTradeId));
+        var response = await Interactor.Execute(new GetTradeRequestModel(notExistingTradeId));
 
         response.Value.Should().BeOfType<NotFound<Trade>>()
             .Which.ResourceId.Should().Be(notExistingTradeId);
@@ -34,7 +32,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        var response = await CreateInteractor().Execute(new GetTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Id.Should().Be(trade.Id);
@@ -48,7 +46,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        var response = await CreateInteractor().Execute(new GetTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Currency.Should().Be(currency.IsoCode);
@@ -62,7 +60,7 @@ public class GetTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        var response = await CreateInteractor().Execute(new GetTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
         response.Value.Should().BeOfType<TradeResponseModel>()
             .Which.Asset.Should().Be(asset.Symbol);

@@ -8,8 +8,8 @@ public enum PositionType
 
 public record PositionPrices
 {
-    private static readonly TradingResult.BreakEven BreakEvenResult =
-        new(TradingResultSource.CalculatedByPositionPrices, 0);
+    private static readonly Result BreakEvenResult =
+        new(Result.BreakEven, TradingResultSource.CalculatedByPositionPrices, 0);
 
     public required decimal Entry { get; set; }
     public decimal? StopLoss { get; set; }
@@ -31,7 +31,7 @@ public record PositionPrices
     public bool IsLongPosition => TakeProfit > Entry;
     public bool IsShortPosition => TakeProfit < Entry;
 
-    public ITradingResult? CalculateResult()
+    public Result? CalculateResult()
     {
         return Type switch
         {
@@ -41,7 +41,7 @@ public record PositionPrices
         };
     }
 
-    private ITradingResult? CalculateLongPositionResult()
+    private Result? CalculateLongPositionResult()
     {
         if (Exit == Entry)
             return BreakEvenResult;
@@ -57,7 +57,7 @@ public record PositionPrices
         return null;
     }
 
-    private ITradingResult? CalculateShortPositionResult()
+    private Result? CalculateShortPositionResult()
     {
         if (Exit == Entry)
             return BreakEvenResult;
@@ -73,27 +73,27 @@ public record PositionPrices
         return null;
     }
 
-    private TradingResult.Loss CalculateLossResult()
+    private Result CalculateLossResult()
     {
         var diffBetweenEntryAndStopLoss = Entry - StopLoss!.Value;
         var diffBetweenEntryAndExit = Entry - Exit!.Value;
         var performance = Math.Abs(diffBetweenEntryAndExit / diffBetweenEntryAndStopLoss * 100) * -1m;
 
-        return new TradingResult.Loss(TradingResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Loss, TradingResultSource.CalculatedByPositionPrices, (short) performance);
     }
 
-    private TradingResult.Win CalculateWinResult()
+    private Result CalculateWinResult()
     {
         var performance = CalculatePositivePerformance();
 
-        return new TradingResult.Win(TradingResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Win, TradingResultSource.CalculatedByPositionPrices, (short) performance);
     }
 
-    private TradingResult.Mediocre CalculateMediocreResult()
+    private Result CalculateMediocreResult()
     {
         var performance = CalculatePositivePerformance();
 
-        return new TradingResult.Mediocre(TradingResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Mediocre, TradingResultSource.CalculatedByPositionPrices, (short) performance);
     }
 
     private decimal CalculatePositivePerformance()

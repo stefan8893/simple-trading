@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -13,17 +11,14 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class DeleteTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IDeleteTrade CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IDeleteTrade>();
-    }
+    private IDeleteTrade Interactor => ServiceLocator.GetRequiredService<IDeleteTrade>();
 
     [Fact]
     public async Task A_not_existing_trade_cannot_be_deleted()
     {
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        var response = await CreateInteractor().Execute(new DeleteTradeRequestModel(notExistingTradeId));
+        var response = await Interactor.Execute(new DeleteTradeRequestModel(notExistingTradeId));
 
         response.Value.Should().BeOfType<NotFound<Trade>>()
             .Which.ResourceId.Should().Be(notExistingTradeId);
@@ -39,13 +34,11 @@ public class DeleteTradeInteractorTests(TestingWebApplicationFactory<Program> fa
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor().Execute(new DeleteTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(new DeleteTradeRequestModel(trade.Id));
 
         // assert
         response.Value.Should().BeOfType<Completed>();
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         storedTrade.Should().BeNull();
     }
-
-
 }

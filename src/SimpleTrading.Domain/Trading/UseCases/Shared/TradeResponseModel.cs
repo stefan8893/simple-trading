@@ -1,7 +1,6 @@
 using SimpleTrading.Domain.Extensions;
-using SimpleTrading.Domain.Trading.UseCases.Shared;
 
-namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
+namespace SimpleTrading.Domain.Trading.UseCases.Shared;
 
 public class TradeResponseModel
 {

@@ -12,7 +12,7 @@ internal class EnteredResultDiffersFromCalculatedAnalyser : ITradeResultAnalyser
 
         if (hasCalculatedResult && hasManuallyEnteredResult &&
             config.CalculatedResult!.Name != config.ManuallyEntered!.Name)
-            yield return CreateManuallyEnteredAndCalculatedMismatchWarning(config);
+            yield return CreateManuallyEnteredAndCalculatedResultMismatchWarning(config);
 
         var hasCalculatedByBalanceResult = config.CalculatedByBalance is not null;
         var hasCalculatedByPositionPricesResult = config.CalculatedByPositionPrices is not null;
@@ -32,7 +32,8 @@ internal class EnteredResultDiffersFromCalculatedAnalyser : ITradeResultAnalyser
             positionResultName, balanceResultName));
     }
 
-    private static Warning CreateManuallyEnteredAndCalculatedMismatchWarning(TradeResultAnalyserConfiguration config)
+    private static Warning CreateManuallyEnteredAndCalculatedResultMismatchWarning(
+        TradeResultAnalyserConfiguration config)
     {
         var calculatedResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedResult!.Name);
         var manuallyEnteredResultName = SimpleTradingStrings.ResourceManager.GetString(config.ManuallyEntered!.Name);

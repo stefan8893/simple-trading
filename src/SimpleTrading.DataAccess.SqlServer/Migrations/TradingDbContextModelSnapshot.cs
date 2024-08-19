@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SimpleTrading.DataAccess;
 
 #nullable disable
 
@@ -17,7 +18,10 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -46,7 +50,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                     b.HasIndex("Symbol")
                         .IsUnique();
 
-                    b.ToTable("Asset", (string)null);
+                    b.ToTable("Asset");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Currency", b =>
@@ -73,7 +77,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                     b.HasIndex("IsoCode")
                         .IsUnique();
 
-                    b.ToTable("Currency", (string)null);
+                    b.ToTable("Currency");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Profile", b =>
@@ -102,7 +106,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Profile", (string)null);
+                    b.ToTable("Profile");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Reference", b =>
@@ -135,7 +139,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
 
                     b.HasIndex("TradeId");
 
-                    b.ToTable("Reference", (string)null);
+                    b.ToTable("Reference");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>
@@ -170,9 +174,6 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Result")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Size")
                         .HasPrecision(24, 8)
                         .HasColumnType("decimal(24,8)");
@@ -206,7 +207,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Trade", (string)null);
+                    b.ToTable("Trade");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.User.UserSettings", b =>
@@ -234,7 +235,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserSettings", (string)null);
+                    b.ToTable("UserSettings");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Reference", b =>
@@ -268,11 +269,42 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.OwnsOne("SimpleTrading.Domain.Trading.Result", "Result", b1 =>
+                        {
+                            b1.Property<Guid>("TradeId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<short?>("Performance")
+                                .HasColumnType("smallint");
+
+                            b1.Property<string>("Source")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("TradeId");
+
+                            b1.ToTable("Trade");
+
+                            b1.ToJson("Result");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TradeId");
+                        });
+
                     b.Navigation("Asset");
 
                     b.Navigation("Currency");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Result");
                 });
 
             modelBuilder.Entity("SimpleTrading.Domain.Trading.Trade", b =>

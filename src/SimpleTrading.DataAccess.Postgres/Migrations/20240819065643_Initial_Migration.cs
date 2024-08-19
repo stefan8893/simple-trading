@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SimpleTrading.DataAccess.Sqlite.Migrations
+namespace SimpleTrading.DataAccess.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class Initial_Migration : Migration
@@ -15,10 +15,10 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                 name: "Asset",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Symbol = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Symbol = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,10 +29,10 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                 name: "Currency",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IsoCode = table.Column<string>(type: "TEXT", maxLength: 3, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsoCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,11 +43,11 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                 name: "Profile",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: true),
-                    IsSelected = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    IsSelected = table.Column<bool>(type: "boolean", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,11 +58,11 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                 name: "UserSettings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Culture = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Language = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    TimeZone = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Culture = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Language = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TimeZone = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,21 +73,21 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                 name: "Trade",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AssetId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProfileId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Opened = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Size = table.Column<decimal>(type: "TEXT", precision: 24, scale: 8, nullable: false),
-                    Balance = table.Column<decimal>(type: "TEXT", precision: 24, scale: 8, nullable: true),
-                    Result = table.Column<string>(type: "TEXT", nullable: true),
-                    Closed = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CurrencyId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Notes = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PositionPrices_Entry = table.Column<decimal>(type: "TEXT", precision: 24, scale: 8, nullable: false),
-                    PositionPrices_Exit = table.Column<decimal>(type: "TEXT", precision: 24, scale: 8, nullable: true),
-                    PositionPrices_StopLoss = table.Column<decimal>(type: "TEXT", precision: 24, scale: 8, nullable: true),
-                    PositionPrices_TakeProfit = table.Column<decimal>(type: "TEXT", precision: 24, scale: 8, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssetId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Opened = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Size = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
+                    Closed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Balance = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PositionPrices_Entry = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: false),
+                    PositionPrices_Exit = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    PositionPrices_StopLoss = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    PositionPrices_TakeProfit = table.Column<decimal>(type: "numeric(24,8)", precision: 24, scale: 8, nullable: true),
+                    Result = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -113,12 +113,12 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                 name: "Reference",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    TradeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Link = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: false),
-                    Notes = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TradeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Link = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: false),
+                    Notes = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

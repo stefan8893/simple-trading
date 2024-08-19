@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using SimpleTrading.Client;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -11,8 +10,7 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
     public async Task Existing_currencies_will_be_returned()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var currency1 = TestData.Currency.Default.Build();
         var currency2 = TestData.Currency.Default.Build();
@@ -21,7 +19,7 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
         await DbContext.SaveChangesAsync();
 
         // act
-        var assets = await simpleTradingClient.GetCurrenciesAsync();
+        var assets = await client.GetCurrenciesAsync();
 
         // assert
         assets.Should().NotBeNull();

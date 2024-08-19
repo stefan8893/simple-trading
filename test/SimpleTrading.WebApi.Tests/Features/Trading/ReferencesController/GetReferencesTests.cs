@@ -12,12 +12,11 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
     public async Task References_of_a_non_existing_trade_cannot_be_found()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => simpleTradingClient.GetReferencesAsync(notExistingTradeId);
+        var act = () => client.GetReferencesAsync(notExistingTradeId);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
@@ -30,8 +29,7 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
     public async Task Existing_references_gets_successfully_returned()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -40,7 +38,7 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.GetReferencesAsync(trade.Id);
+        var response = await client.GetReferencesAsync(trade.Id);
 
         // assert
         response.Should().NotBeNull()

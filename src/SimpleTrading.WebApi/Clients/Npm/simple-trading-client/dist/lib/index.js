@@ -4,16 +4,19 @@
 //     Generated using the NSwag toolchain v14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0)) (http://NSwag.org)
 // </auto-generated>
 //----------------------
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {value: true});
 exports.SimpleTradingClientException = exports.SwaggerResponse = exports.UpdateTradeDto = exports.UpdateReferenceDto = exports.UInt16SuccessResponse = exports.TradeDto = exports.SuccessResponse = exports.StringUpdatedValue = exports.ResultDtoNullableUpdatedValue = exports.ResultDto = exports.ReferenceTypeDto = exports.ReferenceDto = exports.ProfileDto = exports.ProblemDetails = exports.GuidSuccessResponse = exports.FieldError = exports.ErrorResponse = exports.DecimalNullableUpdatedValue = exports.CurrencyDto = exports.CloseTradeDto = exports.AssetDto = exports.ApiInfo = exports.AddTradeDto = exports.AddReferenceDto = exports.SimpleTradingClient = void 0;
+
 class SimpleTradingClient {
     http;
     baseUrl;
     jsonParseReviver = undefined;
+
     constructor(baseUrl, http) {
         this.http = http ? http : window;
         this.baseUrl = baseUrl ?? "/";
     }
+
     /**
      * @return OK
      */
@@ -30,13 +33,14 @@ class SimpleTradingClient {
             return this.processGetAppInfo(_response);
         });
     }
+
     processGetAppInfo(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
@@ -44,14 +48,14 @@ class SimpleTradingClient {
                 result200 = ApiInfo.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @return OK
      */
@@ -71,13 +75,14 @@ class SimpleTradingClient {
             return this.processGetTrade(_response);
         });
     }
+
     processGetTrade(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -85,30 +90,28 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = TradeDto.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param body (optional)
      * @return OK
@@ -132,13 +135,14 @@ class SimpleTradingClient {
             return this.processUpdateTrade(_response);
         });
     }
+
     processUpdateTrade(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -146,46 +150,42 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = SuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status === 422) {
+        } else if (status === 422) {
             return response.text().then((_responseText) => {
                 let result422 = null;
                 let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result422 = ErrorResponse.fromJS(resultData422);
                 return throwException("Unprocessable Content", status, _responseText, _headers, result422);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @return OK
      */
@@ -205,13 +205,14 @@ class SimpleTradingClient {
             return this.processDeleteTrade(_response);
         });
     }
+
     processDeleteTrade(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -219,22 +220,21 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = SuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param body (optional)
      * @return OK
@@ -255,13 +255,14 @@ class SimpleTradingClient {
             return this.processAddTrade(_response);
         });
     }
+
     processAddTrade(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -269,46 +270,42 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = GuidSuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status === 422) {
+        } else if (status === 422) {
             return response.text().then((_responseText) => {
                 let result422 = null;
                 let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result422 = ErrorResponse.fromJS(resultData422);
                 return throwException("Unprocessable Content", status, _responseText, _headers, result422);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param body (optional)
      * @return OK
@@ -332,13 +329,14 @@ class SimpleTradingClient {
             return this.processCloseTrade(_response);
         });
     }
+
     processCloseTrade(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -346,46 +344,42 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = SuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status === 422) {
+        } else if (status === 422) {
             return response.text().then((_responseText) => {
                 let result422 = null;
                 let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result422 = ErrorResponse.fromJS(resultData422);
                 return throwException("Unprocessable Content", status, _responseText, _headers, result422);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @return OK
      */
@@ -408,13 +402,14 @@ class SimpleTradingClient {
             return this.processGetReference(_response);
         });
     }
+
     processGetReference(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -422,30 +417,28 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = ReferenceDto.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param body (optional)
      * @return OK
@@ -472,13 +465,14 @@ class SimpleTradingClient {
             return this.processUpdateReference(_response);
         });
     }
+
     processUpdateReference(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -486,38 +480,35 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = SuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @return OK
      */
@@ -540,13 +531,14 @@ class SimpleTradingClient {
             return this.processDeleteReference(_response);
         });
     }
+
     processDeleteReference(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -554,30 +546,28 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = SuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @return OK
      */
@@ -597,13 +587,14 @@ class SimpleTradingClient {
             return this.processGetReferences(_response);
         });
     }
+
     processGetReferences(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -611,8 +602,7 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -620,28 +610,26 @@ class SimpleTradingClient {
                     result200 = [];
                     for (let item of resultData200)
                         result200.push(ReferenceDto.fromJS(item));
-                }
-                else {
+                } else {
                     result200 = null;
                 }
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param body (optional)
      * @return OK
@@ -665,13 +653,14 @@ class SimpleTradingClient {
             return this.processAddReference(_response);
         });
     }
+
     processAddReference(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -679,46 +668,42 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = GuidSuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status === 422) {
+        } else if (status === 422) {
             return response.text().then((_responseText) => {
                 let result422 = null;
                 let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result422 = ErrorResponse.fromJS(resultData422);
                 return throwException("Unprocessable Content", status, _responseText, _headers, result422);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @return OK
      */
@@ -738,13 +723,14 @@ class SimpleTradingClient {
             return this.processDeleteReferences(_response);
         });
     }
+
     processDeleteReferences(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -752,30 +738,28 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = UInt16SuccessResponse.fromJS(resultData200);
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 404) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
                 let result404 = null;
                 let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result404 = ErrorResponse.fromJS(resultData404);
                 return throwException("Not Found", status, _responseText, _headers, result404);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param searchTerm (optional)
      * @return OK
@@ -797,13 +781,14 @@ class SimpleTradingClient {
             return this.processGetAssets(_response);
         });
     }
+
     processGetAssets(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -811,8 +796,7 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -820,28 +804,26 @@ class SimpleTradingClient {
                     result200 = [];
                     for (let item of resultData200)
                         result200.push(AssetDto.fromJS(item));
-                }
-                else {
+                } else {
                     result200 = null;
                 }
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param searchTerm (optional)
      * @return OK
@@ -863,13 +845,14 @@ class SimpleTradingClient {
             return this.processGetProfiles(_response);
         });
     }
+
     processGetProfiles(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -877,8 +860,7 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -886,28 +868,26 @@ class SimpleTradingClient {
                     result200 = [];
                     for (let item of resultData200)
                         result200.push(ProfileDto.fromJS(item));
-                }
-                else {
+                } else {
                     result200 = null;
                 }
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
+
     /**
      * @param searchTerm (optional)
      * @return OK
@@ -929,13 +909,14 @@ class SimpleTradingClient {
             return this.processGetCurrencies(_response);
         });
     }
+
     processGetCurrencies(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
             response.headers.forEach((v, k) => _headers[k] = v);
         }
-        ;
+
         if (status === 401) {
             return response.text().then((_responseText) => {
                 let result401 = null;
@@ -943,8 +924,7 @@ class SimpleTradingClient {
                 result401 = ProblemDetails.fromJS(resultData401);
                 return throwException("Unauthorized", status, _responseText, _headers, result401);
             });
-        }
-        else if (status === 200) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -952,22 +932,19 @@ class SimpleTradingClient {
                     result200 = [];
                     for (let item of resultData200)
                         result200.push(CurrencyDto.fromJS(item));
-                }
-                else {
+                } else {
                     result200 = null;
                 }
                 return new SwaggerResponse(status, _headers, result200);
             });
-        }
-        else if (status === 400) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
                 let result400 = null;
                 let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result400 = ErrorResponse.fromJS(resultData400);
                 return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        }
-        else if (status !== 200 && status !== 204) {
+        } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
@@ -975,11 +952,14 @@ class SimpleTradingClient {
         return Promise.resolve(new SwaggerResponse(status, _headers, null));
     }
 }
+
 exports.SimpleTradingClient = SimpleTradingClient;
+
 class AddReferenceDto {
     type;
     link;
     notes;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -988,6 +968,14 @@ class AddReferenceDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.type = _data["type"];
@@ -995,12 +983,7 @@ class AddReferenceDto {
             this.notes = _data["notes"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddReferenceDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
@@ -1009,7 +992,9 @@ class AddReferenceDto {
         return data;
     }
 }
+
 exports.AddReferenceDto = AddReferenceDto;
+
 class AddTradeDto {
     assetId;
     profileId;
@@ -1025,6 +1010,7 @@ class AddTradeDto {
     exitPrice;
     notes;
     references;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1033,6 +1019,14 @@ class AddTradeDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.assetId = _data["assetId"];
@@ -1055,12 +1049,7 @@ class AddTradeDto {
             }
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddTradeDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["assetId"] = this.assetId;
@@ -1084,11 +1073,14 @@ class AddTradeDto {
         return data;
     }
 }
+
 exports.AddTradeDto = AddTradeDto;
+
 class ApiInfo {
     name;
     version;
     environment;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1097,6 +1089,14 @@ class ApiInfo {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiInfo();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.name = _data["name"];
@@ -1104,12 +1104,7 @@ class ApiInfo {
             this.environment = _data["environment"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiInfo();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
@@ -1118,11 +1113,14 @@ class ApiInfo {
         return data;
     }
 }
+
 exports.ApiInfo = ApiInfo;
+
 class AssetDto {
     id;
     symbol;
     name;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1131,6 +1129,14 @@ class AssetDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssetDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.id = _data["id"];
@@ -1138,12 +1144,7 @@ class AssetDto {
             this.name = _data["name"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new AssetDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
@@ -1152,12 +1153,15 @@ class AssetDto {
         return data;
     }
 }
+
 exports.AssetDto = AssetDto;
+
 class CloseTradeDto {
     balance;
     exitPrice;
     closed;
     result;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1166,6 +1170,14 @@ class CloseTradeDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new CloseTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.balance = _data["balance"];
@@ -1174,12 +1186,7 @@ class CloseTradeDto {
             this.result = _data["result"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new CloseTradeDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["balance"] = this.balance;
@@ -1189,11 +1196,14 @@ class CloseTradeDto {
         return data;
     }
 }
+
 exports.CloseTradeDto = CloseTradeDto;
+
 class CurrencyDto {
     id;
     isoCode;
     name;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1202,6 +1212,14 @@ class CurrencyDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrencyDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.id = _data["id"];
@@ -1209,12 +1227,7 @@ class CurrencyDto {
             this.name = _data["name"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new CurrencyDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
@@ -1223,9 +1236,12 @@ class CurrencyDto {
         return data;
     }
 }
+
 exports.CurrencyDto = CurrencyDto;
+
 class DecimalNullableUpdatedValue {
     value;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1234,27 +1250,33 @@ class DecimalNullableUpdatedValue {
             }
         }
     }
-    init(_data) {
-        if (_data) {
-            this.value = _data["value"];
-        }
-    }
+
     static fromJS(data) {
         data = typeof data === 'object' ? data : {};
         let result = new DecimalNullableUpdatedValue();
         result.init(data);
         return result;
     }
+
+    init(_data) {
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value;
         return data;
     }
 }
+
 exports.DecimalNullableUpdatedValue = DecimalNullableUpdatedValue;
+
 class ErrorResponse {
     fieldErrors;
     commonErrors;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1263,6 +1285,14 @@ class ErrorResponse {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             if (Array.isArray(_data["fieldErrors"])) {
@@ -1277,12 +1307,7 @@ class ErrorResponse {
             }
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorResponse();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         if (Array.isArray(this.fieldErrors)) {
@@ -1298,10 +1323,13 @@ class ErrorResponse {
         return data;
     }
 }
+
 exports.ErrorResponse = ErrorResponse;
+
 class FieldError {
     identifier;
     messages;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1310,6 +1338,14 @@ class FieldError {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldError();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.identifier = _data["identifier"];
@@ -1320,12 +1356,7 @@ class FieldError {
             }
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldError();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["identifier"] = this.identifier;
@@ -1337,10 +1368,13 @@ class FieldError {
         return data;
     }
 }
+
 exports.FieldError = FieldError;
+
 class GuidSuccessResponse {
     data;
     warnings;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1349,6 +1383,14 @@ class GuidSuccessResponse {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new GuidSuccessResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.data = _data["data"];
@@ -1359,12 +1401,7 @@ class GuidSuccessResponse {
             }
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new GuidSuccessResponse();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["data"] = this.data;
@@ -1376,13 +1413,16 @@ class GuidSuccessResponse {
         return data;
     }
 }
+
 exports.GuidSuccessResponse = GuidSuccessResponse;
+
 class ProblemDetails {
     type;
     title;
     status;
     detail;
     instance;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1391,6 +1431,14 @@ class ProblemDetails {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             for (var property in _data) {
@@ -1404,12 +1452,7 @@ class ProblemDetails {
             this.instance = _data["instance"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         for (var property in this) {
@@ -1424,12 +1467,15 @@ class ProblemDetails {
         return data;
     }
 }
+
 exports.ProblemDetails = ProblemDetails;
+
 class ProfileDto {
     id;
     name;
     description;
     isSelected;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1438,6 +1484,14 @@ class ProfileDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProfileDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.id = _data["id"];
@@ -1446,12 +1500,7 @@ class ProfileDto {
             this.isSelected = _data["isSelected"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProfileDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
@@ -1461,12 +1510,15 @@ class ProfileDto {
         return data;
     }
 }
+
 exports.ProfileDto = ProfileDto;
+
 class ReferenceDto {
     id;
     type;
     link;
     notes;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1475,6 +1527,14 @@ class ReferenceDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.id = _data["id"];
@@ -1483,12 +1543,7 @@ class ReferenceDto {
             this.notes = _data["notes"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new ReferenceDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
@@ -1498,6 +1553,7 @@ class ReferenceDto {
         return data;
     }
 }
+
 exports.ReferenceDto = ReferenceDto;
 var ReferenceTypeDto;
 (function (ReferenceTypeDto) {
@@ -1511,8 +1567,10 @@ var ResultDto;
     ResultDto["BreakEven"] = "BreakEven";
     ResultDto["Loss"] = "Loss";
 })(ResultDto || (exports.ResultDto = ResultDto = {}));
+
 class ResultDtoNullableUpdatedValue {
     value;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1521,26 +1579,32 @@ class ResultDtoNullableUpdatedValue {
             }
         }
     }
-    init(_data) {
-        if (_data) {
-            this.value = _data["value"];
-        }
-    }
+
     static fromJS(data) {
         data = typeof data === 'object' ? data : {};
         let result = new ResultDtoNullableUpdatedValue();
         result.init(data);
         return result;
     }
+
+    init(_data) {
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value;
         return data;
     }
 }
+
 exports.ResultDtoNullableUpdatedValue = ResultDtoNullableUpdatedValue;
+
 class StringUpdatedValue {
     value;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1549,26 +1613,32 @@ class StringUpdatedValue {
             }
         }
     }
-    init(_data) {
-        if (_data) {
-            this.value = _data["value"];
-        }
-    }
+
     static fromJS(data) {
         data = typeof data === 'object' ? data : {};
         let result = new StringUpdatedValue();
         result.init(data);
         return result;
     }
+
+    init(_data) {
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value;
         return data;
     }
 }
+
 exports.StringUpdatedValue = StringUpdatedValue;
+
 class SuccessResponse {
     warnings;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1577,6 +1647,14 @@ class SuccessResponse {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuccessResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             if (Array.isArray(_data["warnings"])) {
@@ -1586,12 +1664,7 @@ class SuccessResponse {
             }
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new SuccessResponse();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         if (Array.isArray(this.warnings)) {
@@ -1602,7 +1675,9 @@ class SuccessResponse {
         return data;
     }
 }
+
 exports.SuccessResponse = SuccessResponse;
+
 class TradeDto {
     id;
     assetId;
@@ -1625,6 +1700,7 @@ class TradeDto {
     riskRewardRatio;
     references;
     notes;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1633,6 +1709,14 @@ class TradeDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.id = _data["id"];
@@ -1662,12 +1746,7 @@ class TradeDto {
             this.notes = _data["notes"];
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new TradeDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
@@ -1698,10 +1777,13 @@ class TradeDto {
         return data;
     }
 }
+
 exports.TradeDto = TradeDto;
+
 class UInt16SuccessResponse {
     data;
     warnings;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1710,6 +1792,14 @@ class UInt16SuccessResponse {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new UInt16SuccessResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.data = _data["data"];
@@ -1720,12 +1810,7 @@ class UInt16SuccessResponse {
             }
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new UInt16SuccessResponse();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["data"] = this.data;
@@ -1737,11 +1822,14 @@ class UInt16SuccessResponse {
         return data;
     }
 }
+
 exports.UInt16SuccessResponse = UInt16SuccessResponse;
+
 class UpdateReferenceDto {
     type;
     link;
     notes;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1750,6 +1838,14 @@ class UpdateReferenceDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.type = _data["type"];
@@ -1757,12 +1853,7 @@ class UpdateReferenceDto {
             this.notes = _data["notes"] ? StringUpdatedValue.fromJS(_data["notes"]) : undefined;
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateReferenceDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
@@ -1771,7 +1862,9 @@ class UpdateReferenceDto {
         return data;
     }
 }
+
 exports.UpdateReferenceDto = UpdateReferenceDto;
+
 class UpdateTradeDto {
     assetId;
     profileId;
@@ -1786,6 +1879,7 @@ class UpdateTradeDto {
     takeProfit;
     exitPrice;
     notes;
+
     constructor(data) {
         if (data) {
             for (var property in data) {
@@ -1794,6 +1888,14 @@ class UpdateTradeDto {
             }
         }
     }
+
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data) {
         if (_data) {
             this.assetId = _data["assetId"];
@@ -1811,12 +1913,7 @@ class UpdateTradeDto {
             this.notes = _data["notes"] ? StringUpdatedValue.fromJS(_data["notes"]) : undefined;
         }
     }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateTradeDto();
-        result.init(data);
-        return result;
-    }
+
     toJSON(data) {
         data = typeof data === 'object' ? data : {};
         data["assetId"] = this.assetId;
@@ -1835,24 +1932,31 @@ class UpdateTradeDto {
         return data;
     }
 }
+
 exports.UpdateTradeDto = UpdateTradeDto;
+
 class SwaggerResponse {
     status;
     headers;
     result;
+
     constructor(status, headers, result) {
         this.status = status;
         this.headers = headers;
         this.result = result;
     }
 }
+
 exports.SwaggerResponse = SwaggerResponse;
+
 class SimpleTradingClientException extends Error {
     message;
     status;
     response;
     headers;
     result;
+    isSimpleTradingClientException = true;
+
     constructor(message, status, response, headers, result) {
         super();
         this.message = message;
@@ -1861,12 +1965,14 @@ class SimpleTradingClientException extends Error {
         this.headers = headers;
         this.result = result;
     }
-    isSimpleTradingClientException = true;
+
     static isSimpleTradingClientException(obj) {
         return obj.isSimpleTradingClientException === true;
     }
 }
+
 exports.SimpleTradingClientException = SimpleTradingClientException;
+
 function throwException(message, status, response, headers, result) {
     throw new SimpleTradingClientException(message, status, response, headers, result);
 }

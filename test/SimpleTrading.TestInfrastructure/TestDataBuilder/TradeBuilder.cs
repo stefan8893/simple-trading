@@ -52,6 +52,8 @@ public static partial class TestData
                 p => p
             );
 
+            var opened = Opened.ToUtcKind();
+
             var trade = new Domain.Trading.Trade
             {
                 Id = Id,
@@ -60,7 +62,7 @@ public static partial class TestData
                 ProfileId = profile.Id,
                 Profile = profile,
                 Size = Size,
-                Opened = Opened,
+                Opened = opened,
                 CurrencyId = currency.Id,
                 Currency = currency,
                 PositionPrices = positionPrices,
@@ -72,7 +74,7 @@ public static partial class TestData
             if (Closed.HasValue && Balance.HasValue)
                 trade.Close(new Domain.Trading.Trade.CloseTradeDto(Closed.Value,
                     Balance.Value,
-                    () => Opened)
+                    () => opened)
                 {
                     ExitPrice = positionPrices.Exit,
                     Result = Result

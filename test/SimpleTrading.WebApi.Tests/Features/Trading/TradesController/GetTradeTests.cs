@@ -15,11 +15,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_missing_trade_cant_be_requested()
     {
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
-        var act = () => simpleTradingClient.GetTradeAsync(notExistingTradeId);
+        var act = () => client.GetTradeAsync(notExistingTradeId);
 
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
@@ -29,15 +28,14 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task An_existing_trade_gets_returned()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
         // act
-        var returnedTrade = await simpleTradingClient.GetTradeAsync(trade.Id);
+        var returnedTrade = await client.GetTradeAsync(trade.Id);
 
         // assert
         returnedTrade.Id.Should().Be(trade.Id);
@@ -47,8 +45,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task An_trades_opened_date_gets_converted_to_the_users_timezone()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var trade = (TestData.Trade.Default with
             {
                 Opened = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind()
@@ -64,7 +61,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var returnedTrade = await simpleTradingClient.GetTradeAsync(trade.Id);
+        var returnedTrade = await client.GetTradeAsync(trade.Id);
 
         // assert
         var expectedOpenedDate = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
@@ -75,8 +72,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task References_must_be_included_in_the_response()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var exampleReference = (TestData.Reference.Default with
@@ -100,7 +96,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var returnedTrade = await simpleTradingClient.GetTradeAsync(trade.Id);
+        var returnedTrade = await client.GetTradeAsync(trade.Id);
 
         // assert
         returnedTrade.References.Should().HaveCount(2)

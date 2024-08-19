@@ -12,14 +12,13 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
     public async Task References_of_a_non_existing_trade_cannot_be_found()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var notExistingTradeId = Guid.Parse("f1e3aed3-da10-481d-a48c-f9686bccb484");
         var notExistingReferenceId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => simpleTradingClient.GetReferenceAsync(notExistingTradeId, notExistingReferenceId);
+        var act = () => client.GetReferenceAsync(notExistingTradeId, notExistingReferenceId);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
@@ -32,8 +31,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
     public async Task A_non_existing_reference_cannot_be_found()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
 
@@ -43,7 +41,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var notExistingReferenceId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => simpleTradingClient.GetReferenceAsync(trade.Id, notExistingReferenceId);
+        var act = () => client.GetReferenceAsync(trade.Id, notExistingReferenceId);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
@@ -56,8 +54,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
     public async Task An_existing_reference_gets_successfully_returned()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -66,7 +63,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await simpleTradingClient.GetReferenceAsync(trade.Id, reference2.Id);
+        var response = await client.GetReferenceAsync(trade.Id, reference2.Id);
 
         // assert
         response.Should().NotBeNull();

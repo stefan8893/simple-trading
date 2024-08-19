@@ -1,4 +1,5 @@
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
@@ -8,9 +9,8 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading;
 
-public class Trade
+public class Trade : IEntity
 {
-    public required Guid Id { get; init; }
     public required Guid AssetId { get; set; }
     public virtual required Asset Asset { get; set; }
     public required Guid ProfileId { get; set; }
@@ -19,7 +19,7 @@ public class Trade
     public required decimal Size { get; set; }
     public DateTime? Closed { get; private set; }
     public decimal? Balance { get; private set; }
-    public ITradingResult? Result { get; private set; }
+    public Result? Result { get; private set; }
     public required Guid CurrencyId { get; set; }
     public virtual required Currency Currency { get; set; }
     public required PositionPrices PositionPrices { get; set; }
@@ -27,6 +27,7 @@ public class Trade
     public virtual ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
     public bool IsClosed => Closed.HasValue && Balance.HasValue;
+    public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
     internal OneOf<Completed, BusinessError> ResetManuallyEnteredResult(UtcNow utcNow)
@@ -78,8 +79,8 @@ public class Trade
         return new TradingResultsDto(manuallyEnteredResult, calculatedByBalance, calculatedByPositionPrices);
     }
 
-    private ITradingResult? PickAppropriateResult(ITradingResult? balanceResult,
-        ITradingResult? positionPricesResult)
+    private Result? PickAppropriateResult(Result? balanceResult,
+        Result? positionPricesResult)
     {
         var hasBalanceResult = balanceResult is not null;
         var hasPositionPricesResult = positionPricesResult is not null;
@@ -87,7 +88,7 @@ public class Trade
 
         var positionPricesResultIsLossOrBreakEven =
             hasPositionPricesResult &&
-            positionPricesResult?.Name is nameof(TradingResult.Loss) or nameof(TradingResult.BreakEven);
+            positionPricesResult?.Name is nameof(Result.Loss) or nameof(Result.BreakEven);
 
         if (isPositiveBalance && positionPricesResultIsLossOrBreakEven)
             return null;
@@ -107,7 +108,7 @@ public class Trade
     }
 
     private Completed AnalyseResults(TradingResultsDto results,
-        ITradingResult? calculatedResult)
+        Result? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
             new EnteredResultDiffersFromCalculatedAnalyser();
@@ -133,24 +134,24 @@ public class Trade
         return new Completed(analysisResult);
     }
 
-    private static ITradingResult CreateManuallyEnteredResult(ResultModel resultModel)
+    private static Result CreateManuallyEnteredResult(ResultModel resultModel)
     {
         return resultModel switch
         {
-            ResultModel.Loss => new TradingResult.Loss(TradingResultSource.ManuallyEntered),
-            ResultModel.BreakEven => new TradingResult.BreakEven(TradingResultSource.ManuallyEntered, 0),
-            ResultModel.Mediocre => new TradingResult.Mediocre(TradingResultSource.ManuallyEntered),
-            ResultModel.Win => new TradingResult.Win(TradingResultSource.ManuallyEntered),
+            ResultModel.Loss => new Result(Result.Loss, TradingResultSource.ManuallyEntered),
+            ResultModel.BreakEven => new Result(Result.BreakEven, TradingResultSource.ManuallyEntered, 0),
+            ResultModel.Mediocre => new Result(Result.Mediocre, TradingResultSource.ManuallyEntered),
+            ResultModel.Win => new Result(Result.Win, TradingResultSource.ManuallyEntered),
             _ => throw new ArgumentOutOfRangeException(nameof(resultModel), resultModel, null)
         };
     }
 
-    private static ITradingResult? CalculateResultByBalance(decimal balance)
+    private static Result? CalculateResultByBalance(decimal balance)
     {
         return balance switch
         {
-            0m => new TradingResult.BreakEven(TradingResultSource.CalculatedByBalance, 0),
-            < 0m => new TradingResult.Loss(TradingResultSource.CalculatedByBalance),
+            0m => new Result(Result.BreakEven, TradingResultSource.CalculatedByBalance, 0),
+            < 0m => new Result(Result.Loss, TradingResultSource.CalculatedByBalance),
             _ => null
         };
     }
@@ -162,7 +163,7 @@ public class Trade
     }
 
     private record TradingResultsDto(
-        ITradingResult? ManuallyEntered,
-        ITradingResult? CalculatedByBalance,
-        ITradingResult? CalculatedByPositionPrices);
+        Result? ManuallyEntered,
+        Result? CalculatedByBalance,
+        Result? CalculatedByPositionPrices);
 }

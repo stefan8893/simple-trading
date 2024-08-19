@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using SimpleTrading.Client;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -11,8 +10,7 @@ public class GetProfilesTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task Existing_profiles_will_be_returned()
     {
         // arrange
-        var client = await CreateClientWithAccessToken();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient();
 
         var profile1 = TestData.Profile.Default.Build();
         var profile2 = TestData.Profile.Default.Build();
@@ -21,7 +19,7 @@ public class GetProfilesTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var assets = await simpleTradingClient.GetProfilesAsync();
+        var assets = await client.GetProfilesAsync();
 
         // assert
         assets.Should().NotBeNull();

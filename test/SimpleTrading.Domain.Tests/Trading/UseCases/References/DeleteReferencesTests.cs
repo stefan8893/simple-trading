@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -12,10 +11,7 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
 public class DeleteReferencesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private IDeleteReferences CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<IDeleteReferences>();
-    }
+    private IDeleteReferences Interactor => ServiceLocator.GetRequiredService<IDeleteReferences>();
 
     [Fact]
     public async Task References_can_be_successfully_deleted()
@@ -29,7 +25,7 @@ public class DeleteReferencesTests(TestingWebApplicationFactory<Program> factory
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await CreateInteractor().Execute(new DeleteReferencesRequestModel(trade.Id));
+        var response = await Interactor.Execute(new DeleteReferencesRequestModel(trade.Id));
 
         // assert
         response.Value.Should().BeOfType<Completed<ushort>>().Which.Data.Should().Be(2);
@@ -43,7 +39,7 @@ public class DeleteReferencesTests(TestingWebApplicationFactory<Program> factory
     {
         var notExistingTradeId = Guid.Parse("f4d1c2c8-28c6-49b7-b6a5-78fd43412008");
 
-        var response = await CreateInteractor().Execute(new DeleteReferencesRequestModel(notExistingTradeId));
+        var response = await Interactor.Execute(new DeleteReferencesRequestModel(notExistingTradeId));
 
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
         notFound.Which.ResourceId.Should().Be(notExistingTradeId);

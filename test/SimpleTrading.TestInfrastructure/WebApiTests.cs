@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTrading.Client;
 using SimpleTrading.DataAccess;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.TestInfrastructure.Authentication;
 using SimpleTrading.WebApi;
 using Xunit;
@@ -14,7 +16,7 @@ namespace SimpleTrading.TestInfrastructure;
 public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    protected readonly WebApplicationFactory<Program> Factory = factory;
+    private readonly WebApplicationFactory<Program> _factory = factory;
     private TradingDbContext? _dbContext;
     private IServiceScope? _serviceScope;
 
@@ -31,7 +33,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     public async Task InitializeAsync()
     {
         factory.OverrideServices = OverrideServices;
-        _serviceScope = Factory.Services.CreateScope();
+        _serviceScope = _factory.Services.CreateScope();
         _dbContext = _serviceScope.ServiceProvider.GetRequiredService<TradingDbContext>();
 
         await DbContext.Database.MigrateAsync();
@@ -44,16 +46,20 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     {
     }
 
-    protected async Task<HttpClient> CreateClientWithAccessToken()
+    protected async Task<SimpleTradingClient> CreateClient(bool includeAccessToken = true)
     {
+        var client = _factory.CreateClient();
+
+        if (!includeAccessToken)
+            return new SimpleTradingClient(client);
+
         var accessToken = await TestIdentity.AccessToken;
-        var client = Factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        return client;
+        return new SimpleTradingClient(client);
     }
-    
-    protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class
+
+    protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity
     {
         return await DbContext.Set<T>()
             .AsNoTracking()

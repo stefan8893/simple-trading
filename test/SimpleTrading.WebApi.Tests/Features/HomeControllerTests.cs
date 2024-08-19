@@ -1,5 +1,4 @@
 using FluentAssertions;
-using SimpleTrading.Client;
 using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.WebApi.Tests.Features;
@@ -9,10 +8,9 @@ public class HomeControllerTests(TestingWebApplicationFactory<Program> factory) 
     [Fact]
     public async Task InfoEndpoint_returns_app_info()
     {
-        var client = Factory.CreateClient();
-        var simpleTradingClient = new SimpleTradingClient(client);
+        var client = await CreateClient(false);
 
-        var response = await simpleTradingClient.GetAppInfoAsync();
+        var response = await client.GetAppInfoAsync();
 
         response.Should().NotBeNull();
         response.Name.Should().NotBeNull();

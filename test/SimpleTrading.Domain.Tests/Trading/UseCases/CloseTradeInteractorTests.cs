@@ -1,7 +1,6 @@
 using System.Globalization;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -18,15 +17,12 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
 {
     private readonly UtcNow _utcNow = () => DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
+    private ICloseTrade Interactor => ServiceLocator.GetRequiredService<ICloseTrade>();
+
     protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
     {
         base.OverrideServices(ctx, services);
         services.AddSingleton<UtcNow>(_ => _utcNow);
-    }
-
-    private ICloseTrade CreateInteractor()
-    {
-        return ServiceLocator.GetRequiredService<ICloseTrade>();
     }
 
     [Fact]
@@ -42,7 +38,7 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
             1.05m);
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         response.Value.Should().BeOfType<BadInput>()
@@ -59,7 +55,7 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
         var requestModel =
             new CloseTradeRequestModel(tradeId, DateTime.Parse("2024-08-03T16:00:00Z"), 500, ResultModel.Win, 1.05m);
 
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
         notFound.Which.ResourceType.Should().Be("Trade");
@@ -78,7 +74,7 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
             new CloseTradeRequestModel(trade.Id, _utcNow().AddHours(1), 500, ResultModel.Win, 0m);
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -103,7 +99,7 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
                 {ExitPrice = 1.2m};
 
         // act
-        var response = await CreateInteractor().Execute(requestModel);
+        var response = await Interactor.Execute(requestModel);
 
         // assert
         var responseModel = response.Value.Should().BeOfType<Completed<CloseTradeResponseModel>>();
