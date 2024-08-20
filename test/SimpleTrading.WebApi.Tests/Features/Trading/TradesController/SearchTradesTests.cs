@@ -128,6 +128,57 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         result.Count.Should().Be(2);
     }
 
+    [Theory]
+    [InlineData("null")]
+    [InlineData("NULL")]
+    [InlineData("nuLL")]
+    [InlineData("nUlL")]
+    [InlineData("null ")]
+    [InlineData(" null")]
+    public async Task A_filter_with_null_literal_in_different_casing_and_whitespaces_is_totally_fine(string nullLiteral)
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var trades = Enumerable.Range(1, 3)
+            .Select(x => TestData.Trade.Default)
+            .Select(x => x.Build())
+            .ToList();
+
+        DbContext.Trades.AddRange(trades);
+        await DbContext.SaveChangesAsync();
+
+        var searchFilter = $"Closed -eq {nullLiteral}";
+
+        // act
+        var result = await client.SearchTradesAsync([], [searchFilter]);
+
+        // assert
+        result.Count.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task A_filter_for_trades_that_dont_have_a_closed_value_return_correct_result()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var trades = Enumerable.Range(1, 3)
+            .Select(x => TestData.Trade.Default)
+            .Select(x => x.Build());
+
+        DbContext.Trades.AddRange(trades);
+        await DbContext.SaveChangesAsync();
+
+        const string searchFilter = "Closed -ne null";
+
+        // act
+        var result = await client.SearchTradesAsync([], [searchFilter]);
+
+        // assert
+        result.Count.Should().Be(0);
+    }
+
     [Fact]
     public async Task Null_as_filter_is_being_ignored()
     {

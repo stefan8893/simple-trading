@@ -270,4 +270,7 @@
     <data name="Field" xml:space="preserve">
         <value>Field</value>
     </data>
+    <data name="NullNotAllowed" xml:space="preserve">
+        <value>Null is not allowed here.</value>
+    </data>
 </root>

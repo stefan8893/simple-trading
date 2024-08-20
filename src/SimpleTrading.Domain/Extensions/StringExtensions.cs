@@ -4,6 +4,16 @@ namespace SimpleTrading.Domain.Extensions;
 
 public static class StringExtensions
 {
+    public static bool IsNullLiteral(this string candidate)
+    {
+        if (string.IsNullOrWhiteSpace(candidate))
+            return false;
+
+        return candidate
+            .Trim()
+            .Equals("null", StringComparison.OrdinalIgnoreCase);
+    }
+
     public static string LocalizeMe(this string s,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string filePath = "",

@@ -19,7 +19,10 @@ public class LessThanOrEqualToPropertyFilterVisitor : IPropertyFilterComparisonV
 
     public Expression<Func<Trade, bool>> Visit(ClosedFilter closedFilter)
     {
-        return t => t.Closed.HasValue && t.Closed.Value <= closedFilter.ComparisonValue.UtcDateTime;
+        if (!closedFilter.ComparisonValue.HasValue)
+            return t => false;
+
+        return t => t.Closed.HasValue && t.Closed.Value <= closedFilter.ComparisonValue.Value.UtcDateTime;
     }
 
     public Expression<Func<Trade, bool>> Visit(SizeFilter sizeFilter)
@@ -29,8 +32,15 @@ public class LessThanOrEqualToPropertyFilterVisitor : IPropertyFilterComparisonV
 
     public Expression<Func<Trade, bool>> Visit(ResultFilter resultFilter)
     {
-        var index = Result.GetIndexOf(resultFilter.ComparisonValue);
+        var isComparisonValueNull = resultFilter.ComparisonValue is null;
 
-        return t => t.Result != null && t.Result.Index <= index;
+        if (isComparisonValueNull)
+            return t => false;
+
+        var index = Result.GetIndexOf(resultFilter.ComparisonValue!);
+
+        return t => (t.Result == null && isComparisonValueNull) ||
+                    (t.Result != null && !isComparisonValueNull &&
+                     t.Result.Index <= index);
     }
 }

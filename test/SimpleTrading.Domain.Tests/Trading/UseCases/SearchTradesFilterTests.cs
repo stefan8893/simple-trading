@@ -29,7 +29,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "gt",
-            ComparisonValue = "2024-08-19T17:00:00+02:00"
+            ComparisonValue = "2024-08-19T17:00:00+02:00",
+            IsLiteral = false
         };
 
         // act
@@ -58,7 +59,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "gt",
-            ComparisonValue = "2024-08-19T15:00:00Z"
+            ComparisonValue = "2024-08-19T15:00:00Z",
+            IsLiteral = false
         };
 
         // act
@@ -72,6 +74,27 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
+    public async Task Closed_greater_than_null_returns_bad_input()
+    {
+        // arrange
+        var filter = new FilterModel
+        {
+            PropertyName = "Closed",
+            Operator = "gt",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.ErrorMessage == "Null is not allowed here.");
+    }
+
+    [Fact]
     public async Task Greater_than_opened_date_with_invalid_comparison_value_returns_bad_input()
     {
         // arrange
@@ -79,7 +102,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "gt",
-            ComparisonValue = "2024-08-19T17:00:"
+            ComparisonValue = "2024-08-19T17:00:",
+            IsLiteral = false
         };
 
         // act
@@ -100,7 +124,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "grt",
-            ComparisonValue = "2024-08-19T17:00:00"
+            ComparisonValue = "2024-08-19T17:00:00",
+            IsLiteral = false
         };
 
         // act
@@ -122,7 +147,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Openend",
             Operator = "gt",
-            ComparisonValue = "2024-08-19T17:00:00"
+            ComparisonValue = "2024-08-19T17:00:00",
+            IsLiteral = false
         };
 
         // act
@@ -151,7 +177,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "ge",
-            ComparisonValue = "2024-08-19T17:00:00+02:00"
+            ComparisonValue = "2024-08-19T17:00:00+02:00",
+            IsLiteral = false
         };
 
         // act
@@ -182,7 +209,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "le",
-            ComparisonValue = "2024-08-19T17:00:00+02:00"
+            ComparisonValue = "2024-08-19T17:00:00+02:00",
+            IsLiteral = false
         };
 
         // act
@@ -213,7 +241,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "lt",
-            ComparisonValue = "2024-08-19T17:00:00+02:00"
+            ComparisonValue = "2024-08-19T17:00:00+02:00",
+            IsLiteral = false
         };
 
         // act
@@ -242,7 +271,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "eq",
-            ComparisonValue = "2024-08-19T17:00:00+02:00"
+            ComparisonValue = "2024-08-19T17:00:00+02:00",
+            IsLiteral = false
         };
 
         // act
@@ -271,7 +301,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Opened",
             Operator = "ne",
-            ComparisonValue = "2024-08-19T17:00:00+02:00"
+            ComparisonValue = "2024-08-19T17:00:00+02:00",
+            IsLiteral = false
         };
 
         // act
@@ -301,7 +332,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "BALANCE",
             Operator = "gt",
-            ComparisonValue = "500"
+            ComparisonValue = "500",
+            IsLiteral = false
         };
 
         // act
@@ -321,7 +353,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Balance",
             Operator = "gt",
-            ComparisonValue = ""
+            ComparisonValue = "",
+            IsLiteral = false
         };
 
         // act
@@ -342,7 +375,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Balance",
             Operator = "",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -363,7 +397,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "",
             Operator = "gt",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -384,7 +419,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Foobar",
             Operator = "gt",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -405,7 +441,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Balance",
             Operator = "gr",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -426,7 +463,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = null!,
             Operator = "gt",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -447,7 +485,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "balance ",
             Operator = "gt",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -468,7 +507,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "balance",
             Operator = " gt",
-            ComparisonValue = "50"
+            ComparisonValue = "50",
+            IsLiteral = false
         };
 
         // act
@@ -496,7 +536,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Size",
             Operator = "ge",
-            ComparisonValue = "10000"
+            ComparisonValue = "10000",
+            IsLiteral = false
         };
 
         // act
@@ -523,7 +564,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Size",
             Operator = "le",
-            ComparisonValue = "5000"
+            ComparisonValue = "5000",
+            IsLiteral = false
         };
 
         // act
@@ -550,7 +592,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Size",
             Operator = "ne",
-            ComparisonValue = "5000"
+            ComparisonValue = "5000",
+            IsLiteral = false
         };
 
         // act
@@ -577,7 +620,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "BALANCE",
             Operator = "lt",
-            ComparisonValue = "500"
+            ComparisonValue = "500",
+            IsLiteral = false
         };
 
         // act
@@ -603,7 +647,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "BALANCE",
             Operator = "eq",
-            ComparisonValue = "500"
+            ComparisonValue = "500",
+            IsLiteral = false
         };
 
         // act
@@ -630,7 +675,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "gt",
-            ComparisonValue = "NotThatBad"
+            ComparisonValue = "NotThatBad",
+            IsLiteral = false
         };
 
         // act
@@ -665,7 +711,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "gt",
-            ComparisonValue = "BreakEven"
+            ComparisonValue = "BreakEven",
+            IsLiteral = false
         };
 
         // act
@@ -701,7 +748,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Closed",
             Operator = "gt",
-            ComparisonValue = "2024-08-19T15:00:00Z"
+            ComparisonValue = "2024-08-19T15:00:00Z",
+            IsLiteral = false
         };
 
         // act
@@ -735,7 +783,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "ge",
-            ComparisonValue = "BreakEven"
+            ComparisonValue = "BreakEven",
+            IsLiteral = false
         };
 
         // act
@@ -771,7 +820,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "le",
-            ComparisonValue = "BreakEven"
+            ComparisonValue = "BreakEven",
+            IsLiteral = false
         };
 
         // act
@@ -806,7 +856,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "lt",
-            ComparisonValue = "Mediocre"
+            ComparisonValue = "Mediocre",
+            IsLiteral = false
         };
 
         // act
@@ -841,7 +892,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "eq",
-            ComparisonValue = "Mediocre"
+            ComparisonValue = "Mediocre",
+            IsLiteral = false
         };
 
         // act
@@ -875,7 +927,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         {
             PropertyName = "Result",
             Operator = "ne",
-            ComparisonValue = "Mediocre"
+            ComparisonValue = "Mediocre",
+            IsLiteral = false
         };
 
         // act
@@ -887,6 +940,174 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .And.Contain(x => x.Result == ResultModel.Loss)
             .And.Contain(x => x.Result == ResultModel.BreakEven)
             .And.Contain(x => x.Result == ResultModel.Win);
+    }
+
+    [Fact]
+    public async Task Equal_to_null_result_returns_all_trades_without_a_result()
+    {
+        // arrange
+        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var tradesWithoutResult = Enumerable.Range(0, 2)
+            .Select(x => TestData.Trade.Default.Build())
+            .ToList();
+
+        var tradesWithResult = Enumerable.Range(0, 4)
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = openedClosed,
+                Closed = openedClosed,
+                Balance = 50m,
+                Result = (ResultModel) x
+            })
+            .Select(x => x.Build())
+            .ToList();
+
+        DbContext.Trades.AddRange(tradesWithoutResult.Concat(tradesWithResult));
+        await DbContext.SaveChangesAsync();
+
+        var filter = new FilterModel
+        {
+            PropertyName = "Result",
+            Operator = "eq",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTrades.Which.Should().HaveCount(2)
+            .And.Contain(x => x.Id == tradesWithoutResult[0].Id)
+            .And.Contain(x => x.Id == tradesWithoutResult[1].Id);
+    }
+
+    [Fact]
+    public async Task Not_equal_to_null_result_returns_all_trades_with_result()
+    {
+        // arrange
+        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var tradesWithoutResult = Enumerable.Range(0, 2)
+            .Select(x => TestData.Trade.Default.Build())
+            .ToList();
+
+        var tradesWithResult = Enumerable.Range(0, 4)
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = openedClosed,
+                Closed = openedClosed,
+                Balance = 50m,
+                Result = (ResultModel) x
+            })
+            .Select(x => x.Build())
+            .ToList();
+
+        DbContext.Trades.AddRange(tradesWithoutResult.Concat(tradesWithResult));
+        await DbContext.SaveChangesAsync();
+
+        var filter = new FilterModel
+        {
+            PropertyName = "Result",
+            Operator = "ne",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTrades.Which.Should().HaveCount(4)
+            .And.Contain(x => x.Id == tradesWithResult[0].Id)
+            .And.Contain(x => x.Id == tradesWithResult[1].Id)
+            .And.Contain(x => x.Id == tradesWithResult[2].Id)
+            .And.Contain(x => x.Id == tradesWithResult[3].Id);
+    }
+
+    [Fact]
+    public async Task Closed_equal_to_null_returns_all_trades_without_closed_date()
+    {
+        // arrange
+        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var closedTrades = Enumerable.Range(0, 2)
+            .Select(x => TestData.Trade.Default.Build())
+            .ToList();
+
+        var notClosedTrades = Enumerable.Range(0, 4)
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = openedClosed,
+                Closed = openedClosed,
+                Balance = 50m,
+                Result = (ResultModel) x
+            })
+            .Select(x => x.Build())
+            .ToList();
+
+        DbContext.Trades.AddRange(closedTrades.Concat(notClosedTrades));
+        await DbContext.SaveChangesAsync();
+
+        var filter = new FilterModel
+        {
+            PropertyName = "Closed",
+            Operator = "eq",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTrades.Which.Should().HaveCount(2)
+            .And.Contain(x => x.Id == closedTrades[0].Id)
+            .And.Contain(x => x.Id == closedTrades[1].Id);
+    }
+
+    [Fact]
+    public async Task Closed_not_equal_to_null_returns_all_trades_with_closed_date()
+    {
+        // arrange
+        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var notClosedTrades = Enumerable.Range(0, 2)
+            .Select(x => TestData.Trade.Default.Build())
+            .ToList();
+
+        var closedTrades = Enumerable.Range(0, 4)
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = openedClosed,
+                Closed = openedClosed,
+                Balance = 50m,
+                Result = (ResultModel) x
+            })
+            .Select(x => x.Build())
+            .ToList();
+
+        DbContext.Trades.AddRange(notClosedTrades.Concat(closedTrades));
+        await DbContext.SaveChangesAsync();
+
+        var filter = new FilterModel
+        {
+            PropertyName = "Closed",
+            Operator = "ne",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTrades.Which.Should().HaveCount(4)
+            .And.Contain(x => x.Id == closedTrades[0].Id)
+            .And.Contain(x => x.Id == closedTrades[1].Id)
+            .And.Contain(x => x.Id == closedTrades[2].Id)
+            .And.Contain(x => x.Id == closedTrades[3].Id);
     }
 
     [Fact]
@@ -914,19 +1135,22 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             {
                 PropertyName = "Result",
                 Operator = "le",
-                ComparisonValue = "BreakEven"
+                ComparisonValue = "BreakEven",
+                IsLiteral = false
             },
             new FilterModel
             {
                 PropertyName = "Balance",
                 Operator = "lt",
-                ComparisonValue = "150"
+                ComparisonValue = "150",
+                IsLiteral = false
             },
             new FilterModel
             {
                 PropertyName = "Size",
                 Operator = "gt",
-                ComparisonValue = "5000"
+                ComparisonValue = "5000",
+                IsLiteral = false
             }
         ];
 

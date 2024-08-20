@@ -1,6 +1,6 @@
 ﻿namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
-public static class SupportedPropertyFilters
+public static class PropertyFilter
 {
     public const string Opened = nameof(Opened);
     public const string Closed = nameof(Closed);
@@ -9,7 +9,7 @@ public static class SupportedPropertyFilters
     public const string Result = nameof(Result);
 
     public static readonly ISet<string> All =
-        typeof(SupportedPropertyFilters).GetFields()
+        typeof(PropertyFilter).GetFields()
             .Where(x => x is {IsLiteral: true, IsInitOnly: false})
             .Select(x => (string) x.GetValue(null)!)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
