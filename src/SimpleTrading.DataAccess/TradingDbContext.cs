@@ -37,11 +37,12 @@ public class TradingDbContext(DbContextOptions<TradingDbContext> options) : DbCo
 
     private static void AddDateTimeKindUtcConverter(ModelBuilder modelBuilder)
     {
-        var dateTimeConverter = new ValueConverter<DateTime, DateTime>(v => v.ToUniversalTime(),
-            v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+        var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+            v => v.ToUtcKind(),
+            v => v.ToUtcKind());
 
         var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
-            v => v.HasValue ? v.Value.ToUniversalTime() : v,
+            v => v.HasValue ? v.Value.ToUtcKind() : v,
             v => v.HasValue ? v.Value.ToUtcKind() : v);
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
