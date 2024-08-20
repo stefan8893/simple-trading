@@ -548,6 +548,34 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         pagedTrades.Which.Should().HaveCount(1)
             .And.Contain(x => x.Size == 10_000m);
     }
+    
+    [Fact]
+    public async Task Uppercase_operator_works_as_well()
+    {
+        // arrange
+        var trades = Enumerable.Range(1, 2)
+            .Select(x => TestData.Trade.Default with {Size = 5000m * x})
+            .Select(x => x.Build());
+
+        DbContext.Trades.AddRange(trades);
+        await DbContext.SaveChangesAsync();
+
+        var filter = new FilterModel
+        {
+            PropertyName = "Size",
+            Operator = "GE",
+            ComparisonValue = "10000",
+            IsLiteral = false
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTrades.Which.Should().HaveCount(1)
+            .And.Contain(x => x.Size == 10_000m);
+    }
 
     [Fact]
     public async Task Less_than_or_equal_to_size_with_valid_input_returns_correct_result()

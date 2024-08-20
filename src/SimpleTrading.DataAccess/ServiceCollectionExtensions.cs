@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserSettingsRepository, UserSettingsRepository>()
             .AddScoped<UowCommit>(sp => () => sp.GetRequiredService<TradingDbContext>().SaveChangesAsync())
             .AddSingleton<IReadOnlyDictionary<string, IPropertyFilterComparisonVisitor<Trade>>>(sp =>
-                new Dictionary<string, IPropertyFilterComparisonVisitor<Trade>>
+                new Dictionary<string, IPropertyFilterComparisonVisitor<Trade>>(StringComparer.OrdinalIgnoreCase)
                 {
                     [Operator.EqualsTo] = new EqualToPropertyFilterVisitor(),
                     [Operator.NotEqualsTo] = new NotEqualToPropertyFilterVisitor(),
