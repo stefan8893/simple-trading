@@ -5,12 +5,14 @@ namespace SimpleTrading.Domain.Infrastructure;
 
 public abstract class Pagination
 {
+    public const int DefaultPageSize = 50;
+    
     /// <summary>
     ///     Pages start at one (one-based)
     /// </summary>
     public int Page { get; set; } = 1;
 
-    public int PageSize { get; set; } = 50;
+    public int PageSize { get; set; } = DefaultPageSize;
 }
 
 public class PaginationValidator : AbstractValidator<Pagination>

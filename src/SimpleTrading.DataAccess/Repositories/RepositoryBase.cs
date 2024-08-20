@@ -37,7 +37,7 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
         var count = await FindInternal(predicate, sortingAsList).CountAsync();
 
         if (count == 0)
-            return new PagedList<T>(Enumerable.Empty<T>(), 0, 0, 0);
+            return new PagedList<T>([], 0, page, pageSize);
 
         var result = await FindInternal(predicate, sortingAsList)
             .Skip((page - 1) * pageSize)
