@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
@@ -42,7 +43,7 @@ public partial class TradesController : ControllerBase
 
         return result.Match(
             page => Ok(new PageDto<TradeDto>(
-                page.Select(TradeDto.From),
+                Enumerable.Select(page, TradeDto.From),
                 page.Count,
                 page.TotalCount,
                 page.Page,
@@ -180,8 +181,9 @@ public partial class TradesController : ControllerBase
                     return new FilterModel
                     {
                         PropertyName = match.Groups["property"].Value,
-                        Operator = match.Groups["operator"].Value[1..],
-                        ComparisonValue = match.Groups["comparisonValue"].Value
+                        Operator = match.Groups["operator"].Value,
+                        ComparisonValue = GetComparisonValue(match),
+                        IsLiteral = IsLiteral(match)
                     };
                 })
                 .ToList() ?? []
@@ -203,6 +205,26 @@ public partial class TradesController : ControllerBase
                 ? new SortModel(sortByTrimmed[1..], false)
                 : new SortModel(sortByTrimmed);
         }
+    }
+
+    private static bool IsLiteral(Match match)
+    {
+        var comparisonValue = match.Groups["comparisonValue"];
+        var literal = match.Groups["literal"];
+
+        return !comparisonValue.Success && literal.Success;
+    }
+
+    private static string GetComparisonValue(Match match)
+    {
+        var comparisonValue = match.Groups["comparisonValue"];
+        var literal = match.Groups["literal"];
+
+        return comparisonValue.Success
+            ? comparisonValue.Value
+            : literal.Value.IsNullLiteral()
+                ? literal.Value
+                : throw new Exception($"Invalid literal '{literal.Value}'.");
     }
 
     private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto)
@@ -266,6 +288,7 @@ public partial class TradesController : ControllerBase
         return tradeResult;
     }
 
-    [GeneratedRegex(@"\s*(?<property>.*?)\s+(?<operator>-.*?)\s+\[(?<comparisonValue>.*?)\]\s*$")]
+    [GeneratedRegex(
+        @"\s*(?<property>.*?)\s+\-(?<operator>.*?)\s+(?<literal>(?i)null(?-i)|\[(?<comparisonValue>.*?)\])\s*$")]
     public static partial Regex PropertyFilterSyntaxRegex();
 }

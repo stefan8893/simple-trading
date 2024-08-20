@@ -13,9 +13,6 @@ public interface IPropertyFilter<TEntity> where TEntity : IEntity
 
 public interface IPropertyFilter<TEntity, out TProperty> : IPropertyFilter<TEntity>
     where TEntity : IEntity
-    where TProperty : IComparable<TProperty>, IEquatable<TProperty>
 {
     TProperty ComparisonValue { get; }
-
-    static abstract bool CanParseComparisonValue(string candidate);
 }

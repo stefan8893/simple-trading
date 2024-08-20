@@ -33,7 +33,7 @@ public class SearchTradeInteractor(
                     : Order.Descending));
 
         var filter = model.Filter
-            .Select(x => PropertyFilterFactory.Create(x.PropertyName, x.Operator, x.ComparisonValue))
+            .Select(x => PropertyFilterFactory.Create(x.PropertyName, x.Operator, x.ComparisonValue, x.IsLiteral))
             .Aggregate(Id, Add);
 
         var paginationConfig = new PaginationConfiguration(model.Page, model.PageSize);

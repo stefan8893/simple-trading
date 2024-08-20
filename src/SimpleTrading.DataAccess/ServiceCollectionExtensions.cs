@@ -22,12 +22,12 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IReadOnlyDictionary<string, IPropertyFilterComparisonVisitor<Trade>>>(sp =>
                 new Dictionary<string, IPropertyFilterComparisonVisitor<Trade>>
                 {
-                    ["eq"] = new EqualToPropertyFilterVisitor(),
-                    ["ne"] = new NotEqualToPropertyFilterVisitor(),
-                    ["gt"] = new GreaterThanPropertyFilterVisitor(),
-                    ["ge"] = new GreaterThanOrEqualToPropertyFilterVisitor(),
-                    ["lt"] = new LessThanPropertyFilterVisitor(),
-                    ["le"] = new LessThanOrEqualToPropertyFilterVisitor()
+                    [Operator.EqualsTo] = new EqualToPropertyFilterVisitor(),
+                    [Operator.NotEqualsTo] = new NotEqualToPropertyFilterVisitor(),
+                    [Operator.GreaterThan] = new GreaterThanPropertyFilterVisitor(),
+                    [Operator.GreaterThanOrEqualTo] = new GreaterThanOrEqualToPropertyFilterVisitor(),
+                    [Operator.LessThan] = new LessThanPropertyFilterVisitor(),
+                    [Operator.LessThanOrEqualTo] = new LessThanOrEqualToPropertyFilterVisitor()
                 });
     }
 }

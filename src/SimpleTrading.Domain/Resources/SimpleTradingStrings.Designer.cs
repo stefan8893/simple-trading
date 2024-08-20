@@ -312,6 +312,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Null ist hier nicht erlaubt..
+        /// </summary>
+        public static string NullNotAllowed {
+            get {
+                return ResourceManager.GetString("NullNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Eröffnet.
         /// </summary>
         public static string Opened {
