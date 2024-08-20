@@ -46,6 +46,7 @@ builder.Services.AddSingleton<ClientGenerator>();
 var app = builder.Build();
 
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
 app.UseAuthentication();

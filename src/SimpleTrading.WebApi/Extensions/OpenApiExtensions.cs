@@ -72,8 +72,8 @@ public static class OpenApiExtensions
             c.OAuthUsePkce();
             c.OAuthScopeSeparator(" ");
             c.OAuth2RedirectUrl(clientAppEntraIdConfig.RedirectUrl);
+            c.InjectStylesheet("/swagger-ui-customization.css");
         });
-
 
         return app;
     }
