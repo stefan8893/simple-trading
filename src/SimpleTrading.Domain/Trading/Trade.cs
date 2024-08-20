@@ -103,7 +103,8 @@ public class Trade : IEntity
             // pick the result from the position prices if both are equal
             // it contains more information (performance indicator)
             ? positionPricesResult
-            // prefer the result by balance if there is a difference to the result by position prices
+            // otherwise pick the result by balance, because it is more important than the result by position prices
+            // at the end of the day counts the balance and not position prices
             : balanceResult;
     }
 
