@@ -618,7 +618,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         var filter = new FilterModel
         {
-            PropertyName = "BALANCE",
+            PropertyName = "Balance",
             Operator = "lt",
             ComparisonValue = "500",
             IsLiteral = false
@@ -645,7 +645,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         var filter = new FilterModel
         {
-            PropertyName = "BALANCE",
+            PropertyName = "Balance",
             Operator = "eq",
             ComparisonValue = "500",
             IsLiteral = false

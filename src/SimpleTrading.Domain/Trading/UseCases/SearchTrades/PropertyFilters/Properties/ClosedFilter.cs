@@ -14,7 +14,7 @@ public class ClosedFilter : IPropertyFilter<Trade, DateTimeOffset?>
         return visitor.Visit(this);
     }
 
-    public static bool TryParseComparisonValue(string candidate, bool isLiteral, out DateTimeOffset? result)
+    public static bool TryParseValue(string candidate, bool isLiteral, out DateTimeOffset? result)
     {
         result = null;
 
@@ -31,7 +31,7 @@ public class ClosedFilter : IPropertyFilter<Trade, DateTimeOffset?>
     public static IPropertyFilter<Trade, DateTimeOffset?> Create(string @operator, string comparisonValue,
         bool isLiteral)
     {
-        var isSuccess = TryParseComparisonValue(comparisonValue, isLiteral, out var value);
+        var isSuccess = TryParseValue(comparisonValue, isLiteral, out var value);
 
         if (!isSuccess)
             throw new Exception($"The comparison value '{comparisonValue}' couldn't be parsed.");

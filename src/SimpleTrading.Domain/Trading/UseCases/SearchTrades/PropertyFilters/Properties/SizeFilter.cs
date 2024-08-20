@@ -13,12 +13,12 @@ public class SizeFilter : IPropertyFilter<Trade, decimal>
         return visitor.Visit(this);
     }
 
-    public static bool TryParseComparisonValue(string candidate, out decimal result)
+    public static bool TryParseValue(string candidate, out decimal result)
     {
         return decimal.TryParse(candidate, out result);
     }
 
-    public static IPropertyFilter<Trade, decimal> Create(string @operator, string comparisonValue, bool isLiteral)
+    public static IPropertyFilter<Trade, decimal> Create(string @operator, string comparisonValue)
     {
         return new SizeFilter
         {

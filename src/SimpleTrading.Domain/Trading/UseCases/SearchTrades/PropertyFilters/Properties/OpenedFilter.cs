@@ -13,13 +13,12 @@ public class OpenedFilter : IPropertyFilter<Trade, DateTimeOffset>
         return visitor.Visit(this);
     }
 
-    public static bool TryParseComparisonValue(string candidate, out DateTimeOffset result)
+    public static bool TryParseValue(string candidate, out DateTimeOffset result)
     {
         return DateTimeOffset.TryParse(candidate, out result);
     }
 
-    public static IPropertyFilter<Trade, DateTimeOffset> Create(string @operator, string comparisonValue,
-        bool isLiteral)
+    public static IPropertyFilter<Trade, DateTimeOffset> Create(string @operator, string comparisonValue)
     {
         return new OpenedFilter
         {

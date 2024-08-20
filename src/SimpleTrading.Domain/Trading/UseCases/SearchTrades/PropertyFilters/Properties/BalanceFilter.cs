@@ -14,7 +14,7 @@ public class BalanceFilter : IPropertyFilter<Trade, decimal?>
         return visitor.Visit(this);
     }
 
-    public static bool TryParseComparisonValue(string candidate, bool isLiteral, out decimal? result)
+    public static bool TryParseValue(string candidate, bool isLiteral, out decimal? result)
     {
         result = null;
 
@@ -30,7 +30,7 @@ public class BalanceFilter : IPropertyFilter<Trade, decimal?>
 
     public static IPropertyFilter<Trade, decimal?> Create(string @operator, string comparisonValue, bool isLiteral)
     {
-        var isSuccess = TryParseComparisonValue(comparisonValue, isLiteral, out var value);
+        var isSuccess = TryParseValue(comparisonValue, isLiteral, out var value);
 
         if (!isSuccess)
             throw new Exception($"The comparison value '{comparisonValue}' couldn't be parsed.");

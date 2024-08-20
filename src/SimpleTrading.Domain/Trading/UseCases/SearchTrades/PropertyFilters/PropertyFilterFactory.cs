@@ -4,37 +4,33 @@ namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 public static class PropertyFilterFactory
 {
-    private static readonly Dictionary<string, Func<string, string, bool, IPropertyFilter<Trade>>>
-        PropertyFilterByName =
-            new(StringComparer.OrdinalIgnoreCase)
-            {
-                [nameof(PropertyFilter.Opened)] = OpenedFilter.Create,
-                [nameof(PropertyFilter.Closed)] = ClosedFilter.Create,
-                [nameof(PropertyFilter.Balance)] = BalanceFilter.Create,
-                [nameof(PropertyFilter.Size)] = SizeFilter.Create,
-                [nameof(PropertyFilter.Result)] = ResultFilter.Create
-            };
-
     public static IPropertyFilter<Trade> Create(string name, string @operator, string value, bool isLiteral)
     {
-        return PropertyFilterByName[name](@operator, value, isLiteral);
+        var propertyFilterByName =
+            new Dictionary<string, Func<IPropertyFilter<Trade>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                [nameof(PropertyFilter.Opened)] = () => OpenedFilter.Create(@operator, value),
+                [nameof(PropertyFilter.Closed)] = () => ClosedFilter.Create(@operator, value, isLiteral),
+                [nameof(PropertyFilter.Balance)] = () => BalanceFilter.Create(@operator, value, isLiteral),
+                [nameof(PropertyFilter.Size)] = () => SizeFilter.Create(@operator, value),
+                [nameof(PropertyFilter.Result)] = () => ResultFilter.Create(@operator, value, isLiteral)
+            };
+
+        return propertyFilterByName[name]();
     }
 
-    public static bool CanCreate(string propertyFilterName, string comparisonValue, bool isLiteral)
+    public static bool CanCreate(string propertyFilter, string comparisonValue, bool isLiteral)
     {
         var canParse = new Dictionary<string, Func<bool>>(StringComparer.OrdinalIgnoreCase)
         {
-            [nameof(PropertyFilter.Opened)] = () => OpenedFilter.TryParseComparisonValue(comparisonValue, out _),
-            [nameof(PropertyFilter.Closed)] =
-                () => ClosedFilter.TryParseComparisonValue(comparisonValue, isLiteral, out _),
-            [nameof(PropertyFilter.Balance)] =
-                () => BalanceFilter.TryParseComparisonValue(comparisonValue, isLiteral, out _),
-            [nameof(PropertyFilter.Size)] = () => SizeFilter.TryParseComparisonValue(comparisonValue, out _),
-            [nameof(PropertyFilter.Result)] =
-                () => ResultFilter.TryParseComparisonValue(comparisonValue, isLiteral, out _)
+            [nameof(PropertyFilter.Opened)] = () => OpenedFilter.TryParseValue(comparisonValue, out _),
+            [nameof(PropertyFilter.Closed)] = () => ClosedFilter.TryParseValue(comparisonValue, isLiteral, out _),
+            [nameof(PropertyFilter.Balance)] = () => BalanceFilter.TryParseValue(comparisonValue, isLiteral, out _),
+            [nameof(PropertyFilter.Size)] = () => SizeFilter.TryParseValue(comparisonValue, out _),
+            [nameof(PropertyFilter.Result)] = () => ResultFilter.TryParseValue(comparisonValue, isLiteral, out _)
         };
 
-        return canParse[propertyFilterName]();
+        return canParse[propertyFilter]();
     }
 
     public static bool IsNullComparisonForbidden(string property, string @operator)
