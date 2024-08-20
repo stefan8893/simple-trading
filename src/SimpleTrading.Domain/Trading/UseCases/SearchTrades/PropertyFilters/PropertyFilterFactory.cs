@@ -41,25 +41,25 @@ public static class PropertyFilterFactory
     {
         // only consider nullable properties
         var nullComparisonForbidden =
-            new Dictionary<(string, string), bool>(new ValueTupleStringComparerOrdinalIgnoreCase())
+            new HashSet<(string, string)>(new ValueTupleStringComparerOrdinalIgnoreCase())
             {
-                [(PropertyFilter.Closed, Operator.GreaterThan)] = true,
-                [(PropertyFilter.Closed, Operator.GreaterThanOrEqualTo)] = true,
-                [(PropertyFilter.Closed, Operator.LessThan)] = true,
-                [(PropertyFilter.Closed, Operator.LessThanOrEqualTo)] = true,
+                (PropertyFilter.Closed, Operator.GreaterThan),
+                (PropertyFilter.Closed, Operator.GreaterThanOrEqualTo),
+                (PropertyFilter.Closed, Operator.LessThan),
+                (PropertyFilter.Closed, Operator.LessThanOrEqualTo),
 
-                [(PropertyFilter.Balance, Operator.GreaterThan)] = true,
-                [(PropertyFilter.Balance, Operator.GreaterThanOrEqualTo)] = true,
-                [(PropertyFilter.Balance, Operator.LessThan)] = true,
-                [(PropertyFilter.Balance, Operator.LessThanOrEqualTo)] = true,
+                (PropertyFilter.Balance, Operator.GreaterThan),
+                (PropertyFilter.Balance, Operator.GreaterThanOrEqualTo),
+                (PropertyFilter.Balance, Operator.LessThan),
+                (PropertyFilter.Balance, Operator.LessThanOrEqualTo),
 
-                [(PropertyFilter.Result, Operator.GreaterThan)] = true,
-                [(PropertyFilter.Result, Operator.GreaterThanOrEqualTo)] = true,
-                [(PropertyFilter.Result, Operator.LessThan)] = true,
-                [(PropertyFilter.Result, Operator.LessThanOrEqualTo)] = true
+                (PropertyFilter.Result, Operator.GreaterThan),
+                (PropertyFilter.Result, Operator.GreaterThanOrEqualTo),
+                (PropertyFilter.Result, Operator.LessThan),
+                (PropertyFilter.Result, Operator.LessThanOrEqualTo)
             };
 
-        return nullComparisonForbidden.TryGetValue((property, @operator), out var result) && result;
+        return nullComparisonForbidden.Contains((property, @operator));
     }
 }
 
