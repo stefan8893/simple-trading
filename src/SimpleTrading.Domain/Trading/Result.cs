@@ -9,42 +9,19 @@ public enum TradingResultSource
     CalculatedByPositionPrices
 }
 
-public interface ITradingResult
-{
-    string Name { get; }
-    TradingResultSource Source { get; }
-
-    /// <summary>
-    ///     The trade's performance in percent.<br />
-    ///     ExitPrice == StopLoss => -100%<br />
-    ///     ExitPrice == TakeProfit => 100%<br />
-    ///     ExitPrice == EntryPrice => 0%<br />
-    /// </summary>
-    short? Performance { get; }
-}
-
-public record Result : ITradingResult
+public record Result
 {
     public const string Loss = nameof(Loss);
     public const string BreakEven = nameof(BreakEven);
     public const string Mediocre = nameof(Mediocre);
     public const string Win = nameof(Win);
 
-    public static readonly IImmutableList<string> SupportedResults;
-    public static readonly int IndexOfLoss;
-    public static readonly int IndexOfBreakEven;
-    public static readonly int IndexOfMediocre;
-    public static readonly int IndexOfWin;
+    private static readonly ImmutableList<string> SupportedResults;
 
     static Result()
     {
         SupportedResults = new List<string>([Loss, BreakEven, Mediocre, Win])
             .ToImmutableList();
-
-        IndexOfLoss = GetIndexOf(Loss);
-        IndexOfBreakEven = GetIndexOf(BreakEven);
-        IndexOfMediocre = GetIndexOf(Mediocre);
-        IndexOfWin = GetIndexOf(Win);
     }
 
     public Result(string name, TradingResultSource source, short? performance = null)
@@ -67,6 +44,12 @@ public record Result : ITradingResult
 
     public TradingResultSource Source { get; init; }
 
+    /// <summary>
+    ///     The trade's performance in percent.<br />
+    ///     ExitPrice == StopLoss => -100%<br />
+    ///     ExitPrice == TakeProfit => 100%<br />
+    ///     ExitPrice == EntryPrice => 0%<br />
+    /// </summary>
     public short? Performance { get; init; }
 
     public static int GetIndexOf(string result)

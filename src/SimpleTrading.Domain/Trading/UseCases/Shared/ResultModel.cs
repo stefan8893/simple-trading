@@ -10,7 +10,7 @@ public enum ResultModel
 
 public static class ResultModelExtensions
 {
-    public static ResultModel ToResultModel(this ITradingResult tradingResult)
+    public static ResultModel ToResultModel(this Result tradingResult)
     {
         var success = Enum.TryParse(typeof(ResultModel), tradingResult.Name, true, out var result);
 
