@@ -14,6 +14,9 @@ public class GreaterThanPropertyFilterVisitor : IPropertyFilterComparisonVisitor
 
     public Expression<Func<Trade, bool>> Visit(BalanceFilter balanceFilter)
     {
+        if (!balanceFilter.ComparisonValue.HasValue)
+            return t => false;
+
         return t => t.Balance > balanceFilter.ComparisonValue;
     }
 
