@@ -2,7 +2,7 @@
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertySorting;
 
-namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades;
+namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 
 public class SortModelValidator : AbstractValidator<SortModel>
 {

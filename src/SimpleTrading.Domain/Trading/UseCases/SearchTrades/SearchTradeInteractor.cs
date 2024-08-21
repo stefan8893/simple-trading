@@ -5,6 +5,7 @@ using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertySorting;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -15,7 +16,7 @@ public class SearchTradeInteractor(
     IValidator<SearchTradesRequestModel> validator,
     ITradeRepository tradeRepository,
     IUserSettingsRepository userSettingsRepository,
-    IReadOnlyDictionary<string, IPropertyFilterComparisonVisitor<Trade>> comparisonByOperator)
+    IEnumerable<IFilterPredicate<Trade>> filterPredicates)
     : BaseInteractor, ISearchTrades
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
@@ -33,7 +34,8 @@ public class SearchTradeInteractor(
                     : Order.Descending));
 
         var filter = model.Filter
-            .Select(x => PropertyFilterFactory.Create(x.PropertyName, x.Operator, x.ComparisonValue, x.IsLiteral))
+            .Select(x => new {Model = x, Filter = filterPredicates.Single(p => p.Match(x.PropertyName, x.Operator))})
+            .Select(x => x.Filter.GetPredicate(x.Model.ComparisonValue, x.Model.IsLiteral))
             .Aggregate(Id, Add);
 
         var paginationConfig = new PaginationConfiguration(model.Page, model.PageSize);
@@ -45,15 +47,13 @@ public class SearchTradeInteractor(
             .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));
     }
 
-    private Expression<Func<Trade, bool>> Add(Expression<Func<Trade, bool>> acc, IPropertyFilter<Trade> propertyFilter)
+    private static Expression<Func<Trade, bool>> Add(Expression<Func<Trade, bool>> acc, Expression<Func<Trade, bool>> next)
     {
-        var propertyFilterComparison = comparisonByOperator[propertyFilter.Operator];
-
         var tradeParameter = Expression.Parameter(typeof(Trade));
         return (Expression<Func<Trade, bool>>) Expression.Lambda(
             Expression.AndAlso(
                 Expression.Invoke(acc, tradeParameter),
-                Expression.Invoke(propertyFilter.GetPredicate(propertyFilterComparison), tradeParameter)),
+                Expression.Invoke(next, tradeParameter)),
             tradeParameter);
     }
 }

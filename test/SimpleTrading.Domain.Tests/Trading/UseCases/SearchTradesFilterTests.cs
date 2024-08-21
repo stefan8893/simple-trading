@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
+using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -113,7 +114,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.PropertyName == "Filter[0].ComparisonValue" &&
-                              x.ErrorMessage == "The value '2024-08-19T17:00:' is not valid.");
+                              x.ErrorMessage == "'2024-08-19T17:00:' is not valid.");
     }
 
     [Fact]
@@ -714,7 +715,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.PropertyName == "Filter[0].ComparisonValue" &&
-                              x.ErrorMessage == "The value 'NotThatBad' is not valid.");
+                              x.ErrorMessage == "'NotThatBad' is not valid.");
     }
 
     [Fact]

@@ -84,7 +84,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Der Wert '2024-08-19T11:00Z' ist nicht zulässig." &&
+            .And.Contain(x => x.Messages.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
                               x.Identifier == "Filter[0].ComparisonValue");
     }
 

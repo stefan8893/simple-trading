@@ -62,4 +62,12 @@ public record Result
             SupportedResults.Count,
             StringComparer.OrdinalIgnoreCase);
     }
+
+    public static string GetName(int index)
+    {
+        if (index < 0 || index >= SupportedResults.Count)
+            throw new ArgumentOutOfRangeException(nameof(index), index, null);
+
+        return SupportedResults[index];
+    }
 }

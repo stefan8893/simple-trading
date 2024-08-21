@@ -7,10 +7,14 @@ public static class PropertyFilter
     public const string Balance = nameof(Balance);
     public const string Size = nameof(Size);
     public const string Result = nameof(Result);
-
-    public static readonly ISet<string> All =
-        typeof(PropertyFilter).GetFields()
-            .Where(x => x is {IsLiteral: true, IsInitOnly: false})
-            .Select(x => (string) x.GetValue(null)!)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+    
+    public static class Operator
+    {
+        public const string EqualTo = "eq";
+        public const string NotEqualTo = "ne";
+        public const string GreaterThan = "gt";
+        public const string GreaterThanOrEqualTo = "ge";
+        public const string LessThan = "lt";
+        public const string LessThanOrEqualTo = "le";
+    }
 }

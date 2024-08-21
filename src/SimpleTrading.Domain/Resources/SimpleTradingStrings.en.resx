@@ -250,7 +250,7 @@
         <value>'{PropertyValue}' cannot be used as a filter.</value>
     </data>
     <data name="ValueNotAllowed" xml:space="preserve">
-        <value>The value '{PropertyValue}' is not valid.</value>
+        <value>'{PropertyValue}' is not valid.</value>
     </data>
     <data name="ComparisonValue" xml:space="preserve">
         <value>Comparison value</value>

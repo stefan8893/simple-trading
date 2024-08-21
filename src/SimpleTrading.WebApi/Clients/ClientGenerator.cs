@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Extensions;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.TypeScript;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.WebApi.CliCommands;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -23,7 +24,7 @@ public class ClientGenerator(ILogger<ClientGenerator> logger, ISwaggerProvider s
         {
             Target.CSharp => GenerateCSharpClient(openApiDocument),
             Target.TypeScript => GenerateTypeScriptClient(openApiDocument),
-            _ => throw new ArgumentOutOfRangeException(nameof(Target))
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target, null)
         };
 
         foreach (var outputDirectory in outputDirectories)

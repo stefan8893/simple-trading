@@ -483,7 +483,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Wert &apos;{PropertyValue}&apos; ist nicht zulässig..
+        ///   Looks up a localized string similar to &apos;{PropertyValue}&apos; ist nicht zulässig..
         /// </summary>
         public static string ValueNotAllowed {
             get {

@@ -1,17 +1,7 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Infrastructure;
 
-namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades;
-
-public record SortModel(string Property, bool Ascending = true);
-
-public record FilterModel
-{
-    public required string PropertyName { get; init; }
-    public required string Operator { get; init; }
-    public required string ComparisonValue { get; init; }
-    public required bool IsLiteral { get; set; }
-}
+namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 
 public class SearchTradesRequestModel : Pagination
 {
