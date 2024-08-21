@@ -2,12 +2,13 @@
 
 namespace SimpleTrading.Domain.Abstractions.DataAccess;
 
-public interface ISort<T>
+public interface ISort<TEntity> where TEntity : IEntity
 {
-    public Order Order { get; }
+    string PropertyName { get; }   
+    Order Order { get; }
 
-    public bool IsAscendingOrder => Order == Order.Ascending;
-    public bool IsDescendingOrder => !IsAscendingOrder;
+    bool IsAscendingOrder => Order == Order.Ascending;
+    bool IsDescendingOrder => !IsAscendingOrder;
 
-    public Expression<Func<T, object?>> Selector { get; }
+    Expression<Func<TEntity, object?>> Selector { get; }
 }

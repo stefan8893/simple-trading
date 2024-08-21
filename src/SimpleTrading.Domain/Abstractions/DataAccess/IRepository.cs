@@ -3,16 +3,16 @@ using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Abstractions.DataAccess;
 
-public interface IRepository<T>
+public interface IRepository<TEntity> where TEntity: IEntity
 {
-    ValueTask<T> Get(Guid id);
-    ValueTask<T?> Find(Guid id);
-    Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> predicate, IEnumerable<ISort<T>>? sorting = null);
+    ValueTask<TEntity> Get(Guid id);
+    ValueTask<TEntity?> Find(Guid id);
+    Task<IReadOnlyList<TEntity>> Find(Expression<Func<TEntity, bool>> predicate, IEnumerable<ISort<TEntity>>? sorting = null);
 
-    Task<PagedList<T>> Find(PaginationConfiguration pagination, Expression<Func<T, bool>> predicate,
-        IEnumerable<ISort<T>>? sorting = null);
+    Task<PagedList<TEntity>> Find(PaginationConfiguration pagination, Expression<Func<TEntity, bool>> predicate,
+        IEnumerable<ISort<TEntity>>? sorting = null);
 
-    void Add(T entity);
-    void Remove(T entity);
-    void RemoveMany(IEnumerable<T> entities);
+    void Add(TEntity entity);
+    void Remove(TEntity entity);
+    void RemoveMany(IEnumerable<TEntity> entities);
 }

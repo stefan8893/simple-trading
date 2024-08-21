@@ -37,10 +37,10 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
             .WithName(SimpleTradingStrings.Field);
     }
 
-    private static bool HaveParsableComparisonValue(IEnumerable<IFilterPredicate<Trade>> filterPredicatesMaterialized,
+    private static bool HaveParsableComparisonValue(IEnumerable<IFilterPredicate<Trade>> filterPredicates,
         FilterModel m, string x)
     {
-        return filterPredicatesMaterialized
+        return filterPredicates
             .First(p => p.Match(m.PropertyName, m.Operator))
             .CanParse(x, m.IsLiteral);
     }
