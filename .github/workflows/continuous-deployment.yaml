@@ -31,39 +31,6 @@ jobs:
           $nextVersion = '${{ steps.get_next_version.outputs.version }}'
           git tag $nextVersion
           git push origin $nextVersion
-          
-          
-  package_client:
-    runs-on: ubuntu-latest
-    needs: has_next_version
-    if: ${{ needs.has_next_version.outputs.HasNextVersion == 'true' }}
-    permissions: 
-      packages: write
-    env:
-      Version: ${{ needs.has_next_version.outputs.Version }}
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Setup dotnet 8.x
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.x"
-
-      - name: Setup node 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: "https://npm.pkg.github.com"
-
-      - name: Publish js client package
-        shell: pwsh
-        working-directory: src/SimpleTrading.WebApi/Clients
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          .\publish-js-client.ps1 -Version ${{ env.Version }}
 
 
   package_app:
