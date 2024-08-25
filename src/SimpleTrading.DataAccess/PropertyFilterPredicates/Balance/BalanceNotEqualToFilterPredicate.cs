@@ -7,10 +7,8 @@ namespace SimpleTrading.DataAccess.PropertyFilterPredicates.Balance;
 public class BalanceNotEqualToFilterPredicate(IValueParser<decimal?> valueParser)
     : FilterPredicateBase<Trade, decimal?>(PropertyFilter.Balance, PropertyFilter.Operator.NotEqualTo, valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(decimal? value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral);
-
         return t => t.Balance != value;
     }
 }

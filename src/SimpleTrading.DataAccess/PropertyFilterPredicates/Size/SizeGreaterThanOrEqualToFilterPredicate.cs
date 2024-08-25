@@ -8,10 +8,8 @@ public class SizeGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> value
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.GreaterThanOrEqualTo,
         valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral);
-
         return t => t.Size >= value;
     }
 }

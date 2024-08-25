@@ -38,10 +38,10 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
     }
 
     private static bool HaveParsableComparisonValue(IEnumerable<IFilterPredicate<Trade>> filterPredicates,
-        FilterModel m, string x)
+        FilterModel m, string comparisonValue)
     {
         return filterPredicates
             .First(p => p.Match(m.PropertyName, m.Operator))
-            .CanParse(x, m.IsLiteral);
+            .CanParse(comparisonValue, m.IsLiteral);
     }
 }

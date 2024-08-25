@@ -8,9 +8,8 @@ public class ResultGreaterThanOrEqualToFilterPredicate(IValueParser<Result> valu
     : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.GreaterThanOrEqualTo,
         valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(Result value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral);
         var index = value.Index;
 
         return t => t.Result != null && t.Result.Index >= index;

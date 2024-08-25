@@ -35,5 +35,12 @@ public abstract class FilterPredicateBase<TEntity, TProperty>(
         return ValueParser.CanParse(comparisonValue, isLiteral);
     }
 
-    public abstract Expression<Func<TEntity, bool>> GetPredicate(string comparisonValue, bool isLiteral);
+    public virtual Expression<Func<TEntity, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    {
+        var value = ValueParser.Parse(comparisonValue, isLiteral);
+
+        return GetPredicate(value);
+    }
+
+    protected abstract Expression<Func<TEntity, bool>> GetPredicate(TProperty value);
 }

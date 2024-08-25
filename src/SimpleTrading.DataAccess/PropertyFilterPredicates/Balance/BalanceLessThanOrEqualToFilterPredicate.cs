@@ -8,10 +8,8 @@ public class BalanceLessThanOrEqualToFilterPredicate(IValueParser<decimal> value
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Balance, PropertyFilter.Operator.LessThanOrEqualTo,
         valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral);
-
         return t => t.Balance != null && t.Balance.Value <= value;
     }
 }

@@ -8,10 +8,8 @@ public class ClosedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffs
     : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Closed, PropertyFilter.Operator.GreaterThanOrEqualTo,
         valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral).UtcDateTime;
-
-        return t => t.Closed >= value;
+        return t => t.Closed >= value.UtcDateTime;
     }
 }

@@ -7,10 +7,9 @@ namespace SimpleTrading.DataAccess.PropertyFilterPredicates.Closed;
 public class ClosedEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset?>(PropertyFilter.Closed, PropertyFilter.Operator.EqualTo, valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset? value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral)?.UtcDateTime;
-
-        return t => t.Closed == value;
+        var nullableValue = value?.UtcDateTime;
+        return t => t.Closed == nullableValue;
     }
 }

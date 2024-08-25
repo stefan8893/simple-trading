@@ -7,10 +7,8 @@ namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ResultIndex;
 public class ResultEqualToFilterPredicate(IValueParser<Result?> valueParser)
     : FilterPredicateBase<Trade, Result?>(PropertyFilter.Result, PropertyFilter.Operator.EqualTo, valueParser)
 {
-    public override Expression<Func<Trade, bool>> GetPredicate(string comparisonValue, bool isLiteral)
+    protected override Expression<Func<Trade, bool>> GetPredicate(Result? value)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral);
-
         var isResultNull = value is null;
         var index = value?.Index;
 
