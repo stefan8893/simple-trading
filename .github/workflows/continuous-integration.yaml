@@ -21,11 +21,38 @@ jobs:
           dotnet-version: "8.x"
 
       - name: Build
+        shell: pwsh
         run: |
-          dotnet build
+          dotnet build --configuration Release
 
       - name: Test
+        shell: pwsh
         env:
           TestIdentity__ClientSecret: ${{ secrets.TESTIDENTITY_CLIENTSECRET }}
         run: |
-          dotnet test
+          dotnet test `
+          -property:Configuration=Release `
+          -property:CollectCoverage=true `
+          -property:CoverletOutputFormat='cobertura'
+
+      - name: Generate Coverage Report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+        with:
+          reports: "test/**/coverage.cobertura.xml"
+          targetdir: "CoverageReport"
+          reporttypes: "HtmlInline;MarkdownSummaryGithub;Cobertura"
+          assemblyfilters: "-SimpleTrading.TestInfrastructure"
+          verbosity: "Info"
+          title: "Simple Trading Code Coverage"
+          tag: "${{ github.run_number }}_${{ github.run_id }}"
+          toolpath: "reportgeneratortool"
+
+      - name: Upload Coverage Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoverageReport
+          path: CoverageReport
+
+      - name: Publish Coverage in Build Summary
+        run: cat CoverageReport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        shell: bash
