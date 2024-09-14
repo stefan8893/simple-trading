@@ -11,6 +11,7 @@ namespace SimpleTrading.Domain.Trading;
 
 public class Trade : IEntity
 {
+    public required Guid Id { get; init; }
     public required Guid AssetId { get; set; }
     public virtual required Asset Asset { get; set; }
     public required Guid ProfileId { get; set; }
@@ -27,7 +28,6 @@ public class Trade : IEntity
     public virtual ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
     public bool IsClosed => Closed.HasValue && Balance.HasValue;
-    public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
     internal OneOf<Completed, BusinessError> ResetManuallyEnteredResult(UtcNow utcNow)
