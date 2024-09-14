@@ -33,6 +33,26 @@ jobs:
           dotnet test `
           -property:Configuration=Release `
           -property:CollectCoverage=true `
-          -property:CoverletOutputFormat='Cobertura' `
-          -property:MergeWith='../../TestResults/coverage.json' `
-          -property:CoverletOutput='../../TestResults/'
+          -property:CoverletOutputFormat='cobertura'
+
+      - name: Generate Coverage Report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+        with:
+          reports: "test/**/coverage.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+          targetdir: "CoverageReport" # REQUIRED # The directory where the generated report should be saved.
+          reporttypes: "HtmlInline;MarkdownSummaryGithub;Cobertura" # The output formats and scope (separated by semicolon)
+          #Values: Badges, Clover, Cobertura, OpenCover, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, Html_BlueRed_Summary, JsonSummary, CodeClimate, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownAssembliesSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
+          verbosity: "Verbose" # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
+          title: "Simple Trading Code Coverage" # Optional title.
+          tag: "${{ github.run_number }}_${{ github.run_id }}" # Optional tag or build version.
+          toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
+
+      - name: Upload Coverage Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoverageReport # Artifact name
+          path: CoverageReport # Directory containing files to upload
+
+      - name: Publish Coverage in Build Summary # Only applicable if 'MarkdownSummaryGithub' or one of the other Markdown report types is generated
+        run: cat CoverageReport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
+        shell: bash
