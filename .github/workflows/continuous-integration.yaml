@@ -21,11 +21,18 @@ jobs:
           dotnet-version: "8.x"
 
       - name: Build
+        shell: pwsh
         run: |
-          dotnet build
+          dotnet build --configuration Release
 
       - name: Test
+        shell: pwsh
         env:
           TestIdentity__ClientSecret: ${{ secrets.TESTIDENTITY_CLIENTSECRET }}
         run: |
-          dotnet test
+          dotnet test `
+          -property:Configuration=Release `
+          -property:CollectCoverage=true `
+          -property:CoverletOutputFormat='Cobertura' `
+          -property:MergeWith='../../TestResults/coverage.json' `
+          -property:CoverletOutput='../../TestResults/'
