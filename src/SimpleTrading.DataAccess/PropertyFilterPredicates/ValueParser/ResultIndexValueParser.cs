@@ -10,7 +10,7 @@ public class ResultIndexValueParser : IValueParser<Result>
         if (isLiteral)
             return false;
 
-        return Result.GetIndexOf(candidate) >= 0;
+        return Result.IndexOf(candidate) >= 0;
     }
 
     public Result Parse(string candidate, bool isLiteral)
@@ -18,7 +18,7 @@ public class ResultIndexValueParser : IValueParser<Result>
         if (isLiteral)
             throw new Exception("A literal cannot be parsed to the non-nullable Result type.");
 
-        var index = Result.GetIndexOf(candidate);
+        var index = Result.IndexOf(candidate);
         var name = Result.GetName(index);
 
         return new Result(name, ResultSource.ManuallyEntered);
@@ -32,7 +32,7 @@ public class NullableResultIndexValueParser : IValueParser<Result?>
         if (isLiteral && candidate.IsNullLiteral())
             return true;
 
-        return Result.GetIndexOf(candidate) >= 0;
+        return Result.IndexOf(candidate) >= 0;
     }
 
     public Result? Parse(string candidate, bool isLiteral)
@@ -40,7 +40,7 @@ public class NullableResultIndexValueParser : IValueParser<Result?>
         if (isLiteral && candidate.IsNullLiteral())
             return null;
 
-        var index = Result.GetIndexOf(candidate);
+        var index = Result.IndexOf(candidate);
         var name = Result.GetName(index);
 
         return new Result(name, ResultSource.ManuallyEntered);

@@ -10,8 +10,8 @@ public class DbMasterData(TradingDbContext dbContext)
 
     public async Task Populate()
     {
-        var defaultProfile = CreateProfiles();
-        dbContext.Profiles.AddRange(defaultProfile);
+        var profiles = CreateProfiles();
+        dbContext.Profiles.AddRange(profiles);
 
         var assets = CreateAssets();
         dbContext.Assets.AddRange(assets);

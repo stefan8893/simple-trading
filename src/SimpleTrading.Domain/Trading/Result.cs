@@ -35,7 +35,7 @@ public record Result
             $"Invalid result name. It must be one of '{string.Join(", ", SupportedResults)}'");
         Source = source;
         Performance = performance;
-        Index = GetIndexOf(Name);
+        Index = IndexOf(Name);
     }
 
     public int Index { get; init; }
@@ -52,7 +52,7 @@ public record Result
     /// </summary>
     public short? Performance { get; init; }
 
-    public static int GetIndexOf(string result)
+    public static int IndexOf(string result)
     {
         if (string.IsNullOrWhiteSpace(result))
             return -1;
