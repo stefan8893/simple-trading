@@ -9,7 +9,7 @@ public enum PositionType
 public record PositionPrices
 {
     private static readonly Result BreakEvenResult =
-        new(Result.BreakEven, TradingResultSource.CalculatedByPositionPrices, 0);
+        new(Result.BreakEven, ResultSource.CalculatedByPositionPrices, 0);
 
     public required decimal Entry { get; set; }
     public decimal? StopLoss { get; set; }
@@ -79,21 +79,21 @@ public record PositionPrices
         var diffBetweenEntryAndExit = Entry - Exit!.Value;
         var performance = Math.Abs(diffBetweenEntryAndExit / diffBetweenEntryAndStopLoss * 100) * -1m;
 
-        return new Result(Result.Loss, TradingResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Loss, ResultSource.CalculatedByPositionPrices, (short) performance);
     }
 
     private Result CalculateWinResult()
     {
         var performance = CalculatePositivePerformance();
 
-        return new Result(Result.Win, TradingResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Win, ResultSource.CalculatedByPositionPrices, (short) performance);
     }
 
     private Result CalculateMediocreResult()
     {
         var performance = CalculatePositivePerformance();
 
-        return new Result(Result.Mediocre, TradingResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Mediocre, ResultSource.CalculatedByPositionPrices, (short) performance);
     }
 
     private decimal CalculatePositivePerformance()

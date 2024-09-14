@@ -48,7 +48,7 @@ public class Trade : IEntity
         if (dto.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
-        if (IsClosed && Result?.Source == TradingResultSource.ManuallyEntered)
+        if (IsClosed && Result?.Source == ResultSource.ManuallyEntered)
             return new Completed();
 
         Closed = dto.Closed.ToUtcKind();
@@ -69,7 +69,7 @@ public class Trade : IEntity
         var manuallyEnteredResult = dto.Result.HasValue
             ? CreateManuallyEnteredResult(dto.Result.Value)
             // do not lose a manual result that was previously entered
-            : Result?.Source == TradingResultSource.ManuallyEntered
+            : Result?.Source == ResultSource.ManuallyEntered
                 ? Result
                 : null;
 
@@ -139,10 +139,10 @@ public class Trade : IEntity
     {
         return resultModel switch
         {
-            ResultModel.Loss => new Result(Result.Loss, TradingResultSource.ManuallyEntered),
-            ResultModel.BreakEven => new Result(Result.BreakEven, TradingResultSource.ManuallyEntered, 0),
-            ResultModel.Mediocre => new Result(Result.Mediocre, TradingResultSource.ManuallyEntered),
-            ResultModel.Win => new Result(Result.Win, TradingResultSource.ManuallyEntered),
+            ResultModel.Loss => new Result(Result.Loss, ResultSource.ManuallyEntered),
+            ResultModel.BreakEven => new Result(Result.BreakEven, ResultSource.ManuallyEntered, 0),
+            ResultModel.Mediocre => new Result(Result.Mediocre, ResultSource.ManuallyEntered),
+            ResultModel.Win => new Result(Result.Win, ResultSource.ManuallyEntered),
             _ => throw new ArgumentOutOfRangeException(nameof(resultModel), resultModel, null)
         };
     }
@@ -151,8 +151,8 @@ public class Trade : IEntity
     {
         return balance switch
         {
-            0m => new Result(Result.BreakEven, TradingResultSource.CalculatedByBalance, 0),
-            < 0m => new Result(Result.Loss, TradingResultSource.CalculatedByBalance),
+            0m => new Result(Result.BreakEven, ResultSource.CalculatedByBalance, 0),
+            < 0m => new Result(Result.Loss, ResultSource.CalculatedByBalance),
             _ => null
         };
     }

@@ -2,7 +2,7 @@
 
 namespace SimpleTrading.Domain.Trading;
 
-public enum TradingResultSource
+public enum ResultSource
 {
     ManuallyEntered,
     CalculatedByBalance,
@@ -24,7 +24,7 @@ public record Result
             .ToImmutableList();
     }
 
-    public Result(string name, TradingResultSource source, short? performance = null)
+    public Result(string name, ResultSource source, short? performance = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -42,7 +42,7 @@ public record Result
 
     public string Name { get; init; }
 
-    public TradingResultSource Source { get; init; }
+    public ResultSource Source { get; init; }
 
     /// <summary>
     ///     The trade's performance in percent.<br />

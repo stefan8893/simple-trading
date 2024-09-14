@@ -104,7 +104,7 @@ public class CloseTradeTests : TestBase
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByBalance);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class CloseTradeTests : TestBase
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByBalance);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
     }
 
     [Fact]
@@ -213,7 +213,7 @@ public class CloseTradeTests : TestBase
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByBalance);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public class CloseTradeTests : TestBase
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
     }
 
     [Fact]
@@ -263,7 +263,7 @@ public class CloseTradeTests : TestBase
         response.Value.Should().BeOfType<Completed>();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(TradingResultSource.ManuallyEntered);
+        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public class CloseTradeTests : TestBase
             .And.Contain(x => x.Reason == "Your trade indicates a 'Loss' result, but you have entered 'Break-even'.");
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(TradingResultSource.ManuallyEntered);
+        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 
     [Fact]
@@ -321,7 +321,7 @@ public class CloseTradeTests : TestBase
             .And.Contain(x => x.Reason == "Your trade indicates a 'Win' result, but you have entered 'Break-even'.");
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(TradingResultSource.ManuallyEntered);
+        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 
     [Fact]
@@ -352,7 +352,7 @@ public class CloseTradeTests : TestBase
             .And.Contain(x => x.Reason == "Your trade indicates a 'Loss' result, but you have entered 'Mediocre'.");
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(TradingResultSource.ManuallyEntered);
+        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 
     [Fact]
@@ -378,7 +378,7 @@ public class CloseTradeTests : TestBase
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
     }
 
     [Fact]
@@ -403,7 +403,7 @@ public class CloseTradeTests : TestBase
         trade.IsClosed.Should().BeTrue();
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.Win);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
     }
 
     [Fact]
@@ -424,7 +424,7 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<Completed>();
         trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
     }
 
     [Fact]
@@ -444,7 +444,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
         trade.Result!.Performance.Should().Be(-50);
     }
 
@@ -465,7 +465,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
         trade.Result!.Performance.Should().Be(-150);
     }
 
@@ -486,7 +486,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
         trade.Result!.Performance.Should().Be(25);
     }
 
@@ -507,7 +507,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
         trade.Result!.Performance.Should().Be(99);
     }
 
@@ -528,7 +528,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result!.Name.Should().Be(Result.Win);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
         trade.Result!.Performance.Should().Be(100);
     }
 
@@ -549,7 +549,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         trade.Result!.Name.Should().Be(Result.Win);
-        trade.Result!.Source.Should().Be(TradingResultSource.CalculatedByPositionPrices);
+        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
         trade.Result!.Performance.Should().Be(120);
     }
 

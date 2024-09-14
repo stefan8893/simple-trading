@@ -21,7 +21,7 @@ public class ResultIndexValueParser : IValueParser<Result>
         var index = Result.GetIndexOf(candidate);
         var name = Result.GetName(index);
 
-        return new Result(name, TradingResultSource.ManuallyEntered);
+        return new Result(name, ResultSource.ManuallyEntered);
     }
 }
 
@@ -43,6 +43,6 @@ public class NullableResultIndexValueParser : IValueParser<Result?>
         var index = Result.GetIndexOf(candidate);
         var name = Result.GetName(index);
 
-        return new Result(name, TradingResultSource.ManuallyEntered);
+        return new Result(name, ResultSource.ManuallyEntered);
     }
 }
