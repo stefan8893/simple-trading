@@ -49,7 +49,7 @@ public class CloseTradeTests : TestBase
     public void The_closed_date_cannot_be_greater_than_one_day_in_the_future()
     {
         // arrange
-        var opened = _utcNow.AddHours(-2);
+        var opened = _utcNow;
         var closed = _utcNow.AddDays(1).AddSeconds(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
@@ -72,7 +72,7 @@ public class CloseTradeTests : TestBase
     public void The_closed_date_can_at_maximum_one_day_in_the_future()
     {
         // arrange
-        var opened = _utcNow.AddHours(-2);
+        var opened = _utcNow;
         var closed = _utcNow.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
