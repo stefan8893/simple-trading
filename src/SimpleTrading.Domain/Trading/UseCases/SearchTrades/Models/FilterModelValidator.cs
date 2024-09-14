@@ -30,7 +30,10 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
                             .NotEmpty()
                             .MaximumLength(50)
                             .Must((m, x) => HaveParsableComparisonValue(filterPredicatesMaterialized, m, x))
-                            .WithMessage(x => x.IsLiteral ? SimpleTradingStrings.NullNotAllowed : SimpleTradingStrings.ValueNotAllowed)
+                            .WithMessage(x =>
+                                x.IsLiteral
+                                    ? SimpleTradingStrings.NullNotAllowed
+                                    : SimpleTradingStrings.ValueNotAllowed)
                             .WithName(SimpleTradingStrings.ComparisonValue);
                     });
             })

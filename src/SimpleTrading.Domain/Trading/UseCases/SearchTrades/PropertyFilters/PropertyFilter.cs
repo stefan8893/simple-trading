@@ -7,7 +7,7 @@ public static class PropertyFilter
     public const string Balance = nameof(Balance);
     public const string Size = nameof(Size);
     public const string Result = nameof(Result);
-    
+
     public static class Operator
     {
         public const string EqualTo = "eq";

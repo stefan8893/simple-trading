@@ -1,11 +1,14 @@
-namespace SimpleTrading.Domain.Infrastructure;
-
 using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 
+namespace SimpleTrading.Domain.Infrastructure;
+
 public static class DateTimeProviderFactory
 {
-    public static UtcNow UtcNow() => () => DateTime.UtcNow;
+    public static UtcNow UtcNow()
+    {
+        return () => DateTime.UtcNow;
+    }
 
     public static LocalNow LocalNow(IUserSettingsRepository userSettingsRepository)
     {
@@ -14,9 +17,8 @@ public static class DateTimeProviderFactory
             var userSettings = await userSettingsRepository.Get();
 
             return DateTime.UtcNow
-                        .ToLocal(userSettings.TimeZone).DateTime
-                        .ToLocalKind();
+                .ToLocal(userSettings.TimeZone).DateTime
+                .ToLocalKind();
         };
     }
-
 }

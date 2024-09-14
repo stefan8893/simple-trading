@@ -1,7 +1,6 @@
-namespace SimpleTrading.WebApi.Infrastructure;
-
 using System.Reflection;
 
+namespace SimpleTrading.WebApi.Infrastructure;
 
 // based upon: https://blog.photogrammer.net/factory-delegates-using-microsoft-di/
 public static class ServiceCollectionExtensions
@@ -39,5 +38,4 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton(c => factory(c.GetRequiredService<T1>()));
     }
-
 }
