@@ -120,9 +120,9 @@ public class UpdateTradeInteractor(
     private static bool UpdatePositionPrices(Trade trade, UpdateTradeRequestModel model)
     {
         var positionPrices = model.EntryPrice.HasValue && model.EntryPrice.Value != trade.PositionPrices.Entry
+            // create a copy of the current prices to compare it later with the original
+            // by doing so you can easily detect changes
             ? trade.PositionPrices with {Entry = model.EntryPrice.Value}
-            // create a copy of the current prices to compare is later with the updated ones
-            // by doing so you can easily detect changes 
             : trade.PositionPrices with { };
 
         if (model.ExitPrice.IsT0 && model.ExitPrice.AsT0 != trade.PositionPrices.Exit)
