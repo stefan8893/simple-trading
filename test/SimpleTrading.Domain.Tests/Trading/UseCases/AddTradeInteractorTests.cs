@@ -1,5 +1,6 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -18,6 +19,12 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
     private IAddTrade Interactor => ServiceLocator.GetRequiredService<IAddTrade>();
 
+    protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    {
+        base.OverrideServices(ctx, services);
+        services.AddSingleton<UtcNow>(_ => () => _utcNow);
+    }
+
     [Fact]
     public async Task Asset_id_must_not_be_empty()
     {
@@ -25,7 +32,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = Guid.Empty,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -47,7 +54,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = Guid.Empty,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -69,7 +76,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = Guid.Empty
@@ -95,7 +102,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 0,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id
@@ -121,7 +128,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -138,14 +145,14 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     }
 
     [Theory]
-    [InlineData("de-AT", "Der Wert von 'Eröffnet' muss grösser oder gleich '01.01.2000 00:00:00 +00:00' sein.")]
-    [InlineData("en-US", "'Opened' must be greater than or equal to '01.01.2000 00:00:00 +00:00'.")]
+    [InlineData("de-AT", "Der Wert von 'Eröffnet' muss grösser oder gleich '01.01.2000 00:00:00' sein.")]
+    [InlineData("en-US", "'Opened' must be greater than or equal to '01.01.2000 00:00:00'.")]
     public async Task Opened_must_not_be_before_min_date(string culture, string errorMessage)
     {
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
-        var longTimeAgo = DateTime.Parse("1998-08-05T12:00:00").ToUtcKind();
+        var longTimeAgo = new DateTimeOffset(DateTime.Parse("1998-08-05T12:00:00").ToUtcKind());
 
         var requestModel = new AddTradeRequestModel
         {
@@ -169,6 +176,40 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
     }
 
     [Fact]
+    public async Task Opened_must_not_be_greater_than_one_day_in_the_future()
+    {
+        // arrange
+        var opened = new DateTimeOffset(_utcNow.AddDays(1).AddSeconds(1));
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = opened,
+            Size = 5000,
+            EntryPrice = 1.05m,
+            CurrencyId = currency.Id
+        };
+
+        // act
+        var response = await Interactor.Execute(requestModel);
+
+        // assert
+        response.Value.Should().BeOfType<BadInput>()
+            .Which.ValidationResult.Errors
+            .Should().Contain(x => x.ErrorMessage == "'Opened' must be less than or equal to '06.08.2024 16:00'.")
+            .And.Contain(x => x.PropertyName == "Opened")
+            .And.HaveCount(1);
+    }
+
+    [Fact]
     public async Task Reference_link_must_be_a_valid_uri()
     {
         var reference = new ReferenceRequestModel(ReferenceType.Other, "foobar");
@@ -177,7 +218,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -210,7 +251,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -236,7 +277,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -271,7 +312,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -301,7 +342,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -331,7 +372,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -360,7 +401,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -390,7 +431,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id,
@@ -425,8 +466,8 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
-            Closed = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
+            Closed = new DateTimeOffset(_utcNow),
             Result = ResultModel.Win,
             Balance = 10,
             EntryPrice = 1.00m,
@@ -460,8 +501,8 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
-            Closed = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
+            Closed = new DateTimeOffset(_utcNow),
             Result = ResultModel.Win,
             Balance = 10m,
             EntryPrice = 0m,
@@ -502,8 +543,8 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
-            Opened = _utcNow,
-            Closed = _utcNow,
+            Opened = new DateTimeOffset(_utcNow),
+            Closed = new DateTimeOffset(_utcNow),
             Result = ResultModel.Win,
             Balance = null,
             Size = 5000,

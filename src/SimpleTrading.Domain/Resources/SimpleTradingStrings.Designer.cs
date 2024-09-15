@@ -240,6 +240,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Der Wert von &apos;{0}&apos; muss kleiner oder gleich &apos;{1}&apos; sein..
+        /// </summary>
+        public static string LessThanOrEqualValidatorMessage {
+            get {
+                return ResourceManager.GetString("LessThanOrEqualValidatorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Link.
         /// </summary>
         public static string Link {

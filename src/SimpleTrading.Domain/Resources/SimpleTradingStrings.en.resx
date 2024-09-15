@@ -273,4 +273,7 @@
     <data name="NullNotAllowed" xml:space="preserve">
         <value>Null is not allowed here.</value>
     </data>
+    <data name="LessThanOrEqualValidatorMessage" xml:space="preserve">
+        <value>'{0}' must be less than or equal to '{1}'.</value>
+    </data>
 </root>

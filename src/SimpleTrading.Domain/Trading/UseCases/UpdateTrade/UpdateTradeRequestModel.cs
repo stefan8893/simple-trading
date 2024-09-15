@@ -1,6 +1,8 @@
 using FluentValidation;
 using OneOf;
 using OneOf.Types;
+using SimpleTrading.Domain.Abstractions.DataAccess;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -27,7 +29,7 @@ public record UpdateTradeRequestModel
 
 public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeRequestModel>
 {
-    public UpdateTradeRequestModelValidator()
+    public UpdateTradeRequestModelValidator(UtcNow utcNow, IUserSettingsRepository userSettingsRepository)
     {
         RuleFor(x => x.AssetId)
             .NotEmpty()
@@ -39,10 +41,23 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .WithName(SimpleTradingStrings.Profile)
             .When(x => x.ProfileId.HasValue);
 
-        RuleFor(x => x.Opened)
+        RuleFor(x => x.Opened.HasValue ? x.Opened.Value.DateTime : DateTime.MinValue)
             .GreaterThanOrEqualTo(Constants.MinDate)
+            .OverridePropertyName(x => x.Opened)
             .WithName(SimpleTradingStrings.Opened)
             .When(x => x.Opened.HasValue);
+
+        RuleFor(x => x.Opened)
+            .CustomAsync(async (opened, ctx, cancellationToken) =>
+            {
+                var userSettings = await userSettingsRepository.Get();
+                var upperBound = utcNow().AddDays(Constants.OpenedDateMaxDaysInTheFutureLimit);
+                var upperBoundLocal = upperBound.ToLocal(userSettings.TimeZone).DateTime;
+
+                if (opened?.UtcDateTime > upperBound)
+                    ctx.AddFailure(string.Format(SimpleTradingStrings.LessThanOrEqualValidatorMessage,
+                        SimpleTradingStrings.Opened, upperBoundLocal.ToString("g")));
+            });
 
         RuleFor(x => x.Size)
             .GreaterThan(0)

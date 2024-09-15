@@ -87,9 +87,10 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<Completed>();
     }
-    
+
     [Fact]
-    public void The_closed_date_can_at_maximum_one_day_in_the_future_based_on_the_opened_date_if_the_trade_was_opened_in_the_future()
+    public void
+        The_closed_date_can_at_maximum_one_day_in_the_future_based_on_the_opened_date_if_the_trade_was_opened_in_the_future()
     {
         // arrange
         var opened = _utcNow.AddHours(5);
