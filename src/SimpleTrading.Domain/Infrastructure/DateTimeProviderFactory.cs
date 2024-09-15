@@ -5,11 +5,6 @@ namespace SimpleTrading.Domain.Infrastructure;
 
 public static class DateTimeProviderFactory
 {
-    public static UtcNow UtcNow()
-    {
-        return () => DateTime.UtcNow;
-    }
-
     public static LocalNow LocalNow(IUserSettingsRepository userSettingsRepository)
     {
         return async () =>

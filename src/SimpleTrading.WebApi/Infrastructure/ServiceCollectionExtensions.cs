@@ -5,7 +5,8 @@ namespace SimpleTrading.WebApi.Infrastructure;
 // based upon: https://blog.photogrammer.net/factory-delegates-using-microsoft-di/
 public static class ServiceCollectionExtensions
 {
-    public static void AddFactory(this IServiceCollection services, Delegate factory)
+    public static IServiceCollection AddFactory(this IServiceCollection services, Delegate factory,
+        ServiceLifetime lifetime = ServiceLifetime.Singleton)
     {
         var returnType = factory.Method.ReturnType;
         var parameters = factory.Method
@@ -23,19 +24,27 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(openGenericMethod);
         var closedGenericMethod = openGenericMethod.MakeGenericMethod([.. parameters, returnType]);
 
-        closedGenericMethod.Invoke(null, [services, factory]);
+        closedGenericMethod.Invoke(null, [services, factory, lifetime]);
+        
+        return services;
     }
 
-    private static void AddFactoryInternal<TResult>(this IServiceCollection services, Func<TResult> factory)
+    private static void AddFactoryInternal<TResult>(this IServiceCollection services, Func<TResult> factory,
+        ServiceLifetime lifetime)
         where TResult : class
     {
-        services.AddSingleton(c => factory());
+        var serviceDescriptor =
+            new ServiceDescriptor(typeof(TResult), c => factory(), lifetime);
+        services.Add(serviceDescriptor);
     }
 
-    private static void AddFactoryInternal<T1, TResult>(this IServiceCollection services, Func<T1, TResult> factory)
+    private static void AddFactoryInternal<T1, TResult>(this IServiceCollection services, Func<T1, TResult> factory,
+        ServiceLifetime lifetime)
         where T1 : notnull
         where TResult : class
     {
-        services.AddSingleton(c => factory(c.GetRequiredService<T1>()));
+        var serviceDescriptor =
+            new ServiceDescriptor(typeof(TResult), c => factory(c.GetRequiredService<T1>()), lifetime);
+        services.Add(serviceDescriptor);
     }
 }
