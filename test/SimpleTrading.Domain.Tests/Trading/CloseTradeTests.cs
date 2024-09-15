@@ -69,11 +69,31 @@ public class CloseTradeTests : TestBase
     }
 
     [Fact]
-    public void The_closed_date_can_at_maximum_one_day_in_the_future()
+    public void The_closed_date_can_at_maximum_one_day_in_the_future_for_trades_that_were_opened_in_the_past()
     {
         // arrange
-        var opened = _utcNow;
-        var closed = _utcNow.AddDays(1);
+        var opened = _utcNow.AddHours(-5);
+        var closed = opened.AddDays(1);
+
+        var trade = (TestData.Trade.Default with {Opened = opened}).Build();
+        var closeTradeDto = new Trade.CloseTradeDto(closed, 500m, UtcNowStub)
+        {
+            ExitPrice = 1.05m
+        };
+
+        // act
+        var response = trade.Close(closeTradeDto);
+
+        // assert
+        response.Value.Should().BeOfType<Completed>();
+    }
+    
+    [Fact]
+    public void The_closed_date_can_at_maximum_one_day_in_the_future_based_on_the_opened_date_if_the_trade_was_opened_in_the_future()
+    {
+        // arrange
+        var opened = _utcNow.AddHours(5);
+        var closed = opened.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
         var closeTradeDto = new Trade.CloseTradeDto(closed, 500m, UtcNowStub)

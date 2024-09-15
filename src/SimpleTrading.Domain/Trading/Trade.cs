@@ -44,7 +44,9 @@ public class Trade : IEntity
         if (dto.Closed < Opened)
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
 
-        var closedDateUpperBound = dto.UtcNow().AddDays(1);
+        var utcNow = dto.UtcNow();
+        var closedDateUpperBound = (Opened > utcNow ? Opened : utcNow).AddDays(1);
+
         if (dto.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
