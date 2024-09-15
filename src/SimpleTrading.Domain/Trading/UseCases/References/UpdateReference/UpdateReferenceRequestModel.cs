@@ -32,7 +32,7 @@ public class UpdateReferenceRequestModelValidator : AbstractValidator<UpdateRefe
         RuleFor(x => x.Notes.AsT0)
             .MaximumLength(4000)
             .WithName(SimpleTradingStrings.Notes)
-            .WithState(x => new CustomPropertyName(nameof(x.Notes)))
+            .OverridePropertyName(x => x.Notes)
             .When(x => x.Notes is {IsT0: true, AsT0: not null});
     }
 }
