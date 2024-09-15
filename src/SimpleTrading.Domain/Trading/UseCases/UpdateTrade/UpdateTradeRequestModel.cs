@@ -67,7 +67,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
         RuleFor(x => x.Result.AsT0)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
-            .WithState(x => new CustomPropertyName(nameof(x.Result)))
+            .OverridePropertyName(x => x.Result)
             .When(x => x.Result is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.EntryPrice)
@@ -78,19 +78,19 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
         RuleFor(x => x.StopLoss.AsT0)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.StopLoss)
-            .WithState(x => new CustomPropertyName(nameof(x.StopLoss)))
+            .OverridePropertyName(x => x.StopLoss)
             .When(x => x.StopLoss is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.TakeProfit.AsT0)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.TakeProfit)
-            .WithState(x => new CustomPropertyName(nameof(x.TakeProfit)))
+            .OverridePropertyName(x => x.TakeProfit)
             .When(x => x.TakeProfit is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.ExitPrice.AsT0)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.ExitPrice)
-            .WithState(x => new CustomPropertyName(nameof(x.ExitPrice)))
+            .OverridePropertyName(x => x.ExitPrice)
             .When(x => x.ExitPrice is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.CurrencyId)
@@ -101,7 +101,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
         RuleFor(x => x.Notes.AsT0)
             .MaximumLength(4000)
             .WithName(SimpleTradingStrings.Notes)
-            .WithState(x => new CustomPropertyName(nameof(x.Notes)))
+            .OverridePropertyName(x => x.Notes)
             .When(x => x.Notes is {IsT0: true, AsT0: not null});
     }
 }

@@ -195,6 +195,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             .And.Contain(x =>
                 x.ErrorMessage ==
                 "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
-            .And.Contain(x => x.GetPropertyName() == "Notes");
+            .And.Contain(x => x.PropertyName == "Notes");
     }
 }

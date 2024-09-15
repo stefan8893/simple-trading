@@ -64,7 +64,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Result' has a range of values which does not include '50'." &&
-                              x.GetPropertyName() == "Result");
+                              x.PropertyName == "Result");
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Entry price' must be greater than '0'." &&
-                              x.GetPropertyName() == "EntryPrice");
+                              x.PropertyName == "EntryPrice");
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Stop loss' must be greater than '0'." &&
-                              x.GetPropertyName() == "StopLoss");
+                              x.PropertyName == "StopLoss");
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Take profit' must be greater than '0'." &&
-                              x.GetPropertyName() == "TakeProfit");
+                              x.PropertyName == "TakeProfit");
     }
 
     [Fact]
@@ -152,7 +152,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Exit price' must be greater than '0'." &&
-                              x.GetPropertyName() == "ExitPrice");
+                              x.PropertyName == "ExitPrice");
     }
 
     [Fact]
@@ -381,7 +381,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             .And.Contain(x =>
                 x.ErrorMessage ==
                 "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
-            .And.Contain(x => x.GetPropertyName() == "Notes");
+            .And.Contain(x => x.PropertyName == "Notes");
     }
 
     [Fact]
