@@ -28,7 +28,10 @@ jobs:
       - name: Test
         shell: pwsh
         env:
-          TestIdentity__ClientSecret: ${{ secrets.TESTIDENTITY_CLIENTSECRET }}
+          TestIdentity__ClientSecret: ${{ secrets.TESTIDENTITY_CLIENT_SECRET }}
+          Auth__SimpleTradingWebApi__Domain: ${{ secrets.AUTH_DOMAIN }}
+          Auth__SimpleTradingWebApi__TenantId: ${{ secrets.AUTH_TENANT_ID }}
+          Auth__SimpleTradingWebApi__ClientId: ${{ secrets.AUTH_CLIENT_ID }}
         run: |
           dotnet test `
           -property:Configuration=Release `
