@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -346,8 +347,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 x.ErrorMessage ==
                 "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.");
     }
-
-
+    
     [Fact]
     public async Task Position_prices_can_be_successfully_updated()
     {
@@ -360,7 +360,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                     PositionPrices = oldPositionPrice
                 }
             ).Build();
-        var _ = trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -383,8 +383,46 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         updatedTrade.Should().NotBeNull();
         updatedTrade!.PositionPrices.Should().Be(newPositionPrices);
     }
+    
+    [Fact]
+    public async Task Updating_position_prices_of_a_closed_trade_leads_to_recalculation_of_the_performance()
+    {
+        // arrange
+        var oldPositionPrice = new PositionPrices {Entry = 0.95m, StopLoss = 0.8m, TakeProfit = 1.4m, Exit = 1.25m};
 
-    private DateTime UtcNowStub()
+        var trade = (TestData.Trade.Default with
+                {
+                    Balance = 500,
+                    Opened = UtcNowStub(),
+                    Closed = UtcNowStub(),
+                    PositionPrices = oldPositionPrice
+                }
+            ).Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            TakeProfit = 1.30m,
+            StopLoss = new None(),
+            ExitPrice = new None(),
+            Notes = new None(),
+            Result = new None()
+        };
+
+        // act
+        var response = await Interactor.Execute(updateTradeRequestModel);
+
+        // assert
+        response.Value.Should().BeOfType<Completed>();
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        updatedTrade?.Result.Should().NotBeNull();
+        updatedTrade!.Result!.Performance.Should().Be(85);
+    }
+    
+    private static DateTime UtcNowStub()
     {
         return DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
     }
