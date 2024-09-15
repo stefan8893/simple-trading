@@ -12,8 +12,8 @@ public static class Constants
 
     public static readonly IReadOnlyCollection<CultureInfo> SupportedCultures =
     [
-        new CultureInfo("de-AT"),
-        new CultureInfo("en-US")
+        new("de-AT"),
+        new("en-US")
     ];
 
     public static readonly IReadOnlyList<string> SupportedLanguages =

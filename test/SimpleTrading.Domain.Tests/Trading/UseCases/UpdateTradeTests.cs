@@ -267,7 +267,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
-            .Which.Reason.Should().Be("The 'Closed' date must be after the 'Opened' date.");
+            .Which.Reason.Should().Be("'Closed' must be after 'Opened'.");
     }
 
     [Fact]

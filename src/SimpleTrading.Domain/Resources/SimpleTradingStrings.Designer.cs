@@ -141,7 +141,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; muss nach dem Datum &apos;Eröffnet&apos; sein..
+        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; muss nach &apos;Eröffnet&apos; liegen..
         /// </summary>
         public static string ClosedBeforeOpened {
             get {
@@ -150,7 +150,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
+        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
         /// </summary>
         public static string ClosedTooFarInTheFuture {
             get {
@@ -159,7 +159,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Bilanz&apos; und das Datum &apos;Abgeschlossen&apos; angeben..
+        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; angeben..
         /// </summary>
         public static string ClosedTradeNeedsClosedAndBalance {
             get {

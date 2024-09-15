@@ -11,7 +11,7 @@ public record PositionPrices
     private static readonly Result BreakEvenResult =
         new(Result.BreakEven, ResultSource.CalculatedByPositionPrices, 0);
 
-    public required decimal Entry { get; set; }
+    public required decimal Entry { get; init; }
     public decimal? StopLoss { get; set; }
     public decimal? TakeProfit { get; set; }
     public decimal? Exit { get; set; }

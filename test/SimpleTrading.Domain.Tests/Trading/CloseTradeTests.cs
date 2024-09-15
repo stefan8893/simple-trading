@@ -32,7 +32,7 @@ public class CloseTradeTests : TestBase
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Reason.Should().Be("The 'Closed' date must be after the 'Opened' date.");
+        businessError.Which.Reason.Should().Be("'Closed' must be after 'Opened'.");
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class CloseTradeTests : TestBase
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Reason.Should().Be("The 'Closed' date must not be greater than one day in the future.");
+        businessError.Which.Reason.Should().Be("'Closed' must not be greater than one day in the future.");
     }
 
     [Fact]

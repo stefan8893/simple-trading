@@ -142,13 +142,13 @@
     <value>Closed</value>
   </data>
     <data name="ClosedTooFarInTheFuture" xml:space="preserve">
-        <value>The 'Closed' date must not be greater than one day in the future.</value>
+        <value>'Closed' must not be greater than one day in the future.</value>
     </data>
     <data name="ClosedBeforeOpened" xml:space="preserve">
-        <value>The 'Closed' date must be after the 'Opened' date.</value>
+        <value>'Closed' must be after 'Opened'.</value>
     </data>
     <data name="ClosedTradeNeedsClosedAndBalance" xml:space="preserve">
-        <value>In order to add a closed trade, you must specify 'Balance' and the 'Closed' date.</value>
+        <value>In order to add a closed trade, you must specify 'Balance' and 'Closed'.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Invalid link.</value>
