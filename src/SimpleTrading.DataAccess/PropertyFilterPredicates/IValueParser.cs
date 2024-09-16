@@ -1,8 +1,6 @@
 ﻿namespace SimpleTrading.DataAccess.PropertyFilterPredicates;
 
-public interface IValueParser<out T>
+public interface IValueParser<T>
 {
-    bool CanParse(string candidate, bool isLiteral);
-
-    T Parse(string candidate, bool isLiteral);
+    bool TryParse(string candidate, bool isLiteral, out T result);
 }

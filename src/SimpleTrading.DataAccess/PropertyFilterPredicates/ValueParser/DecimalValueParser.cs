@@ -4,31 +4,22 @@ namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 
 public class DecimalValueParser : IValueParser<decimal>
 {
-    public bool CanParse(string candidate, bool isLiteral)
+    public bool TryParse(string candidate, bool isLiteral, out decimal result)
     {
-        return decimal.TryParse(candidate, out _);
-    }
-
-    public decimal Parse(string candidate, bool isLiteral)
-    {
-        return decimal.Parse(candidate);
+        return decimal.TryParse(candidate, out result);
     }
 }
 
 public class NullableDecimalValueParser : IValueParser<decimal?>
 {
-    public bool CanParse(string candidate, bool isLiteral)
+    public bool TryParse(string candidate, bool isLiteral, out decimal? result)
     {
+        result = null;
+
         if (isLiteral && candidate.IsNullLiteral())
-            return true;
-
-        return decimal.TryParse(candidate, out _);
-    }
-
-    public decimal? Parse(string candidate, bool isLiteral)
-    {
-        return isLiteral && candidate.IsNullLiteral()
-            ? null
-            : decimal.Parse(candidate);
+            return false;
+        
+        result = decimal.Parse(candidate);
+        return true;
     }
 }
