@@ -2,4 +2,4 @@
 
 public delegate DateTime UtcNow();
 
-public delegate Task<DateTime> LocalNow();
+public delegate Task<DateTimeOffset> LocalNow();

@@ -11,9 +11,7 @@ public static class DateTimeProviderFactory
         {
             var userSettings = await userSettingsRepository.Get();
 
-            return DateTime.UtcNow
-                .ToLocal(userSettings.TimeZone).DateTime
-                .ToLocalKind();
+            return DateTime.UtcNow.ToLocal(userSettings.TimeZone);
         };
     }
 }
