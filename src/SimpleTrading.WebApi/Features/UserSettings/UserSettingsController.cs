@@ -9,10 +9,10 @@ namespace SimpleTrading.WebApi.Features.UserSettings;
 [ApiController]
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 [SwaggerUiControllerPosition(6)]
 public class UserSettingsController : ControllerBase
 {
-    [AllowAnonymous]
     [HttpGet("local-now", Name = "GetUserLocalNow")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetLocalNow([FromServices] LocalNow localNow)
