@@ -25,7 +25,6 @@ public class HomeController(IHostEnvironment hostEnvironment) : ControllerBase
 
     private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? "N/A";
 
-
     [AllowAnonymous]
     [HttpGet("info", Name = "GetAppInfo")]
     [ProducesResponseType(StatusCodes.Status200OK)]

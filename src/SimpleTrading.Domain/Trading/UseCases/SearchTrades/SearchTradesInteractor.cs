@@ -39,7 +39,7 @@ public class SearchTradesInteractor(
         var trades = await tradeRepository.Find(paginationConfig, filter, sorting);
 
         var userSettings = await userSettingsRepository.Get();
-
+        
         return trades
             .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));
     }

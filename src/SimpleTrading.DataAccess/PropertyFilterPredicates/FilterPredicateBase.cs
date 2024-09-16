@@ -11,7 +11,7 @@ public abstract class FilterPredicateBase<TEntity, TProperty>(
     : IFilterPredicate<TEntity>
     where TEntity : IEntity
 {
-    protected IValueParser<TProperty> ValueParser { get; } = valueParser;
+    private IValueParser<TProperty> ValueParser { get; } = valueParser;
     public string Property { get; } = property;
     public string Operator { get; } = @operator;
 

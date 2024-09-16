@@ -10,9 +10,9 @@ public class GetAssetsInteractor(IValidator<GetAssetsRequestModel> validator, IA
 {
     public async Task<OneOf<IReadOnlyList<GetAssetsResponseModel>, BadInput>> Execute(GetAssetsRequestModel model)
     {
-        var validation = await validator.ValidateAsync(model);
-        if (!validation.IsValid)
-            return BadInput(validation);
+        var validationResult = await validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            return BadInput(validationResult);
 
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 
