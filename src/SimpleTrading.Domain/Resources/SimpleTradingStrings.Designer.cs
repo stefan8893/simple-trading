@@ -213,20 +213,20 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter.
-        /// </summary>
-        public static string Filter {
-            get {
-                return ResourceManager.GetString("Filter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &apos;{PropertyValue}&apos; kann nicht als Filter benutzt werden..
         /// </summary>
         public static string FilterNotSupported {
             get {
                 return ResourceManager.GetString("FilterNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ungültiges Filterformat..
+        /// </summary>
+        public static string InvalidFilterFormat {
+            get {
+                return ResourceManager.GetString("InvalidFilterFormat", resourceCulture);
             }
         }
         

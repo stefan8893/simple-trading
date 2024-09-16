@@ -261,9 +261,6 @@
     <data name="PageSize" xml:space="preserve">
         <value>Page size</value>
     </data>
-    <data name="Filter" xml:space="preserve">
-        <value>Filter</value>
-    </data>
     <data name="Operator" xml:space="preserve">
         <value>Operator</value>
     </data>
@@ -275,5 +272,8 @@
     </data>
     <data name="LessThanOrEqualValidatorMessage" xml:space="preserve">
         <value>'{0}' must be less than or equal to '{1}'.</value>
+    </data>
+    <data name="InvalidFilterFormat" xml:space="preserve">
+        <value>Invalid filter format.</value>
     </data>
 </root>

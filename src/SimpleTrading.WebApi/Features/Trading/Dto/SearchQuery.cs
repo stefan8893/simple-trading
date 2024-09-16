@@ -31,7 +31,7 @@ public class PropertyFilterValidator : AbstractValidator<string>
     {
         RuleFor(x => x)
             .Matches(TradesController.PropertyFilterSyntaxRegex().ToString())
-            .WithName(SimpleTradingStrings.Filter)
+            .WithMessage(SimpleTradingStrings.InvalidFilterFormat)
             .When(x => !string.IsNullOrWhiteSpace(x));
     }
 }
