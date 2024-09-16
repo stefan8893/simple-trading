@@ -5,7 +5,7 @@ namespace SimpleTrading.Domain.Infrastructure;
 
 public static class DateTimeProviderFactory
 {
-    public static LocalNow LocalNow(IUserSettingsRepository userSettingsRepository)
+    public static LocalNow CreateLocalNowFunc(IUserSettingsRepository userSettingsRepository)
     {
         return async () =>
         {

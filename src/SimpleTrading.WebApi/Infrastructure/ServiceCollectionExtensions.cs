@@ -1,50 +1,41 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SimpleTrading.WebApi.Infrastructure;
 
-// based upon: https://blog.photogrammer.net/factory-delegates-using-microsoft-di/
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddFactory(this IServiceCollection services, Delegate factory,
         ServiceLifetime lifetime = ServiceLifetime.Singleton)
     {
-        var returnType = factory.Method.ReturnType;
-        var parameters = factory.Method
+        var typeToRegister = factory.Method.ReturnType;
+        var arguments = factory.Method
             .GetParameters()
-            .Select(x => x.ParameterType)
-            .ToArray();
+            .Select(p =>
+            {
+                var serviceLocator = GetServiceLocator();
+                if (serviceLocator is null)
+                    throw new Exception(
+                        "Extension method 'GetRequiredService' not found.");
 
-        var addFactoryGenericParametersLength = parameters.Length + 1;
+                return serviceLocator.MakeGenericMethod(p.ParameterType);
+            });
 
-        var openGenericMethod = typeof(ServiceCollectionExtensions)
-            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
-            .Where(x => x.Name == nameof(AddFactoryInternal))
-            .SingleOrDefault(x => x.GetGenericArguments().Length == addFactoryGenericParametersLength);
+        var serviceDescriptor =
+            new ServiceDescriptor(typeToRegister,
+                sp => factory.DynamicInvoke(arguments.Select(x => x.Invoke(null, [sp])).ToArray())!, lifetime);
+        services.Add(serviceDescriptor);
 
-        ArgumentNullException.ThrowIfNull(openGenericMethod);
-        var closedGenericMethod = openGenericMethod.MakeGenericMethod([.. parameters, returnType]);
-
-        closedGenericMethod.Invoke(null, [services, factory, lifetime]);
-        
         return services;
     }
 
-    private static void AddFactoryInternal<TResult>(this IServiceCollection services, Func<TResult> factory,
-        ServiceLifetime lifetime)
-        where TResult : class
+    private static MethodInfo? GetServiceLocator()
     {
-        var serviceDescriptor =
-            new ServiceDescriptor(typeof(TResult), c => factory(), lifetime);
-        services.Add(serviceDescriptor);
-    }
-
-    private static void AddFactoryInternal<T1, TResult>(this IServiceCollection services, Func<T1, TResult> factory,
-        ServiceLifetime lifetime)
-        where T1 : notnull
-        where TResult : class
-    {
-        var serviceDescriptor =
-            new ServiceDescriptor(typeof(TResult), c => factory(c.GetRequiredService<T1>()), lifetime);
-        services.Add(serviceDescriptor);
+        return AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(x => x.GetTypes())
+            .SelectMany(x => x.GetMethods(BindingFlags.Static | BindingFlags.Public))
+            .Where(x => x.IsDefined(typeof(ExtensionAttribute), false))
+            .FirstOrDefault(x => x is {Name: "GetRequiredService", IsGenericMethod: true});
     }
 }

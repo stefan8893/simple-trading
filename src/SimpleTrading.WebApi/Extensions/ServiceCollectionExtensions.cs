@@ -63,7 +63,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
     {
         services.AddSingleton<UtcNow>(_ => () => DateTime.UtcNow);
-        services.AddFactory(DateTimeProviderFactory.LocalNow);
+        services.AddFactory(DateTimeProviderFactory.CreateLocalNowFunc, ServiceLifetime.Scoped);
 
         return services;
     }
