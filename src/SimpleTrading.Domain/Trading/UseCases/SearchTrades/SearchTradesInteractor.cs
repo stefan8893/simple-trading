@@ -11,7 +11,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 
-public class SearchTradeInteractor(
+public class SearchTradesInteractor(
     IValidator<SearchTradesRequestModel> validator,
     ITradeRepository tradeRepository,
     IUserSettingsRepository userSettingsRepository,

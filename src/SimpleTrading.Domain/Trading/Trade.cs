@@ -102,11 +102,11 @@ public class Trade : IEntity
             return balanceResult;
 
         return positionPricesResult!.Name == balanceResult!.Name
-            // pick the result from the position prices if both are equal
+            // pick the result from position prices if both are equal
             // it contains more information (performance indicator)
             ? positionPricesResult
             // otherwise pick the result by balance, because it is more important than the result by position prices
-            // at the end of the day counts the balance and not position prices
+            // at the end of the day the balance counts and not position prices
             : balanceResult;
     }
 
