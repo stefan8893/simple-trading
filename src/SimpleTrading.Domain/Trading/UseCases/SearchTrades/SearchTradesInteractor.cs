@@ -11,7 +11,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 
-public class SearchTradeInteractor(
+public class SearchTradesInteractor(
     IValidator<SearchTradesRequestModel> validator,
     ITradeRepository tradeRepository,
     IUserSettingsRepository userSettingsRepository,
@@ -23,9 +23,9 @@ public class SearchTradeInteractor(
 
     public async Task<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
     {
-        var validation = await validator.ValidateAsync(model);
-        if (!validation.IsValid)
-            return BadInput(validation);
+        var validationResult = await validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            return BadInput(validationResult);
 
         var sorting = model.Sort
             .Select(x => sorterByName[x.Property](x.Ascending ? Order.Ascending : Order.Descending));
@@ -39,7 +39,7 @@ public class SearchTradeInteractor(
         var trades = await tradeRepository.Find(paginationConfig, filter, sorting);
 
         var userSettings = await userSettingsRepository.Get();
-
+        
         return trades
             .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));
     }
@@ -48,9 +48,9 @@ public class SearchTradeInteractor(
         Expression<Func<Trade, bool>> next)
     {
         var tradeParameter = Expression.Parameter(typeof(Trade));
-        return (Expression<Func<Trade, bool>>) Expression.Lambda(
+        return Expression.Lambda<Func<Trade, bool>>(
             Expression.AndAlso(
-                Expression.Invoke(acc, tradeParameter),
+                Expression.Invoke(acc, tradeParameter), 
                 Expression.Invoke(next, tradeParameter)),
             tradeParameter);
     }

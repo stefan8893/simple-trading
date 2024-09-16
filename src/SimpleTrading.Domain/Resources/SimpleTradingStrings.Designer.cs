@@ -141,7 +141,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; muss nach dem Datum &apos;Eröffnet&apos; sein..
+        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; muss nach &apos;Eröffnet&apos; liegen..
         /// </summary>
         public static string ClosedBeforeOpened {
             get {
@@ -150,7 +150,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Datum &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
+        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
         /// </summary>
         public static string ClosedTooFarInTheFuture {
             get {
@@ -159,7 +159,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Bilanz&apos; und das Datum &apos;Abgeschlossen&apos; angeben..
+        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; angeben..
         /// </summary>
         public static string ClosedTradeNeedsClosedAndBalance {
             get {
@@ -213,15 +213,6 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter.
-        /// </summary>
-        public static string Filter {
-            get {
-                return ResourceManager.GetString("Filter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &apos;{PropertyValue}&apos; kann nicht als Filter benutzt werden..
         /// </summary>
         public static string FilterNotSupported {
@@ -231,11 +222,29 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ungültiges Filterformat..
+        /// </summary>
+        public static string InvalidFilterFormat {
+            get {
+                return ResourceManager.GetString("InvalidFilterFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ungültiger Link..
         /// </summary>
         public static string InvalidLink {
             get {
                 return ResourceManager.GetString("InvalidLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Der Wert von &apos;{0}&apos; muss kleiner oder gleich &apos;{1}&apos; sein..
+        /// </summary>
+        public static string LessThanOrEqualValidatorMessage {
+            get {
+                return ResourceManager.GetString("LessThanOrEqualValidatorMessage", resourceCulture);
             }
         }
         

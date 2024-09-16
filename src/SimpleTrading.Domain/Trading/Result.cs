@@ -2,7 +2,7 @@
 
 namespace SimpleTrading.Domain.Trading;
 
-public enum TradingResultSource
+public enum ResultSource
 {
     ManuallyEntered,
     CalculatedByBalance,
@@ -24,7 +24,7 @@ public record Result
             .ToImmutableList();
     }
 
-    public Result(string name, TradingResultSource source, short? performance = null)
+    public Result(string name, ResultSource source, short? performance = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -35,14 +35,14 @@ public record Result
             $"Invalid result name. It must be one of '{string.Join(", ", SupportedResults)}'");
         Source = source;
         Performance = performance;
-        Index = GetIndexOf(Name);
+        Index = IndexOf(Name);
     }
 
     public int Index { get; init; }
 
     public string Name { get; init; }
 
-    public TradingResultSource Source { get; init; }
+    public ResultSource Source { get; init; }
 
     /// <summary>
     ///     The trade's performance in percent.<br />
@@ -52,7 +52,7 @@ public record Result
     /// </summary>
     public short? Performance { get; init; }
 
-    public static int GetIndexOf(string result)
+    public static int IndexOf(string result)
     {
         if (string.IsNullOrWhiteSpace(result))
             return -1;

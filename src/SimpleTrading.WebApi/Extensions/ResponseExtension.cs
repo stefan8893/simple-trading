@@ -18,7 +18,7 @@ public static class ResponseExtension
         var errorResponse = new ErrorResponse
         {
             FieldErrors = validationResult.Errors
-                .GroupBy(x => x.CustomState is CustomPropertyName custom ? custom.Name : x.PropertyName)
+                .GroupBy(x => x.PropertyName)
                 .Select(x => new FieldError
                 {
                     Identifier = x.Key,

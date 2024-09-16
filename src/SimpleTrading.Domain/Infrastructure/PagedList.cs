@@ -1,11 +1,12 @@
 ﻿using System.Collections;
+using SimpleTrading.Domain.Extensions;
 
 namespace SimpleTrading.Domain.Infrastructure;
 
 public class PagedList<T>(IEnumerable<T> items, int totalCount, int page, int pageSize)
     : IReadOnlyList<T>
 {
-    private readonly IList<T> _subset = items as IList<T> ?? new List<T>(items);
+    private readonly IList<T> _subset = items.AsList();
 
     public int Page { get; } = page;
     public int PageSize { get; } = pageSize;

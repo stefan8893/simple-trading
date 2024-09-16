@@ -36,9 +36,9 @@ builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
 
-builder.Services.AddTradingDbContext(builder.Configuration);
 builder.Services.AddDateTimeProvider();
 builder.Services.AddUseCases();
+builder.Services.AddTradingDbContext(builder.Configuration);
 builder.Services.AddDataAccess();
 builder.Services.AddSingleton<ClientGenerator>();
 

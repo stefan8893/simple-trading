@@ -38,7 +38,7 @@ public class UpdateTradeInteractor(
         var updateEntitiesResult = await UpdateEntities(trade, model);
         var isCompleted = updateEntitiesResult.IsT0;
         if (!isCompleted)
-            return updateEntitiesResult.Match<UpdateTradeResponse>(x => Completed(), x => x);
+            return updateEntitiesResult.Match<UpdateTradeResponse>(_ => Completed(), x => x);
 
         var updatePropertiesResult = UpdateTradeProperties(trade, model);
         if (updatePropertiesResult.Value is BusinessError propertiesBusinessError)
@@ -53,7 +53,7 @@ public class UpdateTradeInteractor(
         await uowCommit();
         return closeTradeResult
             .Match<UpdateTradeResponse>(x => Completed(x.Warnings),
-                x => Completed(),
+                _ => Completed(),
                 x => x);
     }
 
@@ -80,6 +80,7 @@ public class UpdateTradeInteractor(
             trade.Profile = newProfile;
         }
 
+        // ReSharper disable once InvertIf
         if (model.CurrencyId.HasValue && model.CurrencyId.Value != trade.CurrencyId)
         {
             var newCurrency = await tradeRepository.FindCurrency(model.CurrencyId.Value);
@@ -119,6 +120,8 @@ public class UpdateTradeInteractor(
     private static bool UpdatePositionPrices(Trade trade, UpdateTradeRequestModel model)
     {
         var positionPrices = model.EntryPrice.HasValue && model.EntryPrice.Value != trade.PositionPrices.Entry
+            // create a copy of the current prices to compare it later with the original
+            // by doing so you can easily detect changes
             ? trade.PositionPrices with {Entry = model.EntryPrice.Value}
             : trade.PositionPrices with { };
 

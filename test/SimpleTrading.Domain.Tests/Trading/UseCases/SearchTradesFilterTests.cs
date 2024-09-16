@@ -549,7 +549,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         pagedTrades.Which.Should().HaveCount(1)
             .And.Contain(x => x.Size == 10_000m);
     }
-    
+
     [Fact]
     public async Task Uppercase_operator_works_as_well()
     {
@@ -1160,21 +1160,21 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         List<FilterModel> filter =
         [
-            new FilterModel
+            new()
             {
                 PropertyName = "Result",
                 Operator = "le",
                 ComparisonValue = "BreakEven",
                 IsLiteral = false
             },
-            new FilterModel
+            new()
             {
                 PropertyName = "Balance",
                 Operator = "lt",
                 ComparisonValue = "150",
                 IsLiteral = false
             },
-            new FilterModel
+            new()
             {
                 PropertyName = "Size",
                 Operator = "gt",

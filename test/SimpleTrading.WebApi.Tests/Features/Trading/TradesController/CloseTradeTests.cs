@@ -143,7 +143,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         exception.Which.Result.FieldErrors.Should().BeEmpty();
         exception.Which.Result.CommonErrors
             .Should().HaveCount(1)
-            .And.Contain(x => x == "Das Datum 'Abgeschlossen' muss nach dem Datum 'Eröffnet' sein.");
+            .And.Contain(x => x == "'Abgeschlossen' muss nach 'Eröffnet' liegen.");
     }
 
     [Fact]

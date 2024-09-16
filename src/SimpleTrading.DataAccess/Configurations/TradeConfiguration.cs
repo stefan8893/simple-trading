@@ -58,6 +58,8 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
             .HasForeignKey(x => x.TradeId)
             .HasPrincipalKey(x => x.Id)
             .IsRequired();
+        
+        builder.Navigation(x => x.References).AutoInclude();
 
         builder
             .Property(x => x.Notes)

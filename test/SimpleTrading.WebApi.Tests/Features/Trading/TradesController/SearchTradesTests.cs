@@ -48,8 +48,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "'Filter' weist ein ungültiges Format auf." &&
-                              x.Identifier == "Filter[0].Filter");
+            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
+                              x.Identifier == "Filter[0]");
     }
 
     [Fact]
@@ -66,8 +66,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "'Filter' weist ein ungültiges Format auf." &&
-                              x.Identifier == "Filter[0].Filter");
+            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
+                              x.Identifier == "Filter[0]");
     }
 
     [Fact]
@@ -102,8 +102,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "'Filter' weist ein ungültiges Format auf." &&
-                              x.Identifier == "Filter[0].Filter");
+            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
+                              x.Identifier == "Filter[0]");
     }
 
     [Fact]

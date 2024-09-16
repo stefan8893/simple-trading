@@ -7,13 +7,14 @@ public static class Constants
 {
     public const string DefaultTimeZone = "Europe/Vienna";
     public static readonly DateTime MinDate = DateTime.Parse("2000-01-01T00:00:00").ToUtcKind();
+    public static readonly int OpenedDateMaxDaysInTheFutureLimit = 1;
 
     public static readonly CultureInfo DefaultCulture = new("de-AT");
 
     public static readonly IReadOnlyCollection<CultureInfo> SupportedCultures =
     [
-        new CultureInfo("de-AT"),
-        new CultureInfo("en-US")
+        new("de-AT"),
+        new("en-US")
     ];
 
     public static readonly IReadOnlyList<string> SupportedLanguages =

@@ -2,7 +2,6 @@
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Abstractions.DataAccess;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
@@ -62,15 +61,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
     {
         services.AddSingleton<UtcNow>(_ => () => DateTime.UtcNow);
-        services.AddSingleton<LocalNow>(sp => async () =>
-        {
-            using var scope = sp.CreateScope();
-            var userSettings = await scope.ServiceProvider
-                .GetRequiredService<IUserSettingsRepository>()
-                .Get();
-
-            return DateTime.UtcNow.ToLocal(userSettings.TimeZone).DateTime.ToLocalKind();
-        });
+        services.AddScoped(sp =>
+            DateTimeProviderFactory.CreateLocalNowFunc(sp.GetRequiredService<IUserSettingsRepository>()));
 
         return services;
     }

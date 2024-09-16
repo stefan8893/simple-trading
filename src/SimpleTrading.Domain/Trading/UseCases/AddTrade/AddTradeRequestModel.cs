@@ -1,6 +1,7 @@
 using FluentValidation;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
@@ -27,7 +28,9 @@ public record AddTradeRequestModel
 
 public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
 {
-    public AddTradeRequestModelValidator(ReferenceRequestModelValidator referenceRequestModelValidator)
+    public AddTradeRequestModelValidator(
+        OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator,
+        ReferenceRequestModelValidator referenceRequestModelValidator)
     {
         RuleFor(x => x.AssetId)
             .NotEmpty()
@@ -37,9 +40,13 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .NotEmpty()
             .WithName(SimpleTradingStrings.Profile);
 
-        RuleFor(x => x.Opened)
+        RuleFor(x => x.Opened.DateTime)
             .GreaterThanOrEqualTo(Constants.MinDate)
+            .OverridePropertyName(x => x.Opened)
             .WithName(SimpleTradingStrings.Opened);
+
+        RuleFor(x => (DateTimeOffset?) x.Opened)
+            .SetValidator(openedLessThanOneDayInTheFutureValidator);
 
         RuleFor(x => x.Size)
             .GreaterThan(0)

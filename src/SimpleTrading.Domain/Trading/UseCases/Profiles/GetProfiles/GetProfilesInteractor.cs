@@ -10,9 +10,9 @@ public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator
 {
     public async Task<OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>> Execute(GetProfilesRequestModel model)
     {
-        var validation = await validator.ValidateAsync(model);
-        if (!validation.IsValid)
-            return BadInput(validation);
+        var validationResult = await validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            return BadInput(validationResult);
 
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 

@@ -142,13 +142,13 @@
         <value>Abgeschlossen</value>
     </data>
     <data name="ClosedTooFarInTheFuture" xml:space="preserve">
-        <value>Das Datum 'Abgeschlossen' kann maximal nur einen Tag in der Zukunft liegen.</value>
+        <value>'Abgeschlossen' kann maximal nur einen Tag in der Zukunft liegen.</value>
     </data>
     <data name="ClosedBeforeOpened" xml:space="preserve">
-        <value>Das Datum 'Abgeschlossen' muss nach dem Datum 'Eröffnet' sein.</value>
+        <value>'Abgeschlossen' muss nach 'Eröffnet' liegen.</value>
     </data>
     <data name="ClosedTradeNeedsClosedAndBalance" xml:space="preserve">
-        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und das Datum 'Abgeschlossen' angeben.</value>
+        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und 'Abgeschlossen' angeben.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Ungültiger Link.</value>
@@ -261,9 +261,6 @@
     <data name="PageSize" xml:space="preserve">
         <value>Einträge pro Seite</value>
     </data>
-    <data name="Filter" xml:space="preserve">
-        <value>Filter</value>
-    </data>
     <data name="Operator" xml:space="preserve">
         <value>Operator</value>
     </data>
@@ -272,5 +269,11 @@
     </data>
     <data name="NullNotAllowed" xml:space="preserve">
         <value>Null ist hier nicht erlaubt.</value>
+    </data>
+    <data name="LessThanOrEqualValidatorMessage" xml:space="preserve">
+        <value>Der Wert von '{0}' muss kleiner oder gleich '{1}' sein.</value>
+    </data>
+    <data name="InvalidFilterFormat" xml:space="preserve">
+        <value>Ungültiges Filterformat.</value>
     </data>
 </root>

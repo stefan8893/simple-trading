@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -13,7 +15,14 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
+    private readonly DateTime _utcNow = DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
     private IUpdateTrade Interactor => ServiceLocator.GetRequiredService<IUpdateTrade>();
+
+    protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    {
+        base.OverrideServices(ctx, services);
+        services.AddSingleton<UtcNow>(_ => UtcNowStub);
+    }
 
     [Fact]
     public async Task A_trades_size_must_be_greater_than_zero_if_specified()
@@ -55,7 +64,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Result' has a range of values which does not include '50'." &&
-                              x.GetPropertyName() == "Result");
+                              x.PropertyName == "Result");
     }
 
     [Fact]
@@ -77,7 +86,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Entry price' must be greater than '0'." &&
-                              x.GetPropertyName() == "EntryPrice");
+                              x.PropertyName == "EntryPrice");
     }
 
     [Fact]
@@ -99,7 +108,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Stop loss' must be greater than '0'." &&
-                              x.GetPropertyName() == "StopLoss");
+                              x.PropertyName == "StopLoss");
     }
 
     [Fact]
@@ -121,7 +130,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Take profit' must be greater than '0'." &&
-                              x.GetPropertyName() == "TakeProfit");
+                              x.PropertyName == "TakeProfit");
     }
 
     [Fact]
@@ -143,7 +152,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Exit price' must be greater than '0'." &&
-                              x.GetPropertyName() == "ExitPrice");
+                              x.PropertyName == "ExitPrice");
     }
 
     [Fact]
@@ -259,7 +268,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Closed = trade.Opened.AddSeconds(-1)
+            Closed = new DateTimeOffset(trade.Opened.AddSeconds(-1))
         };
 
         // act
@@ -267,7 +276,34 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
-            .Which.Reason.Should().Be("The 'Closed' date must be after the 'Opened' date.");
+            .Which.Reason.Should().Be("'Closed' must be after 'Opened'.");
+    }
+
+    [Fact]
+    public async Task Updating_a_trades_opened_date_to_be_more_than_one_day_in_the_future_is_not_possible()
+    {
+        // arrange
+        var trade = TestData.Trade.Default.Build();
+        _ = trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub));
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            Opened = new DateTimeOffset(_utcNow.AddDays(1).AddSeconds(1))
+        };
+
+        // act
+        var response = await Interactor.Execute(updateTradeRequestModel);
+
+        // assert
+        response.Value.Should().BeOfType<BadInput>()
+            .Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x =>
+                x.ErrorMessage == "'Opened' must be less than or equal to '15.08.2024 14:00'.")
+            .And.Contain(x => x.PropertyName == "Opened");
     }
 
     [Fact]
@@ -282,7 +318,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Closed = trade.Opened.AddSeconds(-1)
+            Closed = new DateTimeOffset(trade.Opened.AddSeconds(-1))
         };
 
         // act
@@ -344,9 +380,9 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             .Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x =>
                 x.ErrorMessage ==
-                "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.");
+                "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
+            .And.Contain(x => x.PropertyName == "Notes");
     }
-
 
     [Fact]
     public async Task Position_prices_can_be_successfully_updated()
@@ -360,7 +396,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                     PositionPrices = oldPositionPrice
                 }
             ).Build();
-        var _ = trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -384,8 +420,46 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         updatedTrade!.PositionPrices.Should().Be(newPositionPrices);
     }
 
+    [Fact]
+    public async Task Updating_position_prices_of_a_closed_trade_leads_to_recalculation_of_the_performance()
+    {
+        // arrange
+        var oldPositionPrice = new PositionPrices {Entry = 0.95m, StopLoss = 0.8m, TakeProfit = 1.4m, Exit = 1.25m};
+
+        var trade = (TestData.Trade.Default with
+                {
+                    Balance = 500,
+                    Opened = UtcNowStub(),
+                    Closed = UtcNowStub(),
+                    PositionPrices = oldPositionPrice
+                }
+            ).Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            TakeProfit = 1.30m,
+            StopLoss = new None(),
+            ExitPrice = new None(),
+            Notes = new None(),
+            Result = new None()
+        };
+
+        // act
+        var response = await Interactor.Execute(updateTradeRequestModel);
+
+        // assert
+        response.Value.Should().BeOfType<Completed>();
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        updatedTrade?.Result.Should().NotBeNull();
+        updatedTrade!.Result!.Performance.Should().Be(85);
+    }
+
     private DateTime UtcNowStub()
     {
-        return DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
+        return _utcNow;
     }
 }
