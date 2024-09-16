@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
                 .AsImplementedInterfaces()
                 .WithSingletonLifetime());
 
-        services.AddSingleton<IReadOnlyDictionary<string, Func<Order, ISort<Trade>>>>(sp => 
+        services.AddSingleton<IReadOnlyDictionary<string, Func<Order, ISort<Trade>>>>(_ => 
             new Dictionary<string, Func<Order, ISort<Trade>>>(StringComparer.OrdinalIgnoreCase)
         {
             [PropertyFilter.Opened] = order => new SortByOpened(order),
