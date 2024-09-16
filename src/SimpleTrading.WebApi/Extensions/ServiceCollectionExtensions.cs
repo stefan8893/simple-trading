@@ -2,10 +2,8 @@
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Abstractions.DataAccess;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
-using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Extensions;
 
@@ -63,7 +61,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
     {
         services.AddSingleton<UtcNow>(_ => () => DateTime.UtcNow);
-        services.AddFactory(DateTimeProviderFactory.CreateLocalNowFunc, ServiceLifetime.Scoped);
+        services.AddScoped(sp =>
+            DateTimeProviderFactory.CreateLocalNowFunc(sp.GetRequiredService<IUserSettingsRepository>()));
 
         return services;
     }
