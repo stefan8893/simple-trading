@@ -9,9 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{08E51543-C73
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{356313D4-DC33-453D-8085-4B6792499BB8}"
-	ProjectSection(SolutionItems) = preProject
-		test\Directory.Build.props = test\Directory.Build.props
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A906921-CD55-4D8B-9849-B8570134132F}"
 	ProjectSection(SolutionItems) = preProject
@@ -38,6 +35,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess.Sqlite", "src\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj", "{19DD4699-2960-4507-9C53-147809036481}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess", "src\SimpleTrading.DataAccess\SimpleTrading.DataAccess.csproj", "{847DB03A-1251-4357-9D64-F4AE23E9EA4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess.Tests", "test\SimpleTrading.DataAccess.Tests\SimpleTrading.DataAccess.Tests.csproj", "{54FEB882-7381-4BD4-B234-4B4183EDFF76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +80,10 @@ Global
 		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{847DB03A-1251-4357-9D64-F4AE23E9EA4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54FEB882-7381-4BD4-B234-4B4183EDFF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54FEB882-7381-4BD4-B234-4B4183EDFF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54FEB882-7381-4BD4-B234-4B4183EDFF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54FEB882-7381-4BD4-B234-4B4183EDFF76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +98,7 @@ Global
 		{CE1C6E35-68B2-4C42-866C-1C7D6D4FFFD3} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 		{19DD4699-2960-4507-9C53-147809036481} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 		{847DB03A-1251-4357-9D64-F4AE23E9EA4F} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
+		{54FEB882-7381-4BD4-B234-4B4183EDFF76} = {356313D4-DC33-453D-8085-4B6792499BB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55851CC1-01BD-4314-B287-376AA406F433}

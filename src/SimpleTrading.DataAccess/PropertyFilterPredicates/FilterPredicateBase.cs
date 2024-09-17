@@ -32,12 +32,14 @@ public abstract class FilterPredicateBase<TEntity, TProperty>(
 
     public virtual bool CanParse(string comparisonValue, bool isLiteral)
     {
-        return ValueParser.CanParse(comparisonValue, isLiteral);
+        return ValueParser.TryParse(comparisonValue, isLiteral, out _);
     }
 
     public virtual Expression<Func<TEntity, bool>> GetPredicate(string comparisonValue, bool isLiteral)
     {
-        var value = ValueParser.Parse(comparisonValue, isLiteral);
+        if (!ValueParser.TryParse(comparisonValue, isLiteral, out var value))
+            throw new ArgumentException(
+                "ComparisonValue is not parsable. Did you forget to call CanParse(...)?");
 
         return GetPredicate(value);
     }

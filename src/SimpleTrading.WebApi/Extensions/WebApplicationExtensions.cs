@@ -22,7 +22,7 @@ public static class WebApplicationExtensions
     private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
     {
         var dbContext = context.RequestServices.GetRequiredService<IUserSettingsRepository>();
-        var userSettings = await dbContext.GetOrDefault();
+        var userSettings = await dbContext.GetUserSettingsOrDefault();
 
         if (userSettings is null)
             return new ProviderCultureResult(Constants.DefaultCulture.Name);
@@ -33,7 +33,7 @@ public static class WebApplicationExtensions
         return new ProviderCultureResult(userSettings.Culture,
             Constants.SupportedCultures
                 .Select(x => x.Name)
-                .FirstOrDefault(x => x.StartsWith(userSettings.Language))
+                .FirstOrDefault(x => x.StartsWith(userSettings.Language, StringComparison.OrdinalIgnoreCase))
             ?? Constants.DefaultCulture.Name);
     }
 }

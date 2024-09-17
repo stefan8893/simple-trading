@@ -13,7 +13,7 @@ public static partial class TestData
         public ReferenceType Type { get; init; } = ReferenceType.TradingView;
         public Uri Link { get; init; } = new("https://example.org");
         public string? Notes { get; init; } = null;
-        public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
+        public DateTime Created { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
         public static Reference Default => new();
 
@@ -32,7 +32,7 @@ public static partial class TestData
                 Type = Type,
                 Link = Link,
                 Notes = Notes,
-                Created = CreatedAt
+                Created = Created
             };
         }
     }

@@ -38,7 +38,7 @@ public class SearchTradesInteractor(
         var paginationConfig = new PaginationConfiguration(model.Page, model.PageSize);
         var trades = await tradeRepository.Find(paginationConfig, filter, sorting);
 
-        var userSettings = await userSettingsRepository.Get();
+        var userSettings = await userSettingsRepository.GetUserSettings();
         
         return trades
             .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));

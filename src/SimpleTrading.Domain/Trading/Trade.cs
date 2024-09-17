@@ -63,7 +63,7 @@ public class Trade : IEntity
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
         Result = results.ManuallyEntered ?? calculatedResult;
 
-        return AnalyseResults(results, calculatedResult);
+        return new Completed(AnalyseResults(results, calculatedResult));
     }
 
     private TradingResultsDto CalculateResults(CloseTradeDto dto)
@@ -110,7 +110,7 @@ public class Trade : IEntity
             : balanceResult;
     }
 
-    private Completed AnalyseResults(TradingResultsDto results,
+    private List<Warning> AnalyseResults(TradingResultsDto results,
         Result? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
@@ -130,11 +130,11 @@ public class Trade : IEntity
             CalculatedResult = calculatedResult
         };
 
-        var analysisResult = balanceDiffersFromPositionPricesAnalysisDecorator
+        var analysisReport = balanceDiffersFromPositionPricesAnalysisDecorator
             .AnalyseResults(this, analyseResultsConfiguration)
             .ToList();
 
-        return new Completed(analysisResult);
+        return analysisReport;
     }
 
     private static Result CreateManuallyEnteredResult(ResultModel resultModel)

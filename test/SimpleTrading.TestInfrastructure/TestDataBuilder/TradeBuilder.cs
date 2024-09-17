@@ -23,7 +23,7 @@ public static partial class TestData
             TestData.PositionPrices.Default;
 
         public string Notes { get; init; } = "";
-        public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
+        public DateTime Created { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
         public static Trade Default => new();
 
@@ -68,7 +68,7 @@ public static partial class TestData
                 PositionPrices = positionPrices,
                 References = [],
                 Notes = Notes,
-                Created = CreatedAt
+                Created = Created
             };
 
             if (Closed.HasValue && Balance.HasValue)

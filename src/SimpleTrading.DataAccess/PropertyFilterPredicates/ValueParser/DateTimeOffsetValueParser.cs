@@ -4,32 +4,22 @@ namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 
 public class DateTimeOffsetValueParser : IValueParser<DateTimeOffset>
 {
-    public bool CanParse(string candidate, bool isLiteral)
+    public bool TryParse(string candidate, bool isLiteral, out DateTimeOffset result)
     {
-        return DateTimeOffset.TryParse(candidate, out _);
-    }
-
-    public DateTimeOffset Parse(string candidate, bool isLiteral)
-    {
-        return DateTimeOffset.Parse(candidate);
+        return DateTimeOffset.TryParse(candidate, out result);
     }
 }
 
 public class NullableDateTimeOffsetValueParser : IValueParser<DateTimeOffset?>
 {
-    public bool CanParse(string candidate, bool isLiteral)
+    public bool TryParse(string candidate, bool isLiteral, out DateTimeOffset? result)
     {
+        result = null;
+        
         if (isLiteral && candidate.IsNullLiteral())
             return true;
 
-        return DateTimeOffset.TryParse(candidate, out _);
-    }
-
-    public DateTimeOffset? Parse(string candidate, bool isLiteral)
-    {
-        if (isLiteral && candidate.IsNullLiteral())
-            return null;
-
-        return DateTimeOffset.Parse(candidate);
+        result = DateTimeOffset.Parse(candidate);
+        return true;
     }
 }

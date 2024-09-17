@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.User;
 
 namespace SimpleTrading.DataAccess;
 
-public class TradingDbContext(DbContextOptions<TradingDbContext> options) : DbContext(options)
+public class TradingDbContext(DbContextOptions<TradingDbContext> options, UtcNow utcNow) : DbContext(options)
 {
     public required DbSet<Asset> Assets { get; init; }
     public required DbSet<Currency> Currencies { get; init; }
@@ -33,6 +34,26 @@ public class TradingDbContext(DbContextOptions<TradingDbContext> options) : DbCo
         AddDateTimeKindUtcConverter(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    {
+        RefreshUpdatedDateOnUserSettingsChanges();
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void RefreshUpdatedDateOnUserSettingsChanges()
+    {
+        var userSettings = ChangeTracker.Entries()
+            .Where(x => x is {Entity: Domain.User.UserSettings, State: EntityState.Modified})
+            .Select(x => x.Entity as UserSettings)
+            .Where(x => x is not null)
+            .Select(x => x!);
+
+        var nowInUtcTime = utcNow();
+        foreach (var userSetting in userSettings)
+            userSetting.LastModified = nowInUtcTime;
     }
 
     private static void AddDateTimeKindUtcConverter(ModelBuilder modelBuilder)

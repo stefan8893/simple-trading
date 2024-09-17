@@ -212,6 +212,9 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Culture")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -221,12 +224,12 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("TimeZone")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

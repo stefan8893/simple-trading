@@ -1,4 +1,5 @@
 ﻿using SimpleTrading.Domain;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.User;
 
@@ -6,7 +7,7 @@ namespace SimpleTrading.DataAccess;
 
 public class DbMasterData(TradingDbContext dbContext)
 {
-    private static readonly DateTime InitialCreationDateTime = DateTime.Parse("2024-08-03T08:00:00Z");
+    private static readonly DateTime InitialCreationDateTime = DateTime.Parse("2024-08-03T08:00:00").ToUtcKind();
 
     public async Task Populate()
     {
@@ -32,7 +33,8 @@ public class DbMasterData(TradingDbContext dbContext)
             Culture = Constants.DefaultCulture.Name,
             Language = null,
             TimeZone = Constants.DefaultTimeZone,
-            UpdatedAt = InitialCreationDateTime
+            LastModified = InitialCreationDateTime,
+            Created = InitialCreationDateTime
         };
 
         dbContext.UserSettings.Add(userSettings);

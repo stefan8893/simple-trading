@@ -14,7 +14,7 @@ public class GetTradeInteractor(ITradeRepository tradeRepository, IUserSettingsR
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
-        var userSettings = await userSettingsRepository.Get();
+        var userSettings = await userSettingsRepository.GetUserSettings();
 
         return TradeResponseModel.From(trade, userSettings.TimeZone);
     }

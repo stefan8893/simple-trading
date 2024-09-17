@@ -11,9 +11,15 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-        return services.Scan(scan =>
+        services.Scan(scan =>
             scan.FromAssemblyOf<IAddTrade>()
                 .AddClasses(f => f.AssignableTo(typeof(IInteractor<,>)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
+        return services.Scan(scan =>
+            scan.FromAssemblyOf<IAddTrade>()
+                .AddClasses(f => f.AssignableTo(typeof(IInteractor<>)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
     }

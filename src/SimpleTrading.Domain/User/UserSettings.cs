@@ -1,6 +1,8 @@
-﻿namespace SimpleTrading.Domain.User;
+﻿using SimpleTrading.Domain.Abstractions;
 
-public class UserSettings
+namespace SimpleTrading.Domain.User;
+
+public class UserSettings : IEntity
 {
     public required Guid Id { get; init; }
 
@@ -10,5 +12,7 @@ public class UserSettings
 
     public required string TimeZone { get; set; }
 
-    public required DateTime UpdatedAt { get; set; }
+    public required DateTime LastModified { get; set; }
+
+    public required DateTime Created { get; init; }
 }

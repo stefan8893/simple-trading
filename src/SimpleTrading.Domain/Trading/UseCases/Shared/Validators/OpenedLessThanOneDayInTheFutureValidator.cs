@@ -13,7 +13,7 @@ public class OpenedLessThanOneDayInTheFutureValidator : AbstractValidator<DateTi
         RuleFor(x => x)
             .CustomAsync(async (opened, ctx, cancellationToken) =>
             {
-                var userSettings = await userSettingsRepository.Get();
+                var userSettings = await userSettingsRepository.GetUserSettings();
                 var upperBound = utcNow().AddDays(Constants.OpenedDateMaxDaysInTheFutureLimit);
                 var upperBoundLocal = upperBound.ToLocal(userSettings.TimeZone).DateTime;
 
