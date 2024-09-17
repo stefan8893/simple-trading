@@ -53,7 +53,7 @@ public class TradingDbContext(DbContextOptions<TradingDbContext> options, UtcNow
 
         var nowInUtcTime = utcNow();
         foreach (var userSetting in userSettings)
-            userSetting.Updated = nowInUtcTime;
+            userSetting.LastModified = nowInUtcTime;
     }
 
     private static void AddDateTimeKindUtcConverter(ModelBuilder modelBuilder)

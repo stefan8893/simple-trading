@@ -12,7 +12,7 @@ public class UserSettings : IEntity
 
     public required string TimeZone { get; set; }
 
-    public required DateTime Updated { get; set; }
+    public required DateTime LastModified { get; set; }
 
     public required DateTime Created { get; init; }
 }

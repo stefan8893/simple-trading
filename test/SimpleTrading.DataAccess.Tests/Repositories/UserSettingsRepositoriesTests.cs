@@ -21,13 +21,13 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
     }
 
     [Fact]
-    public async Task Updating_UserSettings_automatically_sets_Updated_property_to_utcNow()
+    public async Task LastModified_gets_automatically_updated_if_entity_was_modified()
     {
         // arrange
         var uowCommit = ServiceLocator.GetRequiredService<UowCommit>();
         var userSettingsRepository = ServiceLocator.GetRequiredService<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
-        userSettings.Updated.Should().NotBe(_utcNow);
+        userSettings.LastModified.Should().NotBe(_utcNow);
 
         // act
         userSettings.TimeZone = "America/New_York";
@@ -35,22 +35,22 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
 
         // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();
-        updatedUserSettings.Updated.Should().Be(_utcNow);
+        updatedUserSettings.LastModified.Should().Be(_utcNow);
     }
 
     [Fact]
-    public async Task Updated_date_will_not_be_refreshed_automatically_if_entity_was_just_read()
+    public async Task LastModified_will_not_be_refreshed_automatically_if_entity_was_just_read()
     {
         // arrange
         var userSettingsRepository = ServiceLocator.GetRequiredService<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
-        var initialUpdatedDate = userSettings.Updated;
+        var initialUpdatedDate = userSettings.LastModified;
 
         // act
         var timeZone = userSettings.TimeZone;
 
         // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();
-        updatedUserSettings.Updated.Should().Be(initialUpdatedDate);
+        updatedUserSettings.LastModified.Should().Be(initialUpdatedDate);
     }
 }

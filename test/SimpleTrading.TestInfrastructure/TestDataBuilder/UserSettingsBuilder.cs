@@ -24,7 +24,7 @@ public static partial class TestData
                 Culture = Culture,
                 Language = Language,
                 TimeZone = TimeZone,
-                Updated = Updated,
+                LastModified = Updated,
                 Created = Created
             };
         }
