@@ -9,7 +9,7 @@ public static class DateTimeProviderFactory
     {
         return async () =>
         {
-            var userSettings = await userSettingsRepository.Get();
+            var userSettings = await userSettingsRepository.GetUserSettings();
 
             return DateTime.UtcNow.ToLocal(userSettings.TimeZone);
         };

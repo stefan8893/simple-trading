@@ -22,7 +22,7 @@ public static class WebApplicationExtensions
     private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
     {
         var dbContext = context.RequestServices.GetRequiredService<IUserSettingsRepository>();
-        var userSettings = await dbContext.GetOrDefault();
+        var userSettings = await dbContext.GetUserSettingsOrDefault();
 
         if (userSettings is null)
             return new ProviderCultureResult(Constants.DefaultCulture.Name);

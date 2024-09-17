@@ -54,7 +54,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         var userSettings = await ServiceLocator
             .GetRequiredService<IUserSettingsRepository>()
-            .Get();
+            .GetUserSettings();
         userSettings.TimeZone = "America/New_York";
 
         DbContext.Trades.Add(trade);
