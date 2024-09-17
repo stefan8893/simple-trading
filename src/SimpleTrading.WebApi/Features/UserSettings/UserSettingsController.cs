@@ -1,7 +1,8 @@
 ﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.User.UseCases.GetUserSettings;
+using SimpleTrading.WebApi.Features.UserSettings.Dto;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.UserSettings;
@@ -13,8 +14,17 @@ namespace SimpleTrading.WebApi.Features.UserSettings;
 [SwaggerUiControllerPosition(6)]
 public class UserSettingsController : ControllerBase
 {
+    [HttpGet(Name = "GetUserSettings")]
+    [ProducesResponseType<UserSettingsDto>(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetUserSettings([FromServices] IGetUserSettings getUserSettings)
+    {
+        var userSettings = await getUserSettings.Execute();
+
+        return Ok(UserSettingsDto.From(userSettings));
+    }
+
     [HttpGet("local-now", Name = "GetUserLocalNow")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<DateTimeOffset>(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetLocalNow([FromServices] LocalNow localNow)
     {
         var nowInUserTimeZone = await localNow();
