@@ -5,10 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="User\UseCases\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <InternalsVisibleTo Include="SimpleTrading.Domain.Tests"/>
         <InternalsVisibleTo Include="SimpleTrading.TestInfrastructure"/>
     </ItemGroup>

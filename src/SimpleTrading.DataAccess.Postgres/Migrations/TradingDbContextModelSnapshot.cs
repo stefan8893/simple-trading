@@ -216,6 +216,9 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Culture")
                         .IsRequired()
                         .HasMaxLength(100)
