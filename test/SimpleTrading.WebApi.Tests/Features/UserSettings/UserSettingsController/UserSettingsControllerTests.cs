@@ -37,7 +37,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettingsDto.TimeZone.Should().Be("Europe/Vienna");
         userSettingsDto.Language.Should().Be("de");
     }
-    
+
     [Fact]
     public async Task LastModified_is_correctly_converted()
     {

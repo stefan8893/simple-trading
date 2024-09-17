@@ -1,7 +1,5 @@
 ﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.WebApi.Features.UserSettings.Dto;
@@ -21,10 +19,10 @@ public class UserSettingsController : ControllerBase
     public async Task<ActionResult> GetUserSettings([FromServices] IGetUserSettings getUserSettings)
     {
         var userSettings = await getUserSettings.Execute();
-        
+
         return Ok(UserSettingsDto.From(userSettings));
     }
-    
+
     [HttpGet("local-now", Name = "GetUserLocalNow")]
     [ProducesResponseType<DateTimeOffset>(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetLocalNow([FromServices] LocalNow localNow)
