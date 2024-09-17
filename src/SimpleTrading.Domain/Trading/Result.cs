@@ -4,6 +4,7 @@ namespace SimpleTrading.Domain.Trading;
 
 public enum ResultSource
 {
+    Unspecified,
     ManuallyEntered,
     CalculatedByBalance,
     CalculatedByPositionPrices
