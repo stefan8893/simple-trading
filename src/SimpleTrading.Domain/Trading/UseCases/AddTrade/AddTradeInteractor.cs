@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 

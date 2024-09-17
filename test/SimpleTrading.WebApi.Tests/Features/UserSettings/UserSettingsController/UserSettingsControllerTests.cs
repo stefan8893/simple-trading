@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.WebApi.Tests.Features.UserSettings.UserSettingsController;

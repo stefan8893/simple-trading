@@ -1,7 +1,8 @@
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.User.DataAccess;
 
-namespace SimpleTrading.Domain.Infrastructure;
+namespace SimpleTrading.Domain.User.Factories;
 
 public static class DateTimeProviderFactory
 {

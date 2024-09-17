@@ -7,7 +7,7 @@ public static class DateTimeExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(timeZone, nameof(timeZone));
 
         if (dateTime.Kind != DateTimeKind.Utc)
-            throw new ArgumentException("The given dateTime is not in UTC");
+            throw new ArgumentException("The given DateTime is not in UTC");
 
         var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
         var dateTimeOffset = new DateTimeOffset(dateTime);

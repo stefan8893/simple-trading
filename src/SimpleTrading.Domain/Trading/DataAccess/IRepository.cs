@@ -1,7 +1,9 @@
 ﻿using System.Linq.Expressions;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.DataAccess;
 
-namespace SimpleTrading.Domain.Abstractions.DataAccess;
+namespace SimpleTrading.Domain.Trading.DataAccess;
 
 public interface IRepository<TEntity> where TEntity: IEntity
 {

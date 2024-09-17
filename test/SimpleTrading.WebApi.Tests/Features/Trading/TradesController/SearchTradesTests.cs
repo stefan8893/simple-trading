@@ -141,7 +141,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trades = Enumerable.Range(1, 3)
-            .Select(x => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default)
             .Select(x => x.Build())
             .ToList();
 
@@ -164,7 +164,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trades = Enumerable.Range(1, 3)
-            .Select(x => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default)
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -186,7 +186,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default)
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);

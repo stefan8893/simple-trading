@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.User.UseCases.GetUserSettings;
 

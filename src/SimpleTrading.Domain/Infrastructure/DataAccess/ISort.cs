@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+using SimpleTrading.Domain.Abstractions;
 
-namespace SimpleTrading.Domain.Abstractions.DataAccess;
+namespace SimpleTrading.Domain.Infrastructure.DataAccess;
 
 public interface ISort<TEntity> where TEntity : IEntity
 {

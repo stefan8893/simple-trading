@@ -1,7 +1,8 @@
 ﻿using OneOf;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 

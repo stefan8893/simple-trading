@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.Abstractions.DataAccess;
+using SimpleTrading.Domain.Infrastructure.DataAccess;
+using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.DataAccess.Sorting;
 

@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client;
-using SimpleTrading.Domain.Abstractions.DataAccess;
+using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.WebApi;

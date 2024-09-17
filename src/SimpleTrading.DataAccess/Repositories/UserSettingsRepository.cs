@@ -1,6 +1,6 @@
 ﻿using SimpleTrading.Domain;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.User;
+using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
