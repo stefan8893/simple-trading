@@ -688,6 +688,33 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         pagedTrades.Which.Should().HaveCount(1)
             .And.Contain(x => x.Balance == 500m);
     }
+    
+    [Fact]
+    public async Task Balance_equal_to_null_returns_trades_without_a_balance()
+    {
+        // arrange
+        var tradeWithBalance = (TestData.Trade.Default with {Balance = 500m}).Build();
+        var tradeWithoutBalance = (TestData.Trade.Default with {Balance = null}).Build();
+
+        DbContext.Trades.AddRange(tradeWithBalance, tradeWithoutBalance);
+        await DbContext.SaveChangesAsync();
+
+        var filter = new FilterModel
+        {
+            PropertyName = "Balance",
+            Operator = "eq",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTrades.Which.Should().HaveCount(1)
+            .And.Contain(x => x.Id == tradeWithoutBalance.Id);
+    }
 
     [Fact]
     public async Task Greater_than_result_with_invalid_comparison_value_returns_bad_input()
