@@ -230,14 +230,14 @@ public partial class TradesController : ControllerBase
 
     private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto)
     {
-        var addTradeRequestModel = new AddTradeRequestModel
+        return new AddTradeRequestModel
         {
             AssetId = dto.AssetId!.Value,
             ProfileId = dto.ProfileId!.Value,
             Opened = dto.Opened!.Value,
             Closed = dto.Closed,
             Size = dto.Size!.Value,
-            Result = dto.Result.HasValue ? MapToResultModel(dto.Result) : null,
+            Result = MapToResultModel(dto.Result),
             Balance = dto.Balance,
             CurrencyId = dto.CurrencyId!.Value,
             EntryPrice = dto.EntryPrice!.Value,
@@ -250,13 +250,11 @@ public partial class TradesController : ControllerBase
                     new ReferenceRequestModel(x.Type.ToDomainReferenceType(), x.Link!, x.Notes))
                 .ToList() ?? []
         };
-
-        return addTradeRequestModel;
     }
 
     private static UpdateTradeRequestModel MapToRequestModel(Guid tradeId, UpdateTradeDto dto)
     {
-        var updateTradeRequestModel = new UpdateTradeRequestModel
+        return new UpdateTradeRequestModel
         {
             TradeId = tradeId,
             AssetId = dto.AssetId,
@@ -273,20 +271,18 @@ public partial class TradesController : ControllerBase
             ExitPrice = dto.ExitPrice is null ? new None() : dto.ExitPrice.Value,
             Notes = dto.Notes is null ? new None() : dto.Notes.Value
         };
-        return updateTradeRequestModel;
     }
 
     private static ResultModel? MapToResultModel(ResultDto? resultDto)
     {
-        var tradeResult = resultDto switch
+        return resultDto switch
         {
             ResultDto.Win => ResultModel.Win,
             ResultDto.Mediocre => ResultModel.Mediocre,
             ResultDto.BreakEven => ResultModel.BreakEven,
             ResultDto.Loss => ResultModel.Loss,
-            _ => (ResultModel?) null
+            _ => null
         };
-        return tradeResult;
     }
 
     [GeneratedRegex(

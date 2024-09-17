@@ -9,7 +9,7 @@ public interface IRepository<TEntity> where TEntity: IEntity
     ValueTask<TEntity?> Find(Guid id);
     Task<IReadOnlyList<TEntity>> Find(Expression<Func<TEntity, bool>> predicate, IEnumerable<ISort<TEntity>>? sorting = null);
 
-    Task<PagedList<TEntity>> Find(PaginationConfiguration pagination, Expression<Func<TEntity, bool>> predicate,
+    Task<PagedList<TEntity>> Find(PaginationConfiguration pagination, Expression<Func<TEntity, bool>> filterPredicate,
         IEnumerable<ISort<TEntity>>? sorting = null);
 
     void Add(TEntity entity);

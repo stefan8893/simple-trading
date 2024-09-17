@@ -2,7 +2,7 @@
 
 public static class EnumerableExtensions
 {
-    // copied from: https://github.com/DapperLib/Dapper/blob/9ed3525598494dddc1fbeb4e95e018239fffed13/Dapper/SqlMapper.cs#L518
+    // based on: https://github.com/DapperLib/Dapper/blob/9ed3525598494dddc1fbeb4e95e018239fffed13/Dapper/SqlMapper.cs#L518
 
     /// <summary>
     ///     Obtains the data as a list; if it is *already* a list, the original object is returned without
@@ -14,7 +14,7 @@ public static class EnumerableExtensions
     {
         return source switch
         {
-            null => null!,
+            null => [],
             List<T> list => list,
             _ => source.ToList()
         };

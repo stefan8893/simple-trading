@@ -27,19 +27,19 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
             .ToListAsync();
     }
 
-    public async Task<PagedList<T>> Find(PaginationConfiguration pagination, Expression<Func<T, bool>> predicate,
+    public async Task<PagedList<T>> Find(PaginationConfiguration pagination, Expression<Func<T, bool>> filterPredicate,
         IEnumerable<ISort<T>>? sorting = null)
     {
         var page = pagination.Page;
         var pageSize = pagination.PageSize;
         var sortingAsList = sorting.AsList();
 
-        var count = await FindInternal(predicate, sortingAsList).CountAsync();
+        var count = await FindInternal(filterPredicate, sortingAsList).CountAsync();
 
         if (count == 0)
             return new PagedList<T>([], 0, page, pageSize);
 
-        var result = await FindInternal(predicate, sortingAsList)
+        var result = await FindInternal(filterPredicate, sortingAsList)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -62,11 +62,11 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
         dbContext.RemoveRange(entities);
     }
 
-    private IQueryable<T> FindInternal(Expression<Func<T, bool>> predicate, IEnumerable<ISort<T>>? sorting = null)
+    private IQueryable<T> FindInternal(Expression<Func<T, bool>> filterPredicate, IEnumerable<ISort<T>>? sorting = null)
     {
         var filtered = dbContext
             .Set<T>()
-            .Where(predicate);
+            .Where(filterPredicate);
 
         var sortingAsList = sorting.AsList();
         if (sortingAsList.Count == 0)

@@ -33,7 +33,7 @@ public static class WebApplicationExtensions
         return new ProviderCultureResult(userSettings.Culture,
             Constants.SupportedCultures
                 .Select(x => x.Name)
-                .FirstOrDefault(x => x.StartsWith(userSettings.Language))
+                .FirstOrDefault(x => x.StartsWith(userSettings.Language, StringComparison.OrdinalIgnoreCase))
             ?? Constants.DefaultCulture.Name);
     }
 }
