@@ -11,7 +11,7 @@ public static partial class TestData
         public Guid Id { get; init; } = Guid.NewGuid();
         public string IsoCode { get; init; } = $"C{_currencyNumber++:00}";
         public string Name { get; init; } = "Test Currency";
-        public DateTime CreatedAt { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
+        public DateTime Created { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
         public static Currency Default => new();
 
@@ -22,7 +22,7 @@ public static partial class TestData
                 Id = Id,
                 IsoCode = IsoCode,
                 Name = Name,
-                Created = CreatedAt
+                Created = Created
             };
         }
     }

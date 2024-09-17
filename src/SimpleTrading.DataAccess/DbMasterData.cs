@@ -32,7 +32,7 @@ public class DbMasterData(TradingDbContext dbContext)
             Culture = Constants.DefaultCulture.Name,
             Language = null,
             TimeZone = Constants.DefaultTimeZone,
-            UpdatedAt = InitialCreationDateTime,
+            Updated = InitialCreationDateTime,
             Created = InitialCreationDateTime
         };
 
