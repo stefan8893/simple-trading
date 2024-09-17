@@ -1,4 +1,6 @@
-﻿using SimpleTrading.Domain.Extensions;
+﻿using OneOf.Types;
+using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
@@ -23,11 +25,11 @@ public class ResultValueParser : IValueParser<Result>
     }
 }
 
-public class NullableResultValueParser : IValueParser<Result?>
+public class NullableResultValueParser : IValueParser<NullableReference<Result>>
 {
-    public bool TryParse(string candidate, bool isLiteral, out Result? result)
+    public bool TryParse(string candidate, bool isLiteral, out NullableReference<Result> result)
     {
-        result = null;
+        result = NullableReference<Result>.Null;
 
         if (isLiteral && candidate.IsNullLiteral())
             return true;
@@ -38,7 +40,7 @@ public class NullableResultValueParser : IValueParser<Result?>
 
         var name = Result.GetName(index);
 
-        result = new Result(name, ResultSource.Unspecified);
+        result = NullableReference<Result>.From(new Result(name, ResultSource.Unspecified));
         return true;
     }
 }

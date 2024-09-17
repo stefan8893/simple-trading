@@ -688,7 +688,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         pagedTrades.Which.Should().HaveCount(1)
             .And.Contain(x => x.Balance == 500m);
     }
-    
+
     [Fact]
     public async Task Balance_equal_to_null_returns_trades_without_a_balance()
     {
@@ -852,6 +852,29 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .And.Contain(x => x.Result == ResultModel.BreakEven)
             .And.Contain(x => x.Result == ResultModel.Mediocre)
             .And.Contain(x => x.Result == ResultModel.Win);
+    }
+
+
+    [Fact]
+    public async Task Result_greater_than_or_equal_to_null_returns_bad_input()
+    {
+        // arrange
+        var filter = new FilterModel
+        {
+            PropertyName = "Result",
+            Operator = "ge",
+            ComparisonValue = "null",
+            IsLiteral = true
+        };
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+
+        // assert
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.ContainSingle(x =>
+                x.ErrorMessage == "Null is not allowed here." && x.PropertyName == "Filter[0].ComparisonValue");
     }
 
     [Fact]
