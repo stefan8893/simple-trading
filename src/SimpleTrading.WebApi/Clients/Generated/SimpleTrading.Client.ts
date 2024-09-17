@@ -105,7 +105,12 @@ export interface ISimpleTradingClient {
     /**
      * @return OK
      */
-    getUserLocalNow(): Promise<SwaggerResponse<void>>;
+    getUserSettings(): Promise<SwaggerResponse<UserSettingsDto>>;
+
+    /**
+     * @return OK
+     */
+    getUserLocalNow(): Promise<SwaggerResponse<Date>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
@@ -1106,22 +1111,23 @@ export class SimpleTradingClient implements ISimpleTradingClient {
     /**
      * @return OK
      */
-    getUserLocalNow(): Promise<SwaggerResponse<void>> {
-        let url_ = this.baseUrl + "/usersettings/local-now";
+    getUserSettings(): Promise<SwaggerResponse<UserSettingsDto>> {
+        let url_ = this.baseUrl + "/usersettings";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "Accept": "application/json"
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetUserLocalNow(_response);
+            return this.processGetUserSettings(_response);
         });
     }
 
-    protected processGetUserLocalNow(response: Response): Promise<SwaggerResponse<void>> {
+    protected processGetUserSettings(response: Response): Promise<SwaggerResponse<UserSettingsDto>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -1133,14 +1139,62 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
-            return new SwaggerResponse(status, _headers, null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserSettingsDto.fromJS(resultData200);
+            return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<UserSettingsDto>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    getUserLocalNow(): Promise<SwaggerResponse<Date>> {
+        let url_ = this.baseUrl + "/usersettings/local-now";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetUserLocalNow(_response);
+        });
+    }
+
+    protected processGetUserLocalNow(response: Response): Promise<SwaggerResponse<Date>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 ? new Date(resultData200.toString()) : <any>null;
+    
+            return new SwaggerResponse(status, _headers, result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<Date>>(new SwaggerResponse(status, _headers, null as any));
     }
 }
 
@@ -2298,6 +2352,54 @@ export interface IUpdateTradeDto {
     takeProfit?: DecimalNullableUpdatedValue;
     exitPrice?: DecimalNullableUpdatedValue;
     notes?: StringUpdatedValue;
+}
+
+export class UserSettingsDto implements IUserSettingsDto {
+    culture!: string | undefined;
+    language!: string | undefined;
+    timeZone!: string | undefined;
+    lastModified!: Date;
+
+    constructor(data?: IUserSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.culture = _data["culture"];
+            this.language = _data["language"];
+            this.timeZone = _data["timeZone"];
+            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["culture"] = this.culture;
+        data["language"] = this.language;
+        data["timeZone"] = this.timeZone;
+        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUserSettingsDto {
+    culture: string | undefined;
+    language: string | undefined;
+    timeZone: string | undefined;
+    lastModified: Date;
 }
 
 export class SwaggerResponse<TResult> {
