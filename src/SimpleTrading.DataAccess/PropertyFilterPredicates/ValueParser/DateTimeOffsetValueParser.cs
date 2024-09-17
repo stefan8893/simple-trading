@@ -15,7 +15,7 @@ public class NullableDateTimeOffsetValueParser : IValueParser<DateTimeOffset?>
     public bool TryParse(string candidate, bool isLiteral, out DateTimeOffset? result)
     {
         result = null;
-        
+
         if (isLiteral && candidate.IsNullLiteral())
             return true;
 

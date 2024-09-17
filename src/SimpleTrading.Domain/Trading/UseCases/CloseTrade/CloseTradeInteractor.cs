@@ -33,7 +33,7 @@ public class CloseTradeInteractor(
 
     private async Task<CloseTradeResponse> CloseTrade(Trade trade, CloseTradeRequestModel model)
     {
-        var closeTradeDto = new Trade.CloseTradeDto(model.Closed.UtcDateTime,
+        var closeTradeDto = new Trade.CloseTradeConfiguration(model.Closed.UtcDateTime,
             model.Balance,
             utcNow)
         {

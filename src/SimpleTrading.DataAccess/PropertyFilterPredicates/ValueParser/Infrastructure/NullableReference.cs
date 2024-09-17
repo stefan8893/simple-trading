@@ -12,6 +12,6 @@ public record NullableReference<T> where T : class?
 
     public static NullableReference<T> From(T value)
     {
-        return new NullableReference<T> { Value = value };
+        return new NullableReference<T> {Value = value};
     }
 }

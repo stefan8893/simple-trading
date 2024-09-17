@@ -164,7 +164,7 @@ public class UpdateTradeInteractor(
             var balance = model.Balance ?? trade.Balance!.Value;
             var result = model.Result.IsT0 ? model.Result.AsT0 : null;
 
-            return trade.Close(new Trade.CloseTradeDto(closedDate, balance, utcNow) {Result = result})
+            return trade.Close(new Trade.CloseTradeConfiguration(closedDate, balance, utcNow) {Result = result})
                 .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
         }
 

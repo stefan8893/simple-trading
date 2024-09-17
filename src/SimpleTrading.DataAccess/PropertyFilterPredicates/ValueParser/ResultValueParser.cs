@@ -1,5 +1,4 @@
-﻿using OneOf.Types;
-using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
+﻿using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 

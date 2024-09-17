@@ -22,9 +22,9 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
         return dbContext.FindAsync<T>(id);
     }
 
-    public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> predicate, IEnumerable<ISort<T>>? sorting = null)
+    public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> filterPredicate, IEnumerable<ISort<T>>? sorting = null)
     {
-        return await FindInternal(predicate, sorting)
+        return await FindInternal(filterPredicate, sorting)
             .ToListAsync();
     }
 

@@ -131,7 +131,7 @@ public class PositionPricesTests
     }
 
     [Fact]
-    public void It_is_a_short_position_when_TP_is_entry_entry_independent_of_the_SL_value()
+    public void It_is_a_short_position_when_TP_is_below_entry_independent_of_the_SL()
     {
         var prices = new PositionPrices
         {
@@ -147,7 +147,7 @@ public class PositionPricesTests
     }
 
     [Fact]
-    public void Short_position_win_result_get_properly_calculated()
+    public void Short_position_win_result_gets_properly_calculated()
     {
         var prices = new PositionPrices
         {

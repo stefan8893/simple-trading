@@ -1,4 +1,6 @@
-﻿namespace SimpleTrading.Domain.Trading.DataAccess;
+﻿using SimpleTrading.Domain.Abstractions;
+
+namespace SimpleTrading.Domain.Trading.DataAccess;
 
 public interface ITradeRepository : IRepository<Trade>
 {
