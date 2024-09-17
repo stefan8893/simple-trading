@@ -38,14 +38,22 @@ public class TradingDbContext(DbContextOptions<TradingDbContext> options, UtcNow
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
-        var entities = ChangeTracker.Entries().Where(x => x is
-            {Entity: Domain.User.UserSettings, State: EntityState.Modified});
-
-        var nowInUtcTime = utcNow();
-        foreach (var entity in entities)
-            ((UserSettings) entity.Entity).Updated = nowInUtcTime;
+        RefreshUpdatedDateOnUserSettingsChanges();
 
         return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void RefreshUpdatedDateOnUserSettingsChanges()
+    {
+        var userSettings = ChangeTracker.Entries()
+            .Where(x => x is {Entity: Domain.User.UserSettings, State: EntityState.Modified})
+            .Select(x => x.Entity as UserSettings)
+            .Where(x => x is not null)
+            .Select(x => x!);
+
+        var nowInUtcTime = utcNow();
+        foreach (var userSetting in userSettings)
+            userSetting.Updated = nowInUtcTime;
     }
 
     private static void AddDateTimeKindUtcConverter(ModelBuilder modelBuilder)
