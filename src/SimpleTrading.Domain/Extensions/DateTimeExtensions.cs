@@ -24,9 +24,4 @@ public static class DateTimeExtensions
     {
         return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
     }
-
-    public static DateTime ToLocalKind(this DateTime dateTime)
-    {
-        return DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
-    }
 }
