@@ -16,7 +16,7 @@ public class AssetsController : ControllerBase
 {
     [HttpGet(Name = nameof(GetAssets))]
     [ProducesResponseType<IEnumerable<AssetDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetAssets(
         [FromServices] IGetAssets getAssets,
         [FromQuery] string? searchTerm)

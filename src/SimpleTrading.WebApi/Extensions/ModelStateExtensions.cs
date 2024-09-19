@@ -14,14 +14,13 @@ public static class ModelStateExtensions
             .Select(modelStateEntry => new FieldError
             {
                 Identifier = modelStateEntry.Key,
-                Messages = modelStateEntry.Value!.Errors.Select(x => x.ErrorMessage).ToList()
+                Reasons = modelStateEntry.Value!.Errors.Select(x => x.ErrorMessage).ToList()
             })
             .ToList();
 
-        return new BadRequestObjectResult(new ErrorResponse
+        return new BadRequestObjectResult(new FieldErrorResponse
         {
-            FieldErrors = fieldErrors,
-            CommonErrors = []
+            Errors = fieldErrors
         });
     }
 }

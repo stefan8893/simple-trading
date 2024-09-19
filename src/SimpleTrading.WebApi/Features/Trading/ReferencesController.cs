@@ -56,7 +56,7 @@ public class ReferencesController : ControllerBase
 
     [HttpPost(Name = nameof(AddReference))]
     [ProducesResponseType<SuccessResponse<Guid>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> AddReference(
@@ -84,7 +84,7 @@ public class ReferencesController : ControllerBase
 
     [HttpPatch("{referenceId:guid}", Name = nameof(UpdateReference))]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateReference(
         [FromServices] IUpdateReference updateReference,
