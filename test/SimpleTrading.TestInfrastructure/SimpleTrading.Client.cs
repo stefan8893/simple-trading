@@ -59,7 +59,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SuccessResponse> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<TradeResultDtoSuccessResponse> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
@@ -319,12 +319,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -414,12 +414,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -529,12 +529,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -628,12 +628,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -763,7 +763,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SuccessResponse> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<TradeResultDtoSuccessResponse> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -823,7 +823,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<SuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<TradeResultDtoSuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -833,12 +833,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1057,12 +1057,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1363,12 +1363,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1576,12 +1576,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -1673,12 +1673,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -1770,12 +1770,12 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 400)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingClientException<FieldErrorResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -2207,11 +2207,8 @@ namespace SimpleTrading.Client
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ErrorResponse
     {
-        [Newtonsoft.Json.JsonProperty("fieldErrors", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<FieldError> FieldErrors { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("commonErrors", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> CommonErrors { get; set; }
+        [Newtonsoft.Json.JsonProperty("reasons", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<string> Reasons { get; set; }
 
     }
 
@@ -2221,8 +2218,16 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("identifier", Required = Newtonsoft.Json.Required.AllowNull)]
         public string Identifier { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> Messages { get; set; }
+        [Newtonsoft.Json.JsonProperty("reasons", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<string> Reasons { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldErrorResponse
+    {
+        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<FieldError> Errors { get; set; }
 
     }
 
@@ -2445,6 +2450,32 @@ namespace SimpleTrading.Client
 
         [Newtonsoft.Json.JsonProperty("pageSize", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? PageSize { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class TradeResultDto
+    {
+        [Newtonsoft.Json.JsonProperty("tradeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid? TradeId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ResultDto? Result { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Performance { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class TradeResultDtoSuccessResponse
+    {
+        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TradeResultDto Data { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
 
     }
 

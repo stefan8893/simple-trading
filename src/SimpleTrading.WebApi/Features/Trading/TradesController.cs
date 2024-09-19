@@ -28,7 +28,7 @@ public partial class TradesController : ControllerBase
 {
     [HttpGet(Name = nameof(SearchTrades))]
     [ProducesResponseType<PageDto<TradeDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SearchTrades(
         [FromServices] IValidator<SearchQuery> validator,
         [FromServices] ISearchTrades searchTrades,
@@ -56,7 +56,7 @@ public partial class TradesController : ControllerBase
 
     [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
     [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetTrade([FromServices] IGetTrade getTrade, [FromRoute] Guid tradeId)
     {
         var result = await getTrade.Execute(new GetTradeRequestModel(tradeId));
@@ -69,7 +69,7 @@ public partial class TradesController : ControllerBase
 
     [HttpPost(Name = nameof(AddTrade))]
     [ProducesResponseType<SuccessResponse<Guid>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> AddTrade(
@@ -94,7 +94,7 @@ public partial class TradesController : ControllerBase
 
     [HttpPatch("{tradeId:guid}", Name = nameof(UpdateTrade))]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> UpdateTrade(
@@ -114,8 +114,8 @@ public partial class TradesController : ControllerBase
     }
 
     [HttpPut("{tradeId:guid}/close", Name = nameof(CloseTrade))]
-    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<SuccessResponse<TradeResultDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> CloseTrade(
@@ -152,7 +152,6 @@ public partial class TradesController : ControllerBase
     }
 
     [HttpDelete("{tradeId:guid}", Name = nameof(DeleteTrade))]
-    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult> DeleteTrade(
         [FromServices] IDeleteTrade deleteTrade,

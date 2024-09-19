@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Client;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -42,7 +42,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task An_trades_opened_date_gets_converted_to_the_users_timezone()
+    public async Task A_trades_opened_date_gets_converted_to_the_users_timezone()
     {
         // arrange
         var client = await CreateClient();

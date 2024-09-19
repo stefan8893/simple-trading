@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
@@ -112,7 +112,7 @@ public class AddTradeInteractor(
 
         OneOf<Completed<Trade>, BusinessError> Close()
         {
-            var result = trade.Close(new Trade.CloseTradeDto(
+            var result = trade.Close(new Trade.CloseTradeConfiguration(
                 model.Closed!.Value.UtcDateTime,
                 model.Balance!.Value,
                 utcNow)

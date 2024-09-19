@@ -1,6 +1,6 @@
 ﻿using OneOf;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.GetReference;

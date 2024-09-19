@@ -17,8 +17,8 @@ public class NullableDecimalValueParser : IValueParser<decimal?>
         result = null;
 
         if (isLiteral && candidate.IsNullLiteral())
-            return false;
-        
+            return true;
+
         result = decimal.Parse(candidate);
         return true;
     }

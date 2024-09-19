@@ -82,13 +82,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.FieldErrors
+        exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x => x.Identifier == "Size")
-            .And.Contain(x => x.Messages.Count == 1)
-            .And.Contain(x => x.Messages.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
+            .And.Contain(x => x.Reasons.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -117,7 +116,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.CommonErrors
+        exception.Which.Result.Reasons
             .Should().HaveCount(1)
             .And.Contain(x => x == "Asset nicht gefunden.");
     }
@@ -149,12 +148,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.FieldErrors
+        exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x.Messages.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
+                x.Reasons.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
                 x.Identifier == "Balance");
     }
 
@@ -185,12 +184,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.FieldErrors
+        exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x.Messages.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
+                x.Reasons.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
                 x.Identifier == "Closed");
     }
 

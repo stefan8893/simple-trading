@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
+using SimpleTrading.Domain.User.DataAccess;
+using SimpleTrading.Domain.User.Factories;
 
 namespace SimpleTrading.WebApi.Extensions;
 

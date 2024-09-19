@@ -3,9 +3,11 @@ using SimpleTrading.DataAccess.PropertyFilterPredicates;
 using SimpleTrading.DataAccess.Repositories;
 using SimpleTrading.DataAccess.Sorting;
 using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.Abstractions.DataAccess;
+using SimpleTrading.Domain.Infrastructure.DataAccess;
 using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
+using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.DataAccess;
 

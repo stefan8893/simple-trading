@@ -24,7 +24,7 @@ public class ResultTests : TestBase
     [InlineData("mEdIoCrE", Result.Mediocre)]
     [InlineData("LOss", Result.Loss)]
     [InlineData("breakEven", Result.BreakEven)]
-    public void Creating_a_result_with_difference_name_casings_results_always_in_a_capitalized_name(
+    public void Creating_a_result_with_different_name_casings_results_always_in_a_capitalized_name(
         string nameCandidate, string expectedName)
     {
         var result = new Result(nameCandidate, ResultSource.ManuallyEntered);
@@ -37,7 +37,7 @@ public class ResultTests : TestBase
     [InlineData(" Win")]
     [InlineData(" Win ")]
     [InlineData(" Win    ")]
-    public void Leading_and_trailing_whitespaces_get_removed_from_the_name(string name)
+    public void Leading_and_trailing_whitespaces_will_be_removed_from_the_name(string name)
     {
         var result = new Result(name, ResultSource.ManuallyEntered);
 

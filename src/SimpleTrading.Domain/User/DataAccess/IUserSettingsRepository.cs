@@ -1,6 +1,4 @@
-﻿using SimpleTrading.Domain.User;
-
-namespace SimpleTrading.Domain.Abstractions.DataAccess;
+﻿namespace SimpleTrading.Domain.User.DataAccess;
 
 public interface IUserSettingsRepository
 {

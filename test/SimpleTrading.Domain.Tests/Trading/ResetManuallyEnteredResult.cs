@@ -13,7 +13,7 @@ public class ResetManuallyEnteredResult : TestBase
     public void A_manually_entered_result_gets_successfully_reset()
     {
         var trade = TestData.Trade.Default.Build();
-        trade.Close(new Trade.CloseTradeDto(trade.Opened, 50, UtcNowStub) {Result = ResultModel.Mediocre});
+        trade.Close(new Trade.CloseTradeConfiguration(trade.Opened, 50, UtcNowStub) {Result = ResultModel.Mediocre});
 
         trade.ResetManuallyEnteredResult(UtcNowStub);
 

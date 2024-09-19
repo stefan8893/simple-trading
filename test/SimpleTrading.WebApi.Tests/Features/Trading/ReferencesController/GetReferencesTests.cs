@@ -21,7 +21,7 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.CommonErrors.Should().HaveCount(1)
+        exception.Which.Result.Reasons.Should().HaveCount(1)
             .And.Contain(x => x == "Trade nicht gefunden.");
     }
 

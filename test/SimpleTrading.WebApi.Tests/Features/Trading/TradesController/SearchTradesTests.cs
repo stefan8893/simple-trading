@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
@@ -46,9 +48,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var act = () => client.SearchTradesAsync([], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Reasons.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
 
@@ -64,9 +67,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var act = () => client.SearchTradesAsync([], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Reasons.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
 
@@ -82,9 +86,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var act = () => client.SearchTradesAsync([], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Reasons.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
                               x.Identifier == "Filter[0].ComparisonValue");
     }
 
@@ -100,9 +105,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var act = () => client.SearchTradesAsync([], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Reasons.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
 
@@ -141,7 +147,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trades = Enumerable.Range(1, 3)
-            .Select(x => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default)
             .Select(x => x.Build())
             .ToList();
 
@@ -164,7 +170,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trades = Enumerable.Range(1, 3)
-            .Select(x => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default)
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -186,7 +192,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default)
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);

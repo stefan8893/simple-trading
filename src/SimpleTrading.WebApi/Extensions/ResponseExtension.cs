@@ -15,17 +15,16 @@ public static class ResponseExtension
 
     public static ActionResult ToActionResult(this ValidationResult validationResult)
     {
-        var errorResponse = new ErrorResponse
+        var errorResponse = new FieldErrorResponse
         {
-            FieldErrors = validationResult.Errors
+            Errors = validationResult.Errors
                 .GroupBy(x => x.PropertyName)
                 .Select(x => new FieldError
                 {
                     Identifier = x.Key,
-                    Messages = x.Select(e => e.ErrorMessage).ToList()
+                    Reasons = x.Select(e => e.ErrorMessage).ToList()
                 })
-                .ToList(),
-            CommonErrors = []
+                .ToList()
         };
 
         return new BadRequestObjectResult(errorResponse);
@@ -40,8 +39,7 @@ public static class ResponseExtension
 
         var errorResponse = new ErrorResponse
         {
-            FieldErrors = [],
-            CommonErrors = [errorMessage]
+            Reasons = [errorMessage]
         };
 
         return new NotFoundObjectResult(errorResponse);
@@ -51,8 +49,7 @@ public static class ResponseExtension
     {
         var errorResponse = new ErrorResponse
         {
-            FieldErrors = [],
-            CommonErrors = [businessError.Reason]
+            Reasons = [businessError.Reason]
         };
 
         return new UnprocessableEntityObjectResult(errorResponse);

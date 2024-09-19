@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using SimpleTrading.Domain.Abstractions.DataAccess;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
 

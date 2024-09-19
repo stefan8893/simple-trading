@@ -55,11 +55,11 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.FieldErrors.Should().HaveCount(1)
+        exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Identifier == "Type")
-            .And.Contain(x => x.Messages.Single() == "'Referenztyp' hat einen Wertebereich, der '50' nicht enthält.");
+            .And.Contain(x => x.Reasons.Single() == "'Referenztyp' hat einen Wertebereich, der '50' nicht enthält.");
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.CommonErrors.Should().HaveCount(1)
+        exception.Which.Result.Reasons.Should().HaveCount(1)
             .And.Contain(x => x == "Trade nicht gefunden.");
     }
 
@@ -111,7 +111,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.CommonErrors.Should().HaveCount(1)
+        exception.Which.Result.Reasons.Should().HaveCount(1)
             .And.Contain(x => x == "Referenz nicht gefunden.");
     }
 }

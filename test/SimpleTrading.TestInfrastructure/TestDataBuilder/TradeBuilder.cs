@@ -72,7 +72,7 @@ public static partial class TestData
             };
 
             if (Closed.HasValue && Balance.HasValue)
-                trade.Close(new Domain.Trading.Trade.CloseTradeDto(Closed.Value,
+                trade.Close(new Domain.Trading.Trade.CloseTradeConfiguration(Closed.Value,
                     Balance.Value,
                     () => opened)
                 {

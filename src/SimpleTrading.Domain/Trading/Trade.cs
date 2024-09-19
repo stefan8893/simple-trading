@@ -36,40 +36,40 @@ public class Trade : IEntity
             return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
 
         Result = null;
-        return Close(new CloseTradeDto(Closed!.Value, Balance!.Value, utcNow));
+        return Close(new CloseTradeConfiguration(Closed!.Value, Balance!.Value, utcNow));
     }
 
-    internal OneOf<Completed, BusinessError> Close(CloseTradeDto dto)
+    internal OneOf<Completed, BusinessError> Close(CloseTradeConfiguration configuration)
     {
-        if (dto.Closed < Opened)
+        if (configuration.Closed < Opened)
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
 
-        var utcNow = dto.UtcNow();
+        var utcNow = configuration.UtcNow();
         var closedDateUpperBound = (Opened > utcNow ? Opened : utcNow).AddDays(1);
 
-        if (dto.Closed > closedDateUpperBound)
+        if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
         if (IsClosed && Result?.Source == ResultSource.ManuallyEntered)
             return new Completed();
 
-        Closed = dto.Closed.ToUtcKind();
-        Balance = dto.Balance;
+        Closed = configuration.Closed.ToUtcKind();
+        Balance = configuration.Balance;
 
-        if (dto.ExitPrice.HasValue)
-            PositionPrices.Exit = dto.ExitPrice;
+        if (configuration.ExitPrice.HasValue)
+            PositionPrices.Exit = configuration.ExitPrice;
 
-        var results = CalculateResults(dto);
+        var results = CalculateResults(configuration);
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
         Result = results.ManuallyEntered ?? calculatedResult;
 
         return new Completed(AnalyseResults(results, calculatedResult));
     }
 
-    private TradingResultsDto CalculateResults(CloseTradeDto dto)
+    private TradingResultsDto CalculateResults(CloseTradeConfiguration configuration)
     {
-        var manuallyEnteredResult = dto.Result.HasValue
-            ? CreateManuallyEnteredResult(dto.Result.Value)
+        var manuallyEnteredResult = configuration.Result.HasValue
+            ? CreateManuallyEnteredResult(configuration.Result.Value)
             // do not lose a manual result that was previously entered
             : Result?.Source == ResultSource.ManuallyEntered
                 ? Result
@@ -159,7 +159,7 @@ public class Trade : IEntity
         };
     }
 
-    internal record CloseTradeDto(DateTime Closed, decimal Balance, UtcNow UtcNow)
+    internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
     {
         public decimal? ExitPrice { get; init; }
         public ResultModel? Result { get; init; }

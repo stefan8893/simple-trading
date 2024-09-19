@@ -1,6 +1,6 @@
-﻿using SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain.Abstractions;
 
-namespace SimpleTrading.Domain.Abstractions.DataAccess;
+namespace SimpleTrading.Domain.Trading.DataAccess;
 
 public interface IAssetRepository : IRepository<Asset>
 {

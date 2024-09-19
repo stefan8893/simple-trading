@@ -16,7 +16,7 @@ public class CurrenciesController : ControllerBase
 {
     [HttpGet(Name = nameof(GetCurrencies))]
     [ProducesResponseType<IEnumerable<CurrencyDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetCurrencies(
         [FromServices] IGetCurrencies getCurrencies,
         [FromQuery] string? searchTerm)

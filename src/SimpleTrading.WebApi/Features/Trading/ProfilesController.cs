@@ -16,7 +16,7 @@ public class ProfilesController : ControllerBase
 {
     [HttpGet(Name = nameof(GetProfiles))]
     [ProducesResponseType<IEnumerable<ProfileDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetProfiles(
         [FromServices] IGetProfiles getProfiles,
         [FromQuery] string? searchTerm)

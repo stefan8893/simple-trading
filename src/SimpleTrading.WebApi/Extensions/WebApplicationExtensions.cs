@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using SimpleTrading.Domain;
-using SimpleTrading.Domain.Abstractions.DataAccess;
+using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.WebApi.Extensions;
 

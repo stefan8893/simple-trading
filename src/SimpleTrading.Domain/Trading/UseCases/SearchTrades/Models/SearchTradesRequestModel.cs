@@ -3,7 +3,7 @@ using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 
-public class SearchTradesRequestModel : Pagination
+public class SearchTradesRequestModel : PaginationRequestModel
 {
     public IReadOnlyList<SortModel> Sort { get; init; } = [];
     public IReadOnlyList<FilterModel> Filter { get; init; } = [];
@@ -12,7 +12,7 @@ public class SearchTradesRequestModel : Pagination
 public class SearchTradesRequestModelValidator : AbstractValidator<SearchTradesRequestModel>
 {
     public SearchTradesRequestModelValidator(FilterModelValidator filterModelValidator,
-        SortModelValidator sortModelValidator, PaginationValidator paginationValidator)
+        SortModelValidator sortModelValidator, PaginationRequestModelValidator paginationValidator)
     {
         RuleForEach(x => x.Sort)
             .SetValidator(sortModelValidator);

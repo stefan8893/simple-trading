@@ -2,6 +2,6 @@
 
 public class ErrorResponse
 {
-    public required IReadOnlyList<FieldError> FieldErrors { get; init; } = [];
-    public required IReadOnlyList<string> CommonErrors { get; init; } = [];
+    public required IReadOnlyList<string> Reasons { get; init; }
+
 }

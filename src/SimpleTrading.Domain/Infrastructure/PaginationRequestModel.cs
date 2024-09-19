@@ -3,7 +3,7 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Infrastructure;
 
-public abstract class Pagination
+public abstract class PaginationRequestModel
 {
     public const int DefaultPageSize = 50;
     
@@ -15,9 +15,9 @@ public abstract class Pagination
     public int PageSize { get; set; } = DefaultPageSize;
 }
 
-public class PaginationValidator : AbstractValidator<Pagination>
+public class PaginationRequestModelValidator : AbstractValidator<PaginationRequestModel>
 {
-    public PaginationValidator()
+    public PaginationRequestModelValidator()
     {
         RuleFor(x => x.Page)
             .GreaterThanOrEqualTo(1)

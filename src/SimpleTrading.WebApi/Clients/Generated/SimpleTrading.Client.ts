@@ -50,7 +50,7 @@ export interface ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>>;
 
     /**
      * @return OK
@@ -220,7 +220,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
@@ -276,7 +276,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
@@ -344,7 +344,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
@@ -403,7 +403,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
@@ -479,7 +479,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>> {
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/close";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -502,7 +502,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processCloseTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+    protected processCloseTrade(response: Response): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -516,14 +516,14 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
+            result200 = TradeResultDtoSuccessResponse.fromJS(resultData200);
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
@@ -545,7 +545,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<TradeResultDtoSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
@@ -656,7 +656,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
@@ -840,7 +840,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
@@ -971,7 +971,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
@@ -1034,7 +1034,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
@@ -1097,7 +1097,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorResponse.fromJS(resultData400);
+            result400 = FieldErrorResponse.fromJS(resultData400);
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
@@ -1555,8 +1555,7 @@ export interface IDecimalNullableUpdatedValue {
 }
 
 export class ErrorResponse implements IErrorResponse {
-    fieldErrors!: FieldError[] | undefined;
-    commonErrors!: string[] | undefined;
+    reasons!: string[] | undefined;
 
     constructor(data?: IErrorResponse) {
         if (data) {
@@ -1569,15 +1568,10 @@ export class ErrorResponse implements IErrorResponse {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["fieldErrors"])) {
-                this.fieldErrors = [] as any;
-                for (let item of _data["fieldErrors"])
-                    this.fieldErrors!.push(FieldError.fromJS(item));
-            }
-            if (Array.isArray(_data["commonErrors"])) {
-                this.commonErrors = [] as any;
-                for (let item of _data["commonErrors"])
-                    this.commonErrors!.push(item);
+            if (Array.isArray(_data["reasons"])) {
+                this.reasons = [] as any;
+                for (let item of _data["reasons"])
+                    this.reasons!.push(item);
             }
         }
     }
@@ -1591,28 +1585,22 @@ export class ErrorResponse implements IErrorResponse {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.fieldErrors)) {
-            data["fieldErrors"] = [];
-            for (let item of this.fieldErrors)
-                data["fieldErrors"].push(item.toJSON());
-        }
-        if (Array.isArray(this.commonErrors)) {
-            data["commonErrors"] = [];
-            for (let item of this.commonErrors)
-                data["commonErrors"].push(item);
+        if (Array.isArray(this.reasons)) {
+            data["reasons"] = [];
+            for (let item of this.reasons)
+                data["reasons"].push(item);
         }
         return data;
     }
 }
 
 export interface IErrorResponse {
-    fieldErrors: FieldError[] | undefined;
-    commonErrors: string[] | undefined;
+    reasons: string[] | undefined;
 }
 
 export class FieldError implements IFieldError {
     identifier!: string | undefined;
-    messages!: string[] | undefined;
+    reasons!: string[] | undefined;
 
     constructor(data?: IFieldError) {
         if (data) {
@@ -1626,10 +1614,10 @@ export class FieldError implements IFieldError {
     init(_data?: any) {
         if (_data) {
             this.identifier = _data["identifier"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
+            if (Array.isArray(_data["reasons"])) {
+                this.reasons = [] as any;
+                for (let item of _data["reasons"])
+                    this.reasons!.push(item);
             }
         }
     }
@@ -1644,10 +1632,10 @@ export class FieldError implements IFieldError {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["identifier"] = this.identifier;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
+        if (Array.isArray(this.reasons)) {
+            data["reasons"] = [];
+            for (let item of this.reasons)
+                data["reasons"].push(item);
         }
         return data;
     }
@@ -1655,7 +1643,51 @@ export class FieldError implements IFieldError {
 
 export interface IFieldError {
     identifier: string | undefined;
-    messages: string[] | undefined;
+    reasons: string[] | undefined;
+}
+
+export class FieldErrorResponse implements IFieldErrorResponse {
+    errors!: FieldError[] | undefined;
+
+    constructor(data?: IFieldErrorResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(FieldError.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FieldErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldErrorResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFieldErrorResponse {
+    errors: FieldError[] | undefined;
 }
 
 export class GuidSuccessResponse implements IGuidSuccessResponse {
@@ -2176,6 +2208,98 @@ export interface ITradeDtoPageDto {
     totalCount?: number;
     page?: number;
     pageSize?: number;
+}
+
+export class TradeResultDto implements ITradeResultDto {
+    tradeId?: string;
+    result?: ResultDto;
+    performance?: number | undefined;
+
+    constructor(data?: ITradeResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tradeId = _data["tradeId"];
+            this.result = _data["result"];
+            this.performance = _data["performance"];
+        }
+    }
+
+    static fromJS(data: any): TradeResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tradeId"] = this.tradeId;
+        data["result"] = this.result;
+        data["performance"] = this.performance;
+        return data;
+    }
+}
+
+export interface ITradeResultDto {
+    tradeId?: string;
+    result?: ResultDto;
+    performance?: number | undefined;
+}
+
+export class TradeResultDtoSuccessResponse implements ITradeResultDtoSuccessResponse {
+    data?: TradeResultDto;
+    warnings?: string[] | undefined;
+
+    constructor(data?: ITradeResultDtoSuccessResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data = _data["data"] ? TradeResultDto.fromJS(_data["data"]) : <any>undefined;
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): TradeResultDtoSuccessResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeResultDtoSuccessResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ITradeResultDtoSuccessResponse {
+    data?: TradeResultDto;
+    warnings?: string[] | undefined;
 }
 
 export class UInt16SuccessResponse implements IUInt16SuccessResponse {
