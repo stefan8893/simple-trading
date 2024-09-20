@@ -85,7 +85,7 @@ public partial class TradesController : ControllerBase
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
-            completed => Ok(SuccessResponse<Guid>.From(completed.Data, completed.Warnings)),
+            completed => Ok(SuccessResponse<Guid>.From(completed)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()

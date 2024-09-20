@@ -23,7 +23,7 @@ var clientAppEntraIdConfig = builder.Configuration
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(
-        o => o.InvalidModelStateResponseFactory = ctx => ctx.ModelState.ToCustomErrorResponse())
+        o => { o.SuppressMapClientErrors = true; })
     .AddJsonOptions(options =>
     {
         var enumConverter = new JsonStringEnumConverter();
@@ -49,6 +49,7 @@ app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
+app.UseNotFoundMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 

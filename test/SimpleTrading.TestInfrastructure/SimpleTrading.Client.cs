@@ -299,12 +299,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -394,12 +390,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -509,12 +501,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -608,12 +596,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -723,12 +707,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -813,12 +793,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -933,12 +909,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1037,12 +1009,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1147,12 +1115,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1243,12 +1207,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1343,12 +1303,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1459,12 +1415,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1556,12 +1508,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1653,12 +1601,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1750,12 +1694,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1841,12 +1781,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -1922,12 +1858,8 @@ namespace SimpleTrading.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 401)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)
@@ -2239,35 +2171,6 @@ namespace SimpleTrading.Client
 
         [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string> Warnings { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ProblemDetails
-    {
-        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Type { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Title { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Status { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Detail { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Instance { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
 
     }
 

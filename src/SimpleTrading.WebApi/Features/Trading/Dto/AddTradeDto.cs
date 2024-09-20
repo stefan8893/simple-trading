@@ -12,16 +12,13 @@ public record AddTradeDto
     /// <example>401c519b-956a-4a5f-bd84-77e716817771</example>
     public Guid? ProfileId { get; set; }
 
-    /// <example>2024-08-19T10:00:00+02:00</example>
     public DateTimeOffset? Opened { get; set; }
 
-    /// <example>2024-08-19T10:00:00+02:00</example>
     public DateTimeOffset? Closed { get; set; }
 
     /// <example>5000</example>
     public decimal? Size { get; set; }
-
-    /// <example>null</example>
+    
     public ResultDto? Result { get; set; }
 
     /// <example>125</example>
@@ -45,7 +42,7 @@ public record AddTradeDto
     /// <example>null</example>
     public string? Notes { get; set; }
 
-    /// <example>[]</example>
+    /// <example>null</example>
     public IReadOnlyList<AddReferenceDto>? References { get; set; }
 }
 
