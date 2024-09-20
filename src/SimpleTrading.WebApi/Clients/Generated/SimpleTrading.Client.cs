@@ -2139,8 +2139,8 @@ namespace SimpleTrading.Client
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ErrorResponse
     {
-        [Newtonsoft.Json.JsonProperty("reasons", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> Reasons { get; set; }
+        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<string> Messages { get; set; }
 
     }
 
@@ -2150,8 +2150,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("identifier", Required = Newtonsoft.Json.Required.AllowNull)]
         public string Identifier { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("reasons", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> Reasons { get; set; }
+        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<string> Messages { get; set; }
 
     }
 

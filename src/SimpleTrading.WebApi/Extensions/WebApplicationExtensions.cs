@@ -25,7 +25,7 @@ public static class WebApplicationExtensions
             {
                 context.Response.ContentType = "application/json; charset=utf-8";
                 var jsonResponse = JsonSerializer.Serialize(new ErrorResponse
-                    {Reasons = [SimpleTradingStrings.NotFound]});
+                    {Messages = [SimpleTradingStrings.NotFound]});
                 await context.Response.WriteAsync(jsonResponse, Encoding.UTF8);
             }
         });

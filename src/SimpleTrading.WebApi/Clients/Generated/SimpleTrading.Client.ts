@@ -1504,7 +1504,7 @@ export interface IDecimalNullableUpdatedValue {
 }
 
 export class ErrorResponse implements IErrorResponse {
-    reasons!: string[] | undefined;
+    messages!: string[] | undefined;
 
     constructor(data?: IErrorResponse) {
         if (data) {
@@ -1517,10 +1517,10 @@ export class ErrorResponse implements IErrorResponse {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["reasons"])) {
-                this.reasons = [] as any;
-                for (let item of _data["reasons"])
-                    this.reasons!.push(item);
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
             }
         }
     }
@@ -1534,22 +1534,22 @@ export class ErrorResponse implements IErrorResponse {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.reasons)) {
-            data["reasons"] = [];
-            for (let item of this.reasons)
-                data["reasons"].push(item);
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
         }
         return data;
     }
 }
 
 export interface IErrorResponse {
-    reasons: string[] | undefined;
+    messages: string[] | undefined;
 }
 
 export class FieldError implements IFieldError {
     identifier!: string | undefined;
-    reasons!: string[] | undefined;
+    messages!: string[] | undefined;
 
     constructor(data?: IFieldError) {
         if (data) {
@@ -1563,10 +1563,10 @@ export class FieldError implements IFieldError {
     init(_data?: any) {
         if (_data) {
             this.identifier = _data["identifier"];
-            if (Array.isArray(_data["reasons"])) {
-                this.reasons = [] as any;
-                for (let item of _data["reasons"])
-                    this.reasons!.push(item);
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
             }
         }
     }
@@ -1581,10 +1581,10 @@ export class FieldError implements IFieldError {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["identifier"] = this.identifier;
-        if (Array.isArray(this.reasons)) {
-            data["reasons"] = [];
-            for (let item of this.reasons)
-                data["reasons"].push(item);
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
         }
         return data;
     }
@@ -1592,7 +1592,7 @@ export class FieldError implements IFieldError {
 
 export interface IFieldError {
     identifier: string | undefined;
-    reasons: string[] | undefined;
+    messages: string[] | undefined;
 }
 
 export class FieldErrorResponse implements IFieldErrorResponse {
