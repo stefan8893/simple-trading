@@ -78,7 +78,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; ist nur möglich, wenn ein Trade bereits abgeschlossen wurde..
+        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; ist nur möglich, wenn ein Trade bereits abgeschlossen ist..
         /// </summary>
         public static string BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades {
             get {

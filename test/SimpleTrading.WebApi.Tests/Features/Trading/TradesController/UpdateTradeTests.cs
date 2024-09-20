@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
@@ -75,6 +75,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.Result.Messages.Should().HaveCount(1)
             .And.Contain(x =>
                 x ==
-                "Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen wurde.");
+                "Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen ist.");
     }
 }
