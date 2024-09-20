@@ -1,18 +1,14 @@
 using System.CommandLine;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Clients;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
-using SimpleTrading.WebApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +44,6 @@ builder.Services.AddSingleton<ClientGenerator>();
 
 
 var app = builder.Build();
-
 
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseStaticFiles();

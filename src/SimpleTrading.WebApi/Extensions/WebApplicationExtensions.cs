@@ -11,7 +11,7 @@ namespace SimpleTrading.WebApi.Extensions;
 public static class WebApplicationExtensions
 {
     /// <summary>
-    /// In cases where the request path cannot be mapped to an endpoint.<br/>
+    ///     In cases where the request path cannot be mapped to an endpoint.<br />
     /// </summary>
     /// <param name="app"></param>
     /// <returns></returns>
