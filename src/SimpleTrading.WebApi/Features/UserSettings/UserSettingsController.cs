@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
@@ -14,7 +14,7 @@ namespace SimpleTrading.WebApi.Features.UserSettings;
 [SwaggerUiControllerPosition(6)]
 public class UserSettingsController : ControllerBase
 {
-    [HttpGet(Name = "GetUserSettings")]
+    [HttpGet(Name = nameof(GetUserSettings))]
     [ProducesResponseType<UserSettingsDto>(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetUserSettings([FromServices] IGetUserSettings getUserSettings)
     {
@@ -23,11 +23,12 @@ public class UserSettingsController : ControllerBase
         return Ok(UserSettingsDto.From(userSettings));
     }
 
-    [HttpGet("local-now", Name = "GetUserLocalNow")]
+    [HttpGet("local-now", Name = nameof(GetUserLocalNow))]
     [ProducesResponseType<DateTimeOffset>(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetLocalNow([FromServices] LocalNow localNow)
+    public async Task<ActionResult> GetUserLocalNow([FromServices] LocalNow localNow)
     {
         var nowInUserTimeZone = await localNow();
+
         return Ok(nowInUserTimeZone);
     }
 }

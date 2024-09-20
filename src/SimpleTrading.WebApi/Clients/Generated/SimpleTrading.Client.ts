@@ -204,10 +204,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -260,10 +257,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -328,10 +322,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -387,10 +378,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -455,10 +443,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -507,10 +492,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -578,10 +560,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -640,10 +619,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -704,10 +680,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -758,10 +731,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -824,10 +794,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -892,10 +859,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -948,10 +912,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -1011,10 +972,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -1074,10 +1032,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -1132,10 +1087,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -1176,10 +1128,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            return throwException("Unauthorized", status, _responseText, _headers);
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
@@ -1736,70 +1685,6 @@ export class GuidSuccessResponse implements IGuidSuccessResponse {
 export interface IGuidSuccessResponse {
     data?: string;
     warnings?: string[] | undefined;
-}
-
-export class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.type = _data["type"];
-            this.title = _data["title"];
-            this.status = _data["status"];
-            this.detail = _data["detail"];
-            this.instance = _data["instance"];
-        }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["type"] = this.type;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["detail"] = this.detail;
-        data["instance"] = this.instance;
-        return data;
-    }
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
 }
 
 export class ProfileDto implements IProfileDto {

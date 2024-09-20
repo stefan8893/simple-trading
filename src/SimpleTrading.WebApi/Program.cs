@@ -23,7 +23,11 @@ var clientAppEntraIdConfig = builder.Configuration
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(
-        o => o.InvalidModelStateResponseFactory = ctx => ctx.ModelState.ToCustomErrorResponse())
+        o =>
+        {
+            o.InvalidModelStateResponseFactory = ctx => ctx.ModelState.ToCustomErrorResponse();
+            o.SuppressMapClientErrors = true;
+        })
     .AddJsonOptions(options =>
     {
         var enumConverter = new JsonStringEnumConverter();

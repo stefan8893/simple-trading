@@ -8,19 +8,15 @@ public static class ModelStateExtensions
 {
     public static ActionResult ToCustomErrorResponse(this ModelStateDictionary modelStateDictionary)
     {
-        var fieldErrors = modelStateDictionary
+        var reasons = modelStateDictionary
             .Where(x => x.Value is not null)
             .Where(x => x.Value!.ValidationState == ModelValidationState.Invalid)
-            .Select(modelStateEntry => new FieldError
-            {
-                Identifier = modelStateEntry.Key,
-                Reasons = modelStateEntry.Value!.Errors.Select(x => x.ErrorMessage).ToList()
-            })
+            .SelectMany(modelStateEntry => modelStateEntry.Value!.Errors.Select(x => x.ErrorMessage))
             .ToList();
 
-        return new BadRequestObjectResult(new FieldErrorResponse
+        return new BadRequestObjectResult(new ErrorResponse
         {
-            Errors = fieldErrors
+            Reasons = reasons
         });
     }
 }

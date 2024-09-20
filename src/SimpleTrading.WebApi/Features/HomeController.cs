@@ -26,9 +26,9 @@ public class HomeController(IHostEnvironment hostEnvironment) : ControllerBase
     private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? "N/A";
 
     [AllowAnonymous]
-    [HttpGet("info", Name = "GetAppInfo")]
+    [HttpGet("info", Name = nameof(GetAppInfo))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<ApiInfo> Info()
+    public ActionResult<ApiInfo> GetAppInfo()
     {
         var apiInfo = new ApiInfo(AssemblyName,
             AssemblyVersion.Value,

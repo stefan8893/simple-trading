@@ -133,15 +133,14 @@ public class ReferencesController : ControllerBase
         var result = await deleteReferences.Execute(new DeleteReferencesRequestModel(tradeId));
 
         return result.Match(
-            completed => Ok(SuccessResponse<ushort>.From(completed.Data, completed.Warnings)),
+            completed => Ok(SuccessResponse<ushort>.From(completed)),
             notFound => notFound.ToActionResult()
         );
     }
 
     private static UpdateReferenceRequestModel MapToRequestModel(Guid tradeId, Guid referenceId, UpdateReferenceDto dto)
     {
-        var addReferenceRequestModel =
-            new UpdateReferenceRequestModel
+        return new UpdateReferenceRequestModel
             {
                 TradeId = tradeId,
                 ReferenceId = referenceId,
@@ -149,7 +148,6 @@ public class ReferencesController : ControllerBase
                 Link = dto.Link,
                 Notes = dto.Notes is null ? new None() : dto.Notes.Value
             };
-        return addReferenceRequestModel;
     }
 
     private static ReferenceType? MapToReferenceType(ReferenceTypeDto? dto)
