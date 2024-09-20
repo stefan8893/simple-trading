@@ -25,7 +25,6 @@ builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(
         o =>
         {
-            o.InvalidModelStateResponseFactory = ctx => ctx.ModelState.ToCustomErrorResponse();
             o.SuppressMapClientErrors = true;
         })
     .AddJsonOptions(options =>
