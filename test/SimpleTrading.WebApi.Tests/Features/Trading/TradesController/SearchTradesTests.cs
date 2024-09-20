@@ -1,5 +1,4 @@
-﻿using System.Net;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
