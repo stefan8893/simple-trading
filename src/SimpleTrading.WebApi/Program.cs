@@ -1,14 +1,18 @@
 using System.CommandLine;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Clients;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
+using SimpleTrading.WebApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,10 +27,7 @@ var clientAppEntraIdConfig = builder.Configuration
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(
-        o =>
-        {
-            o.SuppressMapClientErrors = true;
-        })
+        o => { o.SuppressMapClientErrors = true; })
     .AddJsonOptions(options =>
     {
         var enumConverter = new JsonStringEnumConverter();
@@ -48,10 +49,12 @@ builder.Services.AddSingleton<ClientGenerator>();
 
 var app = builder.Build();
 
+
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
+app.UseNotFoundMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 
