@@ -16,7 +16,7 @@ public class CloseTradeInteractor(
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : BaseInteractor, ICloseTrade
+    : InteractorBase, ICloseTrade
 {
     public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {

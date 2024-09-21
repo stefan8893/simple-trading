@@ -2,7 +2,7 @@
 
 namespace SimpleTrading.Domain.Infrastructure;
 
-public abstract class BaseInteractor
+public abstract class InteractorBase
 {
     protected static Completed Completed()
     {

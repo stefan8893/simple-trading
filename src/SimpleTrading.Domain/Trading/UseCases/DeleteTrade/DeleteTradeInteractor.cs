@@ -5,7 +5,7 @@ using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 
-public class DeleteTradeInteractor(ITradeRepository tradeRepository, UowCommit uowCommit) : BaseInteractor, IDeleteTrade
+public class DeleteTradeInteractor(ITradeRepository tradeRepository, UowCommit uowCommit) : InteractorBase, IDeleteTrade
 {
     public async Task<OneOf<Completed, NotFound>> Execute(DeleteTradeRequestModel model)
     {

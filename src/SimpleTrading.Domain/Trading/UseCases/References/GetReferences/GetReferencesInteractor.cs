@@ -5,7 +5,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 
-public class GetReferencesInteractor(ITradeRepository tradeRepository) : BaseInteractor, IGetReferences
+public class GetReferencesInteractor(ITradeRepository tradeRepository) : InteractorBase, IGetReferences
 {
     public async Task<OneOf<IReadOnlyList<ReferenceModel>, NotFound>> Execute(GetReferencesRequestModel model)
     {

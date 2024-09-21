@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using FluentValidation;
 using OneOf;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
@@ -19,7 +18,7 @@ public class SearchTradesInteractor(
     IUserSettingsRepository userSettingsRepository,
     IEnumerable<IFilterPredicate<Trade>> filterPredicates,
     IReadOnlyDictionary<string, Func<Order, ISort<Trade>>> sorterByName)
-    : BaseInteractor, ISearchTrades
+    : InteractorBase, ISearchTrades
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
 
@@ -41,7 +40,7 @@ public class SearchTradesInteractor(
         var trades = await tradeRepository.Find(paginationConfig, filter, sorting);
 
         var userSettings = await userSettingsRepository.GetUserSettings();
-        
+
         return trades
             .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));
     }
@@ -52,7 +51,7 @@ public class SearchTradesInteractor(
         var tradeParameter = Expression.Parameter(typeof(Trade));
         return Expression.Lambda<Func<Trade, bool>>(
             Expression.AndAlso(
-                Expression.Invoke(acc, tradeParameter), 
+                Expression.Invoke(acc, tradeParameter),
                 Expression.Invoke(next, tradeParameter)),
             tradeParameter);
     }

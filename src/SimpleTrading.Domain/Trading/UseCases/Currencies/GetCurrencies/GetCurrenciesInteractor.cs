@@ -8,7 +8,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 public class GetCurrenciesInteractor(
     IValidator<GetCurrenciesRequestModel> validator,
     ICurrencyRepository currencyRepository)
-    : BaseInteractor, IGetCurrencies
+    : InteractorBase, IGetCurrencies
 {
     public async Task<OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>> Execute(
         GetCurrenciesRequestModel model)
