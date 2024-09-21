@@ -327,7 +327,31 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<BusinessError>()
             .Which.Reason.Should()
-            .Be("Updating 'Balance' and 'Closed' is only possible when a trade has already been closed.");
+            .Be("Updating 'Balance', 'Closed' or 'Result' is only possible when the trade has already been closed.");
+    }
+    
+    [Fact]
+    public async Task You_cant_update_the_result_if_the_trade_has_not_yet_been_finished()
+    {
+        // arrange
+        var trade = TestData.Trade.Default.Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            Result = ResultModel.Mediocre
+        };
+
+        // act
+        var response = await Interactor.Execute(updateTradeRequestModel);
+
+        // assert
+        response.Value.Should().BeOfType<BusinessError>()
+            .Which.Reason.Should()
+            .Be("Updating 'Balance', 'Closed' or 'Result' is only possible when the trade has already been closed.");
     }
 
     [Fact]

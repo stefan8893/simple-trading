@@ -142,23 +142,23 @@ public class UpdateTradeInteractor(
     }
 
     private OneOf<Completed, NothingToClose, BusinessError> CloseTrade(Trade trade, UpdateTradeRequestModel model,
-        bool hasPositionPricesChanges)
+        bool positionPricesHaveChanged)
     {
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
         var resultHasChanged = model.Result.IsT0 && model.Result.AsT0?.ToString() != trade.Result?.Name;
         var shouldResetResult = resultHasChanged && model.Result.AsT0 is null;
 
-        if (!trade.IsClosed && (balanceHasChanged || closedHasChanged))
-            return new BusinessError(trade.Id,
-                SimpleTradingStrings.BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades);
+        if (!trade.IsClosed && (balanceHasChanged || closedHasChanged || resultHasChanged))
+            return BusinessError(trade.Id,
+                SimpleTradingStrings.BalanceResultAndClosedUpdatesAreOnlyPossibleForClosedTrades);
 
         if (resultHasChanged && shouldResetResult)
             trade.ResetManuallyEnteredResult(utcNow);
 
         // ReSharper disable once InvertIf
         if (trade.IsClosed &&
-            (hasPositionPricesChanges || balanceHasChanged || closedHasChanged || resultHasChanged))
+            (positionPricesHaveChanged || balanceHasChanged || closedHasChanged || resultHasChanged))
         {
             var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
             var balance = model.Balance ?? trade.Balance!.Value;

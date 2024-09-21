@@ -78,20 +78,20 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; ist nur möglich, wenn ein Trade bereits abgeschlossen ist..
-        /// </summary>
-        public static string BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades {
-            get {
-                return ResourceManager.GetString("BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Die Bilanz ist nicht 0, aber die Position deutet auf eine Bilanz gleich 0 hin..
         /// </summary>
         public static string BalanceNotZeroAndExitEntryPricesSame {
             get {
                 return ResourceManager.GetString("BalanceNotZeroAndExitEntryPricesSame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos;, &apos;Abgeschlossen&apos; oder &apos;Ergebnis&apos; ist nur möglich, wenn der Trade bereits abgeschlossen ist..
+        /// </summary>
+        public static string BalanceResultAndClosedUpdatesAreOnlyPossibleForClosedTrades {
+            get {
+                return ResourceManager.GetString("BalanceResultAndClosedUpdatesAreOnlyPossibleForClosedTrades", resourceCulture);
             }
         }
         
