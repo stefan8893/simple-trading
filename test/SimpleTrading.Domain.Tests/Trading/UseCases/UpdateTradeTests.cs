@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -456,6 +456,34 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade?.Result.Should().NotBeNull();
         updatedTrade!.Result!.Performance.Should().Be(85);
+    }
+
+    [Fact]
+    public async Task Manually_entered_results_can_be_updated_multiple_times()
+    {
+        // arrange
+        var trade = (TestData.Trade.Default with {Balance = 500m, Result = ResultModel.Win}).Build();
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        trade.IsClosed.Should().BeTrue();
+        _ = await Interactor.Execute(new UpdateTradeRequestModel
+            {TradeId = trade.Id, Result = ResultModel.Win});
+
+        // act
+        var response = await Interactor.Execute(new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            Result = ResultModel.Mediocre,
+        });
+
+        // assert
+        response.Value.Should().BeOfType<Completed>();
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        updatedTrade.Should().NotBeNull();
+        updatedTrade!.Result.Should().NotBeNull();
+        updatedTrade.Result!.Name.Should().Be(Result.Mediocre);
+        updatedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 
     private DateTime UtcNowStub()

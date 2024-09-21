@@ -50,7 +50,14 @@ public class Trade : IEntity
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
-        if (IsClosed && Result?.Source == ResultSource.ManuallyEntered)
+        var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
+        var thereIsNoNewManuallyEnteredResult = !configuration.Result.HasValue;
+        var doNotOverrideResultThatWasPreviouslyEnteredManually =
+            IsClosed
+            && currentResultWasManuallyEntered
+            && thereIsNoNewManuallyEnteredResult;
+
+        if (doNotOverrideResultThatWasPreviouslyEnteredManually)
             return new Completed();
 
         Closed = configuration.Closed.ToUtcKind();
