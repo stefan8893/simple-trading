@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
 {
-    b.RegisterModule<CommonModule>();
+    b.RegisterModule<WebApiModule>();
     b.RegisterModule<DateTimeProviderModule>();
     b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
     b.RegisterModule<DomainModule>();

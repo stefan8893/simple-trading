@@ -3,7 +3,7 @@ using SimpleTrading.WebApi.Clients;
 
 namespace SimpleTrading.WebApi.Modules;
 
-public class CommonModule : Module
+public class WebApiModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
