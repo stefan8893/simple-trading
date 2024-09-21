@@ -112,7 +112,7 @@ public class AddTradeInteractor(
 
         OneOf<Completed<Trade>, BusinessError> Close()
         {
-            var result = trade.Close(new Trade.CloseTradeConfiguration(
+            var result = trade.Close(new CloseTradeConfiguration(
                 model.Closed!.Value.UtcDateTime,
                 model.Balance!.Value,
                 utcNow)

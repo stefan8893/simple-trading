@@ -159,14 +159,14 @@ public class Trade : IEntity
         };
     }
 
-    internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
-    {
-        public decimal? ExitPrice { get; init; }
-        public ResultModel? Result { get; init; }
-    }
-
     private record TradingResultsDto(
         Result? ManuallyEntered,
         Result? CalculatedByBalance,
         Result? CalculatedByPositionPrices);
+}
+
+internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
+{
+    public decimal? ExitPrice { get; init; }
+    public ResultModel? Result { get; init; }
 }
