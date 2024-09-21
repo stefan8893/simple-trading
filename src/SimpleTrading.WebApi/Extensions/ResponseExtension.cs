@@ -22,7 +22,7 @@ public static class ResponseExtension
                 .Select(x => new FieldError
                 {
                     Identifier = x.Key,
-                    Reasons = x.Select(e => e.ErrorMessage).ToList()
+                    Messages = x.Select(e => e.ErrorMessage).ToList()
                 })
                 .ToList()
         };
@@ -39,7 +39,7 @@ public static class ResponseExtension
 
         var errorResponse = new ErrorResponse
         {
-            Reasons = [errorMessage]
+            Messages = [errorMessage]
         };
 
         return new NotFoundObjectResult(errorResponse);
@@ -49,7 +49,7 @@ public static class ResponseExtension
     {
         var errorResponse = new ErrorResponse
         {
-            Reasons = [businessError.Reason]
+            Messages = [businessError.Reason]
         };
 
         return new UnprocessableEntityObjectResult(errorResponse);

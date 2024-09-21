@@ -1,6 +1,7 @@
-﻿using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
+﻿using Autofac;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -18,10 +19,9 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
     private IUpdateTrade Interactor => ServiceLocator.GetRequiredService<IUpdateTrade>();
 
-    protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
     {
-        base.OverrideServices(ctx, services);
-        services.AddSingleton<UtcNow>(_ => UtcNowStub);
+        builder.Register<UtcNow>(_ => () => _utcNow);
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Result = (ResultModel?) 50
+            ManuallyEnteredResult = (ResultModel?) 50
         };
 
         // act
@@ -64,7 +64,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Result' has a range of values which does not include '50'." &&
-                              x.PropertyName == "Result");
+                              x.PropertyName == "ManuallyEnteredResult");
     }
 
     [Fact]
@@ -260,7 +260,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var _ = trade.Close(new Trade.CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        var _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -284,7 +284,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        _ = trade.Close(new Trade.CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -327,7 +327,31 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<BusinessError>()
             .Which.Reason.Should()
-            .Be("Updating 'Balance' and 'Closed' is only possible when a trade has already been closed.");
+            .Be("Updating 'Balance' or 'Closed' is only possible when the trade has already been closed.");
+    }
+    
+    [Fact]
+    public async Task You_cant_update_the_result_if_the_trade_has_not_yet_been_finished()
+    {
+        // arrange
+        var trade = TestData.Trade.Default.Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            ManuallyEnteredResult = ResultModel.Mediocre
+        };
+
+        // act
+        var response = await Interactor.Execute(updateTradeRequestModel);
+
+        // assert
+        response.Value.Should().BeOfType<BusinessError>()
+            .Which.Reason.Should()
+            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
     }
 
     [Fact]
@@ -335,7 +359,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var _ = trade.Close(new Trade.CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        var _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
         const decimal newBalance = 100m;
 
         DbContext.Trades.Add(trade);
@@ -396,7 +420,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                     PositionPrices = oldPositionPrice
                 }
             ).Build();
-        _ = trade.Close(new Trade.CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -445,7 +469,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             StopLoss = new None(),
             ExitPrice = new None(),
             Notes = new None(),
-            Result = new None()
+            ManuallyEnteredResult = new None()
         };
 
         // act
@@ -456,6 +480,34 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade?.Result.Should().NotBeNull();
         updatedTrade!.Result!.Performance.Should().Be(85);
+    }
+
+    [Fact]
+    public async Task Manually_entered_results_can_be_updated_multiple_times()
+    {
+        // arrange
+        var trade = (TestData.Trade.Default with {Balance = 500m, Result = ResultModel.Win}).Build();
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        trade.IsClosed.Should().BeTrue();
+        _ = await Interactor.Execute(new UpdateTradeRequestModel
+            {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win});
+
+        // act
+        var response = await Interactor.Execute(new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            ManuallyEnteredResult = ResultModel.Mediocre,
+        });
+
+        // assert
+        response.Value.Should().BeOfType<Completed>();
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        updatedTrade.Should().NotBeNull();
+        updatedTrade!.Result.Should().NotBeNull();
+        updatedTrade.Result!.Name.Should().Be(Result.Mediocre);
+        updatedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 
     private DateTime UtcNowStub()

@@ -2,5 +2,5 @@
 
 public class ErrorResponse
 {
-    public required IReadOnlyList<string> Reasons { get; init; }
+    public required IReadOnlyList<string> Messages { get; init; }
 }

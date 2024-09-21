@@ -7,7 +7,7 @@ using SimpleTrading.Domain.User.DataAccess;
 namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 
 public class GetTradeInteractor(ITradeRepository tradeRepository, IUserSettingsRepository userSettingsRepository)
-    : BaseInteractor, IGetTrade
+    : InteractorBase, IGetTrade
 {
     public async Task<OneOf<TradeResponseModel, NotFound>> Execute(GetTradeRequestModel model)
     {

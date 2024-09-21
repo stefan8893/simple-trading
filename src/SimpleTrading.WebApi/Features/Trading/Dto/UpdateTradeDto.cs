@@ -9,7 +9,7 @@ public class UpdateTradeDto
     public DateTimeOffset? Opened { get; set; }
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; set; }
-    public UpdatedValue<ResultDto?>? Result { get; set; }
+    public UpdatedValue<ResultDto?>? ManuallyEnteredResult { get; set; }
     public decimal? Balance { get; set; }
     public Guid? CurrencyId { get; set; }
     public decimal? EntryPrice { get; set; }

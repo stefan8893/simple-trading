@@ -2,29 +2,29 @@
 
 namespace SimpleTrading.Domain.Infrastructure;
 
-public abstract class BaseInteractor
+public abstract class InteractorBase
 {
     protected static Completed Completed()
     {
         return new Completed();
     }
 
-    protected static Completed<T> Completed<T>(T data) where T : notnull
+    protected static Completed<T> Completed<T>(T data)
     {
         return new Completed<T>(data);
     }
 
-    protected static Completed<T> Completed<T>(T data, IEnumerable<Warning> warnings) where T : notnull
+    protected static Completed<T> Completed<T>(T data, IEnumerable<Warning> warnings)
     {
         return new Completed<T>(data, warnings);
     }
 
-    protected static Completed<T> Completed<T>(T data, IEnumerable<string> warnings) where T : notnull
+    protected static Completed<T> Completed<T>(T data, IEnumerable<string> warnings)
     {
         return new Completed<T>(data, warnings);
     }
 
-    protected static Completed<T> Completed<T>(T data, string singleWarning) where T : notnull
+    protected static Completed<T> Completed<T>(T data, string singleWarning)
     {
         return new Completed<T>(data, singleWarning);
     }

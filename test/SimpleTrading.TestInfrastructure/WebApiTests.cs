@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Hosting;
+using Autofac;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SimpleTrading.Client;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Abstractions;
@@ -42,7 +43,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         await dbMasterData.PopulateUserSettings();
     }
 
-    protected virtual void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    protected virtual void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
     {
     }
 

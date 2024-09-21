@@ -54,7 +54,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Reasons
+        exception.Which.Result.Messages
             .Should().Contain(x => x == "Trade nicht gefunden.")
             .And.HaveCount(1);
     }
@@ -83,7 +83,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x => x.Identifier == "Balance")
-            .And.Contain(x => x.Reasons.Single() == "'Bilanz' darf kein Nullwert sein.");
+            .And.Contain(x => x.Messages.Single() == "'Bilanz' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x => x.Identifier == "Closed")
-            .And.Contain(x => x.Reasons.Single() == "'Abgeschlossen' darf kein Nullwert sein.");
+            .And.Contain(x => x.Messages.Single() == "'Abgeschlossen' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.Reasons
+        exception.Which.Result.Messages
             .Should().HaveCount(1)
             .And.Contain(x => x == "'Abgeschlossen' muss nach 'Eröffnet' liegen.");
     }

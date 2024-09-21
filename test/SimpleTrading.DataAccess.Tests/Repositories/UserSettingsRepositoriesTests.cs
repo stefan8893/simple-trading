@@ -1,6 +1,7 @@
-﻿using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
+﻿using Autofac;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -14,10 +15,9 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-09-17T12:00:00").ToUtcKind();
 
-    protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
     {
-        services.AddSingleton<UtcNow>(_ => () => _utcNow);
-        base.OverrideServices(ctx, services);
+        builder.Register<UtcNow>(_ => () => _utcNow);
     }
 
     [Fact]

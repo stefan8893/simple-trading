@@ -17,7 +17,7 @@ public record UpdateTradeRequestModel
     public DateTimeOffset? Opened { get; init; }
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; init; }
-    public OneOf<ResultModel?, None> Result { get; set; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
     public decimal? Balance { get; set; }
     public Guid? CurrencyId { get; init; }
     public decimal? EntryPrice { get; init; }
@@ -55,11 +55,11 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .WithName(SimpleTradingStrings.TradeSize)
             .When(x => x.Size.HasValue);
 
-        RuleFor(x => x.Result.AsT0)
+        RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
-            .OverridePropertyName(x => x.Result)
-            .When(x => x.Result is {IsT0: true, AsT0: not null});
+            .OverridePropertyName(x => x.ManuallyEnteredResult)
+            .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.EntryPrice)
             .GreaterThan(0)

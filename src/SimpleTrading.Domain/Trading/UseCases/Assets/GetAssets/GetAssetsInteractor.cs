@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Trading.DataAccess;
 namespace SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 
 public class GetAssetsInteractor(IValidator<GetAssetsRequestModel> validator, IAssetRepository assetRepository)
-    : BaseInteractor, IGetAssets
+    : InteractorBase, IGetAssets
 {
     public async Task<OneOf<IReadOnlyList<GetAssetsResponseModel>, BadInput>> Execute(GetAssetsRequestModel model)
     {

@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Trading.DataAccess;
 namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
 public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator, IProfileRepository profileRepository)
-    : BaseInteractor, IGetProfiles
+    : InteractorBase, IGetProfiles
 {
     public async Task<OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>> Execute(GetProfilesRequestModel model)
     {

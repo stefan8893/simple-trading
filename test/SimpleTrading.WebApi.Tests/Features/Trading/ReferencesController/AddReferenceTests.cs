@@ -56,7 +56,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Reasons.Single() == "Ungültiger Link.")
+            .And.Contain(x => x.Messages.Single() == "Ungültiger Link.")
             .And.Contain(x => x.Identifier == "Link");
     }
 
@@ -78,7 +78,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Reasons.Should().HaveCount(1)
+        exception.Which.Result.Messages.Should().HaveCount(1)
             .And.Contain(x => x == "Trade nicht gefunden.");
     }
 }

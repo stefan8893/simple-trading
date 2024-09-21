@@ -20,7 +20,7 @@ public class CloseTradeTests : TestBase
         var closed = _utcNow.AddHours(-3);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m,
             Result = ResultModel.Win
@@ -53,7 +53,7 @@ public class CloseTradeTests : TestBase
         var closed = _utcNow.AddDays(1).AddSeconds(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m,
             Result = ResultModel.Win
@@ -76,7 +76,7 @@ public class CloseTradeTests : TestBase
         var closed = opened.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m
         };
@@ -97,7 +97,7 @@ public class CloseTradeTests : TestBase
         var closed = opened.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new Trade.CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m
         };
@@ -115,7 +115,7 @@ public class CloseTradeTests : TestBase
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -138,7 +138,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {ExitPrice = 0.1m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -161,7 +161,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.0m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -183,7 +183,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.1m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -204,7 +204,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.4m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -224,7 +224,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {StopLoss = 1.0m, EntryPrice = 1.1m, ExitPrice = 1.1m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -250,7 +250,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -272,7 +272,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub)
         {
             Result = ResultModel.BreakEven
         };
@@ -297,7 +297,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             Result = ResultModel.BreakEven
         };
@@ -327,7 +327,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 10m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub)
         {
             Result = ResultModel.BreakEven,
             ExitPrice = 0.9m
@@ -358,7 +358,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             Result = ResultModel.Mediocre,
             ExitPrice = 1.0m
@@ -389,7 +389,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -415,7 +415,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -437,7 +437,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.0m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -458,7 +458,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.05m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -479,7 +479,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 0.95m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -500,7 +500,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.175m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 5m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 5m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -521,7 +521,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.397m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -542,7 +542,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.4m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -563,7 +563,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.46m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
         // act
         var _ = trade.Close(closeTradeDto);
@@ -584,7 +584,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
             Balance = 10m,
             ExitPrice = 1.0m
@@ -610,7 +610,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -30m, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -30m, UtcNowStub);
 
         // act
         var response = trade.Close(closeTradeDto);
@@ -635,7 +635,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.2m, TakeProfit = 0.8m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
             ExitPrice = 1.2m
         };
@@ -661,7 +661,7 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.8m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
             ExitPrice = 1.0m
         };
@@ -680,7 +680,7 @@ public class CloseTradeTests : TestBase
     public void Performance_is_zero_if_the_result_break_even_calculated_by_balance()
     {
         var trade = TestData.Trade.Default.Build();
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0, UtcNowStub);
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub);
 
         var response = trade.Close(closeTradeDto);
 
@@ -702,7 +702,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ExitPrice = 0.9m
         };
@@ -727,7 +727,7 @@ public class CloseTradeTests : TestBase
             PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.95m, TakeProfit = 1.4m}
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ExitPrice = 1.1m,
             Result = ResultModel.BreakEven
@@ -757,7 +757,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 1.25m
         };
@@ -787,7 +787,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 0.9m
         };
@@ -816,7 +816,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 0.7m
         };
@@ -845,7 +845,7 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new Trade.CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 1.1m
         };

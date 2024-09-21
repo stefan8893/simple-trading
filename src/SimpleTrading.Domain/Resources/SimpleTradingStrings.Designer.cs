@@ -78,7 +78,16 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; ist nur möglich, wenn ein Trade bereits abgeschlossen wurde..
+        ///   Looks up a localized string similar to Das Ergebnis kann nur überschrieben werden, wenn &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; angegeben ist..
+        /// </summary>
+        public static string BalanceAndClosedMustBePresentWhenOverridingResult {
+            get {
+                return ResourceManager.GetString("BalanceAndClosedMustBePresentWhenOverridingResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Aktualisierung von &apos;Bilanz&apos; oder &apos;Abgeschlossen&apos; ist nur möglich, wenn der Trade bereits abgeschlossen ist..
         /// </summary>
         public static string BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades {
             get {
@@ -512,9 +521,9 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; darf nicht leer sein, wenn &apos;{1}&apos; angegeben ist..
         /// </summary>
-        public static string XMustNotBeEmptyIfYIsThere {
+        public static string XMustNotBeEmptyIfYIsPresent {
             get {
-                return ResourceManager.GetString("XMustNotBeEmptyIfYIsThere", resourceCulture);
+                return ResourceManager.GetString("XMustNotBeEmptyIfYIsPresent", resourceCulture);
             }
         }
     }

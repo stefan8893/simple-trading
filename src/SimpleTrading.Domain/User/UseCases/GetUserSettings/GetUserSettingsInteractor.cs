@@ -6,7 +6,7 @@ using SimpleTrading.Domain.User.DataAccess;
 namespace SimpleTrading.Domain.User.UseCases.GetUserSettings;
 
 public class GetUserSettingsInteractor(IUserSettingsRepository userSettingsRepository)
-    : BaseInteractor, IGetUserSettings
+    : InteractorBase, IGetUserSettings
 {
     public async Task<UserSettingsResponseModel> Execute()
     {

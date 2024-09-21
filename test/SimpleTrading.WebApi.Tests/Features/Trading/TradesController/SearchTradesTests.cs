@@ -1,5 +1,4 @@
-﻿using System.Net;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -51,7 +50,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Reasons.Single() == "Ungültiges Filterformat." &&
+            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
 
@@ -70,7 +69,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Reasons.Single() == "Ungültiges Filterformat." &&
+            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
 
@@ -89,7 +88,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Reasons.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
+            .And.Contain(x => x.Messages.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
                               x.Identifier == "Filter[0].ComparisonValue");
     }
 
@@ -108,7 +107,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Reasons.Single() == "Ungültiges Filterformat." &&
+            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
 

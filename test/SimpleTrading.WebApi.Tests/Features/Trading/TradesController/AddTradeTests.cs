@@ -87,7 +87,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x => x.Identifier == "Size")
-            .And.Contain(x => x.Reasons.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
+            .And.Contain(x => x.Messages.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Reasons
+        exception.Which.Result.Messages
             .Should().HaveCount(1)
             .And.Contain(x => x == "Asset nicht gefunden.");
     }
@@ -153,7 +153,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x.Reasons.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
+                x.Messages.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
                 x.Identifier == "Balance");
     }
 
@@ -189,7 +189,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.Result.Errors
             .Should().HaveCount(1)
             .And.Contain(x =>
-                x.Reasons.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
+                x.Messages.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
                 x.Identifier == "Closed");
     }
 

@@ -1,76 +1,80 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SimpleTrading.DataAccess;
-using SimpleTrading.Domain.Abstractions;
-using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Trading.UseCases.AddTrade;
-using SimpleTrading.Domain.User.DataAccess;
-using SimpleTrading.Domain.User.Factories;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.OpenApi.Models;
+using SimpleTrading.WebApi.Configuration;
+using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddUseCases(this IServiceCollection services)
+    public static IServiceCollection ConfigureOpenApiDocumentation(this IServiceCollection services,
+        ClientAppEntraIdConfig clientAppEntraIdConfig)
     {
-        services.Scan(scan =>
-            scan.FromAssemblyOf<IAddTrade>()
-                .AddClasses(f => f.AssignableTo(typeof(IInteractor<,>)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
-
-        return services.Scan(scan =>
-            scan.FromAssemblyOf<IAddTrade>()
-                .AddClasses(f => f.AssignableTo(typeof(IInteractor<>)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
-    }
-
-    public static IServiceCollection AddTradingDbContext(this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        var dbProvider = configuration.GetValue<string>("DbProvider")
-                         ?? throw new Exception("Missing DbProvider");
-
-        var connectionString = configuration.GetConnectionString(dbProvider);
-
-        const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
-        const string postgresMigrationsAssembly = "SimpleTrading.DataAccess.Postgres";
-        const string sqliteMigrationsAssembly = "SimpleTrading.DataAccess.Sqlite";
-
-        var dbContextOptionsBuilderByProvider =
-            new Dictionary<string, Action<DbContextOptionsBuilder>>(StringComparer.OrdinalIgnoreCase)
+        services
+            .AddSwaggerGen(c =>
             {
-                ["SqlServer"] = o =>
+                c.AddSecurityDefinition("Entra ID", new OpenApiSecurityScheme
                 {
-                    o.UseSqlServer(connectionString,
-                        x =>
-                            x.MigrationsAssembly(sqlServerMigrationsAssembly)
-                                .UseAzureSqlDefaults());
-                },
-                ["Postgres"] = o =>
-                {
-                    o.UseNpgsql(connectionString,
-                        x => x.MigrationsAssembly(postgresMigrationsAssembly));
-                },
-                ["Sqlite"] = o =>
-                {
-                    o.UseSqlite(connectionString,
-                        x => x.MigrationsAssembly(sqliteMigrationsAssembly));
-                }
-            };
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri(clientAppEntraIdConfig.AuthorizationUrl),
+                            TokenUrl = new Uri(clientAppEntraIdConfig.TokenUrl),
+                            Scopes = clientAppEntraIdConfig.Scopes.ToDictionary(x => x.Value, x => x.Description)
+                        }
+                    }
+                });
 
-        services.AddDbContext<TradingDbContext>(dbContextOptionsBuilderByProvider[dbProvider]);
-        services.AddScoped<DbMasterData>();
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Entra ID"}
+                        },
+                        clientAppEntraIdConfig.Scopes.Select(x => x.Value).ToArray()
+                    }
+                });
+
+                c.OrderActionsBy(api =>
+                {
+                    if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
+
+                    var orderAttribute = descriptor
+                        .EndpointMetadata.OfType<SwaggerUiControllerPositionAttribute>()
+                        .FirstOrDefault();
+
+                    return orderAttribute is null
+                        ? descriptor.ControllerName
+                        : orderAttribute.Position.ToString();
+                });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
 
         return services;
     }
 
-    public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
+    public static IApplicationBuilder ConfigureSwaggerUi(this IApplicationBuilder app,
+        ClientAppEntraIdConfig clientAppEntraIdConfig)
     {
-        services.AddSingleton<UtcNow>(_ => () => DateTime.UtcNow);
-        services.AddScoped(sp =>
-            DateTimeProviderFactory.CreateLocalNowFunc(sp.GetRequiredService<IUserSettingsRepository>()));
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.RoutePrefix = "";
+            c.DocumentTitle = "Simple Trading - Web Api";
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimpleTrading - WebApi");
+            c.OAuthClientId(clientAppEntraIdConfig.ClientId);
+            c.OAuthUsePkce();
+            c.OAuthScopeSeparator(" ");
+            c.OAuth2RedirectUrl(clientAppEntraIdConfig.RedirectUrl);
+            c.InjectStylesheet("/swagger-ui-customization.css");
+        });
 
-        return services;
+        return app;
     }
 }

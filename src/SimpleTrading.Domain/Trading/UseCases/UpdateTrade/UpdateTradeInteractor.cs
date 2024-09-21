@@ -18,7 +18,7 @@ public class UpdateTradeInteractor(
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : BaseInteractor, IUpdateTrade
+    : InteractorBase, IUpdateTrade
 {
     public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
     {
@@ -142,33 +142,38 @@ public class UpdateTradeInteractor(
     }
 
     private OneOf<Completed, NothingToClose, BusinessError> CloseTrade(Trade trade, UpdateTradeRequestModel model,
-        bool hasPositionPricesChanges)
+        bool positionPricesHaveChanged)
     {
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
-        var resultHasChanged = model.Result.IsT0 && model.Result.AsT0?.ToString() != trade.Result?.Name;
-        var shouldResetResult = resultHasChanged && model.Result.AsT0 is null;
-
-        if (!trade.IsClosed && (balanceHasChanged || closedHasChanged))
-            return new BusinessError(trade.Id,
-                SimpleTradingStrings.BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades);
+        var resultHasChanged = model.ManuallyEnteredResult.IsT0 && model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
+        var shouldResetResult = resultHasChanged && model.ManuallyEnteredResult.AsT0 is null;
 
         if (resultHasChanged && shouldResetResult)
             trade.ResetManuallyEnteredResult(utcNow);
-
-        // ReSharper disable once InvertIf
-        if (trade.IsClosed &&
-            (hasPositionPricesChanges || balanceHasChanged || closedHasChanged || resultHasChanged))
+        
+        switch (trade.IsClosed)
         {
-            var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
-            var balance = model.Balance ?? trade.Balance!.Value;
-            var result = model.Result.IsT0 ? model.Result.AsT0 : null;
+            case false when balanceHasChanged || closedHasChanged:
+                return BusinessError(trade.Id,
+                    SimpleTradingStrings.BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades);
+            case false when resultHasChanged && !(balanceHasChanged && closedHasChanged):
+                return BusinessError(trade.Id,
+                    SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult);
+            case true when
+                positionPricesHaveChanged || balanceHasChanged || closedHasChanged || resultHasChanged:
+            {
+                var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
+                var balance = model.Balance ?? trade.Balance!.Value;
+                var result = model.ManuallyEnteredResult.IsT0 ? model.ManuallyEnteredResult.AsT0 : null;
 
-            return trade.Close(new Trade.CloseTradeConfiguration(closedDate, balance, utcNow) {Result = result})
-                .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
+                var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow) {Result = result};
+                return trade.Close(closeTradeConfiguration)
+                    .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
+            }
+            default:
+                return new NothingToClose();
         }
-
-        return new NothingToClose();
     }
 
     private record NothingToClose;

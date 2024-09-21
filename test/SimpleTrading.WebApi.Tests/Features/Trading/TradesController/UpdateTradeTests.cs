@@ -72,9 +72,9 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.Reasons.Should().HaveCount(1)
+        exception.Which.Result.Messages.Should().HaveCount(1)
             .And.Contain(x =>
                 x ==
-                "Die Aktualisierung von 'Bilanz' und 'Abgeschlossen' ist nur möglich, wenn ein Trade bereits abgeschlossen wurde.");
+                "Die Aktualisierung von 'Bilanz' oder 'Abgeschlossen' ist nur möglich, wenn der Trade bereits abgeschlossen ist.");
     }
 }

@@ -45,17 +45,34 @@ public class Trade : IEntity
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
 
         var utcNow = configuration.UtcNow();
-        var closedDateUpperBound = (Opened > utcNow ? Opened : utcNow).AddDays(1);
+        var closedDateUpperBound =
+            (Opened > utcNow ? Opened : utcNow).AddDays(Constants.OpenedDateMaxDaysInTheFutureLimit);
 
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
-        if (IsClosed && Result?.Source == ResultSource.ManuallyEntered)
-            return new Completed();
+        var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
+        var thereIsNoNewManuallyEnteredResult = !configuration.Result.HasValue;
+        var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
+            IsClosed
+            && currentResultWasManuallyEntered
+            && thereIsNoNewManuallyEnteredResult;
 
+        return doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne
+            ? new Completed()
+            : CloseTrade(configuration);
+    }
+
+    private OneOf<Completed, BusinessError> CloseTrade(CloseTradeConfiguration configuration)
+    {
         Closed = configuration.Closed.ToUtcKind();
         Balance = configuration.Balance;
 
+        return CalculateResult(configuration);
+    }
+
+    private OneOf<Completed, BusinessError> CalculateResult(CloseTradeConfiguration configuration)
+    {
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
 
@@ -159,14 +176,14 @@ public class Trade : IEntity
         };
     }
 
-    internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
-    {
-        public decimal? ExitPrice { get; init; }
-        public ResultModel? Result { get; init; }
-    }
-
     private record TradingResultsDto(
         Result? ManuallyEntered,
         Result? CalculatedByBalance,
         Result? CalculatedByPositionPrices);
+}
+
+internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
+{
+    public decimal? ExitPrice { get; init; }
+    public ResultModel? Result { get; init; }
 }

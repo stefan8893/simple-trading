@@ -28,7 +28,7 @@ public record Completed
     public IEnumerable<Warning> Warnings { get; init; } = [];
 }
 
-public record Completed<TData> : Completed where TData : notnull
+public record Completed<TData> : Completed
 {
     public Completed(TData data)
     {

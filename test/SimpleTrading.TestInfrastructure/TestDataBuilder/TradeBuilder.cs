@@ -1,5 +1,6 @@
 using OneOf;
 using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -72,7 +73,7 @@ public static partial class TestData
             };
 
             if (Closed.HasValue && Balance.HasValue)
-                trade.Close(new Domain.Trading.Trade.CloseTradeConfiguration(Closed.Value,
+                trade.Close(new CloseTradeConfiguration(Closed.Value,
                     Balance.Value,
                     () => opened)
                 {

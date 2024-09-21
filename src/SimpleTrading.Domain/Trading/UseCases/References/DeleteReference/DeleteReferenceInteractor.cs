@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Trading.DataAccess;
 namespace SimpleTrading.Domain.Trading.UseCases.References.DeleteReference;
 
 public class DeleteReferenceInteractor(ITradeRepository tradeRepository, UowCommit uowCommit)
-    : BaseInteractor, IDeleteReference
+    : InteractorBase, IDeleteReference
 {
     public async Task<OneOf<Completed, NotFound>> Execute(DeleteReferenceRequestModel model)
     {

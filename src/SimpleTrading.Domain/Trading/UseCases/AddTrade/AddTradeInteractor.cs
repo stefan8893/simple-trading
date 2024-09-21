@@ -18,7 +18,7 @@ public class AddTradeInteractor(
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : BaseInteractor, IAddTrade
+    : InteractorBase, IAddTrade
 {
     public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
@@ -112,13 +112,13 @@ public class AddTradeInteractor(
 
         OneOf<Completed<Trade>, BusinessError> Close()
         {
-            var result = trade.Close(new Trade.CloseTradeConfiguration(
+            var result = trade.Close(new CloseTradeConfiguration(
                 model.Closed!.Value.UtcDateTime,
                 model.Balance!.Value,
                 utcNow)
             {
                 ExitPrice = model.ExitPrice,
-                Result = model.Result
+                Result = model.ManuallyEnteredResult
             });
 
             return result.MapT0(x => Completed(trade, x.Warnings));
