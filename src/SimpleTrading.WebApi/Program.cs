@@ -1,16 +1,27 @@
 using System.CommandLine;
 using System.Text.Json.Serialization;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.CliCommands;
-using SimpleTrading.WebApi.Clients;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
+using SimpleTrading.WebApi.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
+{
+    b.RegisterModule<CommonModule>();
+    b.RegisterModule<DateTimeProviderModule>();
+    b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
+    b.RegisterModule<DomainModule>();
+    b.RegisterModule<DataAccessModule>();
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(_ => { },
@@ -35,13 +46,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddValidatorsFromAssemblyContaining<BaseInteractor>();
-
-builder.Services.AddDateTimeProvider();
-builder.Services.AddUseCases();
-builder.Services.AddTradingDbContext(builder.Configuration);
-builder.Services.AddDataAccess();
-builder.Services.AddSingleton<ClientGenerator>();
-
 
 var app = builder.Build();
 

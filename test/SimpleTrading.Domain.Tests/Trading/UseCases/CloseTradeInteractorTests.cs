@@ -1,7 +1,8 @@
 using System.Globalization;
+using Autofac;
 using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -15,14 +16,13 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
-    private readonly UtcNow _utcNow = () => DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
+    private readonly DateTime _utcNow = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
     private ICloseTrade Interactor => ServiceLocator.GetRequiredService<ICloseTrade>();
 
-    protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
     {
-        base.OverrideServices(ctx, services);
-        services.AddSingleton<UtcNow>(_ => _utcNow);
+        builder.Register<UtcNow>(_ => () => _utcNow);
     }
 
     [Fact]
@@ -66,12 +66,12 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {Opened = _utcNow()}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, _utcNow().AddHours(1), 500, ResultModel.Win, 0m);
+            new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500, ResultModel.Win, 0m);
 
         // act
         var response = await Interactor.Execute(requestModel);
@@ -89,13 +89,13 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
         var trade = (TestData.Trade.Default with
         {
             PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m},
-            Opened = _utcNow()
+            Opened = _utcNow
         }).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, _utcNow().AddHours(1), 500)
+            new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
                 {ExitPrice = 1.2m};
 
         // act

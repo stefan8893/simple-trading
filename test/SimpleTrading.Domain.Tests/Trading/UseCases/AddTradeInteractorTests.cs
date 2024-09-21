@@ -1,7 +1,8 @@
 using System.Globalization;
+using Autofac;
 using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -19,10 +20,9 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
     private IAddTrade Interactor => ServiceLocator.GetRequiredService<IAddTrade>();
 
-    protected override void OverrideServices(WebHostBuilderContext ctx, IServiceCollection services)
+    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
     {
-        base.OverrideServices(ctx, services);
-        services.AddSingleton<UtcNow>(_ => () => _utcNow);
+        builder.Register<UtcNow>(_ => () => _utcNow);
     }
 
     [Fact]

@@ -11,12 +11,12 @@ namespace SimpleTrading.DataAccess;
 
 public class TradingDbContext(DbContextOptions<TradingDbContext> options, UtcNow utcNow) : DbContext(options)
 {
-    public required DbSet<Asset> Assets { get; init; }
-    public required DbSet<Currency> Currencies { get; init; }
-    public required DbSet<Profile> Profiles { get; init; }
-    public required DbSet<Reference> References { get; init; }
-    public required DbSet<Trade> Trades { get; init; }
-    public required DbSet<UserSettings> UserSettings { get; init; }
+    public DbSet<Asset> Assets { get; set; }
+    public DbSet<Currency> Currencies { get; set; }
+    public DbSet<Profile> Profiles { get; set; }
+    public DbSet<Reference> References { get; set; }
+    public DbSet<Trade> Trades { get; set; }
+    public DbSet<UserSettings> UserSettings { get; set; }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
