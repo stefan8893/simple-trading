@@ -219,14 +219,14 @@
     <data name="CalculatedResultsMismatch" xml:space="preserve">
         <value>Ihre Position deutet auf das Ergebnis '{0}' hin, aber anhand der Bilanz ist es '{1}'.</value>
     </data>
-    <data name="XMustNotBeEmptyIfYIsThere" xml:space="preserve">
+    <data name="XMustNotBeEmptyIfYIsPresent" xml:space="preserve">
         <value>'{0}' darf nicht leer sein, wenn '{1}' angegeben ist.</value>
     </data>
     <data name="ResultOfAnOpenedTradeCannotBeReset" xml:space="preserve">
         <value>Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher.</value>
     </data>
-    <data name="BalanceResultAndClosedUpdatesAreOnlyPossibleForClosedTrades" xml:space="preserve">
-        <value>Die Aktualisierung von 'Bilanz', 'Abgeschlossen' oder 'Ergebnis' ist nur möglich, wenn der Trade bereits abgeschlossen ist.</value>
+    <data name="BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades" xml:space="preserve">
+        <value>Die Aktualisierung von 'Bilanz' oder 'Abgeschlossen' ist nur möglich, wenn der Trade bereits abgeschlossen ist.</value>
     </data>
     <data name="Reference" xml:space="preserve">
         <value>Referenz</value>
@@ -275,5 +275,8 @@
     </data>
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Ungültiges Filterformat.</value>
+    </data>
+    <data name="BalanceAndClosedMustBePresentWhenOverridingResult" xml:space="preserve">
+        <value>Das Ergebnis kann nur überschrieben werden, wenn 'Bilanz' und 'Abgeschlossen' angegeben ist.</value>
     </data>
 </root>

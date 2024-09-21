@@ -118,7 +118,7 @@ public class AddTradeInteractor(
                 utcNow)
             {
                 ExitPrice = model.ExitPrice,
-                Result = model.Result
+                Result = model.ManuallyEnteredResult
             });
 
             return result.MapT0(x => Completed(trade, x.Warnings));

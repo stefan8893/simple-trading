@@ -19,7 +19,7 @@ public record AddTradeDto
     /// <example>5000</example>
     public decimal? Size { get; set; }
     
-    public ResultDto? Result { get; set; }
+    public ResultDto? ManuallyEnteredResult { get; set; }
 
     /// <example>125</example>
     public decimal? Balance { get; set; }

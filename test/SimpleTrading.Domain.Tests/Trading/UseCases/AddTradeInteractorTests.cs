@@ -129,10 +129,12 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             AssetId = TestData.Asset.Default.Build().Id,
             ProfileId = TestData.Profile.Default.Build().Id,
             Opened = new DateTimeOffset(_utcNow),
+            Closed = new DateTimeOffset(_utcNow),
+            Balance = 500,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
-            Result = (ResultModel) 50
+            ManuallyEnteredResult = (ResultModel) 50
         };
 
         var response = await Interactor.Execute(requestModel);
@@ -140,7 +142,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
             .Should().Contain(x => x.ErrorMessage == errorMessage)
-            .And.Contain(x => x.PropertyName == "Result")
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult")
             .And.HaveCount(1);
     }
 
@@ -468,7 +470,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
-            Result = ResultModel.Win,
+            ManuallyEnteredResult = ResultModel.Win,
             Balance = 10,
             EntryPrice = 1.00m,
             ExitPrice = 1.05m,
@@ -503,7 +505,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
-            Result = ResultModel.Win,
+            ManuallyEnteredResult = ResultModel.Win,
             Balance = 10m,
             EntryPrice = 0m,
             StopLoss = 0m,
@@ -545,7 +547,6 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
-            Result = ResultModel.Win,
             Balance = null,
             Size = 5000,
             EntryPrice = 1.05m,
@@ -599,5 +600,39 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
 
         newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
         newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
+    }
+    
+    [Fact]
+    public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_balance_and_no_closed_date()
+    {
+        // arrange
+        var currency = TestData.Currency.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var asset = TestData.Asset.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var opened = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = opened,
+            Size = 5000,
+            EntryPrice = 1.05m,
+            CurrencyId = currency.Id,
+            ManuallyEnteredResult = ResultModel.Loss
+        };
+
+        // act
+        var response = await Interactor.Execute(requestModel);
+
+        // assert
+        response.Value.Should().BeOfType<BadInput>()
+            .Which.ValidationResult.Errors
+            .Should().HaveCount(1)
+            .And.Contain(x => x.ErrorMessage == "The result can only be overridden if 'Balance' and 'Closed' are specified.")
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult");
     }
 }

@@ -75,6 +75,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         exception.Which.Result.Messages.Should().HaveCount(1)
             .And.Contain(x =>
                 x ==
-                "Die Aktualisierung von 'Bilanz', 'Abgeschlossen' oder 'Ergebnis' ist nur möglich, wenn der Trade bereits abgeschlossen ist.");
+                "Die Aktualisierung von 'Bilanz' oder 'Abgeschlossen' ist nur möglich, wenn der Trade bereits abgeschlossen ist.");
     }
 }

@@ -15,7 +15,7 @@ public record AddTradeRequestModel
     public required DateTimeOffset Opened { get; init; }
     public DateTimeOffset? Closed { get; set; }
     public required decimal Size { get; init; }
-    public ResultModel? Result { get; set; }
+    public ResultModel? ManuallyEnteredResult { get; set; }
     public decimal? Balance { get; set; }
     public required Guid CurrencyId { get; init; }
     public required decimal EntryPrice { get; init; }
@@ -52,22 +52,28 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.TradeSize);
 
-        RuleFor(x => x.Result)
+        RuleFor(x => x.ManuallyEnteredResult)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
-            .When(x => x.Result.HasValue);
+            .When(x => x.ManuallyEnteredResult.HasValue);
+        
+        RuleFor(x => x.ManuallyEnteredResult)
+            .Empty()
+            .WithName(SimpleTradingStrings.Result)
+            .WithMessage(SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult)
+            .When(x => !(x.Balance.HasValue && x.Closed.HasValue) );
 
         RuleFor(x => x.Balance)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Balance)
-            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}",
+            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsPresent, "{PropertyName}",
                 SimpleTradingStrings.Closed))
             .When(x => x.Closed.HasValue);
 
         RuleFor(x => x.Closed)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Closed)
-            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsThere, "{PropertyName}",
+            .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsPresent, "{PropertyName}",
                 SimpleTradingStrings.Balance))
             .When(x => x.Balance.HasValue);
 

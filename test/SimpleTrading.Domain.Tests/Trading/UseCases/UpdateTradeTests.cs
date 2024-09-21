@@ -54,7 +54,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Result = (ResultModel?) 50
+            ManuallyEnteredResult = (ResultModel?) 50
         };
 
         // act
@@ -64,7 +64,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.ErrorMessage == "'Result' has a range of values which does not include '50'." &&
-                              x.PropertyName == "Result");
+                              x.PropertyName == "ManuallyEnteredResult");
     }
 
     [Fact]
@@ -327,7 +327,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<BusinessError>()
             .Which.Reason.Should()
-            .Be("Updating 'Balance', 'Closed' or 'Result' is only possible when the trade has already been closed.");
+            .Be("Updating 'Balance' or 'Closed' is only possible when the trade has already been closed.");
     }
     
     [Fact]
@@ -342,7 +342,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Result = ResultModel.Mediocre
+            ManuallyEnteredResult = ResultModel.Mediocre
         };
 
         // act
@@ -351,7 +351,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         response.Value.Should().BeOfType<BusinessError>()
             .Which.Reason.Should()
-            .Be("Updating 'Balance', 'Closed' or 'Result' is only possible when the trade has already been closed.");
+            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
     }
 
     [Fact]
@@ -469,7 +469,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             StopLoss = new None(),
             ExitPrice = new None(),
             Notes = new None(),
-            Result = new None()
+            ManuallyEnteredResult = new None()
         };
 
         // act
@@ -492,13 +492,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         trade.IsClosed.Should().BeTrue();
         _ = await Interactor.Execute(new UpdateTradeRequestModel
-            {TradeId = trade.Id, Result = ResultModel.Win});
+            {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win});
 
         // act
         var response = await Interactor.Execute(new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Result = ResultModel.Mediocre,
+            ManuallyEnteredResult = ResultModel.Mediocre,
         });
 
         // assert

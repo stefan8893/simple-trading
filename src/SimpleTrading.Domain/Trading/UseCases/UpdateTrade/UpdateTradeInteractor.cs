@@ -146,23 +146,26 @@ public class UpdateTradeInteractor(
     {
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
-        var resultHasChanged = model.Result.IsT0 && model.Result.AsT0?.ToString() != trade.Result?.Name;
-        var shouldResetResult = resultHasChanged && model.Result.AsT0 is null;
+        var resultHasChanged = model.ManuallyEnteredResult.IsT0 && model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
+        var shouldResetResult = resultHasChanged && model.ManuallyEnteredResult.AsT0 is null;
 
         if (resultHasChanged && shouldResetResult)
             trade.ResetManuallyEnteredResult(utcNow);
         
         switch (trade.IsClosed)
         {
-            case false when (balanceHasChanged || closedHasChanged || resultHasChanged):
+            case false when balanceHasChanged || closedHasChanged:
                 return BusinessError(trade.Id,
-                    SimpleTradingStrings.BalanceResultAndClosedUpdatesAreOnlyPossibleForClosedTrades);
+                    SimpleTradingStrings.BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades);
+            case false when resultHasChanged && !(balanceHasChanged && closedHasChanged):
+                return BusinessError(trade.Id,
+                    SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult);
             case true when
-                (positionPricesHaveChanged || balanceHasChanged || closedHasChanged || resultHasChanged):
+                positionPricesHaveChanged || balanceHasChanged || closedHasChanged || resultHasChanged:
             {
                 var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
                 var balance = model.Balance ?? trade.Balance!.Value;
-                var result = model.Result.IsT0 ? model.Result.AsT0 : null;
+                var result = model.ManuallyEnteredResult.IsT0 ? model.ManuallyEnteredResult.AsT0 : null;
 
                 var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow) {Result = result};
                 return trade.Close(closeTradeConfiguration)
