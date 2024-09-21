@@ -45,24 +45,34 @@ public class Trade : IEntity
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
 
         var utcNow = configuration.UtcNow();
-        var closedDateUpperBound = (Opened > utcNow ? Opened : utcNow).AddDays(1);
+        var closedDateUpperBound =
+            (Opened > utcNow ? Opened : utcNow).AddDays(Constants.OpenedDateMaxDaysInTheFutureLimit);
 
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
         var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
         var thereIsNoNewManuallyEnteredResult = !configuration.Result.HasValue;
-        var doNotOverrideResultThatWasPreviouslyEnteredManually =
+        var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
             IsClosed
             && currentResultWasManuallyEntered
             && thereIsNoNewManuallyEnteredResult;
 
-        if (doNotOverrideResultThatWasPreviouslyEnteredManually)
-            return new Completed();
+        return doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne
+            ? new Completed()
+            : CloseTrade(configuration);
+    }
 
+    private OneOf<Completed, BusinessError> CloseTrade(CloseTradeConfiguration configuration)
+    {
         Closed = configuration.Closed.ToUtcKind();
         Balance = configuration.Balance;
 
+        return CalculateResult(configuration);
+    }
+
+    private OneOf<Completed, BusinessError> CalculateResult(CloseTradeConfiguration configuration)
+    {
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
 
