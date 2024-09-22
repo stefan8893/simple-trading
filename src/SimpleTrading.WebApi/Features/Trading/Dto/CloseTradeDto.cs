@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
@@ -24,6 +25,11 @@ public class CloseTradeDto
 public record TradeResultDto(Guid TradeId, ResultDto? Result, short? Performance)
 {
     public static TradeResultDto From(CloseTradeResponseModel model)
+    {
+        return new TradeResultDto(model.TradeId, model.Result.ToResultDto(), model.Performance);
+    }
+    
+    public static TradeResultDto From(RestoreCalculatedResultResponseModel model)
     {
         return new TradeResultDto(model.TradeId, model.Result.ToResultDto(), model.Performance);
     }

@@ -16,7 +16,7 @@ public class ResetManuallyEnteredResultTests : TestBase
         trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub)
             {ManuallyEnteredResult = ResultModel.Mediocre});
 
-        trade.ResetManuallyEnteredResult(UtcNowStub);
+        trade.RestoreCalculatedResult(UtcNowStub);
 
         trade.Result.Should().BeNull();
     }

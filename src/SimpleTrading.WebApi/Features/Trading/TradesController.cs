@@ -10,6 +10,7 @@ using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
+using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -156,6 +157,27 @@ public partial class TradesController : ControllerBase
         }
     }
 
+    [HttpPut("{tradeId:guid}/restore-calculated-result", Name = nameof(RestoreCalculatedResult))]
+    [ProducesResponseType<SuccessResponse<TradeResultDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<ActionResult> RestoreCalculatedResult(
+        [FromServices] IRestoreCalculatedResult restoreCalculatedResult,
+        [FromRoute] Guid tradeId)
+    {
+        var result = await restoreCalculatedResult.Execute(new RestoreCalculatedResultRequestModel(tradeId));
+        
+        return result.Match(c => Ok(MapToSuccessResponse(c)),
+            notFound => notFound.ToActionResult(),
+            businessError => businessError.ToActionResult());
+        
+        SuccessResponse<TradeResultDto> MapToSuccessResponse(Completed<RestoreCalculatedResultResponseModel> completed)
+        {
+            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data),
+                completed.Warnings);
+        }
+    }
+    
     [HttpDelete("{tradeId:guid}", Name = nameof(DeleteTrade))]
     [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult> DeleteTrade(
