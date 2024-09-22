@@ -23,8 +23,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // act
         var act = () => client.CloseTradeAsync(tradeId, new CloseTradeDto
         {
-            Closed = _utcNow,
-            Result = ResultDto.Loss,
+            Closed = new DateTimeOffset(_utcNow),
             Balance = -20d,
             ExitPrice = 1.05
         });
@@ -45,8 +44,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // act
         var act = () => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            Closed = _utcNow,
-            Result = ResultDto.Loss,
+            Closed = new DateTimeOffset(_utcNow),
             Balance = -20d,
             ExitPrice = 1.05
         });
@@ -70,8 +68,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // act
         var act = () => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
-            Closed = _utcNow,
-            Result = ResultDto.BreakEven,
+            Closed = new DateTimeOffset(_utcNow),
             Balance = null,
             ExitPrice = 1.05
         });
@@ -98,7 +95,6 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var act = () => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
         {
             Closed = null,
-            Result = ResultDto.BreakEven,
             Balance = 0d,
             ExitPrice = 1.05
         });
@@ -126,8 +122,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // act
         var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
-            Closed = _utcNow.AddDays(-1),
-            Result = ResultDto.Loss,
+            Closed = new DateTimeOffset(_utcNow).AddDays(-1),
             Balance = -50d,
             ExitPrice = 1.05
         });
@@ -153,8 +148,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // act
         var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
-            Closed = _utcNow,
-            Result = ResultDto.Loss,
+            Closed = new DateTimeOffset(_utcNow),
             Balance = -50d,
             ExitPrice = 1.05
         });
@@ -167,6 +161,31 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         tradeAfterClosing!.IsClosed.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task The_result_gets_overriden_()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
+        {
+            Closed = new DateTimeOffset(_utcNow),
+            Balance = -50d,
+            ExitPrice = 1.05
+        });
+
+        // assert
+        await act.Should().NotThrowAsync();
+        var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+
+        tradeAfterClosing.Should().NotBeNull();
+        tradeAfterClosing!.IsClosed.Should().BeTrue();
+    }
 
     [Fact]
     public async Task A_trade_gets_closed_in_new_york_local_time_but_the_date_is_stored_in_utc()
@@ -184,7 +203,6 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = closedInNewYork,
-            Result = ResultDto.Loss,
             Balance = -50d,
             ExitPrice = 1.05
         });
