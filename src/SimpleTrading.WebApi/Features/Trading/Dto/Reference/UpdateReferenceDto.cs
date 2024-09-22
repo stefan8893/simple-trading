@@ -8,7 +8,7 @@ public record UpdateReferenceDto
 {
     public ReferenceTypeDto? Type { get; set; }
     public string? Link { get; set; }
-    public UpdatedValue<string?>? Notes { get; set; }
+    public UpdateValue<string?>? Notes { get; set; }
 }
 
 public class UpdateReferenceDtoValidator : AbstractValidator<UpdateReferenceDto>

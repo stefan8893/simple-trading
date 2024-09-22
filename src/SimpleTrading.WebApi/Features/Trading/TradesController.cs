@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -128,13 +129,17 @@ public partial class TradesController : ControllerBase
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
-        var tradeResult = MapToResultModel(dto.Result);
+        OneOf<ResultModel?, None> tradeResult = dto.ManuallyEnteredResult is null
+            ? new None()
+            : MapToResultModel(dto.ManuallyEnteredResult.Value);
 
         var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
             dto.Closed!.Value,
-            dto.Balance!.Value,
-            tradeResult,
-            dto.ExitPrice);
+            dto.Balance!.Value)
+        {
+            ManuallyEnteredResult = tradeResult,
+            ExitPrice = dto.ExitPrice
+        };
         var result = await closeTrade.Execute(closeTradeRequestModel);
 
         return result.Match(
@@ -261,7 +266,9 @@ public partial class TradesController : ControllerBase
             Opened = dto.Opened,
             Closed = dto.Closed,
             Size = dto.Size,
-            ManuallyEnteredResult = dto.ManuallyEnteredResult is null ? new None() : MapToResultModel(dto.ManuallyEnteredResult.Value),
+            ManuallyEnteredResult = dto.ManuallyEnteredResult is null
+                ? new None()
+                : MapToResultModel(dto.ManuallyEnteredResult.Value),
             Balance = dto.Balance,
             CurrencyId = dto.CurrencyId,
             EntryPrice = dto.EntryPrice,

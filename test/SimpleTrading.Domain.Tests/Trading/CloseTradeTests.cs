@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -23,7 +24,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m,
-            Result = ResultModel.Win
+            ManuallyEnteredResult = ResultModel.Win
         };
 
         // act
@@ -56,7 +57,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m,
-            Result = ResultModel.Win
+            ManuallyEnteredResult = ResultModel.Win
         };
 
         // act
@@ -274,7 +275,7 @@ public class CloseTradeTests : TestBase
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub)
         {
-            Result = ResultModel.BreakEven
+            ManuallyEnteredResult = ResultModel.BreakEven
         };
 
         // act
@@ -299,7 +300,7 @@ public class CloseTradeTests : TestBase
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
-            Result = ResultModel.BreakEven
+            ManuallyEnteredResult = ResultModel.BreakEven
         };
 
         // act
@@ -329,7 +330,7 @@ public class CloseTradeTests : TestBase
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub)
         {
-            Result = ResultModel.BreakEven,
+            ManuallyEnteredResult = ResultModel.BreakEven,
             ExitPrice = 0.9m
         };
 
@@ -360,7 +361,7 @@ public class CloseTradeTests : TestBase
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
-            Result = ResultModel.Mediocre,
+            ManuallyEnteredResult = ResultModel.Mediocre,
             ExitPrice = 1.0m
         };
 
@@ -730,7 +731,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ExitPrice = 1.1m,
-            Result = ResultModel.BreakEven
+            ManuallyEnteredResult = ResultModel.BreakEven
         };
 
         // act
@@ -765,7 +766,6 @@ public class CloseTradeTests : TestBase
         // act
         var response = trade.Close(closeTradeDto);
 
-
         // assert
         response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
@@ -795,7 +795,6 @@ public class CloseTradeTests : TestBase
         // act
         var response = trade.Close(closeTradeDto);
 
-
         // assert
         response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
@@ -823,7 +822,6 @@ public class CloseTradeTests : TestBase
 
         // act
         var response = trade.Close(closeTradeDto);
-
 
         // assert
         response.Value.Should().BeOfType<Completed>()
@@ -853,12 +851,58 @@ public class CloseTradeTests : TestBase
         // act
         var response = trade.Close(closeTradeDto);
 
-
         // assert
         response.Value.Should().BeOfType<Completed>()
             .Which.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x.Reason == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
+    }
+
+    [Fact]
+    public void The_result_is_null_if_it_was_overriden_with_a_null_value()
+    {
+        // arrange        
+        var trade = (TestData.Trade.Default with
+        {
+            Opened = _utcNow,
+            Closed = _utcNow,
+            Balance = 0m
+        }).Build();
+
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        {
+            ManuallyEnteredResult = null
+        };
+
+        // act
+        _ = trade.Close(closeTradeDto);
+
+        // assert
+        trade.Result.Should().BeNull();
+    }
+
+    [Fact]
+    public void The_result_is_not_overriden_if_manually_entered_result_is_none()
+    {
+        // arrange        
+        var trade = (TestData.Trade.Default with
+        {
+            Opened = _utcNow,
+            Closed = _utcNow,
+            Balance = 0m
+        }).Build();
+
+        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        {
+            ManuallyEnteredResult = new None()
+        };
+
+        // act
+        _ = trade.Close(closeTradeDto);
+
+        // assert
+        trade.Result.Should().NotBeNull();
+        trade.Result!.Name.Should().Be(Result.BreakEven);
     }
 
     private DateTime UtcNowStub()

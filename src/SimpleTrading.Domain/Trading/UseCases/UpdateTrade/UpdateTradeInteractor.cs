@@ -146,12 +146,9 @@ public class UpdateTradeInteractor(
     {
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
-        var resultHasChanged = model.ManuallyEnteredResult.IsT0 && model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
-        var shouldResetResult = resultHasChanged && model.ManuallyEnteredResult.AsT0 is null;
+        var resultHasChanged = model.ManuallyEnteredResult.IsT0 &&
+                               model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
 
-        if (resultHasChanged && shouldResetResult)
-            trade.ResetManuallyEnteredResult(utcNow);
-        
         switch (trade.IsClosed)
         {
             case false when balanceHasChanged || closedHasChanged:
@@ -165,9 +162,11 @@ public class UpdateTradeInteractor(
             {
                 var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
                 var balance = model.Balance ?? trade.Balance!.Value;
-                var result = model.ManuallyEnteredResult.IsT0 ? model.ManuallyEnteredResult.AsT0 : null;
 
-                var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow) {Result = result};
+                var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow)
+                {
+                    ManuallyEnteredResult = model.ManuallyEnteredResult
+                };
                 return trade.Close(closeTradeConfiguration)
                     .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
             }
