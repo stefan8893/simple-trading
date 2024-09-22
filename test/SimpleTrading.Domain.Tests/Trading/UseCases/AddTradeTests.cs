@@ -14,7 +14,7 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind();
 
