@@ -15,7 +15,7 @@ public record UpdateTradeRequestModel
     public DateTimeOffset? Opened { get; init; }
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; init; }
-    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; } = new None();
     public decimal? Balance { get; set; }
     public Guid? CurrencyId { get; init; }
     public decimal? EntryPrice { get; init; }
