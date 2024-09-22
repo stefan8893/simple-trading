@@ -49,7 +49,15 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task A_trades_result_must_be_in_enum_range()
     {
         // arrange
-        var trade = TestData.Trade.Default.Build();
+        var trade = (TestData.Trade.Default with
+        {
+            Opened = _utcNow,
+            Closed = _utcNow,
+            Balance = 0
+        }).Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -307,7 +315,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task You_cant_update_the_closed_date_if_the_trade_has_not_yet_been_finished()
+    public async Task You_cant_update_the_closed_date_if_the_trade_has_not_yet_been_closed()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -318,20 +326,21 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Closed = new DateTimeOffset(trade.Opened.AddSeconds(-1))
+            Closed = new DateTimeOffset(trade.Opened)
         };
 
         // act
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<BusinessError>()
-            .Which.Details.Should()
-            .Be("Updating 'Balance' or 'Closed' is only possible when the trade has already been closed.");
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "Closed" &&
+                              x.ErrorMessage == "'Closed' can only be updated, if the trade has already been closed.");
     }
 
     [Fact]
-    public async Task You_cant_update_the_result_if_the_trade_has_not_yet_been_finished()
+    public async Task You_cant_update_the_balance_if_the_trade_has_not_yet_been_closed()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -342,16 +351,17 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            ManuallyEnteredResult = ResultModel.Mediocre
+            Balance = 50m
         };
 
         // act
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<BusinessError>()
-            .Which.Details.Should()
-            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "Balance" &&
+                              x.ErrorMessage == "'Balance' can only be updated, if the trade has already been closed.");
     }
 
     [Fact]
@@ -534,9 +544,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        var businessError = response.Value.Should().BeOfType<BusinessError>();
-        businessError.Which.Details.Should()
-            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" && 
+                              x.ErrorMessage == "'Result' can only be updated, if the trade has already been closed.");
     }
     
     [Fact]
@@ -558,9 +569,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var businessError = response.Value.Should().BeOfType<BusinessError>();
-        businessError.Which.Details.Should()
-            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" &&
+                              x.ErrorMessage == "'Result' can only be updated, if the trade has already been closed.");
     }
 
     [Fact]

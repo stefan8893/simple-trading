@@ -86,11 +86,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(
-                "Das Ergebnis kann nur überschrieben werden, wenn 'Bilanz' und 'Abgeschlossen' angegeben ist.");
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Identifier == "ManuallyEnteredResult" && 
+                              x.Messages.Single() == "'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
     }
     
     [Fact]
@@ -188,11 +188,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x =>
-                x ==
-                "Die Aktualisierung von 'Bilanz' oder 'Abgeschlossen' ist nur möglich, wenn der Trade bereits abgeschlossen ist.");
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Identifier == "Closed" && 
+                              x.Messages.Single() == "'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
     }
 }
