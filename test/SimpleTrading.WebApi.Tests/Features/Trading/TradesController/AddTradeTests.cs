@@ -59,6 +59,78 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
+    public async Task A_closed_trade_with_an_overriden_null_result_will_be_added()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var response = await client.AddTradeAsync(new AddTradeDto
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = _utcNow,
+            Closed = _utcNow,
+            Balance = 0,
+            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = null},
+            Size = 5000,
+            CurrencyId = currency.Id,
+            EntryPrice = 1.08
+        });
+
+        // assert
+        response.Should().NotBeNull();
+        response.Warnings.Should().BeEmpty();
+        response.Data.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+
+        newlyAddedTrade.Should().NotBeNull();
+        newlyAddedTrade!.Result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task A_closed_trade_with_an_overriden_result_will_be_added()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var response = await client.AddTradeAsync(new AddTradeDto
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = _utcNow,
+            Closed = _utcNow,
+            Balance = 0,
+            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss},
+            Size = 5000,
+            CurrencyId = currency.Id,
+            EntryPrice = 1.08
+        });
+
+        // assert
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+
+        newlyAddedTrade.Should().NotBeNull();
+        newlyAddedTrade!.Result.Should().NotBeNull();
+        newlyAddedTrade!.Result!.Name.Should().Be(Result.Loss);
+    }
+
+    [Fact]
     public async Task TradeSize_must_not_be_null()
     {
         // arrange
@@ -140,7 +212,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
-            Result = ResultDto.Mediocre,
+            ManuallyEnteredResult = null,
             Size = 5000,
             Balance = null,
             CurrencyId = currency.Id,
@@ -176,7 +248,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = null,
-            Result = ResultDto.Mediocre,
             Size = 5000,
             Balance = 50,
             CurrencyId = currency.Id,

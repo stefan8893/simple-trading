@@ -47,7 +47,7 @@ public class TradingDbContext(DbContextOptions<TradingDbContext> options, UtcNow
     {
         var userSettings = ChangeTracker.Entries()
             .Where(x => x is {Entity: Domain.User.UserSettings, State: EntityState.Modified})
-            .Select(x => (UserSettings)x.Entity);
+            .Select(x => (UserSettings) x.Entity);
 
         var nowInUtcTime = utcNow();
         foreach (var userSetting in userSettings)

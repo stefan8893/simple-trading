@@ -1,8 +1,6 @@
 using FluentValidation;
 using OneOf;
 using OneOf.Types;
-using SimpleTrading.Domain.Extensions;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
@@ -17,7 +15,7 @@ public record UpdateTradeRequestModel
     public DateTimeOffset? Opened { get; init; }
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; init; }
-    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; } = new None();
     public decimal? Balance { get; set; }
     public Guid? CurrencyId { get; init; }
     public decimal? EntryPrice { get; init; }
@@ -29,7 +27,8 @@ public record UpdateTradeRequestModel
 
 public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeRequestModel>
 {
-    public UpdateTradeRequestModelValidator(OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator)
+    public UpdateTradeRequestModelValidator(
+        OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator)
     {
         RuleFor(x => x.AssetId)
             .NotEmpty()

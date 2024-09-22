@@ -4,6 +4,7 @@ using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using NotFound = SimpleTrading.Domain.Infrastructure.NotFound;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
@@ -38,7 +39,7 @@ public class CloseTradeInteractor(
             utcNow)
         {
             ExitPrice = model.ExitPrice,
-            Result = model.Result
+            ManuallyEnteredResult = model.ManuallyEnteredResult
         };
 
         var result = trade.Close(closeTradeDto);

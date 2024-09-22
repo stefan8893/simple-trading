@@ -4,7 +4,6 @@ using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
-using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
@@ -22,7 +21,8 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
         return dbContext.FindAsync<T>(id);
     }
 
-    public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> filterPredicate, IEnumerable<ISort<T>>? sorting = null)
+    public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> filterPredicate,
+        IEnumerable<ISort<T>>? sorting = null)
     {
         return await FindInternal(filterPredicate, sorting)
             .ToListAsync();

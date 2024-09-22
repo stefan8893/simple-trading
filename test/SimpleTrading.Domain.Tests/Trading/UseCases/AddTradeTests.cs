@@ -11,10 +11,11 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 using SimpleTrading.WebApi;
+using NotFound = SimpleTrading.Domain.Infrastructure.NotFound;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind();
 
@@ -601,7 +602,7 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
         newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
     }
-    
+
     [Fact]
     public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_balance_and_no_closed_date()
     {
@@ -632,7 +633,47 @@ public class AddTradeInteractorTests(TestingWebApplicationFactory<Program> facto
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
             .Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "The result can only be overridden if 'Balance' and 'Closed' are specified.")
+            .And.Contain(x =>
+                x.ErrorMessage == "The result can only be overridden if 'Balance' and 'Closed' are specified.")
             .And.Contain(x => x.PropertyName == "ManuallyEnteredResult");
+    }
+
+    [Fact]
+    public async Task Specifying_a_manually_entered_result_is_possible_if_balance_and_closed_date_are_present()
+    {
+        // arrange
+        var currency = TestData.Currency.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var asset = TestData.Asset.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var now = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = now,
+            Closed = now,
+            Balance = 500m,
+            Size = 5000,
+            EntryPrice = 1.05m,
+            CurrencyId = currency.Id,
+            ManuallyEnteredResult = ResultModel.Loss
+        };
+
+        // act
+        var response = await Interactor.Execute(requestModel);
+
+        // assert
+        var completed = response.Value.Should().BeOfType<Completed<Guid>>();
+        var addedTradeId = completed.Which.Data;
+
+        var addedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == addedTradeId);
+        addedTrade.Should().NotBeNull();
+        addedTrade!.Result.Should().NotBeNull();
+        addedTrade.Result!.Name.Should().Be(Result.Loss);
+        addedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
     }
 }

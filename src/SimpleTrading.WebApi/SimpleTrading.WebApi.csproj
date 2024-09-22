@@ -9,43 +9,43 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="Clients\Generated\SimpleTrading.Client.cs" />
-        <Compile Remove="Clients\Generated\SimpleTrading.Client.ts" />
+        <Compile Remove="Clients\Generated\SimpleTrading.Client.cs"/>
+        <Compile Remove="Clients\Generated\SimpleTrading.Client.ts"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" />
-        <PackageReference Include="Microsoft.Identity.Web" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.1.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
-        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.1.0" />
-        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.Identity.Web" Version="3.1.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.1.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.1.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3"/>
+        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.1.0"/>
+        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.1.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Autofac" Version="8.1.0" />
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="Autofac" Version="8.1.0"/>
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0"/>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SimpleTrading.DataAccess.Postgres\SimpleTrading.DataAccess.Postgres.csproj" />
-        <ProjectReference Include="..\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj" />
-        <ProjectReference Include="..\SimpleTrading.DataAccess.SqlServer\SimpleTrading.DataAccess.SqlServer.csproj" />
-        <ProjectReference Include="..\SimpleTrading.Domain\SimpleTrading.Domain.csproj" />
+        <ProjectReference Include="..\SimpleTrading.DataAccess.Postgres\SimpleTrading.DataAccess.Postgres.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.DataAccess.SqlServer\SimpleTrading.DataAccess.SqlServer.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="Clients\Generated\SimpleTrading.Client.cs" />
+        <None Include="Clients\Generated\SimpleTrading.Client.cs"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Clients\Npm\" />
+        <Folder Include="Clients\Npm\"/>
     </ItemGroup>
 
 </Project>

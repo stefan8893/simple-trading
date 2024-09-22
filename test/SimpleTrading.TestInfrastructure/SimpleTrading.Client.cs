@@ -2036,9 +2036,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Size { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ResultDto? Result { get; set; }
+        [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public ResultDtoNullableUpdateValue ManuallyEnteredResult { get; set; }
 
         [Newtonsoft.Json.JsonProperty("balance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Balance { get; set; }
@@ -2107,9 +2106,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("closed", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? Closed { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ResultDto? Result { get; set; }
+        [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public ResultDtoNullableUpdateValue ManuallyEnteredResult { get; set; }
 
     }
 
@@ -2129,7 +2127,7 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class DecimalNullableUpdatedValue
+    public partial class DecimalNullableUpdateValue
     {
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Value { get; set; }
@@ -2243,7 +2241,7 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ResultDtoNullableUpdatedValue
+    public partial class ResultDtoNullableUpdateValue
     {
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -2252,7 +2250,7 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class StringUpdatedValue
+    public partial class StringUpdateValue
     {
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Value { get; set; }
@@ -2404,7 +2402,7 @@ namespace SimpleTrading.Client
         public string Link { get; set; }
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public StringUpdatedValue Notes { get; set; }
+        public StringUpdateValue Notes { get; set; }
 
     }
 
@@ -2426,8 +2424,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Size { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ResultDtoNullableUpdatedValue Result { get; set; }
+        [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public ResultDtoNullableUpdateValue ManuallyEnteredResult { get; set; }
 
         [Newtonsoft.Json.JsonProperty("balance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Balance { get; set; }
@@ -2439,16 +2437,16 @@ namespace SimpleTrading.Client
         public double? EntryPrice { get; set; }
 
         [Newtonsoft.Json.JsonProperty("stopLoss", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public DecimalNullableUpdatedValue StopLoss { get; set; }
+        public DecimalNullableUpdateValue StopLoss { get; set; }
 
         [Newtonsoft.Json.JsonProperty("takeProfit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public DecimalNullableUpdatedValue TakeProfit { get; set; }
+        public DecimalNullableUpdateValue TakeProfit { get; set; }
 
         [Newtonsoft.Json.JsonProperty("exitPrice", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public DecimalNullableUpdatedValue ExitPrice { get; set; }
+        public DecimalNullableUpdateValue ExitPrice { get; set; }
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public StringUpdatedValue Notes { get; set; }
+        public StringUpdateValue Notes { get; set; }
 
     }
 

@@ -1,4 +1,5 @@
 using OneOf;
+using OneOf.Types;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -51,46 +52,50 @@ public class Trade : IEntity
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
+        var thereIsANewManuallyEnteredResult = configuration.ManuallyEnteredResult.IsT0;
         var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
-        var thereIsNoNewManuallyEnteredResult = !configuration.Result.HasValue;
+
         var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
             IsClosed
             && currentResultWasManuallyEntered
-            && thereIsNoNewManuallyEnteredResult;
+            && !thereIsANewManuallyEnteredResult;
 
         return doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne
             ? new Completed()
             : CloseTrade(configuration);
     }
 
-    private OneOf<Completed, BusinessError> CloseTrade(CloseTradeConfiguration configuration)
+    private Completed CloseTrade(CloseTradeConfiguration configuration)
     {
         Closed = configuration.Closed.ToUtcKind();
         Balance = configuration.Balance;
 
-        return CalculateResult(configuration);
-    }
-
-    private OneOf<Completed, BusinessError> CalculateResult(CloseTradeConfiguration configuration)
-    {
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
 
+        var (result, warnings) = CalculateResult(configuration);
+
+        Result = result;
+
+        return new Completed(warnings);
+    }
+
+    private (Result? result, IReadOnlyList<Warning> warnings) CalculateResult(CloseTradeConfiguration configuration)
+    {
         var results = CalculateResults(configuration);
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
-        Result = results.ManuallyEntered ?? calculatedResult;
+        var result = results.ManuallyEntered.Match(r => r, _ => calculatedResult);
 
-        return new Completed(AnalyseResults(results, calculatedResult));
+        return (result, AnalyseResults(results, calculatedResult));
     }
 
     private TradingResultsDto CalculateResults(CloseTradeConfiguration configuration)
     {
-        var manuallyEnteredResult = configuration.Result.HasValue
-            ? CreateManuallyEnteredResult(configuration.Result.Value)
-            // do not lose a manual result that was previously entered
-            : Result?.Source == ResultSource.ManuallyEntered
-                ? Result
-                : null;
+        var manuallyEnteredResult = configuration.ManuallyEnteredResult
+            .Match<OneOf<Result?, None>>(x => CreateManuallyEnteredResult(x), _ =>
+                Result?.Source == ResultSource.ManuallyEntered
+                    ? Result
+                    : new None());
 
         var calculatedByBalance = CalculateResultByBalance(Balance!.Value);
         var calculatedByPositionPrices = PositionPrices.CalculateResult();
@@ -141,7 +146,7 @@ public class Trade : IEntity
 
         var analyseResultsConfiguration = new TradeResultAnalyserConfiguration
         {
-            ManuallyEntered = results.ManuallyEntered,
+            ManuallyEntered = results.ManuallyEntered.Match(x => x, _ => null),
             CalculatedByBalance = results.CalculatedByBalance,
             CalculatedByPositionPrices = results.CalculatedByPositionPrices,
             CalculatedResult = calculatedResult
@@ -154,7 +159,7 @@ public class Trade : IEntity
         return analysisReport;
     }
 
-    private static Result CreateManuallyEnteredResult(ResultModel resultModel)
+    private static Result? CreateManuallyEnteredResult(ResultModel? resultModel)
     {
         return resultModel switch
         {
@@ -162,6 +167,7 @@ public class Trade : IEntity
             ResultModel.BreakEven => new Result(Result.BreakEven, ResultSource.ManuallyEntered, 0),
             ResultModel.Mediocre => new Result(Result.Mediocre, ResultSource.ManuallyEntered),
             ResultModel.Win => new Result(Result.Win, ResultSource.ManuallyEntered),
+            null => null,
             _ => throw new ArgumentOutOfRangeException(nameof(resultModel), resultModel, null)
         };
     }
@@ -177,7 +183,7 @@ public class Trade : IEntity
     }
 
     private record TradingResultsDto(
-        Result? ManuallyEntered,
+        OneOf<Result?, None> ManuallyEntered,
         Result? CalculatedByBalance,
         Result? CalculatedByPositionPrices);
 }
@@ -185,5 +191,5 @@ public class Trade : IEntity
 internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
 {
     public decimal? ExitPrice { get; init; }
-    public ResultModel? Result { get; init; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();
 }

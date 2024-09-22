@@ -141,13 +141,13 @@ public class ReferencesController : ControllerBase
     private static UpdateReferenceRequestModel MapToRequestModel(Guid tradeId, Guid referenceId, UpdateReferenceDto dto)
     {
         return new UpdateReferenceRequestModel
-            {
-                TradeId = tradeId,
-                ReferenceId = referenceId,
-                Type = MapToReferenceType(dto.Type),
-                Link = dto.Link,
-                Notes = dto.Notes is null ? new None() : dto.Notes.Value
-            };
+        {
+            TradeId = tradeId,
+            ReferenceId = referenceId,
+            Type = MapToReferenceType(dto.Type),
+            Link = dto.Link,
+            Notes = dto.Notes is null ? new None() : dto.Notes.Value
+        };
     }
 
     private static ReferenceType? MapToReferenceType(ReferenceTypeDto? dto)

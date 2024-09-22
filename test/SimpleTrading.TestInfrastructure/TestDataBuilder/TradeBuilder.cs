@@ -1,4 +1,5 @@
 using OneOf;
+using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -14,9 +15,9 @@ public static partial class TestData
         public OneOf<Guid, Profile, Domain.Trading.Profile> ProfileOrId { get; init; } = Profile.Default;
         public decimal Size { get; init; } = 10_000m;
         public DateTime Opened { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
-        public DateTime? Closed { get; init; } = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
-        public decimal? Balance { get; init; } = null;
-        public ResultModel? Result { get; init; } = null;
+        public DateTime? Closed { get; init; }
+        public decimal? Balance { get; init; }
+        public OneOf<ResultModel?, None> Result { get; init; } = new None();
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
@@ -78,7 +79,7 @@ public static partial class TestData
                     () => opened)
                 {
                     ExitPrice = positionPrices.Exit,
-                    Result = Result
+                    ManuallyEnteredResult = Result
                 });
 
             return trade;

@@ -7,13 +7,14 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading;
 
-public class ResetManuallyEnteredResult : TestBase
+public class ResetManuallyEnteredResultTests : TestBase
 {
     [Fact]
     public void A_manually_entered_result_gets_successfully_reset()
     {
         var trade = TestData.Trade.Default.Build();
-        trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub) {Result = ResultModel.Mediocre});
+        trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub)
+            {ManuallyEnteredResult = ResultModel.Mediocre});
 
         trade.ResetManuallyEnteredResult(UtcNowStub);
 

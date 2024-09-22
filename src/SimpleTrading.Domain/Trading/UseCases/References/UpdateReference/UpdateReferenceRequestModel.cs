@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
 using OneOf.Types;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
