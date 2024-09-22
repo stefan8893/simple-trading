@@ -149,14 +149,13 @@ public class UpdateTradeInteractor(
 
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
-        var resultHasChanged = model.ManuallyEnteredResult.IsT0 &&
-                               model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
+        var manuallyEnteredResultIsSpecified = model.ManuallyEnteredResult.IsT0;
 
         var nothingHasChanged =
             !positionPricesHaveChanged &&
             !balanceHasChanged &&
             !closedHasChanged &&
-            !resultHasChanged;
+            !manuallyEnteredResultIsSpecified;
 
         if (nothingHasChanged)
             return new NothingToClose();
