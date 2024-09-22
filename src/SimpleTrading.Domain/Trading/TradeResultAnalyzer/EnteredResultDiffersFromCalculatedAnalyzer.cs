@@ -1,11 +1,11 @@
 ﻿using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.Domain.Trading.TradeResultAnalyser;
+namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer;
 
-internal class EnteredResultDiffersFromCalculatedAnalyser : ITradeResultAnalyser
+internal class EnteredResultDiffersFromCalculatedAnalyzer : ITradeResultAnalyzer
 {
-    public IEnumerable<Warning> AnalyseResults(Trade trade, TradeResultAnalyserConfiguration config)
+    public IEnumerable<Warning> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var hasManuallyEnteredResult = config.ManuallyEntered is not null;
         var hasCalculatedResult = config.CalculatedResult is not null;
@@ -22,7 +22,7 @@ internal class EnteredResultDiffersFromCalculatedAnalyser : ITradeResultAnalyser
             yield return CreateMismatchBetweenCalculatedResultsWarning(config);
     }
 
-    private static Warning CreateMismatchBetweenCalculatedResultsWarning(TradeResultAnalyserConfiguration config)
+    private static Warning CreateMismatchBetweenCalculatedResultsWarning(TradeResultAnalyzerConfiguration config)
     {
         var balanceResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByBalance!.Name);
         var positionResultName =
@@ -33,7 +33,7 @@ internal class EnteredResultDiffersFromCalculatedAnalyser : ITradeResultAnalyser
     }
 
     private static Warning CreateManuallyEnteredAndCalculatedResultMismatchWarning(
-        TradeResultAnalyserConfiguration config)
+        TradeResultAnalyzerConfiguration config)
     {
         var calculatedResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedResult!.Name);
         var manuallyEnteredResultName = SimpleTradingStrings.ResourceManager.GetString(config.ManuallyEntered!.Name);

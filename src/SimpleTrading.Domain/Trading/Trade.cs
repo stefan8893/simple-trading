@@ -4,8 +4,8 @@ using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.Domain.Trading.TradeResultAnalyser;
-using SimpleTrading.Domain.Trading.TradeResultAnalyser.Decorators;
+using SimpleTrading.Domain.Trading.TradeResultAnalyzer;
+using SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading;
@@ -87,7 +87,7 @@ public class Trade : IEntity
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
         var result = results.ManuallyEntered.Match(r => r, _ => calculatedResult);
 
-        return (result, AnalyseResults(results, calculatedResult));
+        return (result, AnalyzeResults(results, calculatedResult));
     }
 
     private TradingResultsDto CalculateResults(CloseTradeConfiguration configuration)
@@ -133,19 +133,19 @@ public class Trade : IEntity
             : balanceResult;
     }
 
-    private List<Warning> AnalyseResults(TradingResultsDto results,
+    private List<Warning> AnalyzeResults(TradingResultsDto results,
         Result? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
-            new EnteredResultDiffersFromCalculatedAnalyser();
+            new EnteredResultDiffersFromCalculatedAnalyzer();
         var longPositionResultAnalysisDecorator =
-            new LongPositionAnalyserDecorator(enteredResultDiffersFromCalculatedResultAnalysis);
+            new LongPositionAnalyzerDecorator(enteredResultDiffersFromCalculatedResultAnalysis);
         var shortPositionResultAnalysisDecorator =
-            new ShortPositionTradeResultAnalyserDecorator(longPositionResultAnalysisDecorator);
+            new ShortPositionTradeResultAnalyzerDecorator(longPositionResultAnalysisDecorator);
         var balanceDiffersFromPositionPricesAnalysisDecorator =
-            new BalanceDiffersFromPositionPricesAnalyserDecorator(shortPositionResultAnalysisDecorator);
+            new BalanceDiffersFromPositionPricesAnalyzerDecorator(shortPositionResultAnalysisDecorator);
 
-        var analyseResultsConfiguration = new TradeResultAnalyserConfiguration
+        var analyzeResultsConfiguration = new TradeResultAnalyzerConfiguration
         {
             ManuallyEntered = results.ManuallyEntered.Match(x => x, _ => null),
             CalculatedByBalance = results.CalculatedByBalance,
@@ -154,7 +154,7 @@ public class Trade : IEntity
         };
 
         var analysisReport = balanceDiffersFromPositionPricesAnalysisDecorator
-            .AnalyseResults(this, analyseResultsConfiguration)
+            .AnalyzeResults(this, analyzeResultsConfiguration)
             .ToList();
 
         return analysisReport;
