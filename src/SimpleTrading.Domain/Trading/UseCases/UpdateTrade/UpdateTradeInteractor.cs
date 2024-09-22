@@ -146,6 +146,7 @@ public class UpdateTradeInteractor(
     {
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
+        var resultIsSpecified = model.ManuallyEnteredResult.IsT0;
         var resultHasChanged = model.ManuallyEnteredResult.IsT0 &&
                                model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
 
@@ -154,7 +155,7 @@ public class UpdateTradeInteractor(
             case false when balanceHasChanged || closedHasChanged:
                 return BusinessError(trade.Id,
                     SimpleTradingStrings.BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades);
-            case false when resultHasChanged && !(balanceHasChanged && closedHasChanged):
+            case false when resultIsSpecified && !(balanceHasChanged && closedHasChanged):
                 return BusinessError(trade.Id,
                     SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult);
             case true when

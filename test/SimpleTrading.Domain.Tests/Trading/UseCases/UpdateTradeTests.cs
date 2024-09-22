@@ -517,7 +517,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task Result_cannot_be_overriden_since_since_the_trade_is_not_closed()
+    public async Task Result_cannot_be_overriden_since_the_trade_is_not_closed()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -532,6 +532,30 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             TradeId = trade.Id,
             ManuallyEnteredResult = ResultModel.Mediocre
         });
+
+        // assert
+        var businessError = response.Value.Should().BeOfType<BusinessError>();
+        businessError.Which.Details.Should()
+            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
+    }
+    
+    [Fact]
+    public async Task Result_cannot_be_overriden_to_null_since_the_trade_is_not_closed()
+    {
+        // arrange
+        var trade = TestData.Trade.Default.Build();
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        trade.IsClosed.Should().BeFalse();
+
+        // act
+        var updateTradeRequestModel = new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            ManuallyEnteredResult = null
+        };
+        var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
