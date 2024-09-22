@@ -17,9 +17,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8"/>
         <PackageReference Include="Microsoft.Identity.Web" Version="3.1.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.1.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.1.0"/>
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3"/>
         <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.1.0"/>
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.1.0"/>
@@ -42,10 +39,6 @@
 
     <ItemGroup>
         <None Include="Clients\Generated\SimpleTrading.Client.cs"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Clients\Npm\"/>
     </ItemGroup>
 
 </Project>
