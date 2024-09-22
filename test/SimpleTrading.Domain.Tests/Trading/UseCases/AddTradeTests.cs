@@ -3,7 +3,6 @@ using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -603,7 +602,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
         newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
     }
-    
+
     [Fact]
     public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_balance_and_no_closed_date()
     {
@@ -634,10 +633,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
             .Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "The result can only be overridden if 'Balance' and 'Closed' are specified.")
+            .And.Contain(x =>
+                x.ErrorMessage == "The result can only be overridden if 'Balance' and 'Closed' are specified.")
             .And.Contain(x => x.PropertyName == "ManuallyEnteredResult");
     }
-    
+
     [Fact]
     public async Task Specifying_a_manually_entered_result_is_possible_if_balance_and_closed_date_are_present()
     {
@@ -669,7 +669,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var completed = response.Value.Should().BeOfType<Completed<Guid>>();
         var addedTradeId = completed.Which.Data;
-        
+
         var addedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == addedTradeId);
         addedTrade.Should().NotBeNull();
         addedTrade!.Result.Should().NotBeNull();

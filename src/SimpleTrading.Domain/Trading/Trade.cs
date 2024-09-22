@@ -76,7 +76,7 @@ public class Trade : IEntity
         var (result, warnings) = CalculateResult(configuration);
 
         Result = result;
-        
+
         return new Completed(warnings);
     }
 

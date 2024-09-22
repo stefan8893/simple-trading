@@ -1,6 +1,6 @@
 using FluentValidation;
-using OneOf.Types;
 using OneOf;
+using OneOf.Types;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
@@ -59,7 +59,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
             .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
-        
+
         RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .Empty()
             .WithName(SimpleTradingStrings.Result)
