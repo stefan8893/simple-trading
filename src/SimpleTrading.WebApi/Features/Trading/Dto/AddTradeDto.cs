@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
+using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
@@ -19,7 +20,7 @@ public record AddTradeDto
     /// <example>5000</example>
     public decimal? Size { get; set; }
     
-    public ResultDto? ManuallyEnteredResult { get; set; }
+    public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
 
     /// <example>125</example>
     public decimal? Balance { get; set; }

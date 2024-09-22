@@ -241,7 +241,9 @@ public partial class TradesController : ControllerBase
             Opened = dto.Opened!.Value,
             Closed = dto.Closed,
             Size = dto.Size!.Value,
-            ManuallyEnteredResult = MapToResultModel(dto.ManuallyEnteredResult),
+            ManuallyEnteredResult = dto.ManuallyEnteredResult is null
+                ? new None()
+                : MapToResultModel(dto.ManuallyEnteredResult.Value),
             Balance = dto.Balance,
             CurrencyId = dto.CurrencyId!.Value,
             EntryPrice = dto.EntryPrice!.Value,

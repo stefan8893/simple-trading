@@ -2037,8 +2037,7 @@ namespace SimpleTrading.Client
         public double? Size { get; set; }
 
         [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ResultDto? ManuallyEnteredResult { get; set; }
+        public ResultDtoNullableUpdateValue ManuallyEnteredResult { get; set; }
 
         [Newtonsoft.Json.JsonProperty("balance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Balance { get; set; }

@@ -140,6 +140,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
+            ManuallyEnteredResult = null,
             Size = 5000,
             Balance = null,
             CurrencyId = currency.Id,
