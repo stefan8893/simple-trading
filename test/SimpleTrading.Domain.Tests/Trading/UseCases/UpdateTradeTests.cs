@@ -276,7 +276,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
-            .Which.Reason.Should().Be("'Closed' must be after 'Opened'.");
+            .Which.Details.Should().Be("'Closed' must be after 'Opened'.");
     }
 
     [Fact]
@@ -326,7 +326,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
-            .Which.Reason.Should()
+            .Which.Details.Should()
             .Be("Updating 'Balance' or 'Closed' is only possible when the trade has already been closed.");
     }
     
@@ -350,7 +350,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // assert
         response.Value.Should().BeOfType<BusinessError>()
-            .Which.Reason.Should()
+            .Which.Details.Should()
             .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
     }
 

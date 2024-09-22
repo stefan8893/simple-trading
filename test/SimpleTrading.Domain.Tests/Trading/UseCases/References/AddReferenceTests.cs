@@ -63,7 +63,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var businessError = response.Value.Should().BeOfType<BusinessError>();
         businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Reason.Should()
+        businessError.Which.Details.Should()
             .Be("You can't add more than 50 references per trade.");
     }
 

@@ -1197,7 +1197,7 @@ export class AddTradeDto implements IAddTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDto;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
@@ -1223,7 +1223,7 @@ export class AddTradeDto implements IAddTradeDto {
             this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
             this.size = _data["size"];
-            this.result = _data["result"];
+            this.manuallyEnteredResult = _data["manuallyEnteredResult"];
             this.balance = _data["balance"];
             this.currencyId = _data["currencyId"];
             this.entryPrice = _data["entryPrice"];
@@ -1253,7 +1253,7 @@ export class AddTradeDto implements IAddTradeDto {
         data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
         data["size"] = this.size;
-        data["result"] = this.result;
+        data["manuallyEnteredResult"] = this.manuallyEnteredResult;
         data["balance"] = this.balance;
         data["currencyId"] = this.currencyId;
         data["entryPrice"] = this.entryPrice;
@@ -1276,7 +1276,7 @@ export interface IAddTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDto;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
@@ -1379,7 +1379,7 @@ export class CloseTradeDto implements ICloseTradeDto {
     balance?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
 
     constructor(data?: ICloseTradeDto) {
         if (data) {
@@ -1395,7 +1395,7 @@ export class CloseTradeDto implements ICloseTradeDto {
             this.balance = _data["balance"];
             this.exitPrice = _data["exitPrice"];
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
-            this.result = _data["result"];
+            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? ResultDtoNullableUpdateValue.fromJS(_data["manuallyEnteredResult"]) : <any>undefined;
         }
     }
 
@@ -1411,7 +1411,7 @@ export class CloseTradeDto implements ICloseTradeDto {
         data["balance"] = this.balance;
         data["exitPrice"] = this.exitPrice;
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
-        data["result"] = this.result;
+        data["manuallyEnteredResult"] = this.manuallyEnteredResult ? this.manuallyEnteredResult.toJSON() : <any>undefined;
         return data;
     }
 }
@@ -1420,7 +1420,7 @@ export interface ICloseTradeDto {
     balance?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
 }
 
 export class CurrencyDto implements ICurrencyDto {
@@ -1467,10 +1467,10 @@ export interface ICurrencyDto {
     name: string | undefined;
 }
 
-export class DecimalNullableUpdatedValue implements IDecimalNullableUpdatedValue {
+export class DecimalNullableUpdateValue implements IDecimalNullableUpdateValue {
     value?: number | undefined;
 
-    constructor(data?: IDecimalNullableUpdatedValue) {
+    constructor(data?: IDecimalNullableUpdateValue) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1485,9 +1485,9 @@ export class DecimalNullableUpdatedValue implements IDecimalNullableUpdatedValue
         }
     }
 
-    static fromJS(data: any): DecimalNullableUpdatedValue {
+    static fromJS(data: any): DecimalNullableUpdateValue {
         data = typeof data === 'object' ? data : {};
-        let result = new DecimalNullableUpdatedValue();
+        let result = new DecimalNullableUpdateValue();
         result.init(data);
         return result;
     }
@@ -1499,7 +1499,7 @@ export class DecimalNullableUpdatedValue implements IDecimalNullableUpdatedValue
     }
 }
 
-export interface IDecimalNullableUpdatedValue {
+export interface IDecimalNullableUpdateValue {
     value?: number | undefined;
 }
 
@@ -1795,10 +1795,10 @@ export enum ResultDto {
     Loss = "Loss",
 }
 
-export class ResultDtoNullableUpdatedValue implements IResultDtoNullableUpdatedValue {
+export class ResultDtoNullableUpdateValue implements IResultDtoNullableUpdateValue {
     value?: ResultDto;
 
-    constructor(data?: IResultDtoNullableUpdatedValue) {
+    constructor(data?: IResultDtoNullableUpdateValue) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1813,9 +1813,9 @@ export class ResultDtoNullableUpdatedValue implements IResultDtoNullableUpdatedV
         }
     }
 
-    static fromJS(data: any): ResultDtoNullableUpdatedValue {
+    static fromJS(data: any): ResultDtoNullableUpdateValue {
         data = typeof data === 'object' ? data : {};
-        let result = new ResultDtoNullableUpdatedValue();
+        let result = new ResultDtoNullableUpdateValue();
         result.init(data);
         return result;
     }
@@ -1827,14 +1827,14 @@ export class ResultDtoNullableUpdatedValue implements IResultDtoNullableUpdatedV
     }
 }
 
-export interface IResultDtoNullableUpdatedValue {
+export interface IResultDtoNullableUpdateValue {
     value?: ResultDto;
 }
 
-export class StringUpdatedValue implements IStringUpdatedValue {
+export class StringUpdateValue implements IStringUpdateValue {
     value?: string | undefined;
 
-    constructor(data?: IStringUpdatedValue) {
+    constructor(data?: IStringUpdateValue) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1849,9 +1849,9 @@ export class StringUpdatedValue implements IStringUpdatedValue {
         }
     }
 
-    static fromJS(data: any): StringUpdatedValue {
+    static fromJS(data: any): StringUpdateValue {
         data = typeof data === 'object' ? data : {};
-        let result = new StringUpdatedValue();
+        let result = new StringUpdateValue();
         result.init(data);
         return result;
     }
@@ -1863,7 +1863,7 @@ export class StringUpdatedValue implements IStringUpdatedValue {
     }
 }
 
-export interface IStringUpdatedValue {
+export interface IStringUpdateValue {
     value?: string | undefined;
 }
 
@@ -2238,7 +2238,7 @@ export interface IUInt16SuccessResponse {
 export class UpdateReferenceDto implements IUpdateReferenceDto {
     type?: ReferenceTypeDto;
     link?: string | undefined;
-    notes?: StringUpdatedValue;
+    notes?: StringUpdateValue;
 
     constructor(data?: IUpdateReferenceDto) {
         if (data) {
@@ -2253,7 +2253,7 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
         if (_data) {
             this.type = _data["type"];
             this.link = _data["link"];
-            this.notes = _data["notes"] ? StringUpdatedValue.fromJS(_data["notes"]) : <any>undefined;
+            this.notes = _data["notes"] ? StringUpdateValue.fromJS(_data["notes"]) : <any>undefined;
         }
     }
 
@@ -2276,7 +2276,7 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
 export interface IUpdateReferenceDto {
     type?: ReferenceTypeDto;
     link?: string | undefined;
-    notes?: StringUpdatedValue;
+    notes?: StringUpdateValue;
 }
 
 export class UpdateTradeDto implements IUpdateTradeDto {
@@ -2285,14 +2285,14 @@ export class UpdateTradeDto implements IUpdateTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDtoNullableUpdatedValue;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
-    stopLoss?: DecimalNullableUpdatedValue;
-    takeProfit?: DecimalNullableUpdatedValue;
-    exitPrice?: DecimalNullableUpdatedValue;
-    notes?: StringUpdatedValue;
+    stopLoss?: DecimalNullableUpdateValue;
+    takeProfit?: DecimalNullableUpdateValue;
+    exitPrice?: DecimalNullableUpdateValue;
+    notes?: StringUpdateValue;
 
     constructor(data?: IUpdateTradeDto) {
         if (data) {
@@ -2310,14 +2310,14 @@ export class UpdateTradeDto implements IUpdateTradeDto {
             this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
             this.size = _data["size"];
-            this.result = _data["result"] ? ResultDtoNullableUpdatedValue.fromJS(_data["result"]) : <any>undefined;
+            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? ResultDtoNullableUpdateValue.fromJS(_data["manuallyEnteredResult"]) : <any>undefined;
             this.balance = _data["balance"];
             this.currencyId = _data["currencyId"];
             this.entryPrice = _data["entryPrice"];
-            this.stopLoss = _data["stopLoss"] ? DecimalNullableUpdatedValue.fromJS(_data["stopLoss"]) : <any>undefined;
-            this.takeProfit = _data["takeProfit"] ? DecimalNullableUpdatedValue.fromJS(_data["takeProfit"]) : <any>undefined;
-            this.exitPrice = _data["exitPrice"] ? DecimalNullableUpdatedValue.fromJS(_data["exitPrice"]) : <any>undefined;
-            this.notes = _data["notes"] ? StringUpdatedValue.fromJS(_data["notes"]) : <any>undefined;
+            this.stopLoss = _data["stopLoss"] ? DecimalNullableUpdateValue.fromJS(_data["stopLoss"]) : <any>undefined;
+            this.takeProfit = _data["takeProfit"] ? DecimalNullableUpdateValue.fromJS(_data["takeProfit"]) : <any>undefined;
+            this.exitPrice = _data["exitPrice"] ? DecimalNullableUpdateValue.fromJS(_data["exitPrice"]) : <any>undefined;
+            this.notes = _data["notes"] ? StringUpdateValue.fromJS(_data["notes"]) : <any>undefined;
         }
     }
 
@@ -2335,7 +2335,7 @@ export class UpdateTradeDto implements IUpdateTradeDto {
         data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
         data["size"] = this.size;
-        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["manuallyEnteredResult"] = this.manuallyEnteredResult ? this.manuallyEnteredResult.toJSON() : <any>undefined;
         data["balance"] = this.balance;
         data["currencyId"] = this.currencyId;
         data["entryPrice"] = this.entryPrice;
@@ -2353,14 +2353,14 @@ export interface IUpdateTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDtoNullableUpdatedValue;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
-    stopLoss?: DecimalNullableUpdatedValue;
-    takeProfit?: DecimalNullableUpdatedValue;
-    exitPrice?: DecimalNullableUpdatedValue;
-    notes?: StringUpdatedValue;
+    stopLoss?: DecimalNullableUpdateValue;
+    takeProfit?: DecimalNullableUpdateValue;
+    exitPrice?: DecimalNullableUpdateValue;
+    notes?: StringUpdateValue;
 }
 
 export class UserSettingsDto implements IUserSettingsDto {
