@@ -52,17 +52,7 @@ public class Trade : IEntity
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
-        var thereIsANewManuallyEnteredResult = configuration.ManuallyEnteredResult.IsT0;
-        var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
-
-        var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
-            IsClosed
-            && currentResultWasManuallyEntered
-            && !thereIsANewManuallyEnteredResult;
-
-        return doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne
-            ? new Completed()
-            : CloseTrade(configuration);
+        return CloseTrade(configuration);
     }
 
     private Completed CloseTrade(CloseTradeConfiguration configuration)
@@ -72,8 +62,19 @@ public class Trade : IEntity
 
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
+        
+        var thereIsANewManuallyEnteredResult = configuration.ManuallyEnteredResult.IsT0;
+        var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
+
+        var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
+            IsClosed
+            && currentResultWasManuallyEntered
+            && !thereIsANewManuallyEnteredResult;
 
         var (result, warnings) = CalculateResult(configuration);
+
+        if (doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne)
+            return new Completed(warnings);
 
         Result = result;
 

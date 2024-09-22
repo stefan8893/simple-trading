@@ -225,9 +225,6 @@
     <data name="ResultOfAnOpenedTradeCannotBeReset" xml:space="preserve">
         <value>Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher.</value>
     </data>
-    <data name="BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades" xml:space="preserve">
-        <value>Die Aktualisierung von 'Bilanz' oder 'Abgeschlossen' ist nur möglich, wenn der Trade bereits abgeschlossen ist.</value>
-    </data>
     <data name="Reference" xml:space="preserve">
         <value>Referenz</value>
     </data>
@@ -278,5 +275,8 @@
     </data>
     <data name="BalanceAndClosedMustBePresentWhenOverridingResult" xml:space="preserve">
         <value>Das Ergebnis kann nur überschrieben werden, wenn 'Bilanz' und 'Abgeschlossen' angegeben ist.</value>
+    </data>
+    <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
+        <value>'{0}' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.</value>
     </data>
 </root>
