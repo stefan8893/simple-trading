@@ -165,7 +165,7 @@ public class Trade : IEntity
         return resultModel switch
         {
             ResultModel.Loss => new Result(Result.Loss, ResultSource.ManuallyEntered),
-            ResultModel.BreakEven => new Result(Result.BreakEven, ResultSource.ManuallyEntered, 0),
+            ResultModel.BreakEven => new Result(Result.BreakEven, ResultSource.ManuallyEntered),
             ResultModel.Mediocre => new Result(Result.Mediocre, ResultSource.ManuallyEntered),
             ResultModel.Win => new Result(Result.Win, ResultSource.ManuallyEntered),
             null => null,
