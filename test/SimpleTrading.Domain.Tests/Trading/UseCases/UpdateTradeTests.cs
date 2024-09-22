@@ -486,7 +486,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task Manually_entered_results_can_be_updated_multiple_times()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {Balance = 500m, Result = ResultModel.Win}).Build();
+        var trade = (TestData.Trade.Default with
+        {
+            Opened = _utcNow,
+            Closed = _utcNow,
+            Balance = 500m, 
+            Result = ResultModel.Win
+        }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
@@ -508,6 +514,30 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         updatedTrade!.Result.Should().NotBeNull();
         updatedTrade.Result!.Name.Should().Be(Result.Mediocre);
         updatedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
+    }
+    
+    [Fact]
+    public async Task Result_can_only_be_overriden_if_balance_and_trade_is_specified()
+    {
+        // arrange
+        var trade = TestData.Trade.Default.Build();
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync();
+
+        trade.IsClosed.Should().BeFalse();
+
+        // act
+        var response = await Interactor.Execute(new UpdateTradeRequestModel
+        {
+            TradeId = trade.Id,
+            ManuallyEnteredResult = ResultModel.Mediocre,
+        });
+
+        // assert
+        var businessError = response.Value.Should().BeOfType<BusinessError>();
+        businessError.Which.Details.Should()
+            .Be("The result can only be overridden if 'Balance' and 'Closed' are specified.");
+
     }
 
     private DateTime UtcNowStub()

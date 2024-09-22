@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
@@ -322,8 +323,14 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     public async Task Greater_than_balance_with_uppercase_property_name_returns_correct_result()
     {
         // arrange
+        var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Balance = 500m * x})
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = now,
+                Closed = now,
+                Balance = 500m * x
+            })
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -665,8 +672,14 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     public async Task Equal_to_balance_with_valid_input_returns_correct_result()
     {
         // arrange
+        var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Balance = 500m * x})
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = now,
+                Closed = now,
+                Balance = 500m * x
+            })
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -693,8 +706,14 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     public async Task Balance_equal_to_null_returns_trades_without_a_balance()
     {
         // arrange
-        var tradeWithBalance = (TestData.Trade.Default with {Balance = 500m}).Build();
-        var tradeWithoutBalance = (TestData.Trade.Default with {Balance = null}).Build();
+        var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
+        var tradeWithBalance = (TestData.Trade.Default with
+        {
+            Opened = now,
+            Closed = now,
+            Balance = 500m
+        }).Build();
+        var tradeWithoutBalance = TestData.Trade.Default.Build();
 
         DbContext.Trades.AddRange(tradeWithBalance, tradeWithoutBalance);
         await DbContext.SaveChangesAsync();
