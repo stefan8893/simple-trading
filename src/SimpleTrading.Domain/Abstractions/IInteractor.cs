@@ -1,11 +1,11 @@
 ﻿namespace SimpleTrading.Domain.Abstractions;
 
-public interface IInteractor<TResponse>
+public interface IInteractor<TResponseModel>
 {
-    Task<TResponse> Execute();
+    Task<TResponseModel> Execute();
 }
 
-public interface IInteractor<in TRequestModel, TResponse>
+public interface IInteractor<in TRequestModel, TResponseModel>
 {
-    Task<TResponse> Execute(TRequestModel model);
+    Task<TResponseModel> Execute(TRequestModel model);
 }
