@@ -31,7 +31,7 @@ public class Trade : IEntity
     public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
-    internal OneOf<Completed, BusinessError> ResetManuallyEnteredResult(UtcNow utcNow)
+    internal OneOf<Completed, BusinessError> RestoreCalculatedResult(UtcNow utcNow)
     {
         if (!IsClosed)
             return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
