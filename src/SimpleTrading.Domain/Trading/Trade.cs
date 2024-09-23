@@ -1,10 +1,11 @@
 using OneOf;
+using OneOf.Types;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.Domain.Trading.TradeResultAnalyser;
-using SimpleTrading.Domain.Trading.TradeResultAnalyser.Decorators;
+using SimpleTrading.Domain.Trading.TradeResultAnalyzer;
+using SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading;
@@ -30,7 +31,7 @@ public class Trade : IEntity
     public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
-    internal OneOf<Completed, BusinessError> ResetManuallyEnteredResult(UtcNow utcNow)
+    internal OneOf<Completed, BusinessError> RestoreCalculatedResult(UtcNow utcNow)
     {
         if (!IsClosed)
             return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
@@ -51,46 +52,51 @@ public class Trade : IEntity
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
-        var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
-        var thereIsNoNewManuallyEnteredResult = !configuration.Result.HasValue;
-        var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
-            IsClosed
-            && currentResultWasManuallyEntered
-            && thereIsNoNewManuallyEnteredResult;
-
-        return doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne
-            ? new Completed()
-            : CloseTrade(configuration);
+        return CloseTrade(configuration);
     }
 
-    private OneOf<Completed, BusinessError> CloseTrade(CloseTradeConfiguration configuration)
+    private Completed CloseTrade(CloseTradeConfiguration configuration)
     {
         Closed = configuration.Closed.ToUtcKind();
         Balance = configuration.Balance;
 
-        return CalculateResult(configuration);
-    }
-
-    private OneOf<Completed, BusinessError> CalculateResult(CloseTradeConfiguration configuration)
-    {
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
+        
+        var thereIsANewManuallyEnteredResult = configuration.ManuallyEnteredResult.IsT0;
+        var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
 
+        var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
+            IsClosed
+            && currentResultWasManuallyEntered
+            && !thereIsANewManuallyEnteredResult;
+
+        var (result, warnings) = CalculateResult(configuration);
+
+        if (doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne)
+            return new Completed(warnings);
+
+        Result = result;
+
+        return new Completed(warnings);
+    }
+
+    private (Result? result, IReadOnlyList<Warning> warnings) CalculateResult(CloseTradeConfiguration configuration)
+    {
         var results = CalculateResults(configuration);
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
-        Result = results.ManuallyEntered ?? calculatedResult;
+        var result = results.ManuallyEntered.Match(r => r, _ => calculatedResult);
 
-        return new Completed(AnalyseResults(results, calculatedResult));
+        return (result, AnalyzeResults(results, calculatedResult));
     }
 
     private TradingResultsDto CalculateResults(CloseTradeConfiguration configuration)
     {
-        var manuallyEnteredResult = configuration.Result.HasValue
-            ? CreateManuallyEnteredResult(configuration.Result.Value)
-            // do not lose a manual result that was previously entered
-            : Result?.Source == ResultSource.ManuallyEntered
-                ? Result
-                : null;
+        var manuallyEnteredResult = configuration.ManuallyEnteredResult
+            .Match<OneOf<Result?, None>>(x => CreateManuallyEnteredResult(x), _ =>
+                Result?.Source == ResultSource.ManuallyEntered
+                    ? Result
+                    : new None());
 
         var calculatedByBalance = CalculateResultByBalance(Balance!.Value);
         var calculatedByPositionPrices = PositionPrices.CalculateResult();
@@ -127,41 +133,42 @@ public class Trade : IEntity
             : balanceResult;
     }
 
-    private List<Warning> AnalyseResults(TradingResultsDto results,
+    private List<Warning> AnalyzeResults(TradingResultsDto results,
         Result? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
-            new EnteredResultDiffersFromCalculatedAnalyser();
+            new EnteredResultDiffersFromCalculatedAnalyzer();
         var longPositionResultAnalysisDecorator =
-            new LongPositionAnalyserDecorator(enteredResultDiffersFromCalculatedResultAnalysis);
+            new LongPositionAnalyzerDecorator(enteredResultDiffersFromCalculatedResultAnalysis);
         var shortPositionResultAnalysisDecorator =
-            new ShortPositionTradeResultAnalyserDecorator(longPositionResultAnalysisDecorator);
+            new ShortPositionTradeResultAnalyzerDecorator(longPositionResultAnalysisDecorator);
         var balanceDiffersFromPositionPricesAnalysisDecorator =
-            new BalanceDiffersFromPositionPricesAnalyserDecorator(shortPositionResultAnalysisDecorator);
+            new BalanceDiffersFromPositionPricesAnalyzerDecorator(shortPositionResultAnalysisDecorator);
 
-        var analyseResultsConfiguration = new TradeResultAnalyserConfiguration
+        var analyzeResultsConfiguration = new TradeResultAnalyzerConfiguration
         {
-            ManuallyEntered = results.ManuallyEntered,
+            ManuallyEntered = results.ManuallyEntered.Match(x => x, _ => null),
             CalculatedByBalance = results.CalculatedByBalance,
             CalculatedByPositionPrices = results.CalculatedByPositionPrices,
             CalculatedResult = calculatedResult
         };
 
         var analysisReport = balanceDiffersFromPositionPricesAnalysisDecorator
-            .AnalyseResults(this, analyseResultsConfiguration)
+            .AnalyzeResults(this, analyzeResultsConfiguration)
             .ToList();
 
         return analysisReport;
     }
 
-    private static Result CreateManuallyEnteredResult(ResultModel resultModel)
+    private static Result? CreateManuallyEnteredResult(ResultModel? resultModel)
     {
         return resultModel switch
         {
             ResultModel.Loss => new Result(Result.Loss, ResultSource.ManuallyEntered),
-            ResultModel.BreakEven => new Result(Result.BreakEven, ResultSource.ManuallyEntered, 0),
+            ResultModel.BreakEven => new Result(Result.BreakEven, ResultSource.ManuallyEntered),
             ResultModel.Mediocre => new Result(Result.Mediocre, ResultSource.ManuallyEntered),
             ResultModel.Win => new Result(Result.Win, ResultSource.ManuallyEntered),
+            null => null,
             _ => throw new ArgumentOutOfRangeException(nameof(resultModel), resultModel, null)
         };
     }
@@ -177,7 +184,7 @@ public class Trade : IEntity
     }
 
     private record TradingResultsDto(
-        Result? ManuallyEntered,
+        OneOf<Result?, None> ManuallyEntered,
         Result? CalculatedByBalance,
         Result? CalculatedByPositionPrices);
 }
@@ -185,5 +192,5 @@ public class Trade : IEntity
 internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
 {
     public decimal? ExitPrice { get; init; }
-    public ResultModel? Result { get; init; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();
 }

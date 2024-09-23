@@ -9,7 +9,7 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class DeleteTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private IDeleteTrade Interactor => ServiceLocator.GetRequiredService<IDeleteTrade>();
 

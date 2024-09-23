@@ -1,6 +1,6 @@
-﻿namespace SimpleTrading.Domain.Trading.TradeResultAnalyser;
+﻿namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer;
 
-internal record TradeResultAnalyserConfiguration
+internal record TradeResultAnalyzerConfiguration
 {
     public required Result? ManuallyEntered { get; init; }
     public required Result? CalculatedByBalance { get; init; }

@@ -6,7 +6,8 @@ using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 public class ResultEqualToFilterPredicate(IValueParser<NullableReference<Result>> valueParser)
-    : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.EqualTo, valueParser)
+    : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.EqualTo,
+        valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(NullableReference<Result> value)
     {
@@ -65,7 +66,8 @@ public class ResultLessThanOrEqualToFilterPredicate(IValueParser<Result> valuePa
 }
 
 public class ResultNotEqualToFilterPredicate(IValueParser<NullableReference<Result>> valueParser)
-    : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.NotEqualTo, valueParser)
+    : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.NotEqualTo,
+        valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(NullableReference<Result> value)
     {

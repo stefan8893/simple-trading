@@ -1,9 +1,8 @@
 using FluentValidation;
 using OneOf;
 using OneOf.Types;
-using SimpleTrading.Domain.Extensions;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
 
@@ -17,7 +16,7 @@ public record UpdateTradeRequestModel
     public DateTimeOffset? Opened { get; init; }
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; init; }
-    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; } = new None();
     public decimal? Balance { get; set; }
     public Guid? CurrencyId { get; init; }
     public decimal? EntryPrice { get; init; }
@@ -29,8 +28,14 @@ public record UpdateTradeRequestModel
 
 public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeRequestModel>
 {
-    public UpdateTradeRequestModelValidator(OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator)
+    private readonly ITradeRepository _tradeRepository;
+
+    public UpdateTradeRequestModelValidator(
+        OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator,
+        ITradeRepository tradeRepository)
     {
+        _tradeRepository = tradeRepository;
+
         RuleFor(x => x.AssetId)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Asset)
@@ -50,16 +55,34 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
         RuleFor(x => x.Opened)
             .SetValidator(openedLessThanOneDayInTheFutureValidator);
 
+        RuleFor(x => x.Closed)
+            .MustAsync(async (m, _, _) => await IsTradeClose(m.TradeId))
+            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
+                SimpleTradingStrings.Closed))
+            .When(x => x.Closed.HasValue);
+
         RuleFor(x => x.Size)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.TradeSize)
             .When(x => x.Size.HasValue);
+
+        RuleFor(x => x.Balance)
+            .MustAsync(async (m, _, _) => await IsTradeClose(m.TradeId))
+            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
+                SimpleTradingStrings.Balance))
+            .When(x => x.Balance.HasValue);
 
         RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
             .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
+
+        RuleFor(x => x.ManuallyEnteredResult)
+            .MustAsync(async (m, _, _) => await IsTradeClose(m.TradeId))
+            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
+                SimpleTradingStrings.Result))
+            .When(x => x.ManuallyEnteredResult.IsT0);
 
         RuleFor(x => x.EntryPrice)
             .GreaterThan(0)
@@ -94,5 +117,12 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .WithName(SimpleTradingStrings.Notes)
             .OverridePropertyName(x => x.Notes)
             .When(x => x.Notes is {IsT0: true, AsT0: not null});
+    }
+
+    private async Task<bool> IsTradeClose(Guid tradeId)
+    {
+        var trade = await _tradeRepository.Find(tradeId);
+
+        return trade?.IsClosed ?? false;
     }
 }

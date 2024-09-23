@@ -1,4 +1,6 @@
 using FluentValidation;
+using OneOf;
+using OneOf.Types;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
@@ -15,7 +17,7 @@ public record AddTradeRequestModel
     public required DateTimeOffset Opened { get; init; }
     public DateTimeOffset? Closed { get; set; }
     public required decimal Size { get; init; }
-    public ResultModel? ManuallyEnteredResult { get; set; }
+    public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
     public decimal? Balance { get; set; }
     public required Guid CurrencyId { get; init; }
     public required decimal EntryPrice { get; init; }
@@ -52,16 +54,18 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.TradeSize);
 
-        RuleFor(x => x.ManuallyEnteredResult)
+        RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
-            .When(x => x.ManuallyEnteredResult.HasValue);
-        
-        RuleFor(x => x.ManuallyEnteredResult)
+            .OverridePropertyName(x => x.ManuallyEnteredResult)
+            .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
+
+        RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .Empty()
             .WithName(SimpleTradingStrings.Result)
+            .OverridePropertyName(x => x.ManuallyEnteredResult)
             .WithMessage(SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult)
-            .When(x => !(x.Balance.HasValue && x.Closed.HasValue) );
+            .When(x => !(x.Balance.HasValue && x.Closed.HasValue) && x.ManuallyEnteredResult.IsT0);
 
         RuleFor(x => x.Balance)
             .NotEmpty()

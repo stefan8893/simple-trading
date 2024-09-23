@@ -14,7 +14,7 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
@@ -33,9 +33,12 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
 
         var requestModel = new CloseTradeRequestModel(Guid.NewGuid(),
             DateTime.Parse("2024-08-03T16:00:00+00:00"),
-            0m,
-            (ResultModel) 50,
-            1.05m);
+            0m
+        )
+        {
+            ManuallyEnteredResult = (ResultModel) 50,
+            ExitPrice = 1.05m
+        };
 
         // act
         var response = await Interactor.Execute(requestModel);
@@ -44,7 +47,7 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
         response.Value.Should().BeOfType<BadInput>()
             .Which.ValidationResult.Errors
             .Should().Contain(x => x.ErrorMessage == "'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.")
-            .And.Contain(x => x.PropertyName == "Result")
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult")
             .And.HaveCount(1);
     }
 
@@ -53,7 +56,11 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
-            new CloseTradeRequestModel(tradeId, DateTime.Parse("2024-08-03T16:00:00Z"), 500, ResultModel.Win, 1.05m);
+            new CloseTradeRequestModel(tradeId, DateTime.Parse("2024-08-03T16:00:00Z"), 500)
+            {
+                ManuallyEnteredResult = ResultModel.Win,
+                ExitPrice = 1.05m
+            };
 
         var response = await Interactor.Execute(requestModel);
 
@@ -71,7 +78,11 @@ public class CloseTradeInteractorTests(TestingWebApplicationFactory<Program> fac
         await DbContext.SaveChangesAsync();
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500, ResultModel.Win, 0m);
+            new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
+            {
+                ManuallyEnteredResult = ResultModel.Win,
+                ExitPrice = 0m
+            };
 
         // act
         var response = await Interactor.Execute(requestModel);

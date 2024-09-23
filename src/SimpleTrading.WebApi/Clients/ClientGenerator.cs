@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Extensions;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.TypeScript;
-using SimpleTrading.Domain.Trading;
 using SimpleTrading.WebApi.CliCommands;
 using Swashbuckle.AspNetCore.Swagger;
 

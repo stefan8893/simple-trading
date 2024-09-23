@@ -49,7 +49,7 @@ public static class ResponseExtension
     {
         var errorResponse = new ErrorResponse
         {
-            Messages = [businessError.Reason]
+            Messages = [businessError.Details]
         };
 
         return new UnprocessableEntityObjectResult(errorResponse);

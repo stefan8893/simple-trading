@@ -144,36 +144,32 @@ public class UpdateTradeInteractor(
     private OneOf<Completed, NothingToClose, BusinessError> CloseTrade(Trade trade, UpdateTradeRequestModel model,
         bool positionPricesHaveChanged)
     {
+        if (!trade.IsClosed)
+            return new NothingToClose();
+
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
-        var resultHasChanged = model.ManuallyEnteredResult.IsT0 && model.ManuallyEnteredResult.AsT0?.ToString() != trade.Result?.Name;
-        var shouldResetResult = resultHasChanged && model.ManuallyEnteredResult.AsT0 is null;
+        var manuallyEnteredResultIsSpecified = model.ManuallyEnteredResult.IsT0;
 
-        if (resultHasChanged && shouldResetResult)
-            trade.ResetManuallyEnteredResult(utcNow);
-        
-        switch (trade.IsClosed)
+        var nothingHasChanged =
+            !positionPricesHaveChanged &&
+            !balanceHasChanged &&
+            !closedHasChanged &&
+            !manuallyEnteredResultIsSpecified;
+
+        if (nothingHasChanged)
+            return new NothingToClose();
+
+        var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
+        var balance = model.Balance ?? trade.Balance!.Value;
+
+        var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow)
         {
-            case false when balanceHasChanged || closedHasChanged:
-                return BusinessError(trade.Id,
-                    SimpleTradingStrings.BalanceAndClosedUpdatesAreOnlyPossibleForClosedTrades);
-            case false when resultHasChanged && !(balanceHasChanged && closedHasChanged):
-                return BusinessError(trade.Id,
-                    SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult);
-            case true when
-                positionPricesHaveChanged || balanceHasChanged || closedHasChanged || resultHasChanged:
-            {
-                var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
-                var balance = model.Balance ?? trade.Balance!.Value;
-                var result = model.ManuallyEnteredResult.IsT0 ? model.ManuallyEnteredResult.AsT0 : null;
+            ManuallyEnteredResult = model.ManuallyEnteredResult
+        };
 
-                var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow) {Result = result};
-                return trade.Close(closeTradeConfiguration)
-                    .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
-            }
-            default:
-                return new NothingToClose();
-        }
+        return trade.Close(closeTradeConfiguration)
+            .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
     }
 
     private record NothingToClose;

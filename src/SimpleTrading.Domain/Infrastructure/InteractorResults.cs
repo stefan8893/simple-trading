@@ -59,6 +59,6 @@ public record NotFound(Guid ResourceId, string? ResourceType = null);
 
 public record NotFound<TEntity>(Guid ResourceId) : NotFound(ResourceId, typeof(TEntity).Name);
 
-public record BusinessError(Guid ResourceId, string Reason);
+public record BusinessError(Guid ResourceId, string Details);
 
-public record Warning(string Reason);
+public record Warning(string Details);

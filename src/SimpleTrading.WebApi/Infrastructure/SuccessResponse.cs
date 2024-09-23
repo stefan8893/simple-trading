@@ -13,7 +13,7 @@ public record SuccessResponse
 
     private SuccessResponse(IEnumerable<Warning> warnings)
     {
-        Warnings = warnings.Select(x => x.Reason);
+        Warnings = warnings.Select(x => x.Details);
     }
 
     public IEnumerable<string> Warnings { get; init; } = [];
@@ -52,11 +52,11 @@ public record SuccessResponse<T> where T : notnull
 
     public static SuccessResponse<T> From(T data, IEnumerable<Warning> warnings)
     {
-        return new SuccessResponse<T>(data, warnings.Select(x => x.Reason));
+        return new SuccessResponse<T>(data, warnings.Select(x => x.Details));
     }
 
     public static SuccessResponse<T> From(Completed<T> completed)
     {
-        return new SuccessResponse<T>(completed.Data, completed.Warnings.Select(x => x.Reason));
+        return new SuccessResponse<T>(completed.Data, completed.Warnings.Select(x => x.Details));
     }
 }

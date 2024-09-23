@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -116,9 +117,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
+        var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
 
         var trades = Enumerable.Range(1, 3)
-            .Select(x => TestData.Trade.Default with {Balance = 500m * x})
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = now,
+                Closed = now,
+                Balance = 500m * x
+            })
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);

@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 

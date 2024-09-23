@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using Autofac;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +16,6 @@ namespace SimpleTrading.TestInfrastructure;
 public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    private readonly WebApplicationFactory<Program> _factory = factory;
     private TradingDbContext? _dbContext;
     private IServiceScope? _serviceScope;
 
@@ -34,7 +32,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     public async Task InitializeAsync()
     {
         factory.OverrideServices = OverrideServices;
-        _serviceScope = _factory.Services.CreateScope();
+        _serviceScope = factory.Services.CreateScope();
         _dbContext = _serviceScope.ServiceProvider.GetRequiredService<TradingDbContext>();
 
         await DbContext.Database.MigrateAsync();
@@ -49,7 +47,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
     protected async Task<SimpleTradingClient> CreateClient(bool includeAccessToken = true)
     {
-        var client = _factory.CreateClient();
+        var client = factory.CreateClient();
 
         if (!includeAccessToken)
             return new SimpleTradingClient(client);

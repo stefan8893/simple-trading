@@ -1,19 +1,19 @@
 ﻿using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.Domain.Trading.TradeResultAnalyser.Decorators;
+namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;
 
-internal class LongPositionAnalyserDecorator(ITradeResultAnalyser innerComponent) : ITradeResultAnalyser
+internal class LongPositionAnalyzerDecorator(ITradeResultAnalyzer innerComponent) : ITradeResultAnalyzer
 {
-    public IEnumerable<Warning> AnalyseResults(Trade trade, TradeResultAnalyserConfiguration config)
+    public IEnumerable<Warning> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
     {
-        var additionalWarnings = AnalyseLongPositionPrices(trade, config);
+        var additionalWarnings = AnalyzeLongPositionPrices(trade, config);
 
-        return innerComponent.AnalyseResults(trade, config)
+        return innerComponent.AnalyzeResults(trade, config)
             .Concat(additionalWarnings);
     }
 
-    private static IEnumerable<Warning> AnalyseLongPositionPrices(Trade trade, TradeResultAnalyserConfiguration config)
+    private static IEnumerable<Warning> AnalyzeLongPositionPrices(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var isLongPosition = trade.PositionPrices.IsLongPosition;
         var hasBalanceResult = config.CalculatedByBalance is not null;
