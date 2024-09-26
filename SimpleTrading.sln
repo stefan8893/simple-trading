@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.DataAccess.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.Domain.Analyzers", "src\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj", "{B9D652FC-3D02-4E61-8747-FBA6B44BBDFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.Domain.Analyzers.Tests", "test\SimpleTrading.Domain.Analyzers.Tests\SimpleTrading.Domain.Analyzers.Tests.csproj", "{4149219C-1A29-4D6F-B74A-C28221C0193B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{B9D652FC-3D02-4E61-8747-FBA6B44BBDFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9D652FC-3D02-4E61-8747-FBA6B44BBDFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9D652FC-3D02-4E61-8747-FBA6B44BBDFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{847DB03A-1251-4357-9D64-F4AE23E9EA4F} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 		{54FEB882-7381-4BD4-B234-4B4183EDFF76} = {356313D4-DC33-453D-8085-4B6792499BB8}
 		{B9D652FC-3D02-4E61-8747-FBA6B44BBDFA} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
+		{4149219C-1A29-4D6F-B74A-C28221C0193B} = {356313D4-DC33-453D-8085-4B6792499BB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55851CC1-01BD-4314-B287-376AA406F433}

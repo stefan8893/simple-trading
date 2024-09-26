@@ -6,6 +6,10 @@ public class AbstractValidatorSymbolFinder(CancellationToken cancellationToken) 
 {
     protected override bool SatisfiesFilterPredicate(INamedTypeSymbol symbol)
     {
-        return symbol.BaseType is {IsGenericType: true, MetadataName: "AbstractValidator`1", Arity: 1};
+        return symbol.BaseType is
+        {
+            IsGenericType: true, MetadataName: "AbstractValidator`1", Arity: 1,
+            ContainingNamespace.MetadataName: "FluentValidation"
+        };
     }
 }

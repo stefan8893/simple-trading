@@ -15,7 +15,8 @@ public class InteractorImplementor(
 
     public bool HasResponseModelOneOfCase(string oneOfCase)
     {
-        return 
-                ResponseModel.TypeArguments.Any(x => x.Name == oneOfCase);
+        return ResponseModel
+            .TypeArguments
+            .Any(x => x.Name == oneOfCase);
     }
 }

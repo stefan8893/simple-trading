@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using SimpleTrading.Domain.Analyzers.SymbolFinder;
@@ -9,7 +10,7 @@ namespace SimpleTrading.Domain.Analyzers;
 public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
-        ImmutableArray.Create(Rules.MissingBadInputCase, Rules.ResponseModelTypeIsNotOneOf);
+        ImmutableArray.Create(Rules.MissingBadInputCase, Rules.ResponseModelTypeMustBeOneOf);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -26,22 +27,25 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         if (interactorInterface == null)
             return;
 
-        var validatorByRequestModelName = FindAbstractValidators(context);
+        var validatorByRequestModelName = FindAbstractValidators(context)
+            .GroupBy(x => x.BaseType!.TypeArguments[0].Name)
+            .ToDictionary(x => x.Key, x => x.ToList());
 
         if (context.CancellationToken.IsCancellationRequested)
             return;
 
         var interactorImplementors = GetInteractorImplementors(context, interactorInterface);
 
-        var validatableInteractors = interactorImplementors
+        var interactorsWithRequestModelValidators = interactorImplementors
             .Where(x => validatorByRequestModelName.ContainsKey(x.RequestModel.Name))
             .ToList();
 
-        var missingBadInputCaseDiagnostics = CreateMissingBadInputCaseDiagnostics(validatableInteractors,
+        var missingBadInputCaseDiagnostics = CreateMissingBadInputCaseDiagnostics(
+            interactorsWithRequestModelValidators,
             validatorByRequestModelName);
 
         var responseModelTypeIsNotOneOfDiagnostics = CreateResponseModelTypeIsNotOneOfDiagnostics(
-            validatableInteractors,
+            interactorsWithRequestModelValidators,
             validatorByRequestModelName);
 
         if (context.CancellationToken.IsCancellationRequested)
@@ -58,25 +62,21 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             new ImplementsInterfaceSymbolFinder(context.CancellationToken, interactorInterface);
         implementsInteractorFinder.FindIn(context.Compilation.GlobalNamespace);
 
-        var interactorImplementors =
-            implementsInteractorFinder
+        return implementsInteractorFinder
                 .Result
                 .Select(AddRequestAndResponseModelSymbols)
                 .OfType<InteractorImplementor>()
                 .ToList();
-        return interactorImplementors;
     }
 
-    private static Dictionary<string, List<INamedTypeSymbol>> FindAbstractValidators(CompilationAnalysisContext context)
+    private static IEnumerable<INamedTypeSymbol> FindAbstractValidators(CompilationAnalysisContext context)
     {
         var abstractValidatorsFinder = new AbstractValidatorSymbolFinder(context.CancellationToken);
         abstractValidatorsFinder.FindIn(context.Compilation.GlobalNamespace);
 
         return abstractValidatorsFinder
             .Result
-            .Where(x => x.BaseType is not null && x.BaseType.IsGenericType && x.BaseType.Arity is 1)
-            .GroupBy(x => x.BaseType!.TypeArguments[0].Name)
-            .ToDictionary(x => x.Key, x => x.ToList());
+            .Where(x => x.BaseType is not null && x.BaseType.IsGenericType && x.BaseType.Arity is 1);
     }
 
     private static INamedTypeSymbol? FindInteractorInterface(CompilationAnalysisContext context)
@@ -100,7 +100,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         return validatableInteractorsWithoutOneOfResponseModel
             .Where(x => x.Interactor.Locations.Any())
             .Select(badInteractor => Diagnostic.Create(
-                Rules.ResponseModelTypeIsNotOneOf,
+                Rules.ResponseModelTypeMustBeOneOf,
                 badInteractor.Interactor.Locations.First(),
                 badInteractor.RequestModel.Name)
             );

@@ -12,6 +12,7 @@ public class ImplementsInterfaceSymbolFinder(CancellationToken cancellationToken
             .Any(x => x.Name == interfaceType.Name &&
                       x.MetadataName == interfaceType.MetadataName &&
                       x.IsGenericType == interfaceType.IsGenericType &&
-                      x.Arity == interfaceType.Arity);
+                      x.Arity == interfaceType.Arity &&
+                      x.ContainingNamespace.Equals(interfaceType.ContainingNamespace, SymbolEqualityComparer.Default));
     }
 }
