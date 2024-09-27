@@ -32,4 +32,12 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj">
+            <PrivateAssets>All</PrivateAssets>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Analyzer</OutputItemType>
+        </ProjectReference>
+    </ItemGroup>
+
 </Project>
