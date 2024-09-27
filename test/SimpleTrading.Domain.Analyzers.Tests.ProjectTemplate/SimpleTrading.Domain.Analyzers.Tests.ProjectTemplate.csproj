@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\SimpleTrading.Domain\SimpleTrading.Domain.csproj" />
+        <ProjectReference Include="..\..\src\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

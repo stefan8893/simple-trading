@@ -19,8 +19,8 @@ public static class TestConstants
 
         public static readonly string ValidatorExistsForRequestModelCase =
             Path.Combine(TestCasesDir, $"{nameof(ValidatorExistsForRequestModel)}.cs");
-        
-        public static readonly string ResponseModelTypeIsNotOneOfCase = 
+
+        public static readonly string ResponseModelTypeIsNotOneOfCase =
             Path.Combine(TestCasesDir, $"{nameof(ResponseModelTypeIsNotOneOf)}.cs");
     }
 }

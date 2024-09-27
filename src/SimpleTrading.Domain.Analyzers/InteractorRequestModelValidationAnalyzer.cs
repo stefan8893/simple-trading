@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using SimpleTrading.Domain.Analyzers.SymbolFinder;
@@ -63,10 +62,10 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         implementsInteractorFinder.FindIn(context.Compilation.GlobalNamespace);
 
         return implementsInteractorFinder
-                .Result
-                .Select(AddRequestAndResponseModelSymbols)
-                .OfType<InteractorImplementor>()
-                .ToList();
+            .Result
+            .Select(AddRequestAndResponseModelSymbols)
+            .OfType<InteractorImplementor>()
+            .ToList();
     }
 
     private static IEnumerable<INamedTypeSymbol> FindAbstractValidators(CompilationAnalysisContext context)

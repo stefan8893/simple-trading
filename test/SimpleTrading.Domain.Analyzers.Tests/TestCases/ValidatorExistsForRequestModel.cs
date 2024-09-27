@@ -7,7 +7,6 @@ namespace SimpleTrading.Domain.Analyzers.Tests.TestCases;
 
 public class ValidatorExistsForRequestModel
 {
-    
     public class GetFoobarRequestModel
     {
         public string? Candidate { get; set; }
@@ -27,6 +26,5 @@ public class ValidatorExistsForRequestModel
 
     public interface IGetFoobar : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, NotFound>>
     {
-    
     }
 }

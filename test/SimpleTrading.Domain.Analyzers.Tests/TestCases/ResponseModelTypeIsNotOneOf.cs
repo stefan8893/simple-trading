@@ -24,6 +24,5 @@ public class ResponseModelTypeIsNotOneOf
 
     public interface IGetFoobar : IInteractor<GetFoobarRequestModel, string>
     {
-    
-    }   
+    }
 }

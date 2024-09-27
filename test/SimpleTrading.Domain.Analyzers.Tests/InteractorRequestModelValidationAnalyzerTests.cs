@@ -20,12 +20,13 @@ public class InteractorRequestModelValidationAnalyzerTests
     }
 
     [Fact]
-    public async Task An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_that_is_not_of_type_OneOf_results_in_an_error()
+    public async Task
+        An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_that_is_not_of_type_OneOf_results_in_an_error()
     {
         // arrange
         var cSharpTestFile = await File.ReadAllTextAsync(TestConstants.TestCases.ResponseModelTypeIsNotOneOfCase);
         var document = _testProject.AddDocument("Test.cs", cSharpTestFile);
-        
+
         var compilation = await document.Project.GetCompilationAsync();
         compilation.Should().NotBeNull();
 
@@ -45,12 +46,13 @@ public class InteractorRequestModelValidationAnalyzerTests
     }
 
     [Fact]
-    public async Task An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_with_a_bad_input_case_does_not_result_in_an_error()
+    public async Task
+        An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_with_a_bad_input_case_does_not_result_in_an_error()
     {
         // arrange
         var cSharpTestFile = await File.ReadAllTextAsync(TestConstants.TestCases.ValidatorAndBadInputCaseExistsCase);
         var document = _testProject.AddDocument("Test.cs", cSharpTestFile);
-        
+
         var compilation = await document.Project.GetCompilationAsync();
         compilation.Should().NotBeNull();
 
@@ -62,7 +64,7 @@ public class InteractorRequestModelValidationAnalyzerTests
         // assert
         diagnostics.Should().BeEmpty();
     }
-    
+
     [Fact]
     public async Task
         An_interactor_that_has_a_request_model_with_a_validator_must_have_a_bad_input_case_in_its_response_model()
@@ -70,7 +72,7 @@ public class InteractorRequestModelValidationAnalyzerTests
         // arrange
         var cSharpTestFile = await File.ReadAllTextAsync(TestConstants.TestCases.ValidatorExistsForRequestModelCase);
         var document = _testProject.AddDocument("Test.cs", cSharpTestFile);
-        
+
         var compilation = await document.Project.GetCompilationAsync();
         compilation.Should().NotBeNull();
 

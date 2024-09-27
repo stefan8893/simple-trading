@@ -9,10 +9,10 @@
 
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
-        
+
         <NoWarn>$(NoWarn);RS2008</NoWarn>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <InternalsVisibleTo Include="SimpleTrading.Domain.Analyzers.Tests"/>
     </ItemGroup>
