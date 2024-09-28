@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using SimpleTrading.Domain.Analyzers.SymbolFinder;
+using SimpleTrading.Domain.Analyzers.SymbolCollector;
 
 namespace SimpleTrading.Domain.Analyzers;
 
@@ -23,7 +23,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     private static void Analyze(CompilationAnalysisContext context)
     {
         var interactorInterface = FindInteractorInterface(context);
-        if (interactorInterface == null)
+        if (interactorInterface is null)
             return;
 
         var validatorByRequestModelName = FindAbstractValidators(context)
@@ -57,12 +57,11 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     private static List<InteractorImplementor> GetInteractorImplementors(CompilationAnalysisContext context,
         INamedTypeSymbol interactorInterface)
     {
-        var implementsInteractorFinder =
-            new ImplementsInterfaceSymbolFinder(context.CancellationToken, interactorInterface);
-        implementsInteractorFinder.FindIn(context.Compilation.GlobalNamespace);
+        var implementsInteractorSymbolCollector =
+            new ImplementsInterfaceSymbolCollector(context.CancellationToken, interactorInterface);
 
-        return implementsInteractorFinder
-            .Result
+        return implementsInteractorSymbolCollector
+            .CollectIn(context.Compilation.GlobalNamespace)
             .Select(AddRequestAndResponseModelSymbols)
             .OfType<InteractorImplementor>()
             .ToList();
@@ -70,12 +69,8 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 
     private static IEnumerable<INamedTypeSymbol> FindAbstractValidators(CompilationAnalysisContext context)
     {
-        var abstractValidatorsFinder = new AbstractValidatorSymbolFinder(context.CancellationToken);
-        abstractValidatorsFinder.FindIn(context.Compilation.GlobalNamespace);
-
-        return abstractValidatorsFinder
-            .Result
-            .Where(x => x.BaseType is not null && x.BaseType.IsGenericType && x.BaseType.Arity is 1);
+        return new AbstractValidatorSymbolCollector(context.CancellationToken)
+            .CollectIn(context.Compilation.GlobalNamespace);
     }
 
     private static INamedTypeSymbol? FindInteractorInterface(CompilationAnalysisContext context)

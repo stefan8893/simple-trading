@@ -1,9 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace SimpleTrading.Domain.Analyzers.SymbolFinder;
+namespace SimpleTrading.Domain.Analyzers.SymbolCollector;
 
-public class ImplementsInterfaceSymbolFinder(CancellationToken cancellationToken, INamedTypeSymbol interfaceType)
-    : SymbolFinderBase(cancellationToken)
+public class ImplementsInterfaceSymbolCollector(CancellationToken cancellationToken, INamedTypeSymbol interfaceType)
+    : SymbolCollectorBase(cancellationToken)
 {
     protected override bool SatisfiesFilterPredicate(INamedTypeSymbol symbol)
     {

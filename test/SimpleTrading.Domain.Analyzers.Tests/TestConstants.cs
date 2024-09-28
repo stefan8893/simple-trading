@@ -6,7 +6,7 @@ public static class TestConstants
 {
     private static readonly string CurrentDirectory = Environment.CurrentDirectory;
 
-    public static readonly string PathToTestCasesProjectFile = Path.Combine(Environment.CurrentDirectory,
+    public static readonly string PathToTestProjectFile = Path.Combine(Environment.CurrentDirectory,
         "../../../../SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate/SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate.csproj");
 
 

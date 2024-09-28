@@ -13,7 +13,7 @@ public class InteractorRequestModelValidationAnalyzerTests
     public InteractorRequestModelValidationAnalyzerTests()
     {
         var manager = new AnalyzerManager();
-        var analyzer = manager.GetProject(TestConstants.PathToTestCasesProjectFile);
+        var analyzer = manager.GetProject(TestConstants.PathToTestProjectFile);
         var workspace = new AdhocWorkspace();
 
         _testProject = analyzer.AddToWorkspace(workspace);

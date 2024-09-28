@@ -1,4 +1,4 @@
-﻿// Do not change namespace, or keep in sync with 'IInteractor' in SimpleTrading.Domain.Abstractions namespace 
+﻿// Do not change namespace or keep it in sync with 'IInteractor' in SimpleTrading.Domain.Abstractions namespace 
 // ReSharper disable once CheckNamespace
 
 namespace SimpleTrading.Domain.Abstractions;

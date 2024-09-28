@@ -1,28 +1,38 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
-namespace SimpleTrading.Domain.Analyzers.SymbolFinder;
+namespace SimpleTrading.Domain.Analyzers.SymbolCollector;
 
-public abstract class SymbolFinderBase(
+public abstract class SymbolCollectorBase(
     CancellationToken cancellationToken)
     : SymbolVisitor
 {
     private readonly HashSet<INamedTypeSymbol> _collector = new(SymbolEqualityComparer.Default);
 
-    public IImmutableList<INamedTypeSymbol> Result => _collector.ToImmutableList();
     protected abstract bool SatisfiesFilterPredicate(INamedTypeSymbol symbol);
 
-    public void FindIn(ISymbol? symbol)
+    public ImmutableArray<INamedTypeSymbol> CollectIn(INamespaceSymbol? symbol)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        _collector.Clear();
         Visit(symbol);
+
+        return _collector.ToImmutableArray();
     }
 
-    public override void VisitNamespace(INamespaceSymbol symbol)
+    public override void VisitAssembly(IAssemblySymbol assembly)
     {
-        foreach (var namespaceOrType in symbol.GetMembers())
+        cancellationToken.ThrowIfCancellationRequested();
+
+        assembly.GlobalNamespace.Accept(this);
+    }
+
+    public override void VisitNamespace(INamespaceSymbol @namespace)
+    {
+        foreach (var namespaceOrType in @namespace.GetMembers())
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
+            cancellationToken.ThrowIfCancellationRequested();
 
             namespaceOrType.Accept(this);
         }
@@ -33,20 +43,15 @@ public abstract class SymbolFinderBase(
         cancellationToken.ThrowIfCancellationRequested();
 
         if (SatisfiesFilterPredicate(type))
-        {
             _collector.Add(type);
-            return;
-        }
 
         var nestedTypes = type.GetTypeMembers();
-
         if (nestedTypes.IsDefaultOrEmpty)
             return;
 
         foreach (var nestedType in nestedTypes)
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
+            cancellationToken.ThrowIfCancellationRequested();
 
             nestedType.Accept(this);
         }

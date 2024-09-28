@@ -41,6 +41,12 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         await dbMasterData.PopulateUserSettings();
     }
 
+    /// <summary>
+    ///     There is only one web server that gets started for each test class.<br/>
+    ///     This means, OverrideServices is only called once before the first test starts within a test class.
+    /// </summary>
+    /// <param name="ctx"></param>
+    /// <param name="builder"></param>
     protected virtual void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
     {
     }

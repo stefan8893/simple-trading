@@ -90,7 +90,8 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ExitPrice");
+            .And.Contain(x => x.PropertyName == "ExitPrice" &&
+                              x.ErrorMessage == "'Exit price' must be greater than '0'.");
     }
 
     [Fact]
