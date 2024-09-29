@@ -32,15 +32,15 @@ public partial class TradesController : ControllerBase
     [ProducesResponseType<PageDto<TradeDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SearchTrades(
-        [FromServices] IValidator<SearchQuery> validator,
+        [FromServices] IValidator<SearchQueryDto> validator,
         [FromServices] ISearchTrades searchTrades,
-        [FromQuery] SearchQuery query)
+        [FromQuery] SearchQueryDto searchQueryDto)
     {
-        var validationResult = await validator.ValidateAsync(query);
+        var validationResult = await validator.ValidateAsync(searchQueryDto);
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
-        var searchTradesRequestModel = MapToRequestModel(query);
+        var searchTradesRequestModel = MapToRequestModel(searchQueryDto);
 
         var result = await searchTrades.Execute(searchTradesRequestModel);
 
@@ -54,7 +54,6 @@ public partial class TradesController : ControllerBase
             badInput => badInput.ToActionResult()
         );
     }
-
 
     [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
     [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
@@ -77,13 +76,13 @@ public partial class TradesController : ControllerBase
     public async Task<ActionResult> AddTrade(
         [FromServices] IAddTrade addTrade,
         [FromServices] IValidator<AddTradeDto> validator,
-        [FromBody] AddTradeDto dto)
+        [FromBody] AddTradeDto addTradeDto)
     {
-        var validationResult = await validator.ValidateAsync(dto);
+        var validationResult = await validator.ValidateAsync(addTradeDto);
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
-        var addTradeRequestModel = MapToRequestModel(dto);
+        var addTradeRequestModel = MapToRequestModel(addTradeDto);
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
@@ -124,22 +123,22 @@ public partial class TradesController : ControllerBase
         [FromServices] ICloseTrade closeTrade,
         [FromServices] IValidator<CloseTradeDto> validator,
         [FromRoute] Guid tradeId,
-        [FromBody] CloseTradeDto dto)
+        [FromBody] CloseTradeDto closeTradeDto)
     {
-        var validationResult = await validator.ValidateAsync(dto);
+        var validationResult = await validator.ValidateAsync(closeTradeDto);
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
-        OneOf<ResultModel?, None> tradeResult = dto.ManuallyEnteredResult is null
+        OneOf<ResultModel?, None> tradeResult = closeTradeDto.ManuallyEnteredResult is null
             ? new None()
-            : MapToResultModel(dto.ManuallyEnteredResult.Value);
+            : MapToResultModel(closeTradeDto.ManuallyEnteredResult.Value);
 
         var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
-            dto.Closed!.Value,
-            dto.Balance!.Value)
+            closeTradeDto.Closed!.Value,
+            closeTradeDto.Balance!.Value)
         {
             ManuallyEnteredResult = tradeResult,
-            ExitPrice = dto.ExitPrice
+            ExitPrice = closeTradeDto.ExitPrice
         };
         var result = await closeTrade.Execute(closeTradeRequestModel);
 
@@ -192,15 +191,15 @@ public partial class TradesController : ControllerBase
         );
     }
 
-    private static SearchTradesRequestModel MapToRequestModel(SearchQuery query)
+    private static SearchTradesRequestModel MapToRequestModel(SearchQueryDto queryDto)
     {
         var searchTradesRequestModel = new SearchTradesRequestModel
         {
-            Sort = query.Sort?
+            Sort = queryDto.Sort?
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(ParseSorting)
                 .ToList() ?? [],
-            Filter = query.Filter?
+            Filter = queryDto.Filter?
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x =>
                 {
@@ -216,11 +215,11 @@ public partial class TradesController : ControllerBase
                 .ToList() ?? []
         };
 
-        if (query.Page.HasValue)
-            searchTradesRequestModel.Page = query.Page.Value;
+        if (queryDto.Page.HasValue)
+            searchTradesRequestModel.Page = queryDto.Page.Value;
 
-        if (query.PageSize.HasValue)
-            searchTradesRequestModel.PageSize = query.PageSize.Value;
+        if (queryDto.PageSize.HasValue)
+            searchTradesRequestModel.PageSize = queryDto.PageSize.Value;
 
         return searchTradesRequestModel;
 

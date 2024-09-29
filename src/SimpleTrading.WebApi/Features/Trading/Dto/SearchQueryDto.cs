@@ -3,7 +3,7 @@ using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
-public class SearchQuery : IPagination
+public class SearchQueryDto : IPagination
 {
     public List<string>? Sort { get; set; }
 
@@ -16,7 +16,7 @@ public class SearchQuery : IPagination
     public int? PageSize { get; set; }
 }
 
-public class SearchQueryValidator : AbstractValidator<SearchQuery>
+public class SearchQueryValidator : AbstractValidator<SearchQueryDto>
 {
     public SearchQueryValidator(PropertyFilterValidator propertyFilterValidator)
     {

@@ -6,7 +6,7 @@ namespace SimpleTrading.Domain;
 public static class Constants
 {
     public const string DefaultTimeZone = "Europe/Vienna";
-    public const int OpenedDateMaxDaysInTheFutureLimit = 1;
+    public const int OpenedDateMaxDaysInTheFutureBoundary = 1;
     public static readonly DateTime MinDate = DateTime.Parse("2000-01-01T00:00:00").ToUtcKind();
 
     public static readonly CultureInfo DefaultCulture = new("de-AT");

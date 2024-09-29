@@ -63,14 +63,14 @@ public class ReferencesController : ControllerBase
         [FromServices] IAddReference addReference,
         [FromServices] IValidator<AddReferenceDto> validator,
         [FromRoute] Guid tradeId,
-        [FromBody] AddReferenceDto dto)
+        [FromBody] AddReferenceDto addReferenceDto)
     {
-        var validationResult = await validator.ValidateAsync(dto);
+        var validationResult = await validator.ValidateAsync(addReferenceDto);
         if (!validationResult.IsValid)
             return validationResult.ToActionResult();
 
         var addReferenceRequestModel =
-            new AddReferenceRequestModel(tradeId, dto.Type.ToDomainReferenceType(), dto.Link!, dto.Notes);
+            new AddReferenceRequestModel(tradeId, addReferenceDto.Type.ToDomainReferenceType(), addReferenceDto.Link!, addReferenceDto.Notes);
 
         var result = await addReference.Execute(addReferenceRequestModel);
 

@@ -47,7 +47,7 @@ public class Trade : IEntity
 
         var utcNow = configuration.UtcNow();
         var closedDateUpperBound =
-            (Opened > utcNow ? Opened : utcNow).AddDays(Constants.OpenedDateMaxDaysInTheFutureLimit);
+            (Opened > utcNow ? Opened : utcNow).AddDays(Constants.OpenedDateMaxDaysInTheFutureBoundary);
 
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
