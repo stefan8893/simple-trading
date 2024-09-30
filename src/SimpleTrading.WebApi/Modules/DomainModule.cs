@@ -18,5 +18,10 @@ public class DomainModule : Module
             .AsClosedTypesOf(typeof(IInteractor<>))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
+
+        builder.RegisterAssemblyTypes(assemblyThatContainsUseCases)
+            .Where(x => x.Name.EndsWith("InteractorProxy"))
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
     }
 }

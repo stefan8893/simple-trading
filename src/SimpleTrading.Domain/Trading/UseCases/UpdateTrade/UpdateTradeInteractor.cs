@@ -18,7 +18,11 @@ public class UpdateTradeInteractor(
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase, IUpdateTrade
+    : InteractorBase, IInteractor<UpdateTradeRequestModel,
+        OneOf<Completed,
+            BadInput,
+            NotFound,
+            BusinessError>>
 {
     public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
     {

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;
@@ -6,7 +7,7 @@ using SimpleTrading.Domain.User.DataAccess;
 namespace SimpleTrading.Domain.User.UseCases.GetUserSettings;
 
 public class GetUserSettingsInteractor(IUserSettingsRepository userSettingsRepository)
-    : InteractorBase, IGetUserSettings
+    : InteractorBase, IInteractor<UserSettingsResponseModel>
 {
     public async Task<UserSettingsResponseModel> Execute()
     {

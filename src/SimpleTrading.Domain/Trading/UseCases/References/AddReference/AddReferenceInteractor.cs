@@ -14,7 +14,11 @@ public class AddReferenceInteractor(
     IValidator<AddReferenceRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
-    UtcNow utcNow) : InteractorBase, IAddReference
+    UtcNow utcNow) : InteractorBase, IInteractor<AddReferenceRequestModel,
+    OneOf<Completed<Guid>,
+        BadInput,
+        NotFound,
+        BusinessError>>
 {
     private const ushort MaxReferencesPerTrade = 50;
 
