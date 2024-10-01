@@ -38,7 +38,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     }
 
     [Fact]
-    public async Task An_update_with_an_invalid_types_is_a_bad_request()
+    public async Task An_update_with_an_invalid_type_is_a_bad_request()
     {
         // arrange
         var client = await CreateClient();
