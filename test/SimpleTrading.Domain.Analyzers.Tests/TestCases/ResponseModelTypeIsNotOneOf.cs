@@ -22,7 +22,11 @@ public class ResponseModelTypeIsNotOneOf
     {
     }
 
-    public interface IGetFoobar : IInteractor<GetFoobarRequestModel, string>
+    public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, string>
     {
+        public Task<string> Execute(GetFoobarRequestModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

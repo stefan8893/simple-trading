@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 
 public class GetAssetsInteractor(IValidator<GetAssetsRequestModel> validator, IAssetRepository assetRepository)
-    : InteractorBase, IGetAssets
+    : InteractorBase, IInteractor<GetAssetsRequestModel, OneOf<IReadOnlyList<GetAssetsResponseModel>, BadInput>>
 {
     public async Task<OneOf<IReadOnlyList<GetAssetsResponseModel>, BadInput>> Execute(GetAssetsRequestModel model)
     {

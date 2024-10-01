@@ -10,7 +10,8 @@ using RestoreCalculatedResultResponse =
     OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>;
 
 public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository, UtcNow utcNow, UowCommit uowCommit)
-    : InteractorBase, IRestoreCalculatedResult
+    : InteractorBase, IInteractor<RestoreCalculatedResultRequestModel,
+        OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>>
 {
     public async Task<RestoreCalculatedResultResponse> Execute(RestoreCalculatedResultRequestModel model)
     {

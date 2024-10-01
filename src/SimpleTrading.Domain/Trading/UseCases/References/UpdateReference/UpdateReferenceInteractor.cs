@@ -12,7 +12,7 @@ public class UpdateReferenceInteractor(
     IValidator<UpdateReferenceRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit)
-    : InteractorBase, IUpdateReference
+    : InteractorBase, IInteractor<UpdateReferenceRequestModel, OneOf<Completed, BadInput, NotFound>>
 {
     public async Task<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model)
     {

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 
@@ -8,7 +9,8 @@ namespace SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 public class GetCurrenciesInteractor(
     IValidator<GetCurrenciesRequestModel> validator,
     ICurrencyRepository currencyRepository)
-    : InteractorBase, IGetCurrencies
+    : InteractorBase, IInteractor<GetCurrenciesRequestModel,
+        OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>>
 {
     public async Task<OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>> Execute(
         GetCurrenciesRequestModel model)

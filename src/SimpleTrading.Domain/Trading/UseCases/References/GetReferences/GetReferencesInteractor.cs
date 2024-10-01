@@ -1,11 +1,13 @@
 ﻿using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 
-public class GetReferencesInteractor(ITradeRepository tradeRepository) : InteractorBase, IGetReferences
+public class GetReferencesInteractor(ITradeRepository tradeRepository) : InteractorBase,
+    IInteractor<GetReferencesRequestModel, OneOf<IReadOnlyList<ReferenceModel>, NotFound>>
 {
     public async Task<OneOf<IReadOnlyList<ReferenceModel>, NotFound>> Execute(GetReferencesRequestModel model)
     {

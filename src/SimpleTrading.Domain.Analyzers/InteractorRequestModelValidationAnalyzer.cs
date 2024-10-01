@@ -54,7 +54,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             context.ReportDiagnostic(diagnostic);
     }
 
-    private static List<InteractorImplementor> GetInteractorImplementors(CompilationAnalysisContext context,
+    private static List<InteractorImplementorContext> GetInteractorImplementors(CompilationAnalysisContext context,
         INamedTypeSymbol interactorInterface)
     {
         var implementsInteractorSymbolCollector =
@@ -63,7 +63,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         return implementsInteractorSymbolCollector
             .CollectIn(context.Compilation.GlobalNamespace)
             .Select(AddRequestAndResponseModelSymbols)
-            .OfType<InteractorImplementor>()
+            .OfType<InteractorImplementorContext>()
             .ToList();
     }
 
@@ -82,7 +82,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     }
 
     private static IEnumerable<Diagnostic> CreateResponseModelTypeIsNotOneOfDiagnostics(
-        List<InteractorImplementor> validatableInteractors,
+        List<InteractorImplementorContext> validatableInteractors,
         Dictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
         var validatableInteractorsWithoutOneOfResponseModel = validatableInteractors
@@ -101,7 +101,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     }
 
     private static IEnumerable<Diagnostic> CreateMissingBadInputCaseDiagnostics(
-        List<InteractorImplementor> validatableInteractors,
+        List<InteractorImplementorContext> validatableInteractors,
         Dictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
         var validatableInteractorsWithoutBadInputCase = validatableInteractors
@@ -120,7 +120,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             );
     }
 
-    private static InteractorImplementor? AddRequestAndResponseModelSymbols(
+    private static InteractorImplementorContext? AddRequestAndResponseModelSymbols(
         INamedTypeSymbol interactorImplementor)
     {
         var symbol = interactorImplementor
@@ -134,7 +134,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         if (typeArguments.Length != 2)
             return null;
 
-        return new InteractorImplementor(interactorImplementor,
+        return new InteractorImplementorContext(interactorImplementor,
             (INamedTypeSymbol) typeArguments[0],
             (INamedTypeSymbol) typeArguments[1]);
     }

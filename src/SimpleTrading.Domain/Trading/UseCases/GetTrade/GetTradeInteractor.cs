@@ -1,4 +1,5 @@
 ﻿using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -7,7 +8,7 @@ using SimpleTrading.Domain.User.DataAccess;
 namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 
 public class GetTradeInteractor(ITradeRepository tradeRepository, IUserSettingsRepository userSettingsRepository)
-    : InteractorBase, IGetTrade
+    : InteractorBase, IInteractor<GetTradeRequestModel, OneOf<TradeResponseModel, NotFound>>
 {
     public async Task<OneOf<TradeResponseModel, NotFound>> Execute(GetTradeRequestModel model)
     {

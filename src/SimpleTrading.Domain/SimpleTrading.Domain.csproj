@@ -38,6 +38,11 @@
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Analyzer</OutputItemType>
         </ProjectReference>
+        <ProjectReference Include="..\SimpleTrading.Domain.Generators\SimpleTrading.Domain.Generators.csproj">
+            <PrivateAssets>All</PrivateAssets>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Analyzer</OutputItemType>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

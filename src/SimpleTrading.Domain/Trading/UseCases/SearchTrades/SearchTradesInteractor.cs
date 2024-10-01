@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using FluentValidation;
 using OneOf;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
@@ -18,7 +19,7 @@ public class SearchTradesInteractor(
     IUserSettingsRepository userSettingsRepository,
     IEnumerable<IFilterPredicate<Trade>> filterPredicates,
     IReadOnlyDictionary<string, Func<Order, ISort<Trade>>> sorterByName)
-    : InteractorBase, ISearchTrades
+    : InteractorBase, IInteractor<SearchTradesRequestModel, OneOf<PagedList<TradeResponseModel>, BadInput>>
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
 

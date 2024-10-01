@@ -4,7 +4,6 @@ using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using NotFound = SimpleTrading.Domain.Infrastructure.NotFound;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
@@ -17,7 +16,9 @@ public class CloseTradeInteractor(
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase, ICloseTrade
+    : InteractorBase,
+        IInteractor<CloseTradeRequestModel,
+            OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound, BusinessError>>
 {
     public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {

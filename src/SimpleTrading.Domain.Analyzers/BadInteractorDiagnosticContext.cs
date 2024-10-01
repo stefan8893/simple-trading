@@ -3,12 +3,12 @@
 namespace SimpleTrading.Domain.Analyzers;
 
 public class BadInteractorDiagnosticContext(
-    InteractorImplementor interactorImplementor,
+    InteractorImplementorContext interactorImplementorContext,
     IReadOnlyList<INamedTypeSymbol> validators)
-    : InteractorImplementor(
-        interactorImplementor.Interactor,
-        interactorImplementor.RequestModel,
-        interactorImplementor.ResponseModel)
+    : InteractorImplementorContext(
+        interactorImplementorContext.Interactor,
+        interactorImplementorContext.RequestModel,
+        interactorImplementorContext.ResponseModel)
 {
     public IReadOnlyList<INamedTypeSymbol> Validators { get; } = validators;
 }

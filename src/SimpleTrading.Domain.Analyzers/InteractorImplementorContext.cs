@@ -2,7 +2,7 @@
 
 namespace SimpleTrading.Domain.Analyzers;
 
-public class InteractorImplementor(
+public class InteractorImplementorContext(
     INamedTypeSymbol interactor,
     INamedTypeSymbol requestModel,
     INamedTypeSymbol responseModel)

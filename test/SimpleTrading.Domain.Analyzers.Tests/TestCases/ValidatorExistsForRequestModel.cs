@@ -24,7 +24,11 @@ public class ValidatorExistsForRequestModel
     {
     }
 
-    public interface IGetFoobar : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, NotFound>>
+    public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, NotFound>>
     {
+        public Task<OneOf<GetFoobarResponseModel, NotFound>> Execute(GetFoobarRequestModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
