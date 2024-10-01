@@ -8,8 +8,6 @@ public static class SourceTemplates
             ? string.Empty
             : ctx.RequestModel.ToDisplayString();
 
-        var responseModelFullQualifiedTyped = ctx.ResponseModel.ToDisplayString();
-
         List<string> namespaces =
         [
             "System",
@@ -40,7 +38,7 @@ public static class SourceTemplates
                  {
                      public interface {{ctx.InteractorInterfaceName}}
                      {
-                         Task<{{responseModelFullQualifiedTyped}}> Execute({{requestModelParameter}});
+                         Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}});
                      }
                      
                      public sealed class {{ctx.InteractorProxyName}} : {{ctx.InteractorInterfaceName}}
@@ -54,7 +52,7 @@ public static class SourceTemplates
                          }
                          
                          [DebuggerStepThrough]
-                         public Task<{{responseModelFullQualifiedTyped}}> Execute({{requestModelParameter}}) 
+                         public Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
                          {
                              return {{IfRequestModelExists("_interactor.Execute(requestModel);",
                                  "_interactor.Execute();")}}
