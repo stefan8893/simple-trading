@@ -61,14 +61,9 @@ public class ReferencesController : ControllerBase
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> AddReference(
         [FromServices] IAddReference addReference,
-        [FromServices] IValidator<AddReferenceDto> validator,
         [FromRoute] Guid tradeId,
         [FromBody] AddReferenceDto addReferenceDto)
     {
-        var validationResult = await validator.ValidateAsync(addReferenceDto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         var addReferenceRequestModel =
             new AddReferenceRequestModel(tradeId, addReferenceDto.Type.ToDomainReferenceType(), addReferenceDto.Link!, addReferenceDto.Notes);
 
@@ -88,15 +83,10 @@ public class ReferencesController : ControllerBase
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateReference(
         [FromServices] IUpdateReference updateReference,
-        [FromServices] IValidator<UpdateReferenceDto> validator,
         [FromRoute] Guid tradeId,
         [FromRoute] Guid referenceId,
         [FromBody] UpdateReferenceDto dto)
     {
-        var validationResult = await validator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         var addReferenceRequestModel = MapToRequestModel(tradeId, referenceId, dto);
         var result = await updateReference.Execute(addReferenceRequestModel);
 

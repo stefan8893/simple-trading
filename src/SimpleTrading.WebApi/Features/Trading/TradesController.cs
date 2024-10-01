@@ -1,6 +1,5 @@
 ﻿using System.Net.Mime;
 using System.Text.RegularExpressions;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
@@ -32,14 +31,9 @@ public partial class TradesController : ControllerBase
     [ProducesResponseType<PageDto<TradeDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SearchTrades(
-        [FromServices] IValidator<SearchQueryDto> validator,
         [FromServices] ISearchTrades searchTrades,
         [FromQuery] SearchQueryDto searchQueryDto)
     {
-        var validationResult = await validator.ValidateAsync(searchQueryDto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         var searchTradesRequestModel = MapToRequestModel(searchQueryDto);
 
         var result = await searchTrades.Execute(searchTradesRequestModel);
@@ -75,13 +69,8 @@ public partial class TradesController : ControllerBase
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> AddTrade(
         [FromServices] IAddTrade addTrade,
-        [FromServices] IValidator<AddTradeDto> validator,
         [FromBody] AddTradeDto addTradeDto)
     {
-        var validationResult = await validator.ValidateAsync(addTradeDto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         var addTradeRequestModel = MapToRequestModel(addTradeDto);
         var result = await addTrade.Execute(addTradeRequestModel);
 
@@ -121,14 +110,9 @@ public partial class TradesController : ControllerBase
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> CloseTrade(
         [FromServices] ICloseTrade closeTrade,
-        [FromServices] IValidator<CloseTradeDto> validator,
         [FromRoute] Guid tradeId,
         [FromBody] CloseTradeDto closeTradeDto)
     {
-        var validationResult = await validator.ValidateAsync(closeTradeDto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         OneOf<ResultModel?, None> tradeResult = closeTradeDto.ManuallyEnteredResult is null
             ? new None()
             : MapToResultModel(closeTradeDto.ManuallyEnteredResult.Value);

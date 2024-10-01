@@ -10,6 +10,7 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
+using SimpleTrading.WebApi.Filter;
 using SimpleTrading.WebApi.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,14 +33,9 @@ var clientAppEntraIdConfig = builder.Configuration
                                  .Get<ClientAppEntraIdConfig>()
                              ?? throw new Exception("Missing Entra ID settings");
 
-builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(
-        o => { o.SuppressMapClientErrors = true; })
-    .AddJsonOptions(options =>
-    {
-        var enumConverter = new JsonStringEnumConverter();
-        options.JsonSerializerOptions.Converters.Add(enumConverter);
-    });
+builder.Services.AddControllers(o => o.Filters.Add<ValidationFilter>())
+    .ConfigureApiBehaviorOptions(o => o.SuppressMapClientErrors = true)
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
