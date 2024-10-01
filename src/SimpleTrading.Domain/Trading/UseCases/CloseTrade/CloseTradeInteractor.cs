@@ -16,7 +16,9 @@ public class CloseTradeInteractor(
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase, IInteractor<CloseTradeRequestModel, OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound, BusinessError>>
+    : InteractorBase,
+        IInteractor<CloseTradeRequestModel,
+            OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound, BusinessError>>
 {
     public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {

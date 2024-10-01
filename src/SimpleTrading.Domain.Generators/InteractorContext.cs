@@ -1,9 +1,11 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
 namespace SimpleTrading.Domain.Generators;
 
-public class InteractorContext(INamedTypeSymbol interactor, INamedTypeSymbol closedInteractorInterface, INamedTypeSymbol responseModel)
+public class InteractorContext(
+    INamedTypeSymbol interactor,
+    INamedTypeSymbol closedInteractorInterface,
+    INamedTypeSymbol responseModel)
 {
     public INamedTypeSymbol Interactor { get; } = interactor;
     public INamedTypeSymbol ClosedInteractorInterface { get; } = closedInteractorInterface;

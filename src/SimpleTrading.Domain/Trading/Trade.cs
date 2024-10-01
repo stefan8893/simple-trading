@@ -62,7 +62,7 @@ public class Trade : IEntity
 
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
-        
+
         var thereIsANewManuallyEnteredResult = configuration.ManuallyEnteredResult.IsT0;
         var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
 
