@@ -24,11 +24,26 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             if (concreteInteractor is null)
                 return;
 
+            ReportDiagnostics(ctx, concreteInteractor);
+
             var interactorCtx = GatherInteractorContext(concreteInteractor);
 
             ctx.AddSource($"{interactorCtx.InteractorName}.g.cs",
                 SourceText.From(SourceTemplates.CreateProxy(interactorCtx), Encoding.UTF8));
         });
+    }
+
+    private static void ReportDiagnostics(SourceProductionContext ctx, INamedTypeSymbol concreteInteractor)
+    {
+        if (concreteInteractor.Name.EndsWith("Interactor"))
+            return;
+
+        var missingInteractorSuffixDiagnostic = Diagnostic.Create(
+            Rules.MissingInteractorSuffix,
+            concreteInteractor.Locations.FirstOrDefault(),
+            concreteInteractor.MetadataName);
+
+        ctx.ReportDiagnostic(missingInteractorSuffixDiagnostic);
     }
 
     private static InteractorContext GatherInteractorContext(INamedTypeSymbol concreteInteractor)
