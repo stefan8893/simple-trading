@@ -2102,6 +2102,7 @@ export class TradeDtoPageDto implements ITradeDtoPageDto {
     data?: TradeDto[] | undefined;
     count?: number;
     totalCount?: number;
+    totalPages?: number;
     page?: number;
     pageSize?: number;
 
@@ -2123,6 +2124,7 @@ export class TradeDtoPageDto implements ITradeDtoPageDto {
             }
             this.count = _data["count"];
             this.totalCount = _data["totalCount"];
+            this.totalPages = _data["totalPages"];
             this.page = _data["page"];
             this.pageSize = _data["pageSize"];
         }
@@ -2144,6 +2146,7 @@ export class TradeDtoPageDto implements ITradeDtoPageDto {
         }
         data["count"] = this.count;
         data["totalCount"] = this.totalCount;
+        data["totalPages"] = this.totalPages;
         data["page"] = this.page;
         data["pageSize"] = this.pageSize;
         return data;
@@ -2154,6 +2157,7 @@ export interface ITradeDtoPageDto {
     data?: TradeDto[] | undefined;
     count?: number;
     totalCount?: number;
+    totalPages?: number;
     page?: number;
     pageSize?: number;
 }
