@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using FluentValidation;
 using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
@@ -16,7 +15,6 @@ namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 
 [UsedImplicitly]
 public class SearchTradesInteractor(
-    IValidator<SearchTradesRequestModel> validator,
     ITradeRepository tradeRepository,
     IUserSettingsRepository userSettingsRepository,
     IEnumerable<IFilterPredicate<Trade>> filterPredicates,
@@ -27,10 +25,6 @@ public class SearchTradesInteractor(
 
     public async Task<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var sortingConfig = model.Sort
             .DefaultIfEmpty(new SortModel(nameof(Trade.Opened), false))
             .Select(x => sorterByName[x.Property](x.Ascending ? Order.Ascending : Order.Descending));

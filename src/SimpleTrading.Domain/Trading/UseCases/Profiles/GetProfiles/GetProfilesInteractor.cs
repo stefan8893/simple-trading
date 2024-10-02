@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -10,15 +9,11 @@ namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 using GetProfilesResponse = OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>;
 
 [UsedImplicitly]
-public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator, IProfileRepository profileRepository)
+public class GetProfilesInteractor(IProfileRepository profileRepository)
     : InteractorBase, IInteractor<GetProfilesRequestModel, GetProfilesResponse>
 {
     public async Task<GetProfilesResponse> Execute(GetProfilesRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 
         var result = useSearchTerm

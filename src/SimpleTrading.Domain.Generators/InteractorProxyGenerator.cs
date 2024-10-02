@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -29,7 +28,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             var interactorCtx = GatherInteractorContext(concreteInteractor);
             if (interactorCtx is null)
                 return;
-            
+
             ReportDiagnostics(ctx, concreteInteractor);
             ctx.AddSource($"{interactorCtx.InteractorName}.g.cs",
                 SourceText.From(SourceTemplates.CreateProxy(interactorCtx), Encoding.UTF8));
@@ -64,7 +63,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
 
         if (genericTypeArguments.Length is not (1 or 2))
             return null;
-        
+
         var (requestModel, responseModel) = genericTypeArguments.Length == 1
             ? (null, genericTypeArguments[0])
             : (genericTypeArguments[0], genericTypeArguments[1]);
