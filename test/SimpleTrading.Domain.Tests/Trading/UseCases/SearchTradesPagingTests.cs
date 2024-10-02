@@ -166,9 +166,8 @@ public class SearchTradesPagingTests(TestingWebApplicationFactory<Program> facto
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.PropertyName == "PageSize" &&
                               x.ErrorMessage == "'Page size' must be greater than or equal to '1'.");
-        
     }
-    
+
     [Fact]
     public async Task Zero_is_not_a_valid_page_they_start_at_one()
     {
@@ -181,6 +180,5 @@ public class SearchTradesPagingTests(TestingWebApplicationFactory<Program> facto
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.PropertyName == "Page" &&
                               x.ErrorMessage == "'Page' must be greater than or equal to '1'.");
-        
     }
 }
