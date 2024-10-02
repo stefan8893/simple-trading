@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Abstractions;
@@ -10,6 +11,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading;
 
+[UsedImplicitly]
 public class Trade : IEntity
 {
     public required Guid AssetId { get; set; }

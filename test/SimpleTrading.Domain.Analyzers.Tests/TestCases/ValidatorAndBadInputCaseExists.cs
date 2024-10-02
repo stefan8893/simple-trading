@@ -26,7 +26,7 @@ public class ValidatorAndBadInputCaseExists
 
     public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, BadInput, NotFound>>
     {
-        public ValueTask<OneOf<GetFoobarResponseModel, BadInput, NotFound>> Execute(GetFoobarRequestModel model)
+        public Task<OneOf<GetFoobarResponseModel, BadInput, NotFound>> Execute(GetFoobarRequestModel model)
         {
             throw new NotImplementedException();
         }

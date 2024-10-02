@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
+[UsedImplicitly]
 public class ClosedEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset?>(PropertyFilter.Closed, PropertyFilter.Operator.EqualTo, valueParser)
 {
@@ -14,6 +16,7 @@ public class ClosedEqualToFilterPredicate(IValueParser<DateTimeOffset?> valuePar
     }
 }
 
+[UsedImplicitly]
 public class ClosedGreaterThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Closed, PropertyFilter.Operator.GreaterThan,
         valueParser)
@@ -24,6 +27,7 @@ public class ClosedGreaterThanFilterPredicate(IValueParser<DateTimeOffset> value
     }
 }
 
+[UsedImplicitly]
 public class ClosedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Closed, PropertyFilter.Operator.GreaterThanOrEqualTo,
         valueParser)
@@ -34,6 +38,7 @@ public class ClosedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffs
     }
 }
 
+[UsedImplicitly]
 public class ClosedLessThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Closed, PropertyFilter.Operator.LessThan, valueParser)
 {
@@ -43,6 +48,7 @@ public class ClosedLessThanFilterPredicate(IValueParser<DateTimeOffset> valuePar
     }
 }
 
+[UsedImplicitly]
 public class ClosedLessThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Closed, PropertyFilter.Operator.LessThanOrEqualTo,
         valueParser)
@@ -53,6 +59,7 @@ public class ClosedLessThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset>
     }
 }
 
+[UsedImplicitly]
 public class ClosedNotEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
     : FilterPredicateBase<Trade, DateTimeOffset?>(PropertyFilter.Closed, PropertyFilter.Operator.NotEqualTo,
         valueParser)

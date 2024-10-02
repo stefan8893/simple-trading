@@ -4,6 +4,6 @@ namespace SimpleTrading.Domain.Trading.DataAccess;
 
 public interface IAssetRepository : IRepository<Asset>
 {
-    ValueTask<IEnumerable<Asset>> GetAll();
-    ValueTask<IEnumerable<Asset>> Find(string likeName);
+    Task<IEnumerable<Asset>> GetAll();
+    Task<IEnumerable<Asset>> Find(string likeName);
 }

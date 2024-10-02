@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
+[UsedImplicitly]
 public class AssetRepository(TradingDbContext dbContext) : RepositoryBase<Asset>(dbContext), IAssetRepository
 {
-    public async ValueTask<IEnumerable<Asset>> GetAll()
+    public async Task<IEnumerable<Asset>> GetAll()
     {
         return await dbContext.Assets.ToListAsync();
     }
 
-    public async ValueTask<IEnumerable<Asset>> Find(string likeName)
+    public async Task<IEnumerable<Asset>> Find(string likeName)
     {
         var nameLowered = likeName.ToLower();
 

@@ -1,10 +1,12 @@
 ﻿using System.Linq.Expressions;
+using JetBrains.Annotations;
 using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
+[UsedImplicitly]
 public class ResultEqualToFilterPredicate(IValueParser<NullableReference<Result>> valueParser)
     : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.EqualTo,
         valueParser)
@@ -20,6 +22,7 @@ public class ResultEqualToFilterPredicate(IValueParser<NullableReference<Result>
     }
 }
 
+[UsedImplicitly]
 public class ResultGreaterThanFilterPredicate(IValueParser<Result> valueParser)
     : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.GreaterThan, valueParser)
 {
@@ -31,6 +34,7 @@ public class ResultGreaterThanFilterPredicate(IValueParser<Result> valueParser)
     }
 }
 
+[UsedImplicitly]
 public class ResultGreaterThanOrEqualToFilterPredicate(IValueParser<Result> valueParser)
     : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.GreaterThanOrEqualTo,
         valueParser)
@@ -43,6 +47,7 @@ public class ResultGreaterThanOrEqualToFilterPredicate(IValueParser<Result> valu
     }
 }
 
+[UsedImplicitly]
 public class ResultLessThanFilterPredicate(IValueParser<Result> valueParser)
     : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.LessThan, valueParser)
 {
@@ -54,6 +59,7 @@ public class ResultLessThanFilterPredicate(IValueParser<Result> valueParser)
     }
 }
 
+[UsedImplicitly]
 public class ResultLessThanOrEqualToFilterPredicate(IValueParser<Result> valueParser)
     : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.LessThanOrEqualTo, valueParser)
 {
@@ -65,6 +71,7 @@ public class ResultLessThanOrEqualToFilterPredicate(IValueParser<Result> valuePa
     }
 }
 
+[UsedImplicitly]
 public class ResultNotEqualToFilterPredicate(IValueParser<NullableReference<Result>> valueParser)
     : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.NotEqualTo,
         valueParser)

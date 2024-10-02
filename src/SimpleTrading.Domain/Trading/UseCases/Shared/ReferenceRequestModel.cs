@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Shared;
 
 public record ReferenceRequestModel(ReferenceType Type, string Link, string? Notes = null);
 
+[UsedImplicitly]
 public class ReferenceRequestModelValidator : AbstractValidator<ReferenceRequestModel>
 {
     public ReferenceRequestModelValidator()

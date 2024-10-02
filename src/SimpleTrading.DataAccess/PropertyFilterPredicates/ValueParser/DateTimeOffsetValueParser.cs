@@ -1,7 +1,9 @@
-﻿using SimpleTrading.Domain.Extensions;
+﻿using JetBrains.Annotations;
+using SimpleTrading.Domain.Extensions;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 
+[UsedImplicitly]
 public class DateTimeOffsetValueParser : IValueParser<DateTimeOffset>
 {
     public bool TryParse(string candidate, bool isLiteral, out DateTimeOffset result)
@@ -10,6 +12,7 @@ public class DateTimeOffsetValueParser : IValueParser<DateTimeOffset>
     }
 }
 
+[UsedImplicitly]
 public class NullableDateTimeOffsetValueParser : IValueParser<DateTimeOffset?>
 {
     public bool TryParse(string candidate, bool isLiteral, out DateTimeOffset? result)

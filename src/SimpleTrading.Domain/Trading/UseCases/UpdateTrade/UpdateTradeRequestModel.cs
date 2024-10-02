@@ -1,4 +1,5 @@
 using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
@@ -26,6 +27,7 @@ public record UpdateTradeRequestModel
     public OneOf<string?, None> Notes { get; set; }
 }
 
+[UsedImplicitly]
 public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeRequestModel>
 {
     private readonly ITradeRepository _tradeRepository;

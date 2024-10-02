@@ -38,7 +38,7 @@ public static class SourceTemplates
 
                  public interface {{ctx.InteractorInterfaceName}}
                  {
-                     ValueTask<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}});
+                     Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}});
                  }
                  
                  public sealed class {{ctx.InteractorProxyName}} : {{ctx.InteractorInterfaceName}}
@@ -52,7 +52,7 @@ public static class SourceTemplates
                      }
                      
                      [DebuggerStepThrough]
-                     public ValueTask<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
+                     public Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
                      {
                          return {{IfRequestModelExists("_interactor.Execute(requestModel);",
                              "_interactor.Execute();")}}

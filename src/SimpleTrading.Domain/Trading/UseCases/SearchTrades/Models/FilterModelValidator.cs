@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 
+[UsedImplicitly]
 public class FilterModelValidator : AbstractValidator<FilterModel>
 {
     public FilterModelValidator(IEnumerable<IFilterPredicate<Trade>> filterPredicates)
@@ -29,7 +31,7 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
                             .Cascade(CascadeMode.Stop)
                             .NotEmpty()
                             .MaximumLength(50)
-                            .Must((m, x) => HaveParsableComparisonValue(filterPredicatesMaterialized, m, x))
+                            .Must((m, x) => HasParsableComparisonValue(filterPredicatesMaterialized, m, x))
                             .WithMessage(x =>
                                 x.IsLiteral
                                     ? SimpleTradingStrings.NullNotAllowed
@@ -40,7 +42,7 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
             .WithName(SimpleTradingStrings.Field);
     }
 
-    private static bool HaveParsableComparisonValue(IEnumerable<IFilterPredicate<Trade>> filterPredicates,
+    private static bool HasParsableComparisonValue(IEnumerable<IFilterPredicate<Trade>> filterPredicates,
         FilterModel m, string comparisonValue)
     {
         return filterPredicates

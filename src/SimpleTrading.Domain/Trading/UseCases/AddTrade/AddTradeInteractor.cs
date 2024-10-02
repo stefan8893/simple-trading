@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -13,6 +14,7 @@ using AddTradeResponse =
         NotFound,
         BusinessError>;
 
+[UsedImplicitly]
 public class AddTradeInteractor(
     IValidator<AddTradeRequestModel> validator,
     ITradeRepository tradeRepository,
@@ -20,7 +22,7 @@ public class AddTradeInteractor(
     UtcNow utcNow)
     : InteractorBase, IInteractor<AddTradeRequestModel, AddTradeResponse>
 {
-    public async ValueTask<AddTradeResponse> Execute(AddTradeRequestModel model)
+    public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

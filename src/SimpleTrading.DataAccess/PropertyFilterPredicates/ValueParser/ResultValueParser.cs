@@ -1,9 +1,11 @@
-﻿using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
+﻿using JetBrains.Annotations;
+using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 
+[UsedImplicitly]
 public class ResultValueParser : IValueParser<Result>
 {
     public bool TryParse(string candidate, bool isLiteral, out Result result)
@@ -24,6 +26,7 @@ public class ResultValueParser : IValueParser<Result>
     }
 }
 
+[UsedImplicitly]
 public class NullableResultValueParser : IValueParser<NullableReference<Result>>
 {
     public bool TryParse(string candidate, bool isLiteral, out NullableReference<Result> result)

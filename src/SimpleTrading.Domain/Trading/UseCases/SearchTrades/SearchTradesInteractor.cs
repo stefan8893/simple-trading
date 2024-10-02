@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
@@ -13,6 +14,7 @@ using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 
+[UsedImplicitly]
 public class SearchTradesInteractor(
     IValidator<SearchTradesRequestModel> validator,
     ITradeRepository tradeRepository,
@@ -23,7 +25,7 @@ public class SearchTradesInteractor(
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
 
-    public async ValueTask<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
+    public async Task<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

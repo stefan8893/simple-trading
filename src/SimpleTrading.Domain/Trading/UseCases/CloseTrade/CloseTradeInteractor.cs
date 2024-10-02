@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -11,16 +12,15 @@ using CloseTradeResponse =
     OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound,
         BusinessError>;
 
+[UsedImplicitly]
 public class CloseTradeInteractor(
     IValidator<CloseTradeRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase,
-        IInteractor<CloseTradeRequestModel,
-            OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound, BusinessError>>
+    : InteractorBase, IInteractor<CloseTradeRequestModel, CloseTradeResponse>
 {
-    public async ValueTask<CloseTradeResponse> Execute(CloseTradeRequestModel model)
+    public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

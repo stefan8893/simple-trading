@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
+[UsedImplicitly]
 public class ProfileRepository(TradingDbContext dbContext) : RepositoryBase<Profile>(dbContext), IProfileRepository
 {
-    public async ValueTask<IEnumerable<Profile>> GetAll()
+    public async Task<IEnumerable<Profile>> GetAll()
     {
         return await dbContext.Profiles.ToListAsync();
     }
 
-    public async ValueTask<IEnumerable<Profile>> Find(string likeName)
+    public async Task<IEnumerable<Profile>> Find(string likeName)
     {
         var nameLowered = likeName.ToLower();
 

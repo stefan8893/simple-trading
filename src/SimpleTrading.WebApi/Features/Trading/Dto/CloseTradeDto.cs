@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
@@ -35,6 +36,7 @@ public record TradeResultDto(Guid TradeId, ResultDto? Result, short? Performance
     }
 }
 
+[UsedImplicitly]
 public class CloseTradeDtoValidator : AbstractValidator<CloseTradeDto>
 {
     public CloseTradeDtoValidator()

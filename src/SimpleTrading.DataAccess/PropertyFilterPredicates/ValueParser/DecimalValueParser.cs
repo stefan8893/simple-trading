@@ -1,7 +1,9 @@
-﻿using SimpleTrading.Domain.Extensions;
+﻿using JetBrains.Annotations;
+using SimpleTrading.Domain.Extensions;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 
+[UsedImplicitly]
 public class DecimalValueParser : IValueParser<decimal>
 {
     public bool TryParse(string candidate, bool isLiteral, out decimal result)
@@ -10,6 +12,7 @@ public class DecimalValueParser : IValueParser<decimal>
     }
 }
 
+[UsedImplicitly]
 public class NullableDecimalValueParser : IValueParser<decimal?>
 {
     public bool TryParse(string candidate, bool isLiteral, out decimal? result)

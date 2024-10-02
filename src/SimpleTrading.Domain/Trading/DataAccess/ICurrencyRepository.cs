@@ -4,6 +4,6 @@ namespace SimpleTrading.Domain.Trading.DataAccess;
 
 public interface ICurrencyRepository : IRepository<Currency>
 {
-    ValueTask<IEnumerable<Currency>> GetAll();
-    ValueTask<IEnumerable<Currency>> Find(string likeName);
+    Task<IEnumerable<Currency>> GetAll();
+    Task<IEnumerable<Currency>> Find(string likeName);
 }

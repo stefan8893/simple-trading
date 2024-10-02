@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
@@ -9,6 +10,7 @@ public class SearchTradesRequestModel : PaginationRequestModel
     public IReadOnlyList<FilterModel> Filter { get; init; } = [];
 }
 
+[UsedImplicitly]
 public class SearchTradesRequestModelValidator : AbstractValidator<SearchTradesRequestModel>
 {
     public SearchTradesRequestModelValidator(FilterModelValidator filterModelValidator,

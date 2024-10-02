@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 using SimpleTrading.WebApi.Infrastructure;
@@ -47,6 +48,7 @@ public record AddTradeDto
     public IReadOnlyList<AddReferenceDto>? References { get; set; }
 }
 
+[UsedImplicitly]
 public class AddTradeDtoValidator : AbstractValidator<AddTradeDto>
 {
     public AddTradeDtoValidator()

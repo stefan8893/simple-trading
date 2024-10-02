@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using JetBrains.Annotations;
+using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
@@ -6,10 +7,11 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.GetReference;
 
+[UsedImplicitly]
 public class GetReferenceInteractor(ITradeRepository tradeRepository) : InteractorBase,
     IInteractor<GetReferenceRequestModel, OneOf<ReferenceModel, NotFound>>
 {
-    public async ValueTask<OneOf<ReferenceModel, NotFound>> Execute(GetReferenceRequestModel model)
+    public async Task<OneOf<ReferenceModel, NotFound>> Execute(GetReferenceRequestModel model)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

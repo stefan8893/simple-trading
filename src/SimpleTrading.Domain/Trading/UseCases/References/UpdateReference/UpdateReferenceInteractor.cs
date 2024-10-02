@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -8,13 +9,14 @@ namespace SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
 
 using UpdateReferenceResponse = OneOf<Completed, BadInput, NotFound>;
 
+[UsedImplicitly]
 public class UpdateReferenceInteractor(
     IValidator<UpdateReferenceRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit)
-    : InteractorBase, IInteractor<UpdateReferenceRequestModel, OneOf<Completed, BadInput, NotFound>>
+    : InteractorBase, IInteractor<UpdateReferenceRequestModel, UpdateReferenceResponse>
 {
-    public async ValueTask<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model)
+    public async Task<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

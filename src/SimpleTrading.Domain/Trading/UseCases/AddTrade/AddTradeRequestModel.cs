@@ -1,4 +1,5 @@
 using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
@@ -6,9 +7,6 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
-
-public record AddTradeReferenceRequestModel(Guid Id, ReferenceType Type, string Link, string? Notes = null)
-    : ReferenceModel(Id, Type, Link, Notes);
 
 public record AddTradeRequestModel
 {
@@ -28,6 +26,7 @@ public record AddTradeRequestModel
     public IReadOnlyList<ReferenceRequestModel> References { get; set; } = [];
 }
 
+[UsedImplicitly]
 public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
 {
     public AddTradeRequestModelValidator(

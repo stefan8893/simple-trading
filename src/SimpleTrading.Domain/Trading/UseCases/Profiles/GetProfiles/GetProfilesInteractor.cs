@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -6,11 +7,13 @@ using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
+using GetProfilesResponse = OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>;
+
+[UsedImplicitly]
 public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator, IProfileRepository profileRepository)
-    : InteractorBase, IInteractor<GetProfilesRequestModel, OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>>
+    : InteractorBase, IInteractor<GetProfilesRequestModel, GetProfilesResponse>
 {
-    public async ValueTask<OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>> Execute(
-        GetProfilesRequestModel model)
+    public async Task<GetProfilesResponse> Execute(GetProfilesRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

@@ -154,7 +154,7 @@ public partial class TradesController : ControllerBase
         return result.Match(c => Ok(MapToSuccessResponse(c)),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult());
-        
+
         SuccessResponse<TradeResultDto> MapToSuccessResponse(Completed<RestoreCalculatedResultResponseModel> completed)
         {
             return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data),

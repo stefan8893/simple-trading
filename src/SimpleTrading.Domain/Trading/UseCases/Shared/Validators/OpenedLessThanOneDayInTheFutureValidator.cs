@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
@@ -6,6 +7,7 @@ using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
 
+[UsedImplicitly]
 public class OpenedLessThanOneDayInTheFutureValidator : AbstractValidator<DateTimeOffset?>
 {
     public OpenedLessThanOneDayInTheFutureValidator(UtcNow utcNow, IUserSettingsRepository userSettingsRepository)

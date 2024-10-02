@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Infrastructure;
@@ -15,6 +16,7 @@ public abstract class PaginationRequestModel
     public int PageSize { get; set; } = DefaultPageSize;
 }
 
+[UsedImplicitly]
 public class PaginationRequestModelValidator : AbstractValidator<PaginationRequestModel>
 {
     public PaginationRequestModelValidator()

@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using JetBrains.Annotations;
+using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
@@ -9,11 +10,11 @@ namespace SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using RestoreCalculatedResultResponse =
     OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>;
 
+[UsedImplicitly]
 public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository, UtcNow utcNow, UowCommit uowCommit)
-    : InteractorBase, IInteractor<RestoreCalculatedResultRequestModel,
-        OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>>
+    : InteractorBase, IInteractor<RestoreCalculatedResultRequestModel, RestoreCalculatedResultResponse>
 {
-    public async ValueTask<RestoreCalculatedResultResponse> Execute(RestoreCalculatedResultRequestModel model)
+    public async Task<RestoreCalculatedResultResponse> Execute(RestoreCalculatedResultRequestModel model)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
