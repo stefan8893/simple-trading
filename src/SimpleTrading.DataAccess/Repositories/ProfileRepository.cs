@@ -6,12 +6,12 @@ namespace SimpleTrading.DataAccess.Repositories;
 
 public class ProfileRepository(TradingDbContext dbContext) : RepositoryBase<Profile>(dbContext), IProfileRepository
 {
-    public async Task<IEnumerable<Profile>> GetAll()
+    public async ValueTask<IEnumerable<Profile>> GetAll()
     {
         return await dbContext.Profiles.ToListAsync();
     }
 
-    public async Task<IEnumerable<Profile>> Find(string likeName)
+    public async ValueTask<IEnumerable<Profile>> Find(string likeName)
     {
         var nameLowered = likeName.ToLower();
 

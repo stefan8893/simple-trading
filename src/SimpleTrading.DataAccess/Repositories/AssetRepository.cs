@@ -6,12 +6,12 @@ namespace SimpleTrading.DataAccess.Repositories;
 
 public class AssetRepository(TradingDbContext dbContext) : RepositoryBase<Asset>(dbContext), IAssetRepository
 {
-    public async Task<IEnumerable<Asset>> GetAll()
+    public async ValueTask<IEnumerable<Asset>> GetAll()
     {
         return await dbContext.Assets.ToListAsync();
     }
 
-    public async Task<IEnumerable<Asset>> Find(string likeName)
+    public async ValueTask<IEnumerable<Asset>> Find(string likeName)
     {
         var nameLowered = likeName.ToLower();
 
