@@ -130,12 +130,16 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         if (symbol is null)
             return null;
 
-        var typeArguments = symbol.TypeArguments;
+        var typeArguments = symbol
+            .TypeArguments
+            .OfType<INamedTypeSymbol>()
+            .ToImmutableArray();
+
         if (typeArguments.Length != 2)
             return null;
 
         return new InteractorImplementorContext(interactorImplementor,
-            (INamedTypeSymbol) typeArguments[0],
-            (INamedTypeSymbol) typeArguments[1]);
+            typeArguments[0],
+            typeArguments[1]);
     }
 }
