@@ -30,6 +30,7 @@ public class SearchTradesInteractor(
             return BadInput(validationResult);
 
         var sorting = model.Sort
+            .DefaultIfEmpty(new SortModel(nameof(Trade.Opened), false))
             .Select(x => sorterByName[x.Property](x.Ascending ? Order.Ascending : Order.Descending));
 
         var filter = model.Filter
