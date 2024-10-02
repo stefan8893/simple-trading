@@ -2,10 +2,10 @@
 
 public interface IInteractor<TResponseModel>
 {
-    Task<TResponseModel> Execute();
+    ValueTask<TResponseModel> Execute();
 }
 
 public interface IInteractor<in TRequestModel, TResponseModel>
 {
-    Task<TResponseModel> Execute(TRequestModel requestModel);
+    ValueTask<TResponseModel> Execute(TRequestModel requestModel);
 }

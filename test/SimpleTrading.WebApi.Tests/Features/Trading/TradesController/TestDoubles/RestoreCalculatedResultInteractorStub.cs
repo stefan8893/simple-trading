@@ -8,10 +8,10 @@ public class RestoreCalculatedResultInteractorStub : IRestoreCalculatedResult
 {
     public OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>? ResponseModel { get; set; }
 
-    public Task<OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>> Execute(
+    public ValueTask<OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>> Execute(
         RestoreCalculatedResultRequestModel model)
     {
-        return Task.FromResult(ResponseModel ??
-                               throw new InvalidOperationException("Response model has not been initialized."));
+        return ValueTask.FromResult(ResponseModel ??
+                                    throw new InvalidOperationException("Response model has not been initialized."));
     }
 }

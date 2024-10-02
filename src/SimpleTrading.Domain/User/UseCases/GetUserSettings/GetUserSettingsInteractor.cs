@@ -9,7 +9,7 @@ namespace SimpleTrading.Domain.User.UseCases.GetUserSettings;
 public class GetUserSettingsInteractor(IUserSettingsRepository userSettingsRepository)
     : InteractorBase, IInteractor<UserSettingsResponseModel>
 {
-    public async Task<UserSettingsResponseModel> Execute()
+    public async ValueTask<UserSettingsResponseModel> Execute()
     {
         var userSettings = await userSettingsRepository.GetUserSettings();
         var language = userSettings.Language ?? new CultureInfo(userSettings.Culture).TwoLetterISOLanguageName;

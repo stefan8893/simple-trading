@@ -12,7 +12,7 @@ public class GetCurrenciesInteractor(
     : InteractorBase, IInteractor<GetCurrenciesRequestModel,
         OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>>
 {
-    public async Task<OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>> Execute(
+    public async ValueTask<OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>> Execute(
         GetCurrenciesRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);

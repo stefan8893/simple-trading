@@ -14,7 +14,7 @@ public class UpdateReferenceInteractor(
     UowCommit uowCommit)
     : InteractorBase, IInteractor<UpdateReferenceRequestModel, OneOf<Completed, BadInput, NotFound>>
 {
-    public async Task<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model)
+    public async ValueTask<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

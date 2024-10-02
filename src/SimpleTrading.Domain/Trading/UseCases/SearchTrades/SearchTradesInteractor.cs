@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
@@ -23,7 +23,7 @@ public class SearchTradesInteractor(
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
 
-    public async Task<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
+    public async ValueTask<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

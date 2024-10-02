@@ -24,7 +24,7 @@ public class ResponseModelTypeIsNotOneOf
 
     public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, string>
     {
-        public Task<string> Execute(GetFoobarRequestModel model)
+        public ValueTask<string> Execute(GetFoobarRequestModel model)
         {
             throw new NotImplementedException();
         }

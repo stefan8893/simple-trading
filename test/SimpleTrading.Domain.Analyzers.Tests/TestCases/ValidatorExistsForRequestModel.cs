@@ -26,7 +26,7 @@ public class ValidatorExistsForRequestModel
 
     public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, NotFound>>
     {
-        public Task<OneOf<GetFoobarResponseModel, NotFound>> Execute(GetFoobarRequestModel model)
+        public ValueTask<OneOf<GetFoobarResponseModel, NotFound>> Execute(GetFoobarRequestModel model)
         {
             throw new NotImplementedException();
         }

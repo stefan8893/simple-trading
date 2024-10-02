@@ -21,14 +21,14 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
         return dbContext.FindAsync<T>(id);
     }
 
-    public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> filterPredicate,
+    public async ValueTask<IReadOnlyList<T>> Find(Expression<Func<T, bool>> filterPredicate,
         IEnumerable<ISort<T>>? sorting = null)
     {
         return await FindInternal(filterPredicate, sorting)
             .ToListAsync();
     }
 
-    public async Task<PagedList<T>> Find(PaginationConfiguration pagination, Expression<Func<T, bool>> filterPredicate,
+    public async ValueTask<PagedList<T>> Find(Expression<Func<T, bool>> filterPredicate, PaginationConfiguration pagination,
         IEnumerable<ISort<T>>? sorting = null)
     {
         var page = pagination.Page;

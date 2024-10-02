@@ -9,7 +9,8 @@ namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 public class GetProfilesInteractor(IValidator<GetProfilesRequestModel> validator, IProfileRepository profileRepository)
     : InteractorBase, IInteractor<GetProfilesRequestModel, OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>>
 {
-    public async Task<OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>> Execute(GetProfilesRequestModel model)
+    public async ValueTask<OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>> Execute(
+        GetProfilesRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

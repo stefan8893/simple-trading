@@ -24,7 +24,7 @@ public class UpdateTradeInteractor(
             NotFound,
             BusinessError>>
 {
-    public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
+    public async ValueTask<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

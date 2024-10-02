@@ -9,7 +9,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 public class GetReferencesInteractor(ITradeRepository tradeRepository) : InteractorBase,
     IInteractor<GetReferencesRequestModel, OneOf<IReadOnlyList<ReferenceModel>, NotFound>>
 {
-    public async Task<OneOf<IReadOnlyList<ReferenceModel>, NotFound>> Execute(GetReferencesRequestModel model)
+    public async ValueTask<OneOf<IReadOnlyList<ReferenceModel>, NotFound>> Execute(GetReferencesRequestModel model)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

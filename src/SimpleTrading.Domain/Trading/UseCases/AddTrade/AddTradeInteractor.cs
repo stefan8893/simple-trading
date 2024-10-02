@@ -20,7 +20,7 @@ public class AddTradeInteractor(
     UtcNow utcNow)
     : InteractorBase, IInteractor<AddTradeRequestModel, AddTradeResponse>
 {
-    public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
+    public async ValueTask<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

@@ -13,7 +13,7 @@ public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository,
     : InteractorBase, IInteractor<RestoreCalculatedResultRequestModel,
         OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>>
 {
-    public async Task<RestoreCalculatedResultResponse> Execute(RestoreCalculatedResultRequestModel model)
+    public async ValueTask<RestoreCalculatedResultResponse> Execute(RestoreCalculatedResultRequestModel model)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

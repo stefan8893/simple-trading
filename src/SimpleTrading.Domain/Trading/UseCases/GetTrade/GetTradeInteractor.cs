@@ -10,7 +10,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 public class GetTradeInteractor(ITradeRepository tradeRepository, IUserSettingsRepository userSettingsRepository)
     : InteractorBase, IInteractor<GetTradeRequestModel, OneOf<TradeResponseModel, NotFound>>
 {
-    public async Task<OneOf<TradeResponseModel, NotFound>> Execute(GetTradeRequestModel model)
+    public async ValueTask<OneOf<TradeResponseModel, NotFound>> Execute(GetTradeRequestModel model)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

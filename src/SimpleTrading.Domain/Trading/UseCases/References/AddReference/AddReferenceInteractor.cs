@@ -22,7 +22,7 @@ public class AddReferenceInteractor(
 {
     private const ushort MaxReferencesPerTrade = 50;
 
-    public async Task<AddReferenceResponse> Execute(AddReferenceRequestModel model)
+    public async ValueTask<AddReferenceResponse> Execute(AddReferenceRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)

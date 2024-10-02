@@ -20,7 +20,7 @@ public class CloseTradeInteractor(
         IInteractor<CloseTradeRequestModel,
             OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound, BusinessError>>
 {
-    public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
+    public async ValueTask<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)
