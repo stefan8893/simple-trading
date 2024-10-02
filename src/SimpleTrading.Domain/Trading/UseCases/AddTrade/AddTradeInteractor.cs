@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -16,7 +15,6 @@ using AddTradeResponse =
 
 [UsedImplicitly]
 public class AddTradeInteractor(
-    IValidator<AddTradeRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
@@ -24,10 +22,6 @@ public class AddTradeInteractor(
 {
     public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var asset = await tradeRepository.FindAsset(model.AssetId);
         if (asset is null)
             return NotFound<Asset>(model.AssetId);

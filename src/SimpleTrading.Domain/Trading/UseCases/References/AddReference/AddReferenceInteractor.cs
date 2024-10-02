@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -13,7 +12,6 @@ using AddReferenceResponse = OneOf<Completed<Guid>, BadInput, NotFound, Business
 
 [UsedImplicitly]
 public class AddReferenceInteractor(
-    IValidator<AddReferenceRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow) : InteractorBase, IInteractor<AddReferenceRequestModel, AddReferenceResponse>
@@ -22,10 +20,6 @@ public class AddReferenceInteractor(
 
     public async Task<AddReferenceResponse> Execute(AddReferenceRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -16,7 +15,6 @@ using UpdateTradeResponse =
 
 [UsedImplicitly]
 public class UpdateTradeInteractor(
-    IValidator<UpdateTradeRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
@@ -24,10 +22,6 @@ public class UpdateTradeInteractor(
 {
     public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
