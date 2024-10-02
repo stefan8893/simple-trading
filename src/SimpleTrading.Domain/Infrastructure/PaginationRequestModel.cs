@@ -25,7 +25,7 @@ public class PaginationRequestModelValidator : AbstractValidator<PaginationReque
             .WithName(SimpleTradingStrings.Page);
 
         RuleFor(x => x.PageSize)
-            .GreaterThan(1)
+            .GreaterThanOrEqualTo(1)
             .LessThanOrEqualTo(500)
             .WithName(SimpleTradingStrings.PageSize);
     }

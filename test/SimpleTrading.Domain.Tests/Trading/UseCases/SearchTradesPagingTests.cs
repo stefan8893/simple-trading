@@ -153,4 +153,34 @@ public class SearchTradesPagingTests(TestingWebApplicationFactory<Program> facto
         pagedTrades.Which.Should().HaveCount(3);
         pagedTrades.Which.IsLastPage.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task Zero_is_not_a_valid_page_size()
+    {
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            PageSize = 0
+        });
+
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "PageSize" &&
+                              x.ErrorMessage == "'Page size' must be greater than or equal to '1'.");
+        
+    }
+    
+    [Fact]
+    public async Task Zero_is_not_a_valid_page_they_start_at_one()
+    {
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            Page = 0
+        });
+
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "Page" &&
+                              x.ErrorMessage == "'Page' must be greater than or equal to '1'.");
+        
+    }
 }

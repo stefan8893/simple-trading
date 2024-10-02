@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using FluentValidation;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
@@ -29,7 +29,7 @@ public class SearchTradesInteractor(
         if (!validationResult.IsValid)
             return BadInput(validationResult);
 
-        var sorting = model.Sort
+        var sortingConfig = model.Sort
             .DefaultIfEmpty(new SortModel(nameof(Trade.Opened), false))
             .Select(x => sorterByName[x.Property](x.Ascending ? Order.Ascending : Order.Descending));
 
@@ -39,7 +39,7 @@ public class SearchTradesInteractor(
             .Aggregate(Id, Add);
 
         var paginationConfig = new PaginationConfiguration(model.Page, model.PageSize);
-        var trades = await tradeRepository.Find(paginationConfig, filter, sorting);
+        var trades = await tradeRepository.Find(filter, paginationConfig, sortingConfig);
 
         var userSettings = await userSettingsRepository.GetUserSettings();
 

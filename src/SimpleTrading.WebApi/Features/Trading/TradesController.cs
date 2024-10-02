@@ -43,6 +43,7 @@ public partial class TradesController : ControllerBase
                 Enumerable.Select(page, TradeDto.From),
                 page.Count,
                 page.TotalCount,
+                page.TotalPages,
                 page.Page,
                 page.PageSize)),
             badInput => badInput.ToActionResult()
