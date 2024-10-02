@@ -34,36 +34,35 @@ public static class SourceTemplates
 
                  {{string.Join("\n\r", usingStatements)}}
 
-                 namespace {{ctx.Interactor.ContainingNamespace.ToDisplayString()}}
+                 namespace {{ctx.Interactor.ContainingNamespace.ToDisplayString()}};
+
+                 public interface {{ctx.InteractorInterfaceName}}
                  {
-                     public interface {{ctx.InteractorInterfaceName}}
+                     Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}});
+                 }
+                 
+                 public sealed class {{ctx.InteractorProxyName}} : {{ctx.InteractorInterfaceName}}
+                 {
+                     private readonly {{ctx.ClosedInteractorInterface.ToDisplayString()}}  _interactor;
+                     
+                     public {{ctx.InteractorProxyName}}(
+                              {{ctx.ClosedInteractorInterface.ToDisplayString()}} interactor)
                      {
-                         Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}});
+                         _interactor = interactor;
                      }
                      
-                     public sealed class {{ctx.InteractorProxyName}} : {{ctx.InteractorInterfaceName}}
+                     [DebuggerStepThrough]
+                     public Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
                      {
-                         private readonly {{ctx.ClosedInteractorInterface.ToDisplayString()}}  _interactor;
-                         
-                         public {{ctx.InteractorProxyName}}(
-                                  {{ctx.ClosedInteractorInterface.ToDisplayString()}} interactor)
-                         {
-                             _interactor = interactor;
-                         }
-                         
-                         [DebuggerStepThrough]
-                         public Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
-                         {
-                             return {{IfRequestModelExists("_interactor.Execute(requestModel);",
-                                 "_interactor.Execute();")}}
-                         }
-                     }    
-                 }
+                         return {{IfRequestModelExists("_interactor.Execute(requestModel);",
+                             "_interactor.Execute();")}}
+                     }
+                 }    
                  """;
 
-        string IfRequestModelExists(string onRequestModelExists, string? otherwise = null)
+        string IfRequestModelExists(string onRequestModelExists, string otherwise = "")
         {
-            return ctx.RequestModel is not null ? onRequestModelExists : otherwise ?? string.Empty;
+            return ctx.RequestModel is not null ? onRequestModelExists : otherwise;
         }
     }
 }
