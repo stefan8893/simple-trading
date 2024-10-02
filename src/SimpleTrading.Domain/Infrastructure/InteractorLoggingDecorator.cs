@@ -7,11 +7,11 @@ namespace SimpleTrading.Domain.Infrastructure;
 
 public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseModel>(
     ILogger<InteractorLoggingDecoratorBase<TRequestModel, TResponseModel>> logger,
+    string interactorName,
     UtcNow utcNow)
 {
     protected async Task<TResponseModel> LogAndRunInteractorExecution(
         Func<TRequestModel, Task<TResponseModel>> executionFunc,
-        string interactorName,
         TRequestModel requestModel)
     {
         logger.LogInformation("Execute {interactorName} at {utcNow:o}", interactorName, utcNow());
@@ -19,7 +19,7 @@ public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseMod
         if (requestModel is not (null or Unit))
             logger.LogDebug("{interactorName} request model: {@requestModel}", interactorName, requestModel);
 
-        var responseModel = await TryExecution(executionFunc, interactorName, requestModel);
+        var responseModel = await TryExecution(executionFunc, requestModel);
         logger.LogInformation("{interactorName} execution finished successfully at {utcNow:o}", interactorName,
             utcNow());
 
@@ -27,7 +27,7 @@ public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseMod
     }
 
     private async Task<TResponseModel> TryExecution(Func<TRequestModel, Task<TResponseModel>> executionFunc,
-        string interactorName, TRequestModel requestModel)
+        TRequestModel requestModel)
     {
         var stopwatch = new Stopwatch();
         try
@@ -59,13 +59,12 @@ public class InteractorLoggingDecorator<TRequestModel, TResponseModel>(
     ILogger<InteractorLoggingDecorator<TRequestModel, TResponseModel>> logger,
     UtcNow utcNow
 )
-    : InteractorLoggingDecoratorBase<TRequestModel, TResponseModel>(logger, utcNow),
+    : InteractorLoggingDecoratorBase<TRequestModel, TResponseModel>(logger, inner.GetType().Name, utcNow),
         IInteractor<TRequestModel, TResponseModel>
 {
     public Task<TResponseModel> Execute(TRequestModel requestModel)
     {
-        var interactorName = inner.GetType().Name;
-        return LogAndRunInteractorExecution(inner.Execute, interactorName, requestModel);
+        return LogAndRunInteractorExecution(inner.Execute, requestModel);
     }
 }
 
@@ -74,11 +73,11 @@ public class InteractorLoggingDecorator<TResponseModel>(
     ILogger<InteractorLoggingDecorator<TResponseModel>> logger,
     UtcNow utcNow
 )
-    : InteractorLoggingDecoratorBase<Unit, TResponseModel>(logger, utcNow), IInteractor<TResponseModel>
+    : InteractorLoggingDecoratorBase<Unit, TResponseModel>(logger, inner.GetType().Name, utcNow),
+        IInteractor<TResponseModel>
 {
     public Task<TResponseModel> Execute()
     {
-        var interactorName = inner.GetType().Name;
-        return LogAndRunInteractorExecution(_ => inner.Execute(), interactorName, Unit.Default);
+        return LogAndRunInteractorExecution(_ => inner.Execute(), Unit.Default);
     }
 }
