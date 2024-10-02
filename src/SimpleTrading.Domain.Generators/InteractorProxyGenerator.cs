@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -24,10 +26,11 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             if (concreteInteractor is null)
                 return;
 
-            ReportDiagnostics(ctx, concreteInteractor);
-
             var interactorCtx = GatherInteractorContext(concreteInteractor);
-
+            if (interactorCtx is null)
+                return;
+            
+            ReportDiagnostics(ctx, concreteInteractor);
             ctx.AddSource($"{interactorCtx.InteractorName}.g.cs",
                 SourceText.From(SourceTemplates.CreateProxy(interactorCtx), Encoding.UTF8));
         });
@@ -46,7 +49,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         ctx.ReportDiagnostic(missingInteractorSuffixDiagnostic);
     }
 
-    private static InteractorContext GatherInteractorContext(INamedTypeSymbol concreteInteractor)
+    private static InteractorContext? GatherInteractorContext(INamedTypeSymbol concreteInteractor)
     {
         var closedInteractorInterface = concreteInteractor
             .AllInterfaces
@@ -55,10 +58,16 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         if (closedInteractorInterface is null)
             throw new Exception($"{concreteInteractor.MetadataName} does not implement 'IInteractor'");
 
-        var genericTypeArguments = closedInteractorInterface.TypeArguments;
+        var genericTypeArguments = closedInteractorInterface.TypeArguments
+            .OfType<INamedTypeSymbol>()
+            .ToImmutableArray();
+
+        if (genericTypeArguments.Length is not (1 or 2))
+            return null;
+        
         var (requestModel, responseModel) = genericTypeArguments.Length == 1
-            ? (null, (INamedTypeSymbol) genericTypeArguments[0])
-            : ((INamedTypeSymbol) genericTypeArguments[0], (INamedTypeSymbol) genericTypeArguments[1]);
+            ? (null, genericTypeArguments[0])
+            : (genericTypeArguments[0], genericTypeArguments[1]);
 
         return new InteractorContext(concreteInteractor, closedInteractorInterface, responseModel)
         {

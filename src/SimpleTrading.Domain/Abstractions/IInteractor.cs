@@ -7,5 +7,5 @@ public interface IInteractor<TResponseModel>
 
 public interface IInteractor<in TRequestModel, TResponseModel>
 {
-    Task<TResponseModel> Execute(TRequestModel model);
+    Task<TResponseModel> Execute(TRequestModel requestModel);
 }

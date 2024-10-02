@@ -5,6 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Serilog;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.CliCommands;
@@ -18,11 +19,12 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
 {
     b.RegisterModule<WebApiModule>();
-    b.RegisterModule<DateTimeProviderModule>();
     b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
     b.RegisterModule<DomainModule>();
     b.RegisterModule<DataAccessModule>();
 });
+
+builder.Services.AddSerilog(lc => lc.ReadFrom.Configuration(builder.Configuration));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(_ => { },
@@ -33,7 +35,12 @@ var clientAppEntraIdConfig = builder.Configuration
                                  .Get<ClientAppEntraIdConfig>()
                              ?? throw new Exception("Missing Entra ID settings");
 
-builder.Services.AddControllers(o => o.Filters.Add<ValidationFilter>())
+builder.Services
+    .AddControllers(o =>
+    {
+        o.ModelValidatorProviders.Clear();
+        o.Filters.Add<ValidationFilter>();
+    })
     .ConfigureApiBehaviorOptions(o => o.SuppressMapClientErrors = true)
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -48,10 +55,10 @@ var app = builder.Build();
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseStaticFiles();
 app.UseHttpsRedirection();
-app.UseRequestLocalization();
-app.UseNotFoundMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRequestLocalization();
+app.UseNotFoundMiddleware();
 
 app.MapControllers()
     .RequireAuthorization();

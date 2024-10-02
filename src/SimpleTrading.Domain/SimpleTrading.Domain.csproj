@@ -12,6 +12,7 @@
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="11.10.0"/>
         <PackageReference Include="OneOf" Version="3.0.271"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
