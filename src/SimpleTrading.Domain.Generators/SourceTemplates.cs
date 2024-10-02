@@ -13,16 +13,21 @@ public static class SourceTemplates
             "System",
             "System.Threading.Tasks",
             "System.Diagnostics",
+            "SimpleTrading.Domain.Infrastructure",
+            OnValidation("FluentValidation"),
             ctx.Interactor.ContainingNamespace.ToDisplayString()
         ];
 
         var usingStatements = namespaces
+            .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct()
             .Select(static x => $"using {x};");
 
         var requestModelParameter = string.IsNullOrWhiteSpace(requestModelFullQualifiedType)
             ? string.Empty
             : $"{requestModelFullQualifiedType} requestModel";
+
+        var validatorsType = $"IEnumerable<IValidator<{requestModelFullQualifiedType}>>";
 
         // lang=C#
         return $$"""
@@ -40,29 +45,52 @@ public static class SourceTemplates
                  {
                      Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}});
                  }
-                 
+
                  public sealed class {{ctx.InteractorProxyName}} : {{ctx.InteractorInterfaceName}}
                  {
                      private readonly {{ctx.ClosedInteractorInterface.ToDisplayString()}}  _interactor;
+                     {{OnValidation($"private readonly {validatorsType} _validators;")}}
                      
                      public {{ctx.InteractorProxyName}}(
-                              {{ctx.ClosedInteractorInterface.ToDisplayString()}} interactor)
+                              {{ctx.ClosedInteractorInterface.ToDisplayString()}} interactor{{OnValidation(",")}}
+                              {{OnValidation($"{validatorsType} validators")}})
                      {
                          _interactor = interactor;
+                         {{OnValidation("_validators = validators;")}}
                      }
                      
                      [DebuggerStepThrough]
-                     public Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
+                     public async Task<{{ctx.ResponseModel.ToDisplayString()}}> Execute({{requestModelParameter}}) 
                      {
-                         return {{IfRequestModelExists("_interactor.Execute(requestModel);",
+                            {{OnValidation(
+                                // lang=C#
+                                """
+                                foreach(var validator in _validators) 
+                                {
+                                    var validationResult = await validator.ValidateAsync(requestModel);
+                                    if (!validationResult.IsValid)
+                                        return new BadInput(validationResult);
+                                }
+                                """)}}
+                 
+                         return await {{OnContainsRequestModel("_interactor.Execute(requestModel);",
                              "_interactor.Execute();")}}
                      }
                  }    
                  """;
 
-        string IfRequestModelExists(string onRequestModelExists, string otherwise = "")
+        string OnContainsRequestModel(string onRequestModelExists, string otherwise = "")
         {
             return ctx.RequestModel is not null ? onRequestModelExists : otherwise;
+        }
+
+        string OnValidation(string onValidation, string otherwise = "")
+        {
+            var validateRequestModel = ctx.RequestModel is not null &&
+                                       ctx.ResponseModel.IsGenericType &&
+                                       ctx.ResponseModel.TypeArguments.Any(x => x.Name == "BadInput");
+
+            return validateRequestModel ? onValidation : otherwise;
         }
     }
 }
