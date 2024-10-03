@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
@@ -144,13 +143,13 @@ public partial class TradesController : ControllerBase
         [FromRoute] Guid tradeId)
     {
         var result = await restoreCalculatedResult.Execute(new RestoreCalculatedResultRequestModel(tradeId));
-        
+
         return result.Match(
             completed => Ok(TradeResultDto.From(completed.Data)),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult());
     }
-    
+
     [HttpDelete("{tradeId:guid}", Name = nameof(DeleteTrade))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteTrade(

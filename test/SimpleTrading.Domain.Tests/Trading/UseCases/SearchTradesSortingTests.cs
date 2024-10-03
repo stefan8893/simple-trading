@@ -60,7 +60,7 @@ public class SearchTradesSortingTests(TestingWebApplicationFactory<Program> fact
         pagedTraded.Which.ElementAt(2).Result.Should().Be(ResultModel.BreakEven);
         pagedTraded.Which.ElementAt(3).Result.Should().Be(ResultModel.Loss);
     }
-    
+
     [Fact]
     public async Task If_no_sorting_was_specified_the_result_set_is_sorted_by_the_opened_date_descending()
     {

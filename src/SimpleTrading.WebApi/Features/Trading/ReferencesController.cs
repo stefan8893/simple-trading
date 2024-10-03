@@ -64,7 +64,8 @@ public class ReferencesController : ControllerBase
         [FromBody] AddReferenceDto addReferenceDto)
     {
         var addReferenceRequestModel =
-            new AddReferenceRequestModel(tradeId, addReferenceDto.Type.ToDomainReferenceType(), addReferenceDto.Link!, addReferenceDto.Notes);
+            new AddReferenceRequestModel(tradeId, addReferenceDto.Type.ToDomainReferenceType(), addReferenceDto.Link!,
+                addReferenceDto.Notes);
 
         var result = await addReference.Execute(addReferenceRequestModel);
 

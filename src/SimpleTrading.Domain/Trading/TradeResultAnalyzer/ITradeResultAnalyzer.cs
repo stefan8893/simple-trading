@@ -1,6 +1,4 @@
-﻿using SimpleTrading.Domain.Infrastructure;
-
-namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer;
+﻿namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer;
 
 internal interface ITradeResultAnalyzer
 {

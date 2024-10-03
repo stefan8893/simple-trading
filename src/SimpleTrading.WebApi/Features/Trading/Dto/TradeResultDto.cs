@@ -9,7 +9,7 @@ public record TradeResultDto(Guid TradeId, ResultDto? Result, short? Performance
     {
         return new TradeResultDto(model.TradeId, model.Result.ToResultDto(), model.Performance, model.Warnings);
     }
-    
+
     public static TradeResultDto From(RestoreCalculatedResultResponseModel model)
     {
         return new TradeResultDto(model.TradeId, model.Result.ToResultDto(), model.Performance, model.Warnings);

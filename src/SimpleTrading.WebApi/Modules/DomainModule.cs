@@ -11,7 +11,7 @@ public class DomainModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         AddDateTimeProviders(builder);
-        
+
         var assemblyThatContainsUseCases = typeof(IInteractor<>).Assembly;
 
         builder.RegisterAssemblyTypes(assemblyThatContainsUseCases)
@@ -23,7 +23,7 @@ public class DomainModule : Module
             .AsClosedTypesOf(typeof(IInteractor<>))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
-        
+
         builder.RegisterGenericDecorator(typeof(InteractorLoggingDecorator<,>), typeof(IInteractor<,>));
         builder.RegisterGenericDecorator(typeof(InteractorLoggingDecorator<>), typeof(IInteractor<>));
 

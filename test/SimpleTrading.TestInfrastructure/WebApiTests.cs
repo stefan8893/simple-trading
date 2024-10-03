@@ -42,7 +42,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     }
 
     /// <summary>
-    ///     There is only one web server that gets started for each test class.<br/>
+    ///     There is only one web server that gets started for each test class.<br />
     ///     This means, OverrideServices is only called once before the first test starts within a test class.
     /// </summary>
     /// <param name="ctx"></param>

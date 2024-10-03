@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-
-namespace SimpleTrading.Domain.Infrastructure;
+﻿namespace SimpleTrading.Domain.Infrastructure;
 
 public abstract class InteractorBase
 {

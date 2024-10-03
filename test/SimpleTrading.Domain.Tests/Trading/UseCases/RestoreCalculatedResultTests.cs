@@ -14,9 +14,9 @@ namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-09-22T20:00:00").ToUtcKind();
-    
+
     private IRestoreCalculatedResult Interactor => ServiceLocator.GetRequiredService<IRestoreCalculatedResult>();
-    
+
     [Fact]
     public async Task A_not_overriden_result_will_not_be_changed()
     {
@@ -61,7 +61,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
         // act
         var requestModel = new RestoreCalculatedResultRequestModel(notExistingTradeId);
         var response = await Interactor.Execute(requestModel);
-        
+
         // assert
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
         notFound.Which.ResourceId.Should().Be(notExistingTradeId);
@@ -95,7 +95,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
 
         DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
         await DbContext.SaveChangesAsync();
-        
+
         tradeWithCalculatedMediocreResult.Result!.Name.Should().Be(Result.Loss);
 
         // act

@@ -548,10 +548,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" && 
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" &&
                               x.ErrorMessage == "'Result' can only be updated, if the trade has already been closed.");
     }
-    
+
     [Fact]
     public async Task Result_cannot_be_overriden_to_null_since_the_trade_is_not_closed()
     {

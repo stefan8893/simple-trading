@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Serilog.Extensions.Logging;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 
@@ -20,17 +19,18 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         var dbContextOptionsBuilder = GetDbContextOptionsBuilder(dbProvider, connectionString);
 
         builder.Register<TradingDbContext>(ctx =>
-        {
-            var utcNow = ctx.Resolve<UtcNow>();
-            var loggerFactory  = ctx.Resolve<ILoggerFactory>();
-            dbContextOptionsBuilder.UseLoggerFactory(loggerFactory);
+            {
+                var utcNow = ctx.Resolve<UtcNow>();
+                var loggerFactory = ctx.Resolve<ILoggerFactory>();
+                dbContextOptionsBuilder.UseLoggerFactory(loggerFactory);
 
-            return new TradingDbContext(dbContextOptionsBuilder.Options, utcNow);
-        })
-        .InstancePerLifetimeScope();
+                return new TradingDbContext(dbContextOptionsBuilder.Options, utcNow);
+            })
+            .InstancePerLifetimeScope();
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetDbContextOptionsBuilder(string dbProvider, string connectionString)
+    private static DbContextOptionsBuilder<TradingDbContext> GetDbContextOptionsBuilder(string dbProvider,
+        string connectionString)
     {
         var dbContextOptions = new DbContextOptionsBuilder<TradingDbContext>(
             new DbContextOptions<TradingDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));

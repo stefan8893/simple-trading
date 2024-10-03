@@ -14,6 +14,6 @@ public class RestoreCalculatedResultInteractorStub : IRestoreCalculatedResult
         RestoreCalculatedResultRequestModel model)
     {
         return Task.FromResult(ResponseModel ??
-                                    throw new InvalidOperationException("Response model has not been initialized."));
+                               throw new InvalidOperationException("Response model has not been initialized."));
     }
 }

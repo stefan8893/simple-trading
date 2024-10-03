@@ -1,5 +1,4 @@
-﻿using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Resources;
+﻿using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;
 
