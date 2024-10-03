@@ -413,7 +413,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
@@ -445,7 +445,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
@@ -482,7 +482,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
@@ -594,7 +594,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
@@ -666,8 +666,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var completed = response.Value.Should().BeOfType<Completed<Guid>>();
-        var addedTradeId = completed.Which.Data;
+        var completed = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>();
+        var addedTradeId = completed.Which.Data.TradeId;
 
         var addedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == addedTradeId);
         addedTrade.Should().NotBeNull();

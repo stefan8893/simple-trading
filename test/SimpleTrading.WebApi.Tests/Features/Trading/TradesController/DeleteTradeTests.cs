@@ -14,9 +14,9 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        var response = await client.DeleteTradeAsync(notExistingTradeId);
+        var act = () => client.DeleteTradeAsync(notExistingTradeId);
 
-        response.Should().BeOfType<SuccessResponse>();
+        await act.Should().NotThrowAsync();
     }
 
     [Fact]
@@ -30,10 +30,10 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await client.DeleteTradeAsync(trade.Id);
+        var act = () => client.DeleteTradeAsync(trade.Id);
 
         // assert
-        response.Should().BeOfType<SuccessResponse>();
+        await act.Should().NotThrowAsync();
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         storedTrade.Should().BeNull();
     }

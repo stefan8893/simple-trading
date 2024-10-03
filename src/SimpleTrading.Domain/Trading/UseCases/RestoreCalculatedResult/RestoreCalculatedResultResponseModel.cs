@@ -2,4 +2,4 @@
 
 namespace SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 
-public record RestoreCalculatedResultResponseModel(Guid TradeId, ResultModel? Result, short? Performance);
+public record RestoreCalculatedResultResponseModel(Guid TradeId, ResultModel? Result, short? Performance, IEnumerable<string> Warnings);

@@ -33,7 +33,7 @@ public class Trade : IEntity
     public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
-    internal OneOf<Completed, BusinessError> RestoreCalculatedResult(UtcNow utcNow)
+    internal OneOf<Completed<CloseTradeResult>, BusinessError> RestoreCalculatedResult(UtcNow utcNow)
     {
         if (!IsClosed)
             return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
@@ -42,7 +42,7 @@ public class Trade : IEntity
         return Close(new CloseTradeConfiguration(Closed!.Value, Balance!.Value, utcNow));
     }
 
-    internal OneOf<Completed, BusinessError> Close(CloseTradeConfiguration configuration)
+    internal OneOf<Completed<CloseTradeResult>, BusinessError> Close(CloseTradeConfiguration configuration)
     {
         if (configuration.Closed < Opened)
             return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
@@ -54,10 +54,10 @@ public class Trade : IEntity
         if (configuration.Closed > closedDateUpperBound)
             return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
-        return CloseTrade(configuration);
+        return new Completed<CloseTradeResult>(CloseTrade(configuration));
     }
 
-    private Completed CloseTrade(CloseTradeConfiguration configuration)
+    private CloseTradeResult CloseTrade(CloseTradeConfiguration configuration)
     {
         Closed = configuration.Closed.ToUtcKind();
         Balance = configuration.Balance;
@@ -76,14 +76,14 @@ public class Trade : IEntity
         var (result, warnings) = CalculateResult(configuration);
 
         if (doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne)
-            return new Completed(warnings);
+            return new CloseTradeResult(Id, Result, warnings);
 
         Result = result;
 
-        return new Completed(warnings);
+        return new CloseTradeResult(Id, Result, warnings);
     }
 
-    private (Result? result, IReadOnlyList<Warning> warnings) CalculateResult(CloseTradeConfiguration configuration)
+    private (Result? result, IReadOnlyList<string> warnings) CalculateResult(CloseTradeConfiguration configuration)
     {
         var results = CalculateResults(configuration);
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
@@ -135,7 +135,7 @@ public class Trade : IEntity
             : balanceResult;
     }
 
-    private List<Warning> AnalyzeResults(TradingResultsDto results,
+    private List<string> AnalyzeResults(TradingResultsDto results,
         Result? calculatedResult)
     {
         var enteredResultDiffersFromCalculatedResultAnalysis =
@@ -196,3 +196,5 @@ internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow
     public decimal? ExitPrice { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();
 }
+
+internal record CloseTradeResult(Guid TradeId, Result? Result, IEnumerable<string> Warnings);

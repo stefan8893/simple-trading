@@ -2,4 +2,4 @@
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
-public record CloseTradeResponseModel(Guid TradeId, ResultModel? Result, short? Performance);
+public record CloseTradeResponseModel(Guid TradeId, ResultModel? Result, short? Performance, IEnumerable<string> Warnings);

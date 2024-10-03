@@ -64,7 +64,7 @@ public partial class TradesController : ControllerBase
     }
 
     [HttpPost(Name = nameof(AddTrade))]
-    [ProducesResponseType<SuccessResponse<Guid>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<AddTradeResultDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
@@ -76,7 +76,7 @@ public partial class TradesController : ControllerBase
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
-            completed => Ok(SuccessResponse<Guid>.From(completed)),
+            completed => Ok(AddTradeResultDto.From(completed.Data)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
@@ -84,7 +84,7 @@ public partial class TradesController : ControllerBase
     }
 
     [HttpPatch("{tradeId:guid}", Name = nameof(UpdateTrade))]
-    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<WarningsDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
@@ -98,14 +98,14 @@ public partial class TradesController : ControllerBase
 
         return result
             .Match(
-                completed => Ok(SuccessResponse.From(completed.Warnings)),
+                completed => Ok(new WarningsDto(completed.Data.Warnings)),
                 badInput => badInput.ToActionResult(),
                 notFound => notFound.ToActionResult(),
                 businessError => businessError.ToActionResult());
     }
 
     [HttpPut("{tradeId:guid}/close", Name = nameof(CloseTrade))]
-    [ProducesResponseType<SuccessResponse<TradeResultDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<TradeResultDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
@@ -128,21 +128,15 @@ public partial class TradesController : ControllerBase
         var result = await closeTrade.Execute(closeTradeRequestModel);
 
         return result.Match(
-            completed => Ok(MapToSuccessResponse(completed)),
+            completed => Ok(TradeResultDto.From(completed.Data)),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
         );
-
-        SuccessResponse<TradeResultDto> MapToSuccessResponse(Completed<CloseTradeResponseModel> completed)
-        {
-            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data),
-                completed.Warnings);
-        }
     }
 
     [HttpPut("{tradeId:guid}/restore-calculated-result", Name = nameof(RestoreCalculatedResult))]
-    [ProducesResponseType<SuccessResponse<TradeResultDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<TradeResultDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> RestoreCalculatedResult(
@@ -151,29 +145,21 @@ public partial class TradesController : ControllerBase
     {
         var result = await restoreCalculatedResult.Execute(new RestoreCalculatedResultRequestModel(tradeId));
         
-        return result.Match(c => Ok(MapToSuccessResponse(c)),
+        return result.Match(
+            completed => Ok(TradeResultDto.From(completed.Data)),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult());
-
-        SuccessResponse<TradeResultDto> MapToSuccessResponse(Completed<RestoreCalculatedResultResponseModel> completed)
-        {
-            return SuccessResponse<TradeResultDto>.From(TradeResultDto.From(completed.Data),
-                completed.Warnings);
-        }
     }
     
     [HttpDelete("{tradeId:guid}", Name = nameof(DeleteTrade))]
-    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteTrade(
         [FromServices] IDeleteTrade deleteTrade,
         [FromRoute] Guid tradeId)
     {
-        var result = await deleteTrade.Execute(new DeleteTradeRequestModel(tradeId));
+        _ = await deleteTrade.Execute(new DeleteTradeRequestModel(tradeId));
 
-        return result.Match(
-            completed => Ok(SuccessResponse.From(completed.Warnings)),
-            notFound => Ok(SuccessResponse.Empty)
-        );
+        return NoContent();
     }
 
     private static SearchTradesRequestModel MapToRequestModel(SearchQueryDto queryDto)

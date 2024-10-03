@@ -47,7 +47,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
 
         // assert
         var responseModel = response.Value.Should().BeOfType<Completed<RestoreCalculatedResultResponseModel>>();
-        responseModel.Which.Warnings.Should().BeEmpty();
+        responseModel.Which.Data.Warnings.Should().BeEmpty();
         responseModel.Which.Data.Result.Should().NotBeNull().And.Be(ResultModel.Mediocre);
         responseModel.Which.Data.Performance.Should().Be(83);
     }
@@ -104,7 +104,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
 
         // assert
         var responseModel = response.Value.Should().BeOfType<Completed<RestoreCalculatedResultResponseModel>>();
-        responseModel.Which.Warnings.Should().BeEmpty();
+        responseModel.Which.Data.Warnings.Should().BeEmpty();
         responseModel.Which.Data.Result.Should().NotBeNull().And.Be(ResultModel.Mediocre);
         responseModel.Which.Data.Performance.Should().Be(83);
     }

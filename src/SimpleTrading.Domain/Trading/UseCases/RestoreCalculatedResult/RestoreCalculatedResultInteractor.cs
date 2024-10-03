@@ -26,8 +26,12 @@ public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository,
             await uowCommit();
 
         return result
-            .Match<RestoreCalculatedResultResponse>(completed => Completed(
-                new RestoreCalculatedResultResponseModel(trade.Id, trade.Result?.ToResultModel(),
-                    trade.Result?.Performance), completed.Warnings), businessError => businessError);
+            .Match<RestoreCalculatedResultResponse>(
+                completed => Completed(new RestoreCalculatedResultResponseModel(
+                    completed.Data.TradeId,
+                    completed.Data.Result?.ToResultModel(),
+                    completed.Data.Result?.Performance,
+                    completed.Data.Warnings)),
+                businessError => businessError);
     }
 }

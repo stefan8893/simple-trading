@@ -202,7 +202,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
@@ -229,9 +229,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        var updatedTradeId = response.Value.Should()
+            .BeOfType<Completed<UpdateTradeResponseModel>>()
+            .Which.Data.TradeId;
 
-        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == updatedTradeId);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.ProfileId.Should().Be(newProfile.Id);
     }
@@ -256,7 +258,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
@@ -385,7 +387,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Balance.Should().Be(newBalance);
@@ -448,7 +450,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.PositionPrices.Should().Be(newPositionPrices);
@@ -486,7 +488,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade?.Result.Should().NotBeNull();
         updatedTrade!.Result!.Performance.Should().Be(85);
@@ -518,7 +520,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Result.Should().NotBeNull();
@@ -598,7 +600,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();

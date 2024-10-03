@@ -39,16 +39,20 @@ public class CloseTradeInteractor(
 
         var result = trade.Close(closeTradeDto);
 
-        if (result.Value is Completed)
+        if (result.Value is Completed<CloseTradeResult>)
             await uowCommit();
 
-        var closeTradeResponseModel = new CloseTradeResponseModel(trade.Id,
-            trade.Result?.ToResultModel(),
-            trade.Result?.Performance);
-
         return result.Match<CloseTradeResponse>(
-            completed => Completed(closeTradeResponseModel, completed.Warnings),
+            completed => Completed(Map(completed.Data)),
             businessError => businessError
         );
+
+        CloseTradeResponseModel Map(CloseTradeResult closeTradeResult)
+        {
+            return new CloseTradeResponseModel(closeTradeResult.TradeId,
+                closeTradeResult.Result?.ToResultModel(),
+                closeTradeResult.Result?.Performance,
+                closeTradeResult.Warnings);
+        }
     }
 }

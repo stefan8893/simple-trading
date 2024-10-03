@@ -20,18 +20,14 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await client.AddReferenceAsync(trade.Id, new AddReferenceDto
+        var idOfAddedReference = await client.AddReferenceAsync(trade.Id, new AddReferenceDto
         {
             Type = ReferenceTypeDto.Other,
             Link = "https://example.org"
         });
 
         // assert
-        response.Should().NotBeNull();
-        response.Warnings.Should().BeEmpty();
-        response.Data.Should().NotBeNull();
-        var newlyAddedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == response.Data);
-
+        var newlyAddedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == idOfAddedReference);
         newlyAddedReference.Should().NotBeNull();
     }
 

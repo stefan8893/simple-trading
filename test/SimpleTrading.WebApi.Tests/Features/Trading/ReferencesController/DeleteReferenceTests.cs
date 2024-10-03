@@ -40,11 +40,10 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await client.DeleteReferencesAsync(trade.Id);
+        var countOfDeletedReferences = await client.DeleteReferencesAsync(trade.Id);
 
         // assert
-        response.Should().NotBeNull();
-        response.Warnings.Should().BeEmpty();
+        countOfDeletedReferences.Should().Be(2);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
         updatedTrade.Should().NotBeNull();

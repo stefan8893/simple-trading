@@ -30,15 +30,15 @@ public class RestoreCalculatedResultTests(
         var tradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
 
         restoreCalculatedResultInteractorStub.ResponseModel = new Completed<RestoreCalculatedResultResponseModel>(
-            new RestoreCalculatedResultResponseModel(tradeId, ResultModel.Loss, 55));
+            new RestoreCalculatedResultResponseModel(tradeId, ResultModel.Loss, 55, []));
 
         // act
         var result = await client.RestoreCalculatedResultAsync(tradeId);
 
         // assert
-        result.Data.Result.Should().Be(ResultDto.Loss);
-        result.Data.Performance.Should().Be(55);
-        result.Data.TradeId.Should().Be(tradeId);
+        result.Result.Should().Be(ResultDto.Loss);
+        result.Performance.Should().Be(55);
+        result.TradeId.Should().Be(tradeId);
         result.Warnings.Should().BeEmpty();
     }
 

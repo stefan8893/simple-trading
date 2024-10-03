@@ -28,7 +28,7 @@ export interface ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>>;
+    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<AddTradeResultDto>>;
 
     /**
      * @return OK
@@ -39,23 +39,23 @@ export interface ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
+    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SwaggerResponse<WarningsDto>>;
 
     /**
-     * @return OK
+     * @return No Content
      */
-    deleteTrade(tradeId: string): Promise<SwaggerResponse<SuccessResponse>>;
+    deleteTrade(tradeId: string): Promise<SwaggerResponse<void>>;
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>>;
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<TradeResultDto>>;
 
     /**
      * @return OK
      */
-    restoreCalculatedResult(tradeId: string): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>>;
+    restoreCalculatedResult(tradeId: string): Promise<SwaggerResponse<TradeResultDto>>;
 
     /**
      * @return OK
@@ -64,14 +64,14 @@ export interface ISimpleTradingClient {
 
     /**
      * @param body (optional) 
-     * @return OK
+     * @return No Content
      */
-    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
+    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SwaggerResponse<void>>;
 
     /**
-     * @return OK
+     * @return No Content
      */
-    deleteReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<SuccessResponse>>;
+    deleteReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<void>>;
 
     /**
      * @return OK
@@ -82,12 +82,12 @@ export interface ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>>;
+    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SwaggerResponse<string>>;
 
     /**
      * @return OK
      */
-    deleteReferences(tradeId: string): Promise<SwaggerResponse<UInt16SuccessResponse>>;
+    deleteReferences(tradeId: string): Promise<SwaggerResponse<number>>;
 
     /**
      * @param searchTerm (optional) 
@@ -237,7 +237,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>> {
+    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<AddTradeResultDto>> {
         let url_ = this.baseUrl + "/trades";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -257,7 +257,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddTrade(response: Response): Promise<SwaggerResponse<GuidSuccessResponse>> {
+    protected processAddTrade(response: Response): Promise<SwaggerResponse<AddTradeResultDto>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -268,7 +268,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GuidSuccessResponse.fromJS(resultData200);
+            result200 = AddTradeResultDto.fromJS(resultData200);
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 400) {
@@ -297,7 +297,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<GuidSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<AddTradeResultDto>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
@@ -355,7 +355,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>> {
+    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SwaggerResponse<WarningsDto>> {
         let url_ = this.baseUrl + "/trades/{tradeId}";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -378,7 +378,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+    protected processUpdateTrade(response: Response): Promise<SwaggerResponse<WarningsDto>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -389,7 +389,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
+            result200 = WarningsDto.fromJS(resultData200);
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 400) {
@@ -418,13 +418,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<WarningsDto>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
-     * @return OK
+     * @return No Content
      */
-    deleteTrade(tradeId: string): Promise<SwaggerResponse<SuccessResponse>> {
+    deleteTrade(tradeId: string): Promise<SwaggerResponse<void>> {
         let url_ = this.baseUrl + "/trades/{tradeId}";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -434,7 +434,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             method: "DELETE",
             headers: {
-                "Accept": "application/json"
             }
         };
 
@@ -443,33 +442,30 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+    protected processDeleteTrade(response: Response): Promise<SwaggerResponse<void>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
             return throwException("Unauthorized", status, _responseText, _headers);
             });
-        } else if (status === 200) {
+        } else if (status === 204) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
+            return new SwaggerResponse(status, _headers, null as any);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>> {
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<TradeResultDto>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/close";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -492,7 +488,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processCloseTrade(response: Response): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>> {
+    protected processCloseTrade(response: Response): Promise<SwaggerResponse<TradeResultDto>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -503,7 +499,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeResultDtoSuccessResponse.fromJS(resultData200);
+            result200 = TradeResultDto.fromJS(resultData200);
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 400) {
@@ -532,13 +528,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<TradeResultDtoSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<TradeResultDto>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
      * @return OK
      */
-    restoreCalculatedResult(tradeId: string): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>> {
+    restoreCalculatedResult(tradeId: string): Promise<SwaggerResponse<TradeResultDto>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/restore-calculated-result";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -557,7 +553,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processRestoreCalculatedResult(response: Response): Promise<SwaggerResponse<TradeResultDtoSuccessResponse>> {
+    protected processRestoreCalculatedResult(response: Response): Promise<SwaggerResponse<TradeResultDto>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -568,7 +564,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeResultDtoSuccessResponse.fromJS(resultData200);
+            result200 = TradeResultDto.fromJS(resultData200);
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 404) {
@@ -590,7 +586,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<TradeResultDtoSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<TradeResultDto>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
@@ -649,9 +645,9 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
     /**
      * @param body (optional) 
-     * @return OK
+     * @return No Content
      */
-    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SwaggerResponse<SuccessResponse>> {
+    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SwaggerResponse<void>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references/{referenceId}";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -668,7 +664,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
             }
         };
 
@@ -677,19 +672,16 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateReference(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+    protected processUpdateReference(response: Response): Promise<SwaggerResponse<void>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
             return throwException("Unauthorized", status, _responseText, _headers);
             });
-        } else if (status === 200) {
+        } else if (status === 204) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
+            return new SwaggerResponse(status, _headers, null as any);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -710,13 +702,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
-     * @return OK
+     * @return No Content
      */
-    deleteReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<SuccessResponse>> {
+    deleteReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<void>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references/{referenceId}";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -729,7 +721,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             method: "DELETE",
             headers: {
-                "Accept": "application/json"
             }
         };
 
@@ -738,19 +729,16 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteReference(response: Response): Promise<SwaggerResponse<SuccessResponse>> {
+    protected processDeleteReference(response: Response): Promise<SwaggerResponse<void>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
             return throwException("Unauthorized", status, _responseText, _headers);
             });
-        } else if (status === 200) {
+        } else if (status === 204) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
-            return new SwaggerResponse(status, _headers, result200);
+            return new SwaggerResponse(status, _headers, null as any);
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
@@ -764,7 +752,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
@@ -829,7 +817,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param body (optional) 
      * @return OK
      */
-    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>> {
+    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SwaggerResponse<string>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -852,7 +840,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddReference(response: Response): Promise<SwaggerResponse<GuidSuccessResponse>> {
+    protected processAddReference(response: Response): Promise<SwaggerResponse<string>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -863,7 +851,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GuidSuccessResponse.fromJS(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 400) {
@@ -892,13 +881,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<GuidSuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<string>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
      * @return OK
      */
-    deleteReferences(tradeId: string): Promise<SwaggerResponse<UInt16SuccessResponse>> {
+    deleteReferences(tradeId: string): Promise<SwaggerResponse<number>> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references";
         if (tradeId === undefined || tradeId === null)
             throw new Error("The parameter 'tradeId' must be defined.");
@@ -917,7 +906,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteReferences(response: Response): Promise<SwaggerResponse<UInt16SuccessResponse>> {
+    protected processDeleteReferences(response: Response): Promise<SwaggerResponse<number>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -928,7 +917,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UInt16SuccessResponse.fromJS(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status === 404) {
@@ -943,7 +933,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<UInt16SuccessResponse>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse(status, _headers, null as any));
     }
 
     /**
@@ -1350,6 +1340,54 @@ export interface IAddTradeDto {
     references?: AddReferenceDto[] | undefined;
 }
 
+export class AddTradeResultDto implements IAddTradeResultDto {
+    tradeId!: string;
+    warnings!: string[] | undefined;
+
+    constructor(data?: IAddTradeResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tradeId = _data["tradeId"];
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): AddTradeResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddTradeResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tradeId"] = this.tradeId;
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IAddTradeResultDto {
+    tradeId: string;
+    warnings: string[] | undefined;
+}
+
 export class ApiInfo implements IApiInfo {
     name?: string | undefined;
     version?: string | undefined;
@@ -1702,54 +1740,6 @@ export interface IFieldErrorResponse {
     errors: FieldError[] | undefined;
 }
 
-export class GuidSuccessResponse implements IGuidSuccessResponse {
-    data?: string;
-    warnings?: string[] | undefined;
-
-    constructor(data?: IGuidSuccessResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.data = _data["data"];
-            if (Array.isArray(_data["warnings"])) {
-                this.warnings = [] as any;
-                for (let item of _data["warnings"])
-                    this.warnings!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): GuidSuccessResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new GuidSuccessResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["data"] = this.data;
-        if (Array.isArray(this.warnings)) {
-            data["warnings"] = [];
-            for (let item of this.warnings)
-                data["warnings"].push(item);
-        }
-        return data;
-    }
-}
-
-export interface IGuidSuccessResponse {
-    data?: string;
-    warnings?: string[] | undefined;
-}
-
 export class ProfileDto implements IProfileDto {
     id!: string;
     name!: string | undefined;
@@ -1928,50 +1918,6 @@ export class StringUpdateValue implements IStringUpdateValue {
 
 export interface IStringUpdateValue {
     value?: string | undefined;
-}
-
-export class SuccessResponse implements ISuccessResponse {
-    warnings?: string[] | undefined;
-
-    constructor(data?: ISuccessResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["warnings"])) {
-                this.warnings = [] as any;
-                for (let item of _data["warnings"])
-                    this.warnings!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): SuccessResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new SuccessResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.warnings)) {
-            data["warnings"] = [];
-            for (let item of this.warnings)
-                data["warnings"].push(item);
-        }
-        return data;
-    }
-}
-
-export interface ISuccessResponse {
-    warnings?: string[] | undefined;
 }
 
 export class TradeDto implements ITradeDto {
@@ -2166,6 +2112,7 @@ export class TradeResultDto implements ITradeResultDto {
     tradeId?: string;
     result?: ResultDto;
     performance?: number | undefined;
+    warnings?: string[] | undefined;
 
     constructor(data?: ITradeResultDto) {
         if (data) {
@@ -2181,6 +2128,11 @@ export class TradeResultDto implements ITradeResultDto {
             this.tradeId = _data["tradeId"];
             this.result = _data["result"];
             this.performance = _data["performance"];
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
         }
     }
 
@@ -2196,6 +2148,11 @@ export class TradeResultDto implements ITradeResultDto {
         data["tradeId"] = this.tradeId;
         data["result"] = this.result;
         data["performance"] = this.performance;
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
         return data;
     }
 }
@@ -2204,101 +2161,6 @@ export interface ITradeResultDto {
     tradeId?: string;
     result?: ResultDto;
     performance?: number | undefined;
-}
-
-export class TradeResultDtoSuccessResponse implements ITradeResultDtoSuccessResponse {
-    data?: TradeResultDto;
-    warnings?: string[] | undefined;
-
-    constructor(data?: ITradeResultDtoSuccessResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.data = _data["data"] ? TradeResultDto.fromJS(_data["data"]) : <any>undefined;
-            if (Array.isArray(_data["warnings"])) {
-                this.warnings = [] as any;
-                for (let item of _data["warnings"])
-                    this.warnings!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): TradeResultDtoSuccessResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new TradeResultDtoSuccessResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
-        if (Array.isArray(this.warnings)) {
-            data["warnings"] = [];
-            for (let item of this.warnings)
-                data["warnings"].push(item);
-        }
-        return data;
-    }
-}
-
-export interface ITradeResultDtoSuccessResponse {
-    data?: TradeResultDto;
-    warnings?: string[] | undefined;
-}
-
-export class UInt16SuccessResponse implements IUInt16SuccessResponse {
-    data?: number;
-    warnings?: string[] | undefined;
-
-    constructor(data?: IUInt16SuccessResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.data = _data["data"];
-            if (Array.isArray(_data["warnings"])) {
-                this.warnings = [] as any;
-                for (let item of _data["warnings"])
-                    this.warnings!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): UInt16SuccessResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new UInt16SuccessResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["data"] = this.data;
-        if (Array.isArray(this.warnings)) {
-            data["warnings"] = [];
-            for (let item of this.warnings)
-                data["warnings"].push(item);
-        }
-        return data;
-    }
-}
-
-export interface IUInt16SuccessResponse {
-    data?: number;
     warnings?: string[] | undefined;
 }
 
@@ -2476,6 +2338,50 @@ export interface IUserSettingsDto {
     language: string | undefined;
     timeZone: string | undefined;
     lastModified: Date;
+}
+
+export class WarningsDto implements IWarningsDto {
+    warnings?: string[] | undefined;
+
+    constructor(data?: IWarningsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): WarningsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new WarningsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IWarningsDto {
+    warnings?: string[] | undefined;
 }
 
 export class SwaggerResponse<TResult> {

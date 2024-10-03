@@ -5,7 +5,7 @@ namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;
 
 internal class ShortPositionTradeResultAnalyzerDecorator(ITradeResultAnalyzer innerComponent) : ITradeResultAnalyzer
 {
-    public IEnumerable<Warning> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
+    public IEnumerable<string> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var additionalWarnings = AnalyzeShortPositionPrices(trade, config);
 
@@ -13,7 +13,7 @@ internal class ShortPositionTradeResultAnalyzerDecorator(ITradeResultAnalyzer in
             .Concat(additionalWarnings);
     }
 
-    private static IEnumerable<Warning> AnalyzeShortPositionPrices(Trade trade, TradeResultAnalyzerConfiguration config)
+    private static IEnumerable<string> AnalyzeShortPositionPrices(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var isShortPosition = trade.PositionPrices.IsShortPosition;
         var hasBalanceResult = config.CalculatedByBalance is not null;
@@ -24,6 +24,6 @@ internal class ShortPositionTradeResultAnalyzerDecorator(ITradeResultAnalyzer in
         var balance = trade.Balance!.Value;
 
         if (balance > 0 && prices.Exit.HasValue && prices.Exit > prices.Entry)
-            yield return new Warning(SimpleTradingStrings.ShortPositionExitGreaterThanEntryAndPositiveBalance);
+            yield return SimpleTradingStrings.ShortPositionExitGreaterThanEntryAndPositiveBalance;
     }
 }

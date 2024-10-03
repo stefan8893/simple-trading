@@ -118,14 +118,12 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         responseModel.Which.Data.Performance.Should().Be(50);
         responseModel.Which.Data.Result.Should().Be(ResultModel.Mediocre);
 
-        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
         var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         closedTrade.Should().NotBeNull();
 
         closedTrade!.Balance.Should().Be(requestModel.Balance);
         closedTrade.Closed.Should().NotBeNull();
         closedTrade.IsClosed.Should().BeTrue();
-        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
         closedTrade.PositionPrices.Exit.Should().NotBeNull().And.Be(requestModel.ExitPrice);
     }
 }

@@ -52,8 +52,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
-        response.Data.Should().NotBeNull();
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+        response.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
     }
@@ -87,8 +87,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         response.Should().NotBeNull();
         response.Warnings.Should().BeEmpty();
-        response.Data.Should().NotBeNull();
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+        response.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
         newlyAddedTrade!.Result.Should().BeNull();
@@ -122,12 +122,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         response.Should().NotBeNull();
-        response.Data.Should().NotBeNull();
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+        response.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
         newlyAddedTrade!.Result.Should().NotBeNull();
-        newlyAddedTrade!.Result!.Name.Should().Be(Result.Loss);
+        newlyAddedTrade.Result!.Name.Should().Be(Result.Loss);
     }
 
     [Fact]
@@ -290,7 +290,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+        response.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
         var expected = DateTime.Parse("2024-08-05T12:00:00");
@@ -325,7 +326,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.Data);
+        response.Should().NotBeNull();
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");

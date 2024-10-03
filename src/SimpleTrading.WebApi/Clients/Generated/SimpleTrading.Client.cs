@@ -39,7 +39,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<GuidSuccessResponse> AddTradeAsync(AddTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AddTradeResultDto> AddTradeAsync(AddTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
@@ -49,22 +49,22 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SuccessResponse> UpdateTradeAsync(System.Guid tradeId, UpdateTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<WarningsDto> UpdateTradeAsync(System.Guid tradeId, UpdateTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>No Content</returns>
+        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task DeleteTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SuccessResponse> DeleteTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<TradeResultDto> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TradeResultDtoSuccessResponse> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TradeResultDtoSuccessResponse> RestoreCalculatedResultAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<TradeResultDto> RestoreCalculatedResultAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
@@ -72,14 +72,14 @@ namespace SimpleTrading.Client
         System.Threading.Tasks.Task<ReferenceDto> GetReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>No Content</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SuccessResponse> UpdateReferenceAsync(System.Guid tradeId, System.Guid referenceId, UpdateReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task UpdateReferenceAsync(System.Guid tradeId, System.Guid referenceId, UpdateReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>No Content</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SuccessResponse> DeleteReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task DeleteReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
@@ -89,12 +89,12 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<GuidSuccessResponse> AddReferenceAsync(System.Guid tradeId, AddReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<System.Guid> AddReferenceAsync(System.Guid tradeId, AddReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<UInt16SuccessResponse> DeleteReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<int> DeleteReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
@@ -350,7 +350,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<GuidSuccessResponse> AddTradeAsync(AddTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<AddTradeResultDto> AddTradeAsync(AddTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -401,7 +401,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<GuidSuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<AddTradeResultDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -552,7 +552,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SuccessResponse> UpdateTradeAsync(System.Guid tradeId, UpdateTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<WarningsDto> UpdateTradeAsync(System.Guid tradeId, UpdateTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -607,7 +607,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<SuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<WarningsDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -665,9 +665,9 @@ namespace SimpleTrading.Client
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>No Content</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SuccessResponse> DeleteTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task DeleteTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -679,7 +679,6 @@ namespace SimpleTrading.Client
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
@@ -716,14 +715,9 @@ namespace SimpleTrading.Client
                             throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<SuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
+                            return;
                         }
                         else
                         {
@@ -748,7 +742,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TradeResultDtoSuccessResponse> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<TradeResultDto> CloseTradeAsync(System.Guid tradeId, CloseTradeDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -804,7 +798,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<TradeResultDtoSuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<TradeResultDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -864,7 +858,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TradeResultDtoSuccessResponse> RestoreCalculatedResultAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<TradeResultDto> RestoreCalculatedResultAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -917,7 +911,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<TradeResultDtoSuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<TradeResultDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1061,9 +1055,9 @@ namespace SimpleTrading.Client
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>No Content</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SuccessResponse> UpdateReferenceAsync(System.Guid tradeId, System.Guid referenceId, UpdateReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task UpdateReferenceAsync(System.Guid tradeId, System.Guid referenceId, UpdateReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -1082,7 +1076,6 @@ namespace SimpleTrading.Client
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PATCH");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
@@ -1121,14 +1114,9 @@ namespace SimpleTrading.Client
                             throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<SuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
+                            return;
                         }
                         else
                         if (status_ == 400)
@@ -1171,9 +1159,9 @@ namespace SimpleTrading.Client
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>No Content</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SuccessResponse> DeleteReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task DeleteReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -1188,7 +1176,6 @@ namespace SimpleTrading.Client
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
@@ -1227,14 +1214,9 @@ namespace SimpleTrading.Client
                             throw new SimpleTradingClientException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<SuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
+                            return;
                         }
                         else
                         if (status_ == 404)
@@ -1361,7 +1343,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<GuidSuccessResponse> AddReferenceAsync(System.Guid tradeId, AddReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<System.Guid> AddReferenceAsync(System.Guid tradeId, AddReferenceDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -1417,7 +1399,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<GuidSuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Guid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1477,7 +1459,7 @@ namespace SimpleTrading.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UInt16SuccessResponse> DeleteReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<int> DeleteReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
                 throw new System.ArgumentNullException("tradeId");
@@ -1529,7 +1511,7 @@ namespace SimpleTrading.Client
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<UInt16SuccessResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<int>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -2174,6 +2156,18 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class AddTradeResultDto
+    {
+        [Newtonsoft.Json.JsonProperty("tradeId", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid TradeId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ApiInfo
     {
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2270,17 +2264,6 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class GuidSuccessResponse
-    {
-        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid? Data { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ProfileDto
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
@@ -2362,14 +2345,6 @@ namespace SimpleTrading.Client
     {
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Value { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SuccessResponse
-    {
-        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
 
     }
 
@@ -2478,25 +2453,6 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Performance { get; set; }
 
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class TradeResultDtoSuccessResponse
-    {
-        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TradeResultDto Data { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UInt16SuccessResponse
-    {
-        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Data { get; set; }
-
         [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string> Warnings { get; set; }
 
@@ -2576,6 +2532,14 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("lastModified", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset LastModified { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class WarningsDto
+    {
+        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
 
     }
 

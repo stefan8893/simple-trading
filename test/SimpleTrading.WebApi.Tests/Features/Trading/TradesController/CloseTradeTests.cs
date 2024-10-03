@@ -146,7 +146,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
+        var result = await client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = new DateTimeOffset(_utcNow),
             Balance = -50d,
@@ -154,7 +154,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         });
 
         // assert
-        await act.Should().NotThrowAsync();
+        result.Should().NotBeNull();
         var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
         tradeAfterClosing.Should().NotBeNull();
@@ -200,7 +200,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var closedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
 
         // act
-        var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
+        var result = await client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = closedInNewYork,
             Balance = -50d,
@@ -208,7 +208,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         });
 
         // assert
-        await act.Should().NotThrowAsync();
+        result.Should().NotBeNull();
         var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
         tradeAfterClosing.Should().NotBeNull();

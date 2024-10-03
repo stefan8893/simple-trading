@@ -6,7 +6,7 @@ namespace SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;
 internal class BalanceDiffersFromPositionPricesAnalyzerDecorator(ITradeResultAnalyzer innerComponent)
     : ITradeResultAnalyzer
 {
-    public IEnumerable<Warning> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
+    public IEnumerable<string> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var additionalWarnings = AnalyzeBalanceAndPositionPrices(trade, config);
 
@@ -14,7 +14,7 @@ internal class BalanceDiffersFromPositionPricesAnalyzerDecorator(ITradeResultAna
             .Concat(additionalWarnings);
     }
 
-    private static IEnumerable<Warning> AnalyzeBalanceAndPositionPrices(Trade trade,
+    private static IEnumerable<string> AnalyzeBalanceAndPositionPrices(Trade trade,
         TradeResultAnalyzerConfiguration config)
     {
         var prices = trade.PositionPrices;
@@ -25,9 +25,9 @@ internal class BalanceDiffersFromPositionPricesAnalyzerDecorator(ITradeResultAna
             yield break;
 
         if (balance == 0m && prices.Exit.HasValue && prices.Exit != prices.Entry)
-            yield return new Warning(SimpleTradingStrings.BalanceZeroAndExitEntryPricesNotTheSame);
+            yield return SimpleTradingStrings.BalanceZeroAndExitEntryPricesNotTheSame;
 
         if (balance != 0m && prices.Exit.HasValue && prices.Exit == prices.Entry)
-            yield return new Warning(SimpleTradingStrings.BalanceNotZeroAndExitEntryPricesSame);
+            yield return SimpleTradingStrings.BalanceNotZeroAndExitEntryPricesSame;
     }
 }
