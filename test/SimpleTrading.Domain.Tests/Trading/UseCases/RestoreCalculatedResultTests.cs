@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -7,15 +7,14 @@ using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class RestoreCalculatedResultTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-09-22T20:00:00").ToUtcKind();
 
-    private IRestoreCalculatedResult Interactor => ServiceLocator.GetRequiredService<IRestoreCalculatedResult>();
+    private IRestoreCalculatedResult Interactor => ServiceLocator.Resolve<IRestoreCalculatedResult>();
 
     [Fact]
     public async Task A_not_overriden_result_will_not_be_changed()

@@ -1,16 +1,15 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.Currencies;
 
-public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class GetCurrenciesTests : DomainTests
 {
-    private IGetCurrencies Interactor => ServiceLocator.GetRequiredService<IGetCurrencies>();
+    private IGetCurrencies Interactor => ServiceLocator.Resolve<IGetCurrencies>();
 
     [Fact]
     public async Task Get_currencies_without_search_term_returns_all_currencies()

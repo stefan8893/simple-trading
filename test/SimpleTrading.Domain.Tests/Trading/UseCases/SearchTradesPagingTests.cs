@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class SearchTradesPagingTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class SearchTradesPagingTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.GetRequiredService<ISearchTrades>();
+    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
 
     [Fact]
     public async Task Paged_result_contains_only_requested_subset()

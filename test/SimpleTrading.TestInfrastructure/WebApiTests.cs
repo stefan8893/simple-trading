@@ -17,11 +17,12 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
 {
     private TradingDbContext? _dbContext;
+    private ILifetimeScope? _lifetimeScope;
     private IServiceScope? _serviceScope;
 
     protected TradingDbContext DbContext => _dbContext!;
 
-    protected IServiceProvider ServiceLocator => _serviceScope!.ServiceProvider;
+    protected ILifetimeScope ServiceLocator => _lifetimeScope!;
 
     public async Task DisposeAsync()
     {
@@ -33,6 +34,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     {
         factory.OverrideServices = OverrideServices;
         _serviceScope = factory.Services.CreateScope();
+        _lifetimeScope = _serviceScope.ServiceProvider.GetRequiredService<ILifetimeScope>();
         _dbContext = _serviceScope.ServiceProvider.GetRequiredService<TradingDbContext>();
 
         await DbContext.Database.MigrateAsync();
@@ -43,7 +45,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
     /// <summary>
     ///     There is only one web server that gets started for each test class.<br />
-    ///     This means, OverrideServices is only called once before the first test starts within a test class.
+    ///     This means, OverrideServices is only called once before the first test run
     /// </summary>
     /// <param name="ctx"></param>
     /// <param name="builder"></param>

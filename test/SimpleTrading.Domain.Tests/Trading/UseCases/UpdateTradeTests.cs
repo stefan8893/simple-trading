@@ -1,7 +1,5 @@
 ﻿using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -10,16 +8,15 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class UpdateTradeTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
-    private IUpdateTrade Interactor => ServiceLocator.GetRequiredService<IUpdateTrade>();
+    private IUpdateTrade Interactor => ServiceLocator.Resolve<IUpdateTrade>();
 
-    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
+    protected override void OverrideServices(ContainerBuilder builder)
     {
         builder.Register<UtcNow>(_ => () => _utcNow);
     }
