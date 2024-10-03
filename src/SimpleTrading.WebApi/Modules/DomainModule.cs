@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FluentValidation;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;
@@ -12,14 +13,14 @@ public class DomainModule : Module
     {
         AddDateTimeProviders(builder);
 
-        var assemblyThatContainsUseCases = typeof(IInteractor<>).Assembly;
+        var domainAssembly = typeof(IInteractor<>).Assembly;
 
-        builder.RegisterAssemblyTypes(assemblyThatContainsUseCases)
+        builder.RegisterAssemblyTypes(domainAssembly)
             .AsClosedTypesOf(typeof(IInteractor<,>))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
-        builder.RegisterAssemblyTypes(assemblyThatContainsUseCases)
+        builder.RegisterAssemblyTypes(domainAssembly)
             .AsClosedTypesOf(typeof(IInteractor<>))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
@@ -27,8 +28,13 @@ public class DomainModule : Module
         builder.RegisterGenericDecorator(typeof(InteractorLoggingDecorator<,>), typeof(IInteractor<,>));
         builder.RegisterGenericDecorator(typeof(InteractorLoggingDecorator<>), typeof(IInteractor<>));
 
-        builder.RegisterAssemblyTypes(assemblyThatContainsUseCases)
+        builder.RegisterAssemblyTypes(domainAssembly)
             .Where(x => x.Name.EndsWith("InteractorProxy"))
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
+        
+        builder.RegisterAssemblyTypes(domainAssembly)
+            .AsClosedTypesOf(typeof(IValidator<>))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
     }

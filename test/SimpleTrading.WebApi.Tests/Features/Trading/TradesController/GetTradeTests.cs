@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Autofac;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Client;
@@ -53,7 +54,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             .Build();
 
         var userSettings = await ServiceLocator
-            .GetRequiredService<IUserSettingsRepository>()
+            .Resolve<IUserSettingsRepository>()
             .GetUserSettings();
         userSettings.TimeZone = "America/New_York";
 

@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class GetTradeTests : DomainTests
 {
-    private IGetTrade Interactor => ServiceLocator.GetRequiredService<IGetTrade>();
+    private IGetTrade Interactor => ServiceLocator.Resolve<IGetTrade>();
 
     [Fact]
     public async Task A_not_existing_trade_cant_be_returned()

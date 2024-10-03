@@ -48,8 +48,6 @@ builder.Services
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-builder.Services.AddValidatorsFromAssemblyContaining<InteractorBase>();
 
 var app = builder.Build();
 

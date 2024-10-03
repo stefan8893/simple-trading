@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
@@ -7,13 +7,12 @@ using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class SearchTradesSortingTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class SearchTradesSortingTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.GetRequiredService<ISearchTrades>();
+    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
 
     [Fact]
     public async Task Sort_by_invalid_property_does_not_work()

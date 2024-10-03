@@ -24,8 +24,8 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
     public async Task LastModified_gets_automatically_updated_if_entity_was_modified()
     {
         // arrange
-        var uowCommit = ServiceLocator.GetRequiredService<UowCommit>();
-        var userSettingsRepository = ServiceLocator.GetRequiredService<IUserSettingsRepository>();
+        var uowCommit = ServiceLocator.Resolve<UowCommit>();
+        var userSettingsRepository = ServiceLocator.Resolve<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
         userSettings.LastModified.Should().NotBe(_utcNow);
 
@@ -42,12 +42,12 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
     public async Task LastModified_will_not_be_refreshed_automatically_if_entity_was_just_read()
     {
         // arrange
-        var userSettingsRepository = ServiceLocator.GetRequiredService<IUserSettingsRepository>();
+        var userSettingsRepository = ServiceLocator.Resolve<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
         var initialUpdatedDate = userSettings.LastModified;
 
         // act
-        var timeZone = userSettings.TimeZone;
+        _ = userSettings.TimeZone;
 
         // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();

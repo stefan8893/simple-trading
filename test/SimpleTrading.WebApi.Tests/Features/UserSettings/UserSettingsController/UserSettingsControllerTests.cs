@@ -23,7 +23,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     {
         // arrange
         var client = await CreateClient();
-        var userSettings = await ServiceLocator.GetRequiredService<IUserSettingsRepository>().GetUserSettings();
+        var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
         userSettings.Language = "de";
@@ -43,7 +43,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     {
         // arrange
         var client = await CreateClient();
-        var userSettings = await ServiceLocator.GetRequiredService<IUserSettingsRepository>().GetUserSettings();
+        var userSettings = await ServiceLocator
+            .Resolve<IUserSettingsRepository>()
+            .GetUserSettings();
+
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
         userSettings.Language = "de";
