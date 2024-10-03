@@ -1,15 +1,21 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
+using OneOf;
 using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Infrastructure;
 
-namespace SimpleTrading.Domain.Analyzers.Tests.TestCases;
+namespace SimpleTrading.Domain.Analyzers.Tests.TestSourceFiles;
 
-public class ResponseModelTypeIsNotOneOf
+[UsedImplicitly]
+public class ValidatorExistsForRequestModel
 {
+    [UsedImplicitly]
     public class GetFoobarRequestModel
     {
         public string? Candidate { get; set; }
     }
 
+    [UsedImplicitly]
     public class GetFoobarRequestModelValidator : AbstractValidator<GetFoobarRequestModel>
     {
         public GetFoobarRequestModelValidator()
@@ -18,13 +24,15 @@ public class ResponseModelTypeIsNotOneOf
         }
     }
 
+    [UsedImplicitly]
     public class GetFoobarResponseModel
     {
     }
 
-    public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, string>
+    [UsedImplicitly]
+    public class GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, NotFound>>
     {
-        public Task<string> Execute(GetFoobarRequestModel model)
+        public Task<OneOf<GetFoobarResponseModel, NotFound>> Execute(GetFoobarRequestModel model)
         {
             throw new NotImplementedException();
         }

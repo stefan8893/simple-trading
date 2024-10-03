@@ -71,15 +71,22 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         var interactorWithMissingSuffix = interactorImplementors
             .Where(x => !x.Interactor.Name.EndsWith("Interactor"))
             .Select(x =>
-                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]));
+                new BadInteractorDiagnosticContext(x, GetValidatorsOrDefault(x)));
 
         return interactorWithMissingSuffix
             .Where(x => x.Interactor.Locations.Any())
             .Select(badInteractor => Diagnostic.Create(
                 Rules.MissingInteractorSuffix,
                 badInteractor.Interactor.Locations.First(),
-                badInteractor.RequestModel.Name)
+                badInteractor.Interactor.Name)
             );
+
+        List<INamedTypeSymbol> GetValidatorsOrDefault(InteractorImplementorContext x)
+        {
+            return abstractValidatorByRequestModelName.TryGetValue(x.RequestModel.Name, out var validators) 
+                ? validators 
+                : [];
+        }
     }
 
     private static List<InteractorImplementorContext> GetInteractorImplementors(CompilationAnalysisContext context,

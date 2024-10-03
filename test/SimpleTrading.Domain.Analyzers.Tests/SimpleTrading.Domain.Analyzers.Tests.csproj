@@ -46,6 +46,21 @@
         <Compile Update="TestCases\ResponseModelTypeIsNotOneOf.cs">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
+        <Compile Update="TestCases\InteractorWithMissingInteractorSuffix.cs">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
+        <Compile Update="TestSourceFiles\InteractorWithMissingInteractorSuffix.cs">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
+        <Compile Update="TestSourceFiles\ResponseModelTypeIsNotOneOf.cs">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
+        <Compile Update="TestSourceFiles\ValidatorAndBadInputCaseExists.cs">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
+        <Compile Update="TestSourceFiles\ValidatorExistsForRequestModel.cs">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
     </ItemGroup>
 
 </Project>
