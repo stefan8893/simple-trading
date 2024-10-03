@@ -22,7 +22,7 @@ public class TestingWebApplicationFactory<TProgram> : WebApplicationFactory<TPro
 
         return base.CreateHost(builder);
     }
-    
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Development");

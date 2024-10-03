@@ -1,11 +1,9 @@
 ﻿using System.Globalization;
 using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.TestInfrastructure;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.User.UseCases;
 
@@ -28,7 +26,7 @@ public class GetUserSettingsTests : DomainTests
         var userSettings = await ServiceLocator
             .Resolve<IUserSettingsRepository>()
             .GetUserSettings();
-        
+
         userSettings.Language = null;
 
         // act

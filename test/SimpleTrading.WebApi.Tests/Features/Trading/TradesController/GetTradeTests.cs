@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Trading;

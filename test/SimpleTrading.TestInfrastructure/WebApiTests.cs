@@ -17,8 +17,8 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
 {
     private TradingDbContext? _dbContext;
-    private IServiceScope? _serviceScope;
     private ILifetimeScope? _lifetimeScope;
+    private IServiceScope? _serviceScope;
 
     protected TradingDbContext DbContext => _dbContext!;
 

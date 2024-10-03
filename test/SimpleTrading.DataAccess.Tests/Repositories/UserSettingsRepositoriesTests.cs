@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
