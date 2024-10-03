@@ -17,8 +17,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         var connectionString = configuration.GetConnectionString(dbProvider)
                                ?? throw new Exception("Missing connection string");
 
-        var dbContextOptionsBuilder = GetDbContextOptionsBuilder(dbProvider, connectionString)
-                .UseLoggerFactory(new SerilogLoggerFactory());
+        var dbContextOptionsBuilder = GetDbContextOptionsBuilder(dbProvider, connectionString);
 
         builder.Register<TradingDbContext>(ctx =>
         {

@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SimpleTrading.WebApi.Extensions;
 
 namespace SimpleTrading.WebApi.Filter;
 
+[UsedImplicitly]
 public class ValidationFilter(IServiceProvider serviceProvider) : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)

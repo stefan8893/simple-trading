@@ -6,7 +6,7 @@ namespace SimpleTrading.Domain.Infrastructure;
 
 public abstract class PaginationRequestModel
 {
-    public const int DefaultPageSize = 50;
+    private const int DefaultPageSize = 50;
 
     /// <summary>
     ///     Pages start at one (one-based)

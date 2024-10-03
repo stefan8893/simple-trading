@@ -12,8 +12,7 @@ public static class DropDatabaseCommand
         "Drops the database, but only if it is not 'SqlServer'. Be careful, all your data will be lost");
 
     private static readonly Option<bool> ForceOption = new(["-f", "--force"],
-        "Drop the db even it's 'SqlServer'");
-
+        "Drop the db even it's SqlServer");
 
     public static Command Create(WebApplication app)
     {

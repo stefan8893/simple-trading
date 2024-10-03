@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentValidation;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Serilog;
@@ -73,6 +74,7 @@ await rootCommand.InvokeAsync(args);
 
 namespace SimpleTrading.WebApi
 {
+    [UsedImplicitly]
     public class Program
     {
     }

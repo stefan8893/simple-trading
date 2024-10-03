@@ -17,7 +17,7 @@ public static class CreateDatabaseCommand
         "An already existing database gets dropped");
 
     private static readonly Option<bool> ForceOption = new(["-f", "--force"],
-        "Drop the db even it's 'SqlServer'");
+        "Drop the db even it's SqlServer");
 
     public static Command Create(WebApplication app)
     {
