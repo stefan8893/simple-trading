@@ -21,4 +21,14 @@ internal static class Rules
         DiagnosticSeverity.Error,
         true,
         "The validation is done automatically if there exists a validator for the request model. If that validation fails the interactor is not being called and the caller receives the response model directly, that is the 'OneOf<BadInput>'. You must provide the 'BadInput' case in the signature of your use case interactor.");
+    
+    private const string ConventionCategory = "Convention";
+
+    public static readonly DiagnosticDescriptor MissingInteractorSuffix = new("ST0003",
+        "Interactors must have the suffix 'Interactor'",
+        "{0} must end with 'Interactor', since it implements 'IInteractor'",
+        ConventionCategory,
+        DiagnosticSeverity.Error,
+        true,
+        "By convention all interactors that implements IInteractor must have the suffix 'Interactor'.");
 }

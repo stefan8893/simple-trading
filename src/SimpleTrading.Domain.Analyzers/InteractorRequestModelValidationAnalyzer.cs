@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using SimpleTrading.Domain.Analyzers.SymbolCollector;
@@ -9,7 +10,9 @@ namespace SimpleTrading.Domain.Analyzers;
 public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
-        ImmutableArray.Create(Rules.MissingBadInputCase, Rules.ResponseModelTypeMustBeOneOf);
+        ImmutableArray.Create(Rules.MissingBadInputCase,
+            Rules.ResponseModelTypeMustBeOneOf,
+            Rules.MissingInteractorSuffix);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -47,11 +50,36 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             interactorsWithRequestModelValidators,
             validatorByRequestModelName);
 
+        var missingInteractorSuffixDiagnostics = CreateMissingInteractorSuffixDiagnostics(interactorImplementors,
+            validatorByRequestModelName);
+
         if (context.CancellationToken.IsCancellationRequested)
             return;
 
-        foreach (var diagnostic in missingBadInputCaseDiagnostics.Concat(responseModelTypeIsNotOneOfDiagnostics))
+        var diagnostics = missingBadInputCaseDiagnostics
+            .Concat(responseModelTypeIsNotOneOfDiagnostics)
+            .Concat(missingInteractorSuffixDiagnostics);
+
+        foreach (var diagnostic in diagnostics)
             context.ReportDiagnostic(diagnostic);
+    }
+
+    private static IEnumerable<Diagnostic> CreateMissingInteractorSuffixDiagnostics(
+        List<InteractorImplementorContext> interactorImplementors,
+        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+    {
+        var interactorWithMissingSuffix = interactorImplementors
+            .Where(x => !x.Interactor.Name.EndsWith("Interactor"))
+            .Select(x =>
+                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]));
+
+        return interactorWithMissingSuffix
+            .Where(x => x.Interactor.Locations.Any())
+            .Select(badInteractor => Diagnostic.Create(
+                Rules.MissingInteractorSuffix,
+                badInteractor.Interactor.Locations.First(),
+                badInteractor.RequestModel.Name)
+            );
     }
 
     private static List<InteractorImplementorContext> GetInteractorImplementors(CompilationAnalysisContext context,
@@ -83,13 +111,12 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 
     private static IEnumerable<Diagnostic> CreateResponseModelTypeIsNotOneOfDiagnostics(
         List<InteractorImplementorContext> validatableInteractors,
-        Dictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
         var validatableInteractorsWithoutOneOfResponseModel = validatableInteractors
             .Where(x => !x.IsResponseModelOneOf)
             .Select(x =>
-                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]))
-            .ToList();
+                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]));
 
         return validatableInteractorsWithoutOneOfResponseModel
             .Where(x => x.Interactor.Locations.Any())
@@ -102,14 +129,13 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 
     private static IEnumerable<Diagnostic> CreateMissingBadInputCaseDiagnostics(
         List<InteractorImplementorContext> validatableInteractors,
-        Dictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
         var validatableInteractorsWithoutBadInputCase = validatableInteractors
             .Where(x => x.IsResponseModelOneOf)
             .Where(x => !x.HasResponseModelOneOfCase("BadInput"))
             .Select(x =>
-                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]))
-            .ToList();
+                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]));
 
         return validatableInteractorsWithoutBadInputCase
             .Where(x => x.Interactor.Locations.Any())
