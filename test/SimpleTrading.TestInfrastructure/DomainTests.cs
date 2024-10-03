@@ -56,7 +56,7 @@ public abstract class DomainTests
     }
 
     /// <summary>
-    ///     OverrideServices will be invoked before each test run
+    ///     Will be invoked before each test run
     /// </summary>
     /// <param name="builder"></param>
     protected virtual void OverrideServices(ContainerBuilder builder)
