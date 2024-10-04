@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using SimpleTrading.Domain.Analyzers.SymbolCollector;
@@ -37,56 +36,27 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             return;
 
         var interactorImplementors = GetInteractorImplementors(context, interactorInterface);
-
-        var interactorsWithRequestModelValidators = interactorImplementors
-            .Where(x => validatorByRequestModelName.ContainsKey(x.RequestModel.Name))
-            .ToList();
-
-        var missingBadInputCaseDiagnostics = CreateMissingBadInputCaseDiagnostics(
-            interactorsWithRequestModelValidators,
-            validatorByRequestModelName);
-
-        var responseModelTypeIsNotOneOfDiagnostics = CreateResponseModelTypeIsNotOneOfDiagnostics(
-            interactorsWithRequestModelValidators,
-            validatorByRequestModelName);
-
-        var missingInteractorSuffixDiagnostics = CreateMissingInteractorSuffixDiagnostics(interactorImplementors,
-            validatorByRequestModelName);
+        var diagnostics = GatherDiagnostics(validatorByRequestModelName, interactorImplementors);
 
         if (context.CancellationToken.IsCancellationRequested)
             return;
-
-        var diagnostics = missingBadInputCaseDiagnostics
-            .Concat(responseModelTypeIsNotOneOfDiagnostics)
-            .Concat(missingInteractorSuffixDiagnostics);
 
         foreach (var diagnostic in diagnostics)
             context.ReportDiagnostic(diagnostic);
     }
 
-    private static IEnumerable<Diagnostic> CreateMissingInteractorSuffixDiagnostics(
-        List<InteractorImplementorContext> interactorImplementors,
-        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+    private static INamedTypeSymbol? FindInteractorInterface(CompilationAnalysisContext context)
     {
-        var interactorWithMissingSuffix = interactorImplementors
-            .Where(x => !x.Interactor.Name.EndsWith("Interactor"))
-            .Select(x =>
-                new BadInteractorDiagnosticContext(x, GetValidatorsOrDefault(x)));
+        return context.Compilation
+            .GetSymbolsWithName(x => x == "IInteractor", SymbolFilter.Type)
+            .OfType<INamedTypeSymbol>()
+            .SingleOrDefault(x => x.MetadataName == "IInteractor`2" && x is {IsGenericType: true, Arity: 2});
+    }
 
-        return interactorWithMissingSuffix
-            .Where(x => x.Interactor.Locations.Any())
-            .Select(badInteractor => Diagnostic.Create(
-                Rules.MissingInteractorSuffix,
-                badInteractor.Interactor.Locations.First(),
-                badInteractor.Interactor.Name)
-            );
-
-        List<INamedTypeSymbol> GetValidatorsOrDefault(InteractorImplementorContext x)
-        {
-            return abstractValidatorByRequestModelName.TryGetValue(x.RequestModel.Name, out var validators) 
-                ? validators 
-                : [];
-        }
+    private static IEnumerable<INamedTypeSymbol> FindAbstractValidators(CompilationAnalysisContext context)
+    {
+        return new AbstractValidatorSymbolCollector(context.CancellationToken)
+            .CollectIn(context.Compilation.GlobalNamespace);
     }
 
     private static List<InteractorImplementorContext> GetInteractorImplementors(CompilationAnalysisContext context,
@@ -102,18 +72,51 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             .ToList();
     }
 
-    private static IEnumerable<INamedTypeSymbol> FindAbstractValidators(CompilationAnalysisContext context)
+    private static InteractorImplementorContext? AddRequestAndResponseModelSymbols(
+        INamedTypeSymbol interactorImplementor)
     {
-        return new AbstractValidatorSymbolCollector(context.CancellationToken)
-            .CollectIn(context.Compilation.GlobalNamespace);
+        var symbol = interactorImplementor
+            .AllInterfaces
+            .FirstOrDefault(i => i.MetadataName == "IInteractor`2");
+
+        if (symbol is null)
+            return null;
+
+        var typeArguments = symbol
+            .TypeArguments
+            .OfType<INamedTypeSymbol>()
+            .ToImmutableArray();
+
+        if (typeArguments.Length != 2)
+            return null;
+
+        return new InteractorImplementorContext(interactorImplementor,
+            typeArguments[0],
+            typeArguments[1]);
     }
 
-    private static INamedTypeSymbol? FindInteractorInterface(CompilationAnalysisContext context)
+    private static IEnumerable<Diagnostic> GatherDiagnostics(
+        IReadOnlyDictionary<string, List<INamedTypeSymbol>> validatorByRequestModelName,
+        List<InteractorImplementorContext> interactorImplementors)
     {
-        return context.Compilation
-            .GetSymbolsWithName(x => x == "IInteractor", SymbolFilter.Type)
-            .OfType<INamedTypeSymbol>()
-            .SingleOrDefault(x => x.MetadataName == "IInteractor`2" && x is {IsGenericType: true, Arity: 2});
+        var interactorsWithRequestModelValidators = interactorImplementors
+            .Where(x => validatorByRequestModelName.ContainsKey(x.RequestModel.Name))
+            .ToList();
+
+        var missingBadInputCaseDiagnostics = CreateMissingBadInputCaseDiagnostics(
+            interactorsWithRequestModelValidators,
+            validatorByRequestModelName);
+
+        var responseModelTypeIsNotOneOfDiagnostics = CreateResponseModelTypeIsNotOneOfDiagnostics(
+            interactorsWithRequestModelValidators,
+            validatorByRequestModelName);
+
+        var missingInteractorSuffixDiagnostics = CreateMissingInteractorSuffixDiagnostics(interactorImplementors,
+            validatorByRequestModelName);
+
+        return missingBadInputCaseDiagnostics
+            .Concat(responseModelTypeIsNotOneOfDiagnostics)
+            .Concat(missingInteractorSuffixDiagnostics);
     }
 
     private static IEnumerable<Diagnostic> CreateResponseModelTypeIsNotOneOfDiagnostics(
@@ -153,26 +156,28 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             );
     }
 
-    private static InteractorImplementorContext? AddRequestAndResponseModelSymbols(
-        INamedTypeSymbol interactorImplementor)
+    private static IEnumerable<Diagnostic> CreateMissingInteractorSuffixDiagnostics(
+        List<InteractorImplementorContext> interactorImplementors,
+        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
-        var symbol = interactorImplementor
-            .AllInterfaces
-            .FirstOrDefault(i => i.MetadataName == "IInteractor`2");
+        var interactorWithMissingSuffix = interactorImplementors
+            .Where(x => !x.Interactor.Name.EndsWith("Interactor"))
+            .Select(x =>
+                new BadInteractorDiagnosticContext(x, GetValidatorsOrDefault(x)));
 
-        if (symbol is null)
-            return null;
+        return interactorWithMissingSuffix
+            .Where(x => x.Interactor.Locations.Any())
+            .Select(badInteractor => Diagnostic.Create(
+                Rules.MissingInteractorSuffix,
+                badInteractor.Interactor.Locations.First(),
+                badInteractor.Interactor.Name)
+            );
 
-        var typeArguments = symbol
-            .TypeArguments
-            .OfType<INamedTypeSymbol>()
-            .ToImmutableArray();
-
-        if (typeArguments.Length != 2)
-            return null;
-
-        return new InteractorImplementorContext(interactorImplementor,
-            typeArguments[0],
-            typeArguments[1]);
+        List<INamedTypeSymbol> GetValidatorsOrDefault(InteractorImplementorContext x)
+        {
+            return abstractValidatorByRequestModelName.TryGetValue(x.RequestModel.Name, out var validators)
+                ? validators
+                : [];
+        }
     }
 }

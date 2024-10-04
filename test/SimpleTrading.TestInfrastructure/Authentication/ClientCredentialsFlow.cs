@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace SimpleTrading.TestInfrastructure.Authentication;
 
@@ -11,6 +12,7 @@ public record ClientCredentialsFlowConfiguration
     public string? Scope { get; set; }
 }
 
+[UsedImplicitly]
 public record TokenResponse
 {
     [JsonPropertyName("access_token")] public string? AccessToken { get; set; }
@@ -27,7 +29,7 @@ public class ClientCredentialsFlow(HttpClient httpClient)
     {
     }
 
-    public async Task<TokenResponse> AcquireTokenAsync(ClientCredentialsFlowConfiguration config)
+    public async Task<TokenResponse> AcquireToken(ClientCredentialsFlowConfiguration config)
     {
         if (string.IsNullOrWhiteSpace(config.TokenEndpoint))
             throw new Exception($"Missing {nameof(config.TokenEndpoint)}");

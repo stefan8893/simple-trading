@@ -2,13 +2,11 @@ using System.CommandLine;
 using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Serilog;
 using SimpleTrading.DataAccess;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
@@ -26,16 +24,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
 });
 
 builder.Services.AddSerilog(lc => lc.ReadFrom.Configuration(builder.Configuration));
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(_ => { },
-        options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
-
-var clientAppEntraIdConfig = builder.Configuration
-                                 .GetSection("Auth:SimpleTradingClientApp")
-                                 .Get<ClientAppEntraIdConfig>()
-                             ?? throw new Exception("Missing Entra ID settings");
-
 builder.Services
     .AddControllers(o =>
     {
@@ -45,8 +33,18 @@ builder.Services
     .ConfigureApiBehaviorOptions(o => o.SuppressMapClientErrors = true)
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(_ => { },
+        options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
+
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
+
+var clientAppEntraIdConfig = builder.Configuration
+                                 .GetSection("Auth:SimpleTradingClientApp")
+                                 .Get<ClientAppEntraIdConfig>()
+                             ?? throw new Exception("Missing Entra ID settings");
+
 builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 
 var app = builder.Build();
