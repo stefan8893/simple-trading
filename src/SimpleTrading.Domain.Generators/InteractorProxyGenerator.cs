@@ -33,8 +33,10 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         if (interactorCtx is null)
             return;
 
+        var interactorProxySourceTemplate = new InteractorProxySourceTemplate(interactorCtx);
+
         ctx.AddSource($"{interactorCtx.InteractorName}.g.cs",
-            SourceText.From(SourceTemplates.CreateProxy(interactorCtx), Encoding.UTF8));
+            SourceText.From(interactorProxySourceTemplate.GenerateConcreteProxy(), Encoding.UTF8));
     }
 
     private static InteractorContext? GatherInteractorContext(INamedTypeSymbol concreteInteractor)
