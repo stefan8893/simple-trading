@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
@@ -10,20 +10,16 @@ namespace SimpleTrading.Domain.Trading.UseCases.References.AddReference;
 
 using AddReferenceResponse = OneOf<Completed<Guid>, BadInput, NotFound, BusinessError>;
 
+[UsedImplicitly]
 public class AddReferenceInteractor(
-    IValidator<AddReferenceRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
-    UtcNow utcNow) : InteractorBase, IAddReference
+    UtcNow utcNow) : InteractorBase, IInteractor<AddReferenceRequestModel, AddReferenceResponse>
 {
     private const ushort MaxReferencesPerTrade = 50;
 
     public async Task<AddReferenceResponse> Execute(AddReferenceRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);

@@ -2,6 +2,6 @@
 
 public interface IUserSettingsRepository
 {
-    ValueTask<UserSettings> GetUserSettings();
-    public ValueTask<UserSettings?> GetUserSettingsOrDefault();
+    Task<UserSettings> GetUserSettings();
+    public Task<UserSettings?> GetUserSettingsOrDefault();
 }

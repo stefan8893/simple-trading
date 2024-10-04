@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-
-namespace SimpleTrading.Domain.Infrastructure;
+﻿namespace SimpleTrading.Domain.Infrastructure;
 
 public abstract class InteractorBase
 {
@@ -12,41 +10,6 @@ public abstract class InteractorBase
     protected static Completed<T> Completed<T>(T data)
     {
         return new Completed<T>(data);
-    }
-
-    protected static Completed<T> Completed<T>(T data, IEnumerable<Warning> warnings)
-    {
-        return new Completed<T>(data, warnings);
-    }
-
-    protected static Completed<T> Completed<T>(T data, IEnumerable<string> warnings)
-    {
-        return new Completed<T>(data, warnings);
-    }
-
-    protected static Completed<T> Completed<T>(T data, string singleWarning)
-    {
-        return new Completed<T>(data, singleWarning);
-    }
-
-    protected static Completed Completed(IEnumerable<Warning> warnings)
-    {
-        return new Completed(warnings);
-    }
-
-    protected static Completed Completed(IEnumerable<string> warnings)
-    {
-        return new Completed(warnings);
-    }
-
-    protected static Completed Completed(string singleWarning)
-    {
-        return new Completed(singleWarning);
-    }
-
-    protected static BadInput BadInput(ValidationResult validationResult)
-    {
-        return new BadInput(validationResult);
     }
 
     protected static NotFound NotFound(Guid resourceId, string? resourceName = null)

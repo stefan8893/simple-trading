@@ -1,17 +1,16 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class DeleteTradeTests : DomainTests
 {
-    private IDeleteTrade Interactor => ServiceLocator.GetRequiredService<IDeleteTrade>();
+    private IDeleteTrade Interactor => ServiceLocator.Resolve<IDeleteTrade>();
 
     [Fact]
     public async Task A_not_existing_trade_cannot_be_deleted()

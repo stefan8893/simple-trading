@@ -1,18 +1,18 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
+using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class SearchTradesSortingTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class SearchTradesSortingTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.GetRequiredService<ISearchTrades>();
+    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
 
     [Fact]
     public async Task Sort_by_invalid_property_does_not_work()
@@ -58,6 +58,35 @@ public class SearchTradesSortingTests(TestingWebApplicationFactory<Program> fact
         pagedTraded.Which.ElementAt(1).Result.Should().Be(ResultModel.Mediocre);
         pagedTraded.Which.ElementAt(2).Result.Should().Be(ResultModel.BreakEven);
         pagedTraded.Which.ElementAt(3).Result.Should().Be(ResultModel.Loss);
+    }
+
+    [Fact]
+    public async Task If_no_sorting_was_specified_the_result_set_is_sorted_by_the_opened_date_descending()
+    {
+        // arrange
+        var initialOpenedDate = DateTime.Parse("2024-08-19T15:00:00").ToUtcKind();
+        var trades = Enumerable.Range(0, 4)
+            .Select(x => TestData.Trade.Default with
+            {
+                Opened = initialOpenedDate.AddDays(x),
+                Size = 5000m * x,
+                Result = (ResultModel) x
+            })
+            .Select(x => x.Build());
+
+        DbContext.Trades.AddRange(trades);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var response = await Interactor.Execute(new SearchTradesRequestModel());
+
+        // assert
+        var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        pagedTraded.Which.Should().HaveCount(4);
+        pagedTraded.Which.ElementAt(0).Opened.UtcDateTime.Should().Be(initialOpenedDate.AddDays(3));
+        pagedTraded.Which.ElementAt(1).Opened.UtcDateTime.Should().Be(initialOpenedDate.AddDays(2));
+        pagedTraded.Which.ElementAt(2).Opened.UtcDateTime.Should().Be(initialOpenedDate.AddDays(1));
+        pagedTraded.Which.ElementAt(3).Opened.UtcDateTime.Should().Be(initialOpenedDate);
     }
 
     [Fact]

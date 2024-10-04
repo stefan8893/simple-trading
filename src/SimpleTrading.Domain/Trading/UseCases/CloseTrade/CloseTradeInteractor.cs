@@ -1,10 +1,9 @@
-﻿using FluentValidation;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using NotFound = SimpleTrading.Domain.Infrastructure.NotFound;
 
 namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
@@ -12,19 +11,15 @@ using CloseTradeResponse =
     OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound,
         BusinessError>;
 
+[UsedImplicitly]
 public class CloseTradeInteractor(
-    IValidator<CloseTradeRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase, ICloseTrade
+    : InteractorBase, IInteractor<CloseTradeRequestModel, CloseTradeResponse>
 {
     public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
@@ -44,16 +39,20 @@ public class CloseTradeInteractor(
 
         var result = trade.Close(closeTradeDto);
 
-        if (result.Value is Completed)
+        if (result.Value is Completed<CloseTradeResult>)
             await uowCommit();
 
-        var closeTradeResponseModel = new CloseTradeResponseModel(trade.Id,
-            trade.Result?.ToResultModel(),
-            trade.Result?.Performance);
-
         return result.Match<CloseTradeResponse>(
-            completed => Completed(closeTradeResponseModel, completed.Warnings),
+            completed => Completed(Map(completed.Data)),
             businessError => businessError
         );
+
+        CloseTradeResponseModel Map(CloseTradeResult closeTradeResult)
+        {
+            return new CloseTradeResponseModel(closeTradeResult.TradeId,
+                closeTradeResult.Result?.ToResultModel(),
+                closeTradeResult.Result?.Performance,
+                closeTradeResult.Warnings);
+        }
     }
 }

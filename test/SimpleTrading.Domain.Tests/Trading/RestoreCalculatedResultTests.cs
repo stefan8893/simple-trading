@@ -7,7 +7,7 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading;
 
-public class ResetManuallyEnteredResultTests : TestBase
+public class RestoreCalculatedResultTests : TestBase
 {
     [Fact]
     public void A_manually_entered_result_gets_successfully_reset()

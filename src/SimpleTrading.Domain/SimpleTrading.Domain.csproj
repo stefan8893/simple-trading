@@ -12,6 +12,8 @@
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="11.10.0"/>
         <PackageReference Include="OneOf" Version="3.0.271"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.2.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -30,6 +32,19 @@
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>SimpleTradingStrings.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj">
+            <PrivateAssets>All</PrivateAssets>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Analyzer</OutputItemType>
+        </ProjectReference>
+        <ProjectReference Include="..\SimpleTrading.Domain.Generators\SimpleTrading.Domain.Generators.csproj">
+            <PrivateAssets>All</PrivateAssets>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Analyzer</OutputItemType>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

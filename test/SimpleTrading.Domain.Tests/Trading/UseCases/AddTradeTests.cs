@@ -1,8 +1,6 @@
 using System.Globalization;
 using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -10,18 +8,16 @@ using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
-using NotFound = SimpleTrading.Domain.Infrastructure.NotFound;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class AddTradeTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-05T14:00:00").ToUtcKind();
 
-    private IAddTrade Interactor => ServiceLocator.GetRequiredService<IAddTrade>();
+    private IAddTrade Interactor => ServiceLocator.Resolve<IAddTrade>();
 
-    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
+    protected override void OverrideServices(ContainerBuilder builder)
     {
         builder.Register<UtcNow>(_ => () => _utcNow);
     }
@@ -414,7 +410,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
@@ -446,7 +442,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
@@ -483,7 +479,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
@@ -595,7 +591,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var newId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
@@ -667,8 +663,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var completed = response.Value.Should().BeOfType<Completed<Guid>>();
-        var addedTradeId = completed.Which.Data;
+        var completed = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>();
+        var addedTradeId = completed.Which.Data.TradeId;
 
         var addedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == addedTradeId);
         addedTrade.Should().NotBeNull();

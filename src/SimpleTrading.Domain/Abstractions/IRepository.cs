@@ -6,13 +6,13 @@ namespace SimpleTrading.Domain.Abstractions;
 
 public interface IRepository<TEntity> where TEntity : IEntity
 {
-    ValueTask<TEntity> Get(Guid id);
-    ValueTask<TEntity?> Find(Guid id);
+    Task<TEntity> Get(Guid id);
+    Task<TEntity?> Find(Guid id);
 
     Task<IReadOnlyList<TEntity>> Find(Expression<Func<TEntity, bool>> filterPredicate,
         IEnumerable<ISort<TEntity>>? sorting = null);
 
-    Task<PagedList<TEntity>> Find(PaginationConfiguration pagination, Expression<Func<TEntity, bool>> filterPredicate,
+    Task<PagedList<TEntity>> Find(Expression<Func<TEntity, bool>> filterPredicate, PaginationConfiguration pagination,
         IEnumerable<ISort<TEntity>>? sorting = null);
 
     void Add(TEntity entity);

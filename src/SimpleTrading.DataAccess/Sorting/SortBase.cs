@@ -4,10 +4,9 @@ using SimpleTrading.Domain.Infrastructure.DataAccess;
 
 namespace SimpleTrading.DataAccess.Sorting;
 
-public abstract class SortBase<TEntity>(string propertyName, Order order) : ISort<TEntity>
+public abstract class SortBase<TEntity>(Order order) : ISort<TEntity>
     where TEntity : IEntity
 {
-    public string PropertyName { get; init; } = propertyName;
-    public Order Order { get; init; } = order;
+    public Order Order { get; } = order;
     public abstract Expression<Func<TEntity, object?>> Selector { get; }
 }

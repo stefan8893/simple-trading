@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
+[UsedImplicitly]
 public class SizeEqualToFilterPredicate(IValueParser<decimal> valueParser)
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.EqualTo, valueParser)
 {
@@ -13,6 +15,7 @@ public class SizeEqualToFilterPredicate(IValueParser<decimal> valueParser)
     }
 }
 
+[UsedImplicitly]
 public class SizeGreaterThanFilterPredicate(IValueParser<decimal> valueParser)
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.GreaterThan, valueParser)
 {
@@ -22,6 +25,7 @@ public class SizeGreaterThanFilterPredicate(IValueParser<decimal> valueParser)
     }
 }
 
+[UsedImplicitly]
 public class SizeGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.GreaterThanOrEqualTo,
         valueParser)
@@ -32,6 +36,7 @@ public class SizeGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> value
     }
 }
 
+[UsedImplicitly]
 public class SizeLessThanFilterPredicate(IValueParser<decimal> valueParser)
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.LessThan, valueParser)
 {
@@ -41,6 +46,7 @@ public class SizeLessThanFilterPredicate(IValueParser<decimal> valueParser)
     }
 }
 
+[UsedImplicitly]
 public class SizeLessThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.LessThanOrEqualTo, valueParser)
 {
@@ -50,6 +56,7 @@ public class SizeLessThanOrEqualToFilterPredicate(IValueParser<decimal> valuePar
     }
 }
 
+[UsedImplicitly]
 public class SizeNotEqualToFilterPredicate(IValueParser<decimal> valueParser)
     : FilterPredicateBase<Trade, decimal>(PropertyFilter.Size, PropertyFilter.Operator.NotEqualTo, valueParser)
 {

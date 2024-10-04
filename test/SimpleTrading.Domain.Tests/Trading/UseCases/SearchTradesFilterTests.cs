@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
@@ -7,13 +7,12 @@ using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class SearchTradesTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.GetRequiredService<ISearchTrades>();
+    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
 
     [Fact]
     public async Task Greater_than_opened_date_with_comparison_value_in_local_time_returns_correct_result()

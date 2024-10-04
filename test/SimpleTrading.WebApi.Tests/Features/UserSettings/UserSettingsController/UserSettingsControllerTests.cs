@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -23,7 +22,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     {
         // arrange
         var client = await CreateClient();
-        var userSettings = await ServiceLocator.GetRequiredService<IUserSettingsRepository>().GetUserSettings();
+        var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
         userSettings.Language = "de";
@@ -43,7 +42,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     {
         // arrange
         var client = await CreateClient();
-        var userSettings = await ServiceLocator.GetRequiredService<IUserSettingsRepository>().GetUserSettings();
+        var userSettings = await ServiceLocator
+            .Resolve<IUserSettingsRepository>()
+            .GetUserSettings();
+
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
         userSettings.Language = "de";

@@ -9,16 +9,18 @@ namespace SimpleTrading.DataAccess.Repositories;
 
 public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : class, IEntity
 {
-    public async ValueTask<T> Get(Guid id)
+    public async Task<T> Get(Guid id)
     {
         var entity = await dbContext.FindAsync<T>(id);
 
         return entity ?? throw new Exception($"{typeof(T).Name} not found.");
     }
 
-    public ValueTask<T?> Find(Guid id)
+    public Task<T?> Find(Guid id)
     {
-        return dbContext.FindAsync<T>(id);
+        return dbContext
+            .FindAsync<T>(id)
+            .AsTask();
     }
 
     public async Task<IReadOnlyList<T>> Find(Expression<Func<T, bool>> filterPredicate,
@@ -28,7 +30,7 @@ public class RepositoryBase<T>(DbContext dbContext) : IRepository<T> where T : c
             .ToListAsync();
     }
 
-    public async Task<PagedList<T>> Find(PaginationConfiguration pagination, Expression<Func<T, bool>> filterPredicate,
+    public async Task<PagedList<T>> Find(Expression<Func<T, bool>> filterPredicate, PaginationConfiguration pagination,
         IEnumerable<ISort<T>>? sorting = null)
     {
         var page = pagination.Page;

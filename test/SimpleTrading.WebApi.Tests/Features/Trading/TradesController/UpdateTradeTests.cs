@@ -70,7 +70,8 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task A_trades_result_cannot_be_successfully_updated_since_balance_and_closed_date_are_missing_and_the_trade_is_not_closed()
+    public async Task
+        A_trades_result_cannot_be_successfully_updated_since_balance_and_closed_date_are_missing_and_the_trade_is_not_closed()
     {
         // arrange
         var client = await CreateClient();
@@ -89,10 +90,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "ManuallyEnteredResult" && 
-                              x.Messages.Single() == "'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
+            .And.Contain(x => x.Identifier == "ManuallyEnteredResult" &&
+                              x.Messages.Single() ==
+                              "'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
     }
-    
+
     [Fact]
     public async Task A_trades_result_can_be_successfully_updated_to_null_since_the_trade_is_closed()
     {
@@ -122,7 +124,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Result.Should().BeNull();
     }
-    
+
     [Fact]
     public async Task A_trades_result_will_not_be_updated_if_manually_entered_result_is_specified()
     {
@@ -191,7 +193,8 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Closed" && 
-                              x.Messages.Single() == "'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
+            .And.Contain(x => x.Identifier == "Closed" &&
+                              x.Messages.Single() ==
+                              "'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
     }
 }

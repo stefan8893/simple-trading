@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
 using SimpleTrading.Domain.Trading;
@@ -55,27 +54,23 @@ public class ReferencesController : ControllerBase
     }
 
     [HttpPost(Name = nameof(AddReference))]
-    [ProducesResponseType<SuccessResponse<Guid>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> AddReference(
         [FromServices] IAddReference addReference,
-        [FromServices] IValidator<AddReferenceDto> validator,
         [FromRoute] Guid tradeId,
-        [FromBody] AddReferenceDto dto)
+        [FromBody] AddReferenceDto addReferenceDto)
     {
-        var validationResult = await validator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         var addReferenceRequestModel =
-            new AddReferenceRequestModel(tradeId, dto.Type.ToDomainReferenceType(), dto.Link!, dto.Notes);
+            new AddReferenceRequestModel(tradeId, addReferenceDto.Type.ToDomainReferenceType(), addReferenceDto.Link!,
+                addReferenceDto.Notes);
 
         var result = await addReference.Execute(addReferenceRequestModel);
 
         return result.Match(
-            completed => Ok(SuccessResponse<Guid>.From(completed.Data, completed.Warnings)),
+            completed => Ok(completed.Data),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult(),
             businessError => businessError.ToActionResult()
@@ -83,32 +78,27 @@ public class ReferencesController : ControllerBase
     }
 
     [HttpPatch("{referenceId:guid}", Name = nameof(UpdateReference))]
-    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateReference(
         [FromServices] IUpdateReference updateReference,
-        [FromServices] IValidator<UpdateReferenceDto> validator,
         [FromRoute] Guid tradeId,
         [FromRoute] Guid referenceId,
         [FromBody] UpdateReferenceDto dto)
     {
-        var validationResult = await validator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-            return validationResult.ToActionResult();
-
         var addReferenceRequestModel = MapToRequestModel(tradeId, referenceId, dto);
         var result = await updateReference.Execute(addReferenceRequestModel);
 
         return result.Match(
-            completed => Ok(SuccessResponse.From(completed.Warnings)),
+            completed => NoContent(),
             badInput => badInput.ToActionResult(),
             notFound => notFound.ToActionResult()
         );
     }
 
     [HttpDelete("{referenceId:guid}", Name = nameof(DeleteReference))]
-    [ProducesResponseType<SuccessResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteReference(
         [FromServices] IDeleteReference deleteReference,
@@ -118,13 +108,13 @@ public class ReferencesController : ControllerBase
         var result = await deleteReference.Execute(new DeleteReferenceRequestModel(tradeId, referenceId));
 
         return result.Match(
-            completed => Ok(SuccessResponse.From(completed.Warnings)),
+            completed => NoContent(),
             notFound => notFound.ToActionResult()
         );
     }
 
     [HttpDelete(Name = nameof(DeleteReferences))]
-    [ProducesResponseType<SuccessResponse<ushort>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ushort>(StatusCodes.Status200OK)]
     [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteReferences(
         [FromServices] IDeleteReferences deleteReferences,
@@ -133,7 +123,7 @@ public class ReferencesController : ControllerBase
         var result = await deleteReferences.Execute(new DeleteReferencesRequestModel(tradeId));
 
         return result.Match(
-            completed => Ok(SuccessResponse<ushort>.From(completed)),
+            completed => Ok(completed.Data),
             notFound => notFound.ToActionResult()
         );
     }

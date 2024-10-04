@@ -6,7 +6,7 @@ using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Extensions;
 
-public static class ServiceCollectionExtensions
+public static class OpenApiServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureOpenApiDocumentation(this IServiceCollection services,
         ClientAppEntraIdConfig clientAppEntraIdConfig)

@@ -1,17 +1,16 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
-public class DeleteReferencesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class DeleteReferencesTests : DomainTests
 {
-    private IDeleteReferences Interactor => ServiceLocator.GetRequiredService<IDeleteReferences>();
+    private IDeleteReferences Interactor => ServiceLocator.Resolve<IDeleteReferences>();
 
     [Fact]
     public async Task References_can_be_successfully_deleted()

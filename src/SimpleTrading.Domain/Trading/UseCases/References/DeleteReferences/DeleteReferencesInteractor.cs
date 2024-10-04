@@ -1,12 +1,14 @@
-﻿using OneOf;
+﻿using JetBrains.Annotations;
+using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
 
+[UsedImplicitly]
 public class DeleteReferencesInteractor(ITradeRepository tradeRepository, UowCommit uowCommit)
-    : InteractorBase, IDeleteReferences
+    : InteractorBase, IInteractor<DeleteReferencesRequestModel, OneOf<Completed<ushort>, NotFound>>
 {
     public async Task<OneOf<Completed<ushort>, NotFound>> Execute(DeleteReferencesRequestModel model)
     {

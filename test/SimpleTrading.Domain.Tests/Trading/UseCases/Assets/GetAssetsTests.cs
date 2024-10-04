@@ -1,16 +1,15 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.Assets;
 
-public class GetAssetsTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class GetAssetsTests : DomainTests
 {
-    private IGetAssets Interactor => ServiceLocator.GetRequiredService<IGetAssets>();
+    private IGetAssets Interactor => ServiceLocator.Resolve<IGetAssets>();
 
     [Fact]
     public async Task Get_assets_without_search_term_returns_all_assets()

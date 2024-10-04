@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
+[UsedImplicitly]
 public class ProfileRepository(TradingDbContext dbContext) : RepositoryBase<Profile>(dbContext), IProfileRepository
 {
     public async Task<IEnumerable<Profile>> GetAll()

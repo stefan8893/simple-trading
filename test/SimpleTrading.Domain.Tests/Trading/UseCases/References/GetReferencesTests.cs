@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
 
-public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class GetReferencesTests : DomainTests
 {
-    private IGetReferences Interactor => ServiceLocator.GetRequiredService<IGetReferences>();
+    private IGetReferences Interactor => ServiceLocator.Resolve<IGetReferences>();
 
     [Fact]
     public async Task A_non_existing_references_cant_be_returned()

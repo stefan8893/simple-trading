@@ -1,7 +1,5 @@
 ﻿using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using OneOf.Types;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
@@ -10,16 +8,15 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class UpdateTradeTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
-    private IUpdateTrade Interactor => ServiceLocator.GetRequiredService<IUpdateTrade>();
+    private IUpdateTrade Interactor => ServiceLocator.Resolve<IUpdateTrade>();
 
-    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
+    protected override void OverrideServices(ContainerBuilder builder)
     {
         builder.Register<UtcNow>(_ => () => _utcNow);
     }
@@ -202,7 +199,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
@@ -229,9 +226,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        var updatedTradeId = response.Value.Should()
+            .BeOfType<Completed<UpdateTradeResponseModel>>()
+            .Which.Data.TradeId;
 
-        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == updatedTradeId);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.ProfileId.Should().Be(newProfile.Id);
     }
@@ -256,7 +255,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
@@ -385,7 +384,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Balance.Should().Be(newBalance);
@@ -448,7 +447,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.PositionPrices.Should().Be(newPositionPrices);
@@ -486,7 +485,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade?.Result.Should().NotBeNull();
         updatedTrade!.Result!.Performance.Should().Be(85);
@@ -518,7 +517,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
         updatedTrade!.Result.Should().NotBeNull();
@@ -546,10 +545,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" && 
+            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" &&
                               x.ErrorMessage == "'Result' can only be updated, if the trade has already been closed.");
     }
-    
+
     [Fact]
     public async Task Result_cannot_be_overriden_to_null_since_the_trade_is_not_closed()
     {
@@ -598,7 +597,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();

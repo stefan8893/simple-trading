@@ -1,11 +1,14 @@
-﻿using OneOf;
+﻿using JetBrains.Annotations;
+using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 
-public class DeleteTradeInteractor(ITradeRepository tradeRepository, UowCommit uowCommit) : InteractorBase, IDeleteTrade
+[UsedImplicitly]
+public class DeleteTradeInteractor(ITradeRepository tradeRepository, UowCommit uowCommit)
+    : InteractorBase, IInteractor<DeleteTradeRequestModel, OneOf<Completed, NotFound>>
 {
     public async Task<OneOf<Completed, NotFound>> Execute(DeleteTradeRequestModel model)
     {

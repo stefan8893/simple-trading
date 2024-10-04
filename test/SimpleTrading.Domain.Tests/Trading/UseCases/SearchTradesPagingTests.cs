@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class SearchTradesPagingTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class SearchTradesPagingTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.GetRequiredService<ISearchTrades>();
+    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
 
     [Fact]
     public async Task Paged_result_contains_only_requested_subset()
@@ -152,5 +151,33 @@ public class SearchTradesPagingTests(TestingWebApplicationFactory<Program> facto
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
         pagedTrades.Which.Should().HaveCount(3);
         pagedTrades.Which.IsLastPage.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Zero_is_not_a_valid_page_size()
+    {
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            PageSize = 0
+        });
+
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "PageSize" &&
+                              x.ErrorMessage == "'Page size' must be greater than or equal to '1'.");
+    }
+
+    [Fact]
+    public async Task Zero_is_not_a_valid_page_they_start_at_one()
+    {
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            Page = 0
+        });
+
+        var badInput = response.Value.Should().BeOfType<BadInput>();
+        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.PropertyName == "Page" &&
+                              x.ErrorMessage == "'Page' must be greater than or equal to '1'.");
     }
 }

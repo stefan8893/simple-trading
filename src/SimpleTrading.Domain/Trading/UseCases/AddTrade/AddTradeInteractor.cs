@@ -1,31 +1,28 @@
-﻿using FluentValidation;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.DataAccess;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 using AddTradeResponse =
-    OneOf<Completed<Guid>,
+    OneOf<Completed<AddTradeResponseModel>,
         BadInput,
         NotFound,
         BusinessError>;
 
+[UsedImplicitly]
 public class AddTradeInteractor(
-    IValidator<AddTradeRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase, IAddTrade
+    : InteractorBase, IInteractor<AddTradeRequestModel, AddTradeResponse>
 {
     public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var asset = await tradeRepository.FindAsset(model.AssetId);
         if (asset is null)
             return NotFound<Asset>(model.AssetId);
@@ -55,8 +52,11 @@ public class AddTradeInteractor(
         await uowCommit();
 
         return potentiallyClosedTrade.Match<AddTradeResponse>(
-            x => Completed(x.Data.Id, x.Warnings),
-            x => Completed(x.Trade.Id),
+            x => Completed(new AddTradeResponseModel(x.Data.TradeId,
+                x.Data.Result?.ToResultModel(),
+                x.Data.Result?.Performance,
+                x.Data.Warnings)),
+            x => Completed(AddTradeResponseModel.From(x.Trade, [])),
             x => x);
     }
 
@@ -99,7 +99,7 @@ public class AddTradeInteractor(
         return newTrade;
     }
 
-    private OneOf<Completed<Trade>, NothingToClose, BusinessError> TryCloseTrade(
+    private OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError> TryCloseTrade(
         Trade trade,
         AddTradeRequestModel model)
     {
@@ -110,9 +110,9 @@ public class AddTradeInteractor(
             _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndBalance)
         };
 
-        OneOf<Completed<Trade>, BusinessError> Close()
+        OneOf<Completed<CloseTradeResult>, BusinessError> Close()
         {
-            var result = trade.Close(new CloseTradeConfiguration(
+            return trade.Close(new CloseTradeConfiguration(
                 model.Closed!.Value.UtcDateTime,
                 model.Balance!.Value,
                 utcNow)
@@ -120,16 +120,14 @@ public class AddTradeInteractor(
                 ExitPrice = model.ExitPrice,
                 ManuallyEnteredResult = model.ManuallyEnteredResult
             });
-
-            return result.MapT0(x => Completed(trade, x.Warnings));
         }
 
-        OneOf<Completed<Trade>, NothingToClose, BusinessError> Map(
-            OneOf<Completed<Trade>, BusinessError> closeTradeResult)
+        OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError> Map(
+            OneOf<Completed<CloseTradeResult>, BusinessError> closeTradeResult)
         {
             return closeTradeResult
-                .Match<OneOf<Completed<Trade>, NothingToClose, BusinessError>>(
-                    x => Completed(trade, x.Warnings),
+                .Match<OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError>>(
+                    x => x,
                     x => x);
         }
     }

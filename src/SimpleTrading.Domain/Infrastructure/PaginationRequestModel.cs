@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.Domain.Infrastructure;
 
 public abstract class PaginationRequestModel
 {
-    public const int DefaultPageSize = 50;
+    private const int DefaultPageSize = 50;
 
     /// <summary>
     ///     Pages start at one (one-based)
@@ -15,6 +16,7 @@ public abstract class PaginationRequestModel
     public int PageSize { get; set; } = DefaultPageSize;
 }
 
+[UsedImplicitly]
 public class PaginationRequestModelValidator : AbstractValidator<PaginationRequestModel>
 {
     public PaginationRequestModelValidator()
@@ -25,7 +27,7 @@ public class PaginationRequestModelValidator : AbstractValidator<PaginationReque
             .WithName(SimpleTradingStrings.Page);
 
         RuleFor(x => x.PageSize)
-            .GreaterThan(1)
+            .GreaterThanOrEqualTo(1)
             .LessThanOrEqualTo(500)
             .WithName(SimpleTradingStrings.PageSize);
     }

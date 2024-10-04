@@ -1,31 +1,28 @@
-﻿using FluentValidation;
+﻿using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.DataAccess;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 
 using UpdateTradeResponse =
-    OneOf<Completed,
+    OneOf<Completed<UpdateTradeResponseModel>,
         BadInput,
         NotFound,
         BusinessError>;
 
+[UsedImplicitly]
 public class UpdateTradeInteractor(
-    IValidator<UpdateTradeRequestModel> validator,
     ITradeRepository tradeRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
-    : InteractorBase, IUpdateTrade
+    : InteractorBase, IInteractor<UpdateTradeRequestModel, UpdateTradeResponse>
 {
     public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
     {
-        var validationResult = await validator.ValidateAsync(model);
-        if (!validationResult.IsValid)
-            return BadInput(validationResult);
-
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
@@ -38,7 +35,7 @@ public class UpdateTradeInteractor(
         var updateEntitiesResult = await UpdateEntities(trade, model);
         var isCompleted = updateEntitiesResult.IsT0;
         if (!isCompleted)
-            return updateEntitiesResult.Match<UpdateTradeResponse>(_ => Completed(), x => x);
+            return updateEntitiesResult.AsT1;
 
         var updatePropertiesResult = UpdateTradeProperties(trade, model);
         if (updatePropertiesResult.Value is BusinessError propertiesBusinessError)
@@ -52,9 +49,13 @@ public class UpdateTradeInteractor(
 
         await uowCommit();
         return closeTradeResult
-            .Match<UpdateTradeResponse>(x => Completed(x.Warnings),
-                _ => Completed(),
-                x => x);
+            .Match<UpdateTradeResponse>(
+                completed => Completed(new UpdateTradeResponseModel(completed.Data.TradeId,
+                    completed.Data.Result?.ToResultModel(),
+                    completed.Data.Result?.Performance,
+                    completed.Data.Warnings)),
+                nothingToClose => Completed(UpdateTradeResponseModel.From(nothingToClose.Trade, [])),
+                businessError => businessError);
     }
 
     private async Task<OneOf<Completed, NotFound>> UpdateEntities(Trade trade,
@@ -141,11 +142,12 @@ public class UpdateTradeInteractor(
         return true;
     }
 
-    private OneOf<Completed, NothingToClose, BusinessError> CloseTrade(Trade trade, UpdateTradeRequestModel model,
+    private OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError> CloseTrade(Trade trade,
+        UpdateTradeRequestModel model,
         bool positionPricesHaveChanged)
     {
         if (!trade.IsClosed)
-            return new NothingToClose();
+            return new NothingToClose(trade);
 
         var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
@@ -158,7 +160,7 @@ public class UpdateTradeInteractor(
             !manuallyEnteredResultIsSpecified;
 
         if (nothingHasChanged)
-            return new NothingToClose();
+            return new NothingToClose(trade);
 
         var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
         var balance = model.Balance ?? trade.Balance!.Value;
@@ -169,8 +171,12 @@ public class UpdateTradeInteractor(
         };
 
         return trade.Close(closeTradeConfiguration)
-            .Match<OneOf<Completed, NothingToClose, BusinessError>>(x => x, x => x);
+            .Match<OneOf<Completed<CloseTradeResult>,
+                NothingToClose,
+                BusinessError>>(
+                completed => completed,
+                businessError => businessError);
     }
 
-    private record NothingToClose;
+    private record NothingToClose(Trade Trade);
 }

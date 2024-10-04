@@ -1,8 +1,6 @@
 using System.Globalization;
 using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -10,17 +8,16 @@ using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class CloseTradeTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-    private ICloseTrade Interactor => ServiceLocator.GetRequiredService<ICloseTrade>();
+    private ICloseTrade Interactor => ServiceLocator.Resolve<ICloseTrade>();
 
-    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
+    protected override void OverrideServices(ContainerBuilder builder)
     {
         builder.Register<UtcNow>(_ => () => _utcNow);
     }
@@ -90,7 +87,8 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ExitPrice");
+            .And.Contain(x => x.PropertyName == "ExitPrice" &&
+                              x.ErrorMessage == "'Exit price' must be greater than '0'.");
     }
 
     [Fact]
@@ -117,14 +115,12 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         responseModel.Which.Data.Performance.Should().Be(50);
         responseModel.Which.Data.Result.Should().Be(ResultModel.Mediocre);
 
-        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataQuery
         var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         closedTrade.Should().NotBeNull();
 
         closedTrade!.Balance.Should().Be(requestModel.Balance);
         closedTrade.Closed.Should().NotBeNull();
         closedTrade.IsClosed.Should().BeTrue();
-        // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
         closedTrade.PositionPrices.Exit.Should().NotBeNull().And.Be(requestModel.ExitPrice);
     }
 }

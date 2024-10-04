@@ -1,5 +1,8 @@
-﻿namespace SimpleTrading.WebApi.Configuration;
+﻿using JetBrains.Annotations;
 
+namespace SimpleTrading.WebApi.Configuration;
+
+[UsedImplicitly]
 public record Scope(string Value, string Description);
 
 public class ClientAppEntraIdConfig

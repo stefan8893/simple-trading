@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using FluentAssertions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
@@ -7,16 +7,15 @@ using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class RestoreCalculatedResultTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-09-22T20:00:00").ToUtcKind();
-    
-    private IRestoreCalculatedResult Interactor => ServiceLocator.GetRequiredService<IRestoreCalculatedResult>();
-    
+
+    private IRestoreCalculatedResult Interactor => ServiceLocator.Resolve<IRestoreCalculatedResult>();
+
     [Fact]
     public async Task A_not_overriden_result_will_not_be_changed()
     {
@@ -47,7 +46,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
 
         // assert
         var responseModel = response.Value.Should().BeOfType<Completed<RestoreCalculatedResultResponseModel>>();
-        responseModel.Which.Warnings.Should().BeEmpty();
+        responseModel.Which.Data.Warnings.Should().BeEmpty();
         responseModel.Which.Data.Result.Should().NotBeNull().And.Be(ResultModel.Mediocre);
         responseModel.Which.Data.Performance.Should().Be(83);
     }
@@ -61,7 +60,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
         // act
         var requestModel = new RestoreCalculatedResultRequestModel(notExistingTradeId);
         var response = await Interactor.Execute(requestModel);
-        
+
         // assert
         var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
         notFound.Which.ResourceId.Should().Be(notExistingTradeId);
@@ -95,7 +94,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
 
         DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
         await DbContext.SaveChangesAsync();
-        
+
         tradeWithCalculatedMediocreResult.Result!.Name.Should().Be(Result.Loss);
 
         // act
@@ -104,7 +103,7 @@ public class RestoreCalculatedResultTests(TestingWebApplicationFactory<Program> 
 
         // assert
         var responseModel = response.Value.Should().BeOfType<Completed<RestoreCalculatedResultResponseModel>>();
-        responseModel.Which.Warnings.Should().BeEmpty();
+        responseModel.Which.Data.Warnings.Should().BeEmpty();
         responseModel.Which.Data.Result.Should().NotBeNull().And.Be(ResultModel.Mediocre);
         responseModel.Which.Data.Performance.Should().Be(83);
     }

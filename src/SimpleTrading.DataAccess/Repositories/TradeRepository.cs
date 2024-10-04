@@ -1,8 +1,10 @@
-﻿using SimpleTrading.Domain.Trading;
+﻿using JetBrains.Annotations;
+using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.DataAccess.Repositories;
 
+[UsedImplicitly]
 public class TradeRepository(TradingDbContext dbContext) : RepositoryBase<Trade>(dbContext), ITradeRepository
 {
     public void AddReference(Reference reference)
@@ -15,18 +17,24 @@ public class TradeRepository(TradingDbContext dbContext) : RepositoryBase<Trade>
         dbContext.References.RemoveRange(references);
     }
 
-    public ValueTask<Asset?> FindAsset(Guid assetId)
+    public Task<Asset?> FindAsset(Guid assetId)
     {
-        return dbContext.Assets.FindAsync(assetId);
+        return dbContext.Assets
+            .FindAsync(assetId)
+            .AsTask();
     }
 
-    public ValueTask<Profile?> FindProfile(Guid profileId)
+    public Task<Profile?> FindProfile(Guid profileId)
     {
-        return dbContext.Profiles.FindAsync(profileId);
+        return dbContext.Profiles
+            .FindAsync(profileId)
+            .AsTask();
     }
 
-    public ValueTask<Currency?> FindCurrency(Guid currencyId)
+    public Task<Currency?> FindCurrency(Guid currencyId)
     {
-        return dbContext.Currencies.FindAsync(currencyId);
+        return dbContext.Currencies
+            .FindAsync(currencyId)
+            .AsTask();
     }
 }

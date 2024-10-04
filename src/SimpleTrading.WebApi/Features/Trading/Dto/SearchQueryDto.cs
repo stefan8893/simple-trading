@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
-public class SearchQuery : IPagination
+public class SearchQueryDto : IPagination
 {
     public List<string>? Sort { get; set; }
 
@@ -16,7 +17,8 @@ public class SearchQuery : IPagination
     public int? PageSize { get; set; }
 }
 
-public class SearchQueryValidator : AbstractValidator<SearchQuery>
+[UsedImplicitly]
+public class SearchQueryValidator : AbstractValidator<SearchQueryDto>
 {
     public SearchQueryValidator(PropertyFilterValidator propertyFilterValidator)
     {
@@ -25,6 +27,7 @@ public class SearchQueryValidator : AbstractValidator<SearchQuery>
     }
 }
 
+[UsedImplicitly]
 public class PropertyFilterValidator : AbstractValidator<string>
 {
     public PropertyFilterValidator()

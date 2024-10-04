@@ -1,16 +1,15 @@
 ﻿using System.Globalization;
+using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.TestInfrastructure;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.Domain.Tests.User.UseCases;
 
-public class GetUserSettingsTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class GetUserSettingsTests : DomainTests
 {
-    private IGetUserSettings Interactor => ServiceLocator.GetRequiredService<IGetUserSettings>();
+    private IGetUserSettings Interactor => ServiceLocator.Resolve<IGetUserSettings>();
 
     [Fact]
     public async Task UserSettings_can_be_retrieved_successfully()
@@ -24,7 +23,10 @@ public class GetUserSettingsTests(TestingWebApplicationFactory<Program> factory)
     public async Task Language_is_equal_to_culture_language_if_not_overriden()
     {
         // arrange
-        var userSettings = await ServiceLocator.GetRequiredService<IUserSettingsRepository>().GetUserSettings();
+        var userSettings = await ServiceLocator
+            .Resolve<IUserSettingsRepository>()
+            .GetUserSettings();
+
         userSettings.Language = null;
 
         // act
@@ -39,7 +41,10 @@ public class GetUserSettingsTests(TestingWebApplicationFactory<Program> factory)
     public async Task Language_is_not_equal_to_culture_language_if_overriden()
     {
         // arrange
-        var userSettings = await ServiceLocator.GetRequiredService<IUserSettingsRepository>().GetUserSettings();
+        var userSettings = await ServiceLocator
+            .Resolve<IUserSettingsRepository>()
+            .GetUserSettings();
+
         userSettings.Culture = "en-US";
         userSettings.Language = "de";
 

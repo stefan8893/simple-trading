@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto.Reference;
@@ -10,6 +11,7 @@ public record AddReferenceDto
     public string? Notes { get; set; }
 }
 
+[UsedImplicitly]
 public class AddReferenceDtoValidator : AbstractValidator<AddReferenceDto>
 {
     public AddReferenceDtoValidator()

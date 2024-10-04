@@ -1,12 +1,15 @@
 ﻿using System.Globalization;
+using JetBrains.Annotations;
+using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.User.UseCases.GetUserSettings;
 
+[UsedImplicitly]
 public class GetUserSettingsInteractor(IUserSettingsRepository userSettingsRepository)
-    : InteractorBase, IGetUserSettings
+    : InteractorBase, IInteractor<UserSettingsResponseModel>
 {
     public async Task<UserSettingsResponseModel> Execute()
     {

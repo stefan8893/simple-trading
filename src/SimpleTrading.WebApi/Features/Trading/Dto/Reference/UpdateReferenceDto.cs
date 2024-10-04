@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi.Infrastructure;
 
@@ -11,6 +12,7 @@ public record UpdateReferenceDto
     public UpdateValue<string?>? Notes { get; set; }
 }
 
+[UsedImplicitly]
 public class UpdateReferenceDtoValidator : AbstractValidator<UpdateReferenceDto>
 {
     public UpdateReferenceDtoValidator()

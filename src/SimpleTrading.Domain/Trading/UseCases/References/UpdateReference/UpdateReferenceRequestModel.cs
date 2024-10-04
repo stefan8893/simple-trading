@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
@@ -14,6 +15,7 @@ public record UpdateReferenceRequestModel
     public OneOf<string?, None> Notes { get; init; }
 }
 
+[UsedImplicitly]
 public class UpdateReferenceRequestModelValidator : AbstractValidator<UpdateReferenceRequestModel>
 {
     public UpdateReferenceRequestModelValidator()

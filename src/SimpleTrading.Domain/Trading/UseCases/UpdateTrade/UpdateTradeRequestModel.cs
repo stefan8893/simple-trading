@@ -1,4 +1,5 @@
 using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
@@ -26,6 +27,7 @@ public record UpdateTradeRequestModel
     public OneOf<string?, None> Notes { get; set; }
 }
 
+[UsedImplicitly]
 public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeRequestModel>
 {
     private readonly ITradeRepository _tradeRepository;
@@ -56,7 +58,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .SetValidator(openedLessThanOneDayInTheFutureValidator);
 
         RuleFor(x => x.Closed)
-            .MustAsync(async (m, _, _) => await IsTradeClose(m.TradeId))
+            .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
             .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
                 SimpleTradingStrings.Closed))
             .When(x => x.Closed.HasValue);
@@ -67,7 +69,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .When(x => x.Size.HasValue);
 
         RuleFor(x => x.Balance)
-            .MustAsync(async (m, _, _) => await IsTradeClose(m.TradeId))
+            .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
             .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
                 SimpleTradingStrings.Balance))
             .When(x => x.Balance.HasValue);
@@ -79,7 +81,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.ManuallyEnteredResult)
-            .MustAsync(async (m, _, _) => await IsTradeClose(m.TradeId))
+            .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
             .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
                 SimpleTradingStrings.Result))
             .When(x => x.ManuallyEnteredResult.IsT0);
@@ -119,10 +121,12 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .When(x => x.Notes is {IsT0: true, AsT0: not null});
     }
 
-    private async Task<bool> IsTradeClose(Guid tradeId)
+    private async Task<bool> IsTradeClosed(Guid tradeId)
     {
         var trade = await _tradeRepository.Find(tradeId);
 
-        return trade?.IsClosed ?? false;
+        // return true if the trade does not exist
+        // the interactor itself will then handle that case
+        return trade?.IsClosed ?? true;
     }
 }

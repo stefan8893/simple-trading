@@ -21,15 +21,14 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
+        var act = () => client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
             Type = ReferenceTypeDto.TradingView,
             Link = "https://www.tradingview.com/x/RRJnEMaI/"
         });
 
         // assert
-        response.Should().NotBeNull();
-        response.Warnings.Should().BeEmpty();
+        await act.Should().NotThrowAsync();
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
 
         updatedReference.Should().NotBeNull();
@@ -38,7 +37,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     }
 
     [Fact]
-    public async Task An_update_with_an_invalid_types_is_a_bad_request()
+    public async Task An_update_with_an_invalid_type_is_a_bad_request()
     {
         // arrange
         var client = await CreateClient();
