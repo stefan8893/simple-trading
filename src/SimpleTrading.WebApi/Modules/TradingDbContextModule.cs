@@ -36,18 +36,18 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
             new DbContextOptions<TradingDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
 
         if (dbProvider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
-            return GetSqlServerDbContextOptions(connectionString, dbContextOptions);
+            return UseSqlServerDbContextOptions(connectionString, dbContextOptions);
 
         if (dbProvider.Equals("Postgres", StringComparison.OrdinalIgnoreCase))
-            return GetPostgresDbContextOptions(connectionString, dbContextOptions);
+            return UsePostgresDbContextOptions(connectionString, dbContextOptions);
 
         if (dbProvider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
-            return GetSqliteDbContextOptions(connectionString, dbContextOptions);
+            return UseSqliteDbContextOptions(connectionString, dbContextOptions);
 
         throw new Exception("Unknown db provider");
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetSqlServerDbContextOptions(string connectionString,
+    private static DbContextOptionsBuilder<TradingDbContext> UseSqlServerDbContextOptions(string connectionString,
         DbContextOptionsBuilder<TradingDbContext> dbContextOptions)
     {
         const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
@@ -60,7 +60,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         return builder;
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetPostgresDbContextOptions(string connectionString,
+    private static DbContextOptionsBuilder<TradingDbContext> UsePostgresDbContextOptions(string connectionString,
         DbContextOptionsBuilder<TradingDbContext> dbContextOptions)
     {
         const string postgresMigrationsAssembly = "SimpleTrading.DataAccess.Postgres";
@@ -71,7 +71,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         return builder;
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetSqliteDbContextOptions(string connectionString,
+    private static DbContextOptionsBuilder<TradingDbContext> UseSqliteDbContextOptions(string connectionString,
         DbContextOptionsBuilder<TradingDbContext> dbContextOptions)
     {
         const string sqliteMigrationsAssembly = "SimpleTrading.DataAccess.Sqlite";

@@ -103,15 +103,15 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             .Where(x => validatorByRequestModelName.ContainsKey(x.RequestModel.Name))
             .ToList();
 
-        var missingBadInputCaseDiagnostics = CreateMissingBadInputCaseDiagnostics(
+        var missingBadInputCaseDiagnostics = DetectMissingBadInputCaseDiagnostics(
             interactorsWithRequestModelValidators,
             validatorByRequestModelName);
 
-        var responseModelTypeIsNotOneOfDiagnostics = CreateResponseModelTypeIsNotOneOfDiagnostics(
+        var responseModelTypeIsNotOneOfDiagnostics = DetectResponseModelTypeIsNotOneOfDiagnostics(
             interactorsWithRequestModelValidators,
             validatorByRequestModelName);
 
-        var missingInteractorSuffixDiagnostics = CreateMissingInteractorSuffixDiagnostics(interactorImplementors,
+        var missingInteractorSuffixDiagnostics = DetectMissingInteractorSuffixDiagnostics(interactorImplementors,
             validatorByRequestModelName);
 
         return missingBadInputCaseDiagnostics
@@ -119,7 +119,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             .Concat(missingInteractorSuffixDiagnostics);
     }
 
-    private static IEnumerable<Diagnostic> CreateResponseModelTypeIsNotOneOfDiagnostics(
+    private static IEnumerable<Diagnostic> DetectResponseModelTypeIsNotOneOfDiagnostics(
         List<InteractorImplementorContext> validatableInteractors,
         IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
@@ -137,7 +137,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             );
     }
 
-    private static IEnumerable<Diagnostic> CreateMissingBadInputCaseDiagnostics(
+    private static IEnumerable<Diagnostic> DetectMissingBadInputCaseDiagnostics(
         List<InteractorImplementorContext> validatableInteractors,
         IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {
@@ -156,7 +156,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             );
     }
 
-    private static IEnumerable<Diagnostic> CreateMissingInteractorSuffixDiagnostics(
+    private static IEnumerable<Diagnostic> DetectMissingInteractorSuffixDiagnostics(
         List<InteractorImplementorContext> interactorImplementors,
         IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
     {

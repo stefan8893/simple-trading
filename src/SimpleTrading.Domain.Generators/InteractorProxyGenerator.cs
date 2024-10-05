@@ -46,7 +46,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             .FirstOrDefault(static x => IsInteractorInterface(x));
 
         if (closedInteractorInterface is null)
-            throw new Exception($"{concreteInteractor.MetadataName} does not implement 'IInteractor'");
+            return null;
 
         var genericTypeArguments = closedInteractorInterface.TypeArguments
             .OfType<INamedTypeSymbol>()

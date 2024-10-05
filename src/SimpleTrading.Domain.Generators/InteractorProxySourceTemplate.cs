@@ -1,4 +1,4 @@
-﻿namespace SimpleTrading.Domain.Generators;
+namespace SimpleTrading.Domain.Generators;
 
 public class InteractorProxySourceTemplate(InteractorContext context)
 {

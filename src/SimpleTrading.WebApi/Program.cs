@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Serilog;
-using SimpleTrading.DataAccess;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
@@ -18,8 +17,8 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
 {
     b.RegisterModule<WebApiModule>();
-    b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
     b.RegisterModule<DomainModule>();
+    b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
     b.RegisterModule<DataAccessModule>();
 });
 
