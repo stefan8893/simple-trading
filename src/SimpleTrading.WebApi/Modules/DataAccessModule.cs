@@ -61,11 +61,11 @@ public class DataAccessModule : Module
         builder.Register<IReadOnlyDictionary<string, Func<Order, ISort<Trade>>>>(_ =>
                 new Dictionary<string, Func<Order, ISort<Trade>>>(StringComparer.OrdinalIgnoreCase)
                 {
-                    [PropertyFilter.Opened] = order => new SortByOpened(order),
-                    [PropertyFilter.Closed] = order => new SortByClosed(order),
-                    [PropertyFilter.Balance] = order => new SortByBalance(order),
-                    [PropertyFilter.Size] = order => new SortBySize(order),
-                    [PropertyFilter.Result] = order => new SortByResult(order)
+                    [nameof(Trade.Opened)] = order => new SortByOpened(order),
+                    [nameof(Trade.Closed)] = order => new SortByClosed(order),
+                    [nameof(Trade.Balance)] = order => new SortByBalance(order),
+                    [nameof(Trade.Size)] = order => new SortBySize(order),
+                    [nameof(Trade.Result)] = order => new SortByResult(order)
                 })
             .SingleInstance();
     }

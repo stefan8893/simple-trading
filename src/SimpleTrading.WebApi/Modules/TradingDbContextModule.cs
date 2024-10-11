@@ -16,7 +16,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         var connectionString = configuration.GetConnectionString(dbProvider)
                                ?? throw new Exception("Missing connection string");
 
-        var dbContextOptionsBuilder = GetDbContextOptionsBuilder(dbProvider, connectionString);
+        var dbContextOptionsBuilder = GetDefaultDbContextOptionsBuilder(dbProvider, connectionString);
 
         builder.Register<TradingDbContext>(ctx =>
             {
@@ -29,7 +29,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
             .InstancePerLifetimeScope();
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetDbContextOptionsBuilder(string dbProvider,
+    private static DbContextOptionsBuilder<TradingDbContext> GetDefaultDbContextOptionsBuilder(string dbProvider,
         string connectionString)
     {
         var dbContextOptions = new DbContextOptionsBuilder<TradingDbContext>(
@@ -52,12 +52,10 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
     {
         const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
 
-        var builder = dbContextOptions.UseSqlServer(connectionString,
+        return dbContextOptions.UseSqlServer(connectionString,
             x =>
                 x.MigrationsAssembly(sqlServerMigrationsAssembly)
                     .UseAzureSqlDefaults());
-
-        return builder;
     }
 
     private static DbContextOptionsBuilder<TradingDbContext> UsePostgresDbContextOptions(string connectionString,
@@ -65,10 +63,8 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
     {
         const string postgresMigrationsAssembly = "SimpleTrading.DataAccess.Postgres";
 
-        var builder = dbContextOptions.UseNpgsql(connectionString,
+        return dbContextOptions.UseNpgsql(connectionString,
             x => x.MigrationsAssembly(postgresMigrationsAssembly));
-
-        return builder;
     }
 
     private static DbContextOptionsBuilder<TradingDbContext> UseSqliteDbContextOptions(string connectionString,
@@ -76,9 +72,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
     {
         const string sqliteMigrationsAssembly = "SimpleTrading.DataAccess.Sqlite";
 
-        var builder = dbContextOptions.UseSqlite(connectionString,
+        return dbContextOptions.UseSqlite(connectionString,
             x => x.MigrationsAssembly(sqliteMigrationsAssembly));
-
-        return builder;
     }
 }

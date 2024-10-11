@@ -2,11 +2,11 @@
 
 public static class PropertyFilter
 {
-    public const string Opened = nameof(Opened);
-    public const string Closed = nameof(Closed);
-    public const string Balance = nameof(Balance);
-    public const string Size = nameof(Size);
-    public const string Result = nameof(Result);
+    public const string Opened = nameof(Trade.Opened);
+    public const string Closed = nameof(Trade.Closed);
+    public const string Balance = nameof(Trade.Balance);
+    public const string Size = nameof(Trade.Size);
+    public const string Result = nameof(Trade.Result);
 
     public static class Operator
     {
