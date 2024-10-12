@@ -51,9 +51,9 @@ var app = builder.Build();
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRequestLocalization();
 app.UseNotFoundMiddleware();
 
 app.MapControllers()
