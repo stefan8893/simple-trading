@@ -1,43 +1,48 @@
 ﻿using System.Linq.Expressions;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
+using SimpleTrading.Domain.Infrastructure.Filter;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates;
 
-public abstract class FilterPredicateBase<TEntity, TProperty>(
-    string property,
-    string @operator,
-    IValueParser<TProperty> valueParser)
-    : IFilterPredicate<TEntity>
+public abstract class FilterPredicateBase<TEntity, TProperty> : IFilterPredicate<TEntity>
     where TEntity : IEntity
 {
-    private IValueParser<TProperty> ValueParser { get; } = valueParser;
-    public string Property { get; } = property;
-    public string Operator { get; } = @operator;
+    private readonly string _operator;
+    private readonly string _property;
+    private readonly IValueParser<TProperty> _valueParser;
+
+    protected FilterPredicateBase(string property,
+        string @operator,
+        IValueParser<TProperty> valueParser)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(property);
+        ArgumentException.ThrowIfNullOrWhiteSpace(@operator);
+        ArgumentNullException.ThrowIfNull(valueParser);
+
+        _property = property;
+        _operator = @operator;
+        _valueParser = valueParser;
+    }
 
     public virtual bool Match(string property)
     {
-        return !string.IsNullOrWhiteSpace(property) &&
-               Property.Equals(property, StringComparison.OrdinalIgnoreCase);
+        return _property.Equals(property, StringComparison.OrdinalIgnoreCase);
     }
 
     public virtual bool Match(string property, string @operator)
     {
-        if (string.IsNullOrWhiteSpace(property) || string.IsNullOrWhiteSpace(@operator))
-            return false;
-
-        return Property.Equals(property, StringComparison.OrdinalIgnoreCase) &&
-               Operator.Equals(@operator, StringComparison.OrdinalIgnoreCase);
+        return _property.Equals(property, StringComparison.OrdinalIgnoreCase) &&
+               _operator.Equals(@operator, StringComparison.OrdinalIgnoreCase);
     }
 
     public virtual bool CanParse(string comparisonValue, bool isLiteral)
     {
-        return ValueParser.TryParse(comparisonValue, isLiteral, out _);
+        return _valueParser.TryParse(comparisonValue, isLiteral, out _);
     }
 
     public virtual Expression<Func<TEntity, bool>> GetPredicate(string comparisonValue, bool isLiteral)
     {
-        if (!ValueParser.TryParse(comparisonValue, isLiteral, out var value))
+        if (!_valueParser.TryParse(comparisonValue, isLiteral, out var value))
             throw new ArgumentException(
                 "ComparisonValue is not parsable. Did you forget to call CanParse(...)?");
 

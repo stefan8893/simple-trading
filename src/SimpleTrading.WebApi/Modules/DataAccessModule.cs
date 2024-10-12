@@ -6,8 +6,8 @@ using SimpleTrading.DataAccess.Repositories;
 using SimpleTrading.DataAccess.Sorting;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
+using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 using Module = Autofac.Module;
 
 namespace SimpleTrading.WebApi.Modules;

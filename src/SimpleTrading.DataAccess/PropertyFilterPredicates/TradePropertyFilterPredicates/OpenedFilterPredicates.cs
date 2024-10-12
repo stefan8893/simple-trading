@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using JetBrains.Annotations;
+using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 [UsedImplicitly]
 public class OpenedEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Opened, PropertyFilter.Operator.EqualTo, valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Opened, Operator.EqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
@@ -17,7 +17,7 @@ public class OpenedEqualToFilterPredicate(IValueParser<DateTimeOffset> valuePars
 
 [UsedImplicitly]
 public class OpenedGreaterThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Opened, PropertyFilter.Operator.GreaterThan,
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Opened, Operator.GreaterThan,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
@@ -28,7 +28,7 @@ public class OpenedGreaterThanFilterPredicate(IValueParser<DateTimeOffset> value
 
 [UsedImplicitly]
 public class OpenedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Opened, PropertyFilter.Operator.GreaterThanOrEqualTo,
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Opened, Operator.GreaterThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
@@ -39,7 +39,7 @@ public class OpenedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffs
 
 [UsedImplicitly]
 public class OpenedLessThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Opened, PropertyFilter.Operator.LessThan, valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Opened, Operator.LessThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
@@ -49,7 +49,7 @@ public class OpenedLessThanFilterPredicate(IValueParser<DateTimeOffset> valuePar
 
 [UsedImplicitly]
 public class OpenedLessThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Opened, PropertyFilter.Operator.LessThanOrEqualTo,
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Opened, Operator.LessThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
@@ -60,7 +60,7 @@ public class OpenedLessThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset>
 
 [UsedImplicitly]
 public class OpenedNotEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(PropertyFilter.Opened, PropertyFilter.Operator.NotEqualTo, valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Opened, Operator.NotEqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {

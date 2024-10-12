@@ -1045,7 +1045,7 @@ public class SearchTradesTests : DomainTests
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var tradesWithoutResult = Enumerable.Range(0, 2)
-            .Select(x => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default.Build())
             .ToList();
 
         var tradesWithResult = Enumerable.Range(0, 4)
@@ -1086,7 +1086,7 @@ public class SearchTradesTests : DomainTests
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var tradesWithoutResult = Enumerable.Range(0, 2)
-            .Select(x => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default.Build())
             .ToList();
 
         var tradesWithResult = Enumerable.Range(0, 4)
@@ -1129,7 +1129,7 @@ public class SearchTradesTests : DomainTests
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var closedTrades = Enumerable.Range(0, 2)
-            .Select(x => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default.Build())
             .ToList();
 
         var notClosedTrades = Enumerable.Range(0, 4)
@@ -1170,7 +1170,7 @@ public class SearchTradesTests : DomainTests
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var notClosedTrades = Enumerable.Range(0, 2)
-            .Select(x => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default.Build())
             .ToList();
 
         var closedTrades = Enumerable.Range(0, 4)

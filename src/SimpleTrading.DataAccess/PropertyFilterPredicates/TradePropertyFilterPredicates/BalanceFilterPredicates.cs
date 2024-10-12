@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using JetBrains.Annotations;
+using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 [UsedImplicitly]
 public class BalanceEqualToFilterPredicate(IValueParser<decimal?> valueParser)
-    : FilterPredicateBase<Trade, decimal?>(PropertyFilter.Balance, PropertyFilter.Operator.EqualTo, valueParser)
+    : FilterPredicateBase<Trade, decimal?>(TradeProperty.Balance, Operator.EqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal? value)
     {
@@ -17,7 +17,7 @@ public class BalanceEqualToFilterPredicate(IValueParser<decimal?> valueParser)
 
 [UsedImplicitly]
 public class BalanceGreaterThanFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(PropertyFilter.Balance, PropertyFilter.Operator.GreaterThan, valueParser)
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.GreaterThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
@@ -27,7 +27,7 @@ public class BalanceGreaterThanFilterPredicate(IValueParser<decimal> valueParser
 
 [UsedImplicitly]
 public class BalanceGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(PropertyFilter.Balance, PropertyFilter.Operator.GreaterThanOrEqualTo,
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.GreaterThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
@@ -38,7 +38,7 @@ public class BalanceGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> va
 
 [UsedImplicitly]
 public class BalanceLessThanFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(PropertyFilter.Balance, PropertyFilter.Operator.LessThan, valueParser)
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.LessThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
@@ -48,7 +48,7 @@ public class BalanceLessThanFilterPredicate(IValueParser<decimal> valueParser)
 
 [UsedImplicitly]
 public class BalanceLessThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(PropertyFilter.Balance, PropertyFilter.Operator.LessThanOrEqualTo,
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.LessThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
@@ -59,7 +59,7 @@ public class BalanceLessThanOrEqualToFilterPredicate(IValueParser<decimal> value
 
 [UsedImplicitly]
 public class BalanceNotEqualToFilterPredicate(IValueParser<decimal?> valueParser)
-    : FilterPredicateBase<Trade, decimal?>(PropertyFilter.Balance, PropertyFilter.Operator.NotEqualTo, valueParser)
+    : FilterPredicateBase<Trade, decimal?>(TradeProperty.Balance, Operator.NotEqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal? value)
     {

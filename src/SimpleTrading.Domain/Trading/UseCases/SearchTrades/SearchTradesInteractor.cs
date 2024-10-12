@@ -4,9 +4,9 @@ using OneOf;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
+using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.User.DataAccess;
 
