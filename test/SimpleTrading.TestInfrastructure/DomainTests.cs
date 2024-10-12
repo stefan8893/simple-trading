@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using SimpleTrading.DataAccess;
-using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.Modules;
 using Xunit;
 

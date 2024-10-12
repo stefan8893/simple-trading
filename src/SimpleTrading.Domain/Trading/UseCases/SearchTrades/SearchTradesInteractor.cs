@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using JetBrains.Annotations;
 using OneOf;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;

@@ -81,6 +81,6 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             Arity: 1 or 2
         } && candidate
             .ContainingNamespace
-            .ToDisplayString() == "SimpleTrading.Domain.Abstractions";
+            .ToDisplayString().StartsWith("SimpleTrading.Domain.");
     }
 }

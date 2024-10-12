@@ -4,7 +4,7 @@ using SimpleTrading.DataAccess;
 using SimpleTrading.DataAccess.PropertyFilterPredicates;
 using SimpleTrading.DataAccess.Repositories;
 using SimpleTrading.DataAccess.Sorting;
-using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;

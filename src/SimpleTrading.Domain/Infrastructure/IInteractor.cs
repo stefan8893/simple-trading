@@ -1,4 +1,4 @@
-﻿namespace SimpleTrading.Domain.Abstractions;
+﻿namespace SimpleTrading.Domain.Infrastructure;
 
 public interface IInteractor<TResponseModel>
 {

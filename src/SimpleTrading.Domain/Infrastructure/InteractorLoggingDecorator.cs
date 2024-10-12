@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 
 namespace SimpleTrading.Domain.Infrastructure;

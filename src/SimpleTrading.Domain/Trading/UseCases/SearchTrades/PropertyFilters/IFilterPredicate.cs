@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Infrastructure;
 
 namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 

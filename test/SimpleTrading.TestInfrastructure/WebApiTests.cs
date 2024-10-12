@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Client;
 using SimpleTrading.DataAccess;
-using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.TestInfrastructure.Authentication;
 using SimpleTrading.WebApi;
 using Xunit;

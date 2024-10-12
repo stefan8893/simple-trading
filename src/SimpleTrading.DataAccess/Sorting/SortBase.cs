@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using SimpleTrading.Domain.Abstractions;
+using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
 
 namespace SimpleTrading.DataAccess.Sorting;

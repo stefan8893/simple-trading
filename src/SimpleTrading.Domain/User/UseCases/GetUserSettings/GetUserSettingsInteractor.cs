@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using JetBrains.Annotations;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;

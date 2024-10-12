@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
 using FluentValidation;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.Factories;

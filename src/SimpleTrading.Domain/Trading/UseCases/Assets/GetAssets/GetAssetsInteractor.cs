@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using OneOf;
-using SimpleTrading.Domain.Abstractions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 
