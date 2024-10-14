@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.Domain.Tests.Extensions;
 

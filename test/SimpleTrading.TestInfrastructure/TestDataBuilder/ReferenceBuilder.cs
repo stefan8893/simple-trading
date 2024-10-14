@@ -1,5 +1,5 @@
 ﻿using OneOf;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 
 namespace SimpleTrading.TestInfrastructure.TestDataBuilder;

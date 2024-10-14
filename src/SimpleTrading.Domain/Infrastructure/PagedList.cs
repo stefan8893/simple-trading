@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.Domain.Infrastructure;
 

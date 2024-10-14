@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 

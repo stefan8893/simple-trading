@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Resources;
 

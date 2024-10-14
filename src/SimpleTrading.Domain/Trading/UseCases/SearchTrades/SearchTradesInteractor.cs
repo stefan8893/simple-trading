@@ -1,9 +1,9 @@
 ﻿using System.Linq.Expressions;
 using JetBrains.Annotations;
 using OneOf;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;

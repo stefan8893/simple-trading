@@ -1,8 +1,8 @@
 using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.TradeResultAnalyzer;
 using SimpleTrading.Domain.Trading.TradeResultAnalyzer.Decorators;

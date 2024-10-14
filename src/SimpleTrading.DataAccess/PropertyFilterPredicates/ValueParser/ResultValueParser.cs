@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;

@@ -1,5 +1,5 @@
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
 
 namespace SimpleTrading.Domain.User.Factories;
