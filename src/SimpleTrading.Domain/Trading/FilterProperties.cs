@@ -1,6 +1,4 @@
-﻿using SimpleTrading.Domain.Trading;
-
-namespace SimpleTrading.Domain.Infrastructure.Filter;
+﻿namespace SimpleTrading.Domain.Trading;
 
 public static class TradeProperty
 {

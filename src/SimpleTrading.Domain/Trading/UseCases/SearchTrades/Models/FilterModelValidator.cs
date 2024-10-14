@@ -20,18 +20,19 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
             .NotEmpty()
             .Must(x => _filterPredicates.Any(p => p.Match(x)))
             .WithMessage(SimpleTradingStrings.FilterNotSupported)
-            .DependentRules(() => RuleForOperator().DependentRules(RuleForComparisonValue))
+            .DependentRules(RuleForOperator)
             .WithName(SimpleTradingStrings.Field);
     }
 
-    private IRuleBuilderOptions<FilterModel, string> RuleForOperator()
+    private void RuleForOperator()
     {
-        return RuleFor(x => x.Operator)
+        RuleFor(x => x.Operator)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .Must((m, x) => _filterPredicates.Any(p => p.Match(m.PropertyName, x)))
             .WithMessage(SimpleTradingStrings.OperatorNotSupported)
-            .WithName(SimpleTradingStrings.Operator);
+            .WithName(SimpleTradingStrings.Operator)
+            .DependentRules(RuleForComparisonValue);
     }
 
     private void RuleForComparisonValue()

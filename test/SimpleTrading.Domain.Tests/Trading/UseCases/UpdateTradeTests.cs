@@ -267,7 +267,7 @@ public class UpdateTradeTests : DomainTests
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -368,7 +368,7 @@ public class UpdateTradeTests : DomainTests
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
         const decimal newBalance = 100m;
 
         DbContext.Trades.Add(trade);

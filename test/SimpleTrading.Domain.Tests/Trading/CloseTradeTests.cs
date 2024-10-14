@@ -419,7 +419,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.IsClosed.Should().BeTrue();
@@ -462,7 +462,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.Result!.Name.Should().Be(Result.Loss);
@@ -483,7 +483,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.Result!.Name.Should().Be(Result.Loss);
@@ -504,7 +504,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 5m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.Result!.Name.Should().Be(Result.Mediocre);
@@ -525,7 +525,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.Result!.Name.Should().Be(Result.Mediocre);
@@ -546,7 +546,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.Result!.Name.Should().Be(Result.Win);
@@ -567,7 +567,7 @@ public class CloseTradeTests : TestBase
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
         // act
-        var _ = trade.Close(closeTradeDto);
+        _ = trade.Close(closeTradeDto);
 
         // assert
         trade.Result!.Name.Should().Be(Result.Win);

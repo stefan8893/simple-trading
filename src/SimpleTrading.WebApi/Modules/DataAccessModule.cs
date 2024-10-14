@@ -25,9 +25,9 @@ public class DataAccessModule : Module
         AddDbMasterData(builder);
     }
 
-    private static void AddRepositories(ContainerBuilder builder, Assembly currentAssembly)
+    private static void AddRepositories(ContainerBuilder builder, Assembly assemblyOfInterest)
     {
-        builder.RegisterAssemblyTypes(currentAssembly)
+        builder.RegisterAssemblyTypes(assemblyOfInterest)
             .Where(t => t.Name.EndsWith("Repository"))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
@@ -43,14 +43,14 @@ public class DataAccessModule : Module
             .InstancePerLifetimeScope();
     }
 
-    private static void AddPropertyFilter(ContainerBuilder builder, Assembly currentAssembly)
+    private static void AddPropertyFilter(ContainerBuilder builder, Assembly assemblyOfInterest)
     {
-        builder.RegisterAssemblyTypes(currentAssembly)
+        builder.RegisterAssemblyTypes(assemblyOfInterest)
             .AsClosedTypesOf(typeof(IFilterPredicate<>))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
-        builder.RegisterAssemblyTypes(currentAssembly)
+        builder.RegisterAssemblyTypes(assemblyOfInterest)
             .AsClosedTypesOf(typeof(IValueParser<>))
             .AsImplementedInterfaces()
             .SingleInstance();
