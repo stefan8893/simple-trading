@@ -9,10 +9,10 @@
 
     <ItemGroup>
         <PackageReference Include="xunit" Version="2.9.2" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" Version="1.1.2"/>
-        <PackageReference Include="Buildalyzer.Workspaces" Version="7.0.2"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" Version="1.1.2" />
+        <PackageReference Include="Buildalyzer.Workspaces" Version="7.0.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -24,16 +24,16 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FluentAssertions" Version="6.12.1"/>
+        <PackageReference Include="FluentAssertions" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj"/>
-        <ProjectReference Include="..\..\src\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
+        <ProjectReference Include="..\..\src\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj" />
+        <ProjectReference Include="..\..\src\SimpleTrading.Domain\SimpleTrading.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
