@@ -52,10 +52,8 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
     {
         const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
 
-        return dbContextOptions.UseSqlServer(connectionString,
-            x =>
-                x.MigrationsAssembly(sqlServerMigrationsAssembly)
-                    .UseAzureSqlDefaults());
+        return dbContextOptions.UseAzureSql(connectionString,
+            x => x.MigrationsAssembly(sqlServerMigrationsAssembly));
     }
 
     private static DbContextOptionsBuilder<TradingDbContext> UsePostgresDbContextOptions(string connectionString,

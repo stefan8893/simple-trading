@@ -15,10 +15,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup dotnet 8.x
+      - name: Setup dotnet 9.x
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.x"
+          dotnet-version: "9.x"
 
       - name: Build
         shell: pwsh
@@ -39,7 +39,7 @@ jobs:
           -property:CoverletOutputFormat='cobertura'
 
       - name: Generate Coverage Report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.2
         with:
           reports: "test/**/coverage.cobertura.xml"
           targetdir: "CoverageReport"
