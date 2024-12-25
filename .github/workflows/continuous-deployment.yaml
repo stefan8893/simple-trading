@@ -89,6 +89,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.x"
 
       - name: Login to Azure
         uses: azure/login@v2
