@@ -8,7 +8,7 @@ public class HomeControllerTests(TestingWebApplicationFactory<Program> factory) 
     [Fact]
     public async Task InfoEndpoint_returns_app_info()
     {
-        var client = await CreateClient(false);
+        var client = await CreateClient(includeAccessToken: false);
 
         var response = await client.GetAppInfoAsync();
 

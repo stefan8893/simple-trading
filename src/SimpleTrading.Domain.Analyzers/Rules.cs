@@ -12,15 +12,15 @@ internal static class Rules
         UsageCategory,
         DiagnosticSeverity.Error,
         true,
-        "The validation is done automatically if there exists a validator for the request model. If that validation fails the interactor is not being called and the caller receives the response model directly, that is the 'OneOf<BadInput>'. You must provide the 'BadInput' case in the signature of your use case interactor.");
+        "The validation is done automatically if there exists a validator for the request model. If that validation fails the interactor is not being called and the caller receives the response model directly that is 'OneOf<BadInput>'. In order to make this work you must provide a 'BadInput' case in the signature of your use case interactor.");
 
     public static readonly DiagnosticDescriptor ResponseModelTypeMustBeOneOf = new("ST0002",
-        "Response model type must be 'OneOf' including 'BadInput' case",
+        "Response model type must be 'OneOf' including a 'BadInput' case",
         "Response model must be of type 'OneOf' including a 'BadInput' case, because there is a validator for '{0}'",
         UsageCategory,
         DiagnosticSeverity.Error,
         true,
-        "The validation is done automatically if there exists a validator for the request model. If that validation fails the interactor is not being called and the caller receives the response model directly, that is the 'OneOf<BadInput>'. You must provide the 'BadInput' case in the signature of your use case interactor.");
+        "The validation is done automatically if there exists a validator for the request model. If that validation fails the interactor is not being called and the caller receives the response model directly that is 'OneOf<BadInput>'. In order to make this work you must provide a 'BadInput' case in the signature of your use case interactor.");
     
     private const string ConventionCategory = "Convention";
 

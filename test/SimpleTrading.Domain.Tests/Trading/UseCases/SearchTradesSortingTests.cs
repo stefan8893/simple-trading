@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using FluentAssertions;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;

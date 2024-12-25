@@ -1,7 +1,6 @@
-﻿// Do not change namespace or keep it in sync with 'IInteractor' in SimpleTrading.Domain.Abstractions namespace 
+﻿// do not change namespace
 // ReSharper disable once CheckNamespace
-
-namespace SimpleTrading.Domain.Abstractions;
+namespace SimpleTrading.Domain.Infrastructure;
 
 public interface IInteractor<TResponseModel>
 {

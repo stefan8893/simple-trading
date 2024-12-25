@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using SimpleTrading.Domain.Abstractions;
 
 namespace SimpleTrading.Domain.Infrastructure.DataAccess;
 

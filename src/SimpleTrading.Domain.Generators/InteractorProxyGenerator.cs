@@ -20,28 +20,33 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             .Where(static x => x is not null && !x.IsAbstract)
             .Where(static x => ImplementsInteractor(x!));
 
-        context.RegisterSourceOutput(interactors, (ctx, concreteInteractor) =>
-        {
-            if (concreteInteractor is null)
-                return;
+        context.RegisterSourceOutput(interactors,
+            static (ctx, concreteInteractor) => GenerateProxies(concreteInteractor, ctx));
+    }
 
-            var interactorCtx = GatherInteractorContext(concreteInteractor);
-            if (interactorCtx is null)
-                return;
+    private static void GenerateProxies(INamedTypeSymbol? concreteInteractor, SourceProductionContext ctx)
+    {
+        if (concreteInteractor is null)
+            return;
 
-            ctx.AddSource($"{interactorCtx.InteractorName}.g.cs",
-                SourceText.From(SourceTemplates.CreateProxy(interactorCtx), Encoding.UTF8));
-        });
+        var interactorCtx = GatherInteractorContext(concreteInteractor);
+        if (interactorCtx is null)
+            return;
+
+        var interactorProxySourceTemplate = new InteractorProxySourceTemplate(interactorCtx);
+
+        ctx.AddSource($"{interactorCtx.InteractorName}.g.cs",
+            SourceText.From(interactorProxySourceTemplate.GenerateConcreteProxy(), Encoding.UTF8));
     }
 
     private static InteractorContext? GatherInteractorContext(INamedTypeSymbol concreteInteractor)
     {
         var closedInteractorInterface = concreteInteractor
             .AllInterfaces
-            .SingleOrDefault(static x => IsInteractorInterface(x));
+            .FirstOrDefault(static x => IsInteractorInterface(x));
 
         if (closedInteractorInterface is null)
-            throw new Exception($"{concreteInteractor.MetadataName} does not implement 'IInteractor'");
+            return null;
 
         var genericTypeArguments = closedInteractorInterface.TypeArguments
             .OfType<INamedTypeSymbol>()
@@ -76,6 +81,6 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             Arity: 1 or 2
         } && candidate
             .ContainingNamespace
-            .ToDisplayString() == "SimpleTrading.Domain.Abstractions";
+            .ToDisplayString().StartsWith("SimpleTrading.Domain.");
     }
 }

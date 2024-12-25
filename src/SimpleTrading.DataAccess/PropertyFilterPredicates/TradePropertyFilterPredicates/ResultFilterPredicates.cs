@@ -1,14 +1,14 @@
 ﻿using System.Linq.Expressions;
 using JetBrains.Annotations;
 using SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Filter;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
 
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 [UsedImplicitly]
 public class ResultEqualToFilterPredicate(IValueParser<NullableReference<Result>> valueParser)
-    : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.EqualTo,
+    : FilterPredicateBase<Trade, NullableReference<Result>>(TradeProperty.Result, Operator.EqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(NullableReference<Result> value)
@@ -24,7 +24,7 @@ public class ResultEqualToFilterPredicate(IValueParser<NullableReference<Result>
 
 [UsedImplicitly]
 public class ResultGreaterThanFilterPredicate(IValueParser<Result> valueParser)
-    : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.GreaterThan, valueParser)
+    : FilterPredicateBase<Trade, Result>(TradeProperty.Result, Operator.GreaterThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(Result value)
     {
@@ -36,7 +36,7 @@ public class ResultGreaterThanFilterPredicate(IValueParser<Result> valueParser)
 
 [UsedImplicitly]
 public class ResultGreaterThanOrEqualToFilterPredicate(IValueParser<Result> valueParser)
-    : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.GreaterThanOrEqualTo,
+    : FilterPredicateBase<Trade, Result>(TradeProperty.Result, Operator.GreaterThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(Result value)
@@ -49,7 +49,7 @@ public class ResultGreaterThanOrEqualToFilterPredicate(IValueParser<Result> valu
 
 [UsedImplicitly]
 public class ResultLessThanFilterPredicate(IValueParser<Result> valueParser)
-    : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.LessThan, valueParser)
+    : FilterPredicateBase<Trade, Result>(TradeProperty.Result, Operator.LessThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(Result value)
     {
@@ -61,7 +61,7 @@ public class ResultLessThanFilterPredicate(IValueParser<Result> valueParser)
 
 [UsedImplicitly]
 public class ResultLessThanOrEqualToFilterPredicate(IValueParser<Result> valueParser)
-    : FilterPredicateBase<Trade, Result>(PropertyFilter.Result, PropertyFilter.Operator.LessThanOrEqualTo, valueParser)
+    : FilterPredicateBase<Trade, Result>(TradeProperty.Result, Operator.LessThanOrEqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(Result value)
     {
@@ -73,7 +73,7 @@ public class ResultLessThanOrEqualToFilterPredicate(IValueParser<Result> valuePa
 
 [UsedImplicitly]
 public class ResultNotEqualToFilterPredicate(IValueParser<NullableReference<Result>> valueParser)
-    : FilterPredicateBase<Trade, NullableReference<Result>>(PropertyFilter.Result, PropertyFilter.Operator.NotEqualTo,
+    : FilterPredicateBase<Trade, NullableReference<Result>>(TradeProperty.Result, Operator.NotEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(NullableReference<Result> value)

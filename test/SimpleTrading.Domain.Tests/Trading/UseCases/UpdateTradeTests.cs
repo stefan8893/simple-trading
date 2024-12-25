@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using FluentAssertions;
 using OneOf.Types;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
@@ -267,7 +267,7 @@ public class UpdateTradeTests : DomainTests
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -368,7 +368,7 @@ public class UpdateTradeTests : DomainTests
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
-        var _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
         const decimal newBalance = 100m;
 
         DbContext.Trades.Add(trade);

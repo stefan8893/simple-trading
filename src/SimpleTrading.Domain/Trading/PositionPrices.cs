@@ -67,7 +67,7 @@ public record PositionPrices
                 ? CalculateMediocreResult()
                 : CalculateWinResult();
 
-        if (Exit > Entry && StopLoss.HasValue)
+        if (StopLoss.HasValue && Exit > Entry)
             return CalculateLossResult();
 
         return null;

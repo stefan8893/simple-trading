@@ -2,13 +2,10 @@ using System.CommandLine;
 using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Serilog;
-using SimpleTrading.DataAccess;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
@@ -20,22 +17,12 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
 {
     b.RegisterModule<WebApiModule>();
-    b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
     b.RegisterModule<DomainModule>();
+    b.RegisterModule(new TradingDbContextModule(ctx.Configuration));
     b.RegisterModule<DataAccessModule>();
 });
 
 builder.Services.AddSerilog(lc => lc.ReadFrom.Configuration(builder.Configuration));
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(_ => { },
-        options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
-
-var clientAppEntraIdConfig = builder.Configuration
-                                 .GetSection("Auth:SimpleTradingClientApp")
-                                 .Get<ClientAppEntraIdConfig>()
-                             ?? throw new Exception("Missing Entra ID settings");
-
 builder.Services
     .AddControllers(o =>
     {
@@ -45,8 +32,18 @@ builder.Services
     .ConfigureApiBehaviorOptions(o => o.SuppressMapClientErrors = true)
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(_ => { },
+        options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
+
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
+
+var clientAppEntraIdConfig = builder.Configuration
+                                 .GetSection("Auth:SimpleTradingClientApp")
+                                 .Get<ClientAppEntraIdConfig>()
+                             ?? throw new Exception("Missing Entra ID settings");
+
 builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 
 var app = builder.Build();
@@ -54,9 +51,9 @@ var app = builder.Build();
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRequestLocalization();
 app.UseNotFoundMiddleware();
 
 app.MapControllers()

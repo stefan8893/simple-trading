@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
-using SimpleTrading.Domain.Extensions;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -16,7 +16,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_request_without_an_access_token_is_not_authorized()
     {
         // arrange
-        var client = await CreateClient(false);
+        var client = await CreateClient(includeAccessToken: false);
 
         // act
         var act = () => client.AddTradeAsync();

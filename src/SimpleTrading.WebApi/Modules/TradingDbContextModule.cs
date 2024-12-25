@@ -16,7 +16,7 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         var connectionString = configuration.GetConnectionString(dbProvider)
                                ?? throw new Exception("Missing connection string");
 
-        var dbContextOptionsBuilder = GetDbContextOptionsBuilder(dbProvider, connectionString);
+        var dbContextOptionsBuilder = GetDefaultDbContextOptionsBuilder(dbProvider, connectionString);
 
         builder.Register<TradingDbContext>(ctx =>
             {
@@ -29,56 +29,48 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
             .InstancePerLifetimeScope();
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetDbContextOptionsBuilder(string dbProvider,
+    private static DbContextOptionsBuilder<TradingDbContext> GetDefaultDbContextOptionsBuilder(string dbProvider,
         string connectionString)
     {
         var dbContextOptions = new DbContextOptionsBuilder<TradingDbContext>(
             new DbContextOptions<TradingDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
 
         if (dbProvider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
-            return GetSqlServerDbContextOptions(connectionString, dbContextOptions);
+            return UseSqlServerDbContextOptions(connectionString, dbContextOptions);
 
         if (dbProvider.Equals("Postgres", StringComparison.OrdinalIgnoreCase))
-            return GetPostgresDbContextOptions(connectionString, dbContextOptions);
+            return UsePostgresDbContextOptions(connectionString, dbContextOptions);
 
         if (dbProvider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
-            return GetSqliteDbContextOptions(connectionString, dbContextOptions);
+            return UseSqliteDbContextOptions(connectionString, dbContextOptions);
 
         throw new Exception("Unknown db provider");
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetSqlServerDbContextOptions(string connectionString,
+    private static DbContextOptionsBuilder<TradingDbContext> UseSqlServerDbContextOptions(string connectionString,
         DbContextOptionsBuilder<TradingDbContext> dbContextOptions)
     {
         const string sqlServerMigrationsAssembly = "SimpleTrading.DataAccess.SqlServer";
 
-        var builder = dbContextOptions.UseSqlServer(connectionString,
-            x =>
-                x.MigrationsAssembly(sqlServerMigrationsAssembly)
-                    .UseAzureSqlDefaults());
-
-        return builder;
+        return dbContextOptions.UseAzureSql(connectionString,
+            x => x.MigrationsAssembly(sqlServerMigrationsAssembly));
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetPostgresDbContextOptions(string connectionString,
+    private static DbContextOptionsBuilder<TradingDbContext> UsePostgresDbContextOptions(string connectionString,
         DbContextOptionsBuilder<TradingDbContext> dbContextOptions)
     {
         const string postgresMigrationsAssembly = "SimpleTrading.DataAccess.Postgres";
 
-        var builder = dbContextOptions.UseNpgsql(connectionString,
+        return dbContextOptions.UseNpgsql(connectionString,
             x => x.MigrationsAssembly(postgresMigrationsAssembly));
-
-        return builder;
     }
 
-    private static DbContextOptionsBuilder<TradingDbContext> GetSqliteDbContextOptions(string connectionString,
+    private static DbContextOptionsBuilder<TradingDbContext> UseSqliteDbContextOptions(string connectionString,
         DbContextOptionsBuilder<TradingDbContext> dbContextOptions)
     {
         const string sqliteMigrationsAssembly = "SimpleTrading.DataAccess.Sqlite";
 
-        var builder = dbContextOptions.UseSqlite(connectionString,
+        return dbContextOptions.UseSqlite(connectionString,
             x => x.MigrationsAssembly(sqliteMigrationsAssembly));
-
-        return builder;
     }
 }

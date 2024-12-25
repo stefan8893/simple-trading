@@ -1,8 +1,8 @@
 using System.Globalization;
 using Autofac;
 using FluentAssertions;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;

@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
-using SimpleTrading.Domain.Abstractions;
 
-namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.PropertyFilters;
+namespace SimpleTrading.Domain.Infrastructure.Filter;
 
 public interface IFilterPredicate<TEntity> where TEntity : IEntity
 {

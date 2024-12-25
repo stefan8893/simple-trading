@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.Hosting;
-using SimpleTrading.Domain.Extensions;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
 
