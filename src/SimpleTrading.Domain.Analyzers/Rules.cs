@@ -30,5 +30,5 @@ internal static class Rules
         ConventionCategory,
         DiagnosticSeverity.Error,
         true,
-        "By convention all interactors that implements IInteractor must have the suffix 'Interactor'.");
+        "By convention all interactors that implement IInteractor must have the suffix 'Interactor'.");
 }
