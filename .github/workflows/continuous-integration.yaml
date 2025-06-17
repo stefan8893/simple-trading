@@ -5,7 +5,8 @@ on:
     branches: ["**"]
 
 jobs:
-  build_and_test:
+  ci:
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:

@@ -8,6 +8,7 @@ on:
 
 jobs:
   has_next_version:
+    name: Get Next Version
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
@@ -34,6 +35,7 @@ jobs:
           git push origin $nextVersion
 
   package_app:
+    name: Package App
     runs-on: ubuntu-latest
     needs: has_next_version
     if: ${{ needs.has_next_version.outputs.HasNextVersion == 'true' }}
@@ -76,6 +78,7 @@ jobs:
           build-args: Version=${{ env.Version }}
 
   deploy_app:
+    name: Deploy App
     needs: package_app
     runs-on: ubuntu-latest
     permissions:
