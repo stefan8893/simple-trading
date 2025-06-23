@@ -1,6 +1,6 @@
 {
   "name": "@stefan8893/simple-trading-client-builder",
-  "version": "1.2.3",
+  "version": "0.0.0",
   "description": "A client for the SimpleTrading Backend",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -27,6 +27,6 @@
   "homepage": "https://github.com/stefan8893/simple-trading#readme",
   "devDependencies": {
     "@types/node": "^22.3.0",
-    "typescript": "^5.5.4"
+    "typescript": "~5.8.0"
   }
 }
