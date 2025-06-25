@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.Domain.Tests.Extensions;

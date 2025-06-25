@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Autofac;
-using FluentAssertions;
+using AwesomeAssertions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.TestInfrastructure;

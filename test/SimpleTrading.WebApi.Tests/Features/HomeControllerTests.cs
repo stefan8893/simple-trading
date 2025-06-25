@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.WebApi.Tests.Features;

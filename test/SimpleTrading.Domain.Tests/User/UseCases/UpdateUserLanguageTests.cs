@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using FluentAssertions;
+using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User;
 using SimpleTrading.Domain.User.DataAccess;

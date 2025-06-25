@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;

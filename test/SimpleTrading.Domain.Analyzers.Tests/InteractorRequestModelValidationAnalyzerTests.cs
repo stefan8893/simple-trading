@@ -1,6 +1,6 @@
 ﻿using Buildalyzer;
 using Buildalyzer.Workspaces;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 

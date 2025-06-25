@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure.Extensions;
