@@ -30,7 +30,7 @@ public class DeleteReferenceTests : DomainTests
         response.Value.Should().BeOfType<Completed>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.References.Should().HaveCount(1)
+        updatedTrade.References.Should().HaveCount(1)
             .And.Contain(x => x.Id == reference2.Id);
     }
 

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.Hosting;
+using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
@@ -57,5 +58,29 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // assert
         var nowInLocalTime = _utcNow.ToLocal(userSettings.TimeZone).DateTime;
         userSettingsDto.LastModified.DateTime.Should().Be(nowInLocalTime);
+    }
+
+    [Fact]
+    public async Task UserLanguage_can_be_updated_successfully()
+    {
+        // arrange
+        var client = await CreateClient();
+        var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
+        userSettings.Culture = "en-US";
+        userSettings.TimeZone = "Europe/Vienna";
+        userSettings.Language = "de";
+        await DbContext.SaveChangesAsync();
+
+        // act
+        await client.UpdateUserLanguageAsync(new UpdateUserLanguageDto
+        {
+            IsoLanguageCode = "en"
+        });
+
+        // assert
+        var updatedUserSettings =
+            await DbContextSingleOrDefault<Domain.User.UserSettings>(x => x.Id == userSettings.Id);
+        updatedUserSettings.Should().NotBeNull();
+        updatedUserSettings.Language.Should().Be("en");
     }
 }

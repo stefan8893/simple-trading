@@ -30,7 +30,7 @@ public class DeleteReferencesTests : DomainTests
         response.Value.Should().BeOfType<Completed<ushort>>().Which.Data.Should().Be(2);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.References.Should().BeEmpty();
+        updatedTrade.References.Should().BeEmpty();
     }
 
     [Fact]

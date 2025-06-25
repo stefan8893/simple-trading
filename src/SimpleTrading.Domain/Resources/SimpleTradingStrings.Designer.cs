@@ -240,6 +240,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; wird nicht unterstützt. Die unterstützten Sprachen sind &apos;{1}&apos;..
+        /// </summary>
+        public static string LanguageNotSupported {
+            get {
+                return ResourceManager.GetString("LanguageNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Der Wert von &apos;{0}&apos; muss kleiner oder gleich &apos;{1}&apos; sein..
         /// </summary>
         public static string LessThanOrEqualValidatorMessage {

@@ -446,7 +446,7 @@ public class AddTradeTests : DomainTests
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade!.References
+        newlyAddedTrade.References
             .Should().HaveCount(1)
             .And.Contain(x => x.Notes == "some notes");
     }
@@ -483,7 +483,7 @@ public class AddTradeTests : DomainTests
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
-        newlyAddedTrade!.IsClosed.Should().BeTrue();
+        newlyAddedTrade.IsClosed.Should().BeTrue();
     }
 
     [Fact]
@@ -595,7 +595,7 @@ public class AddTradeTests : DomainTests
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
         newlyAddedTrade.Should().NotBeNull();
 
-        newlyAddedTrade!.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
+        newlyAddedTrade.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
         newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
     }
 
@@ -668,7 +668,7 @@ public class AddTradeTests : DomainTests
 
         var addedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == addedTradeId);
         addedTrade.Should().NotBeNull();
-        addedTrade!.Result.Should().NotBeNull();
+        addedTrade.Result.Should().NotBeNull();
         addedTrade.Result!.Name.Should().Be(Result.Loss);
         addedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
     }

@@ -42,7 +42,7 @@ public class UpdateReferenceTests : DomainTests
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
 
         updatedReference.Should().NotBeNull();
-        updatedReference!.Notes.Should().BeNull();
+        updatedReference.Notes.Should().BeNull();
     }
 
     [Fact]

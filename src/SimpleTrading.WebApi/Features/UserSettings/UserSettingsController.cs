@@ -1,7 +1,11 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
+using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
+using SimpleTrading.Domain.User.UseCases.UpdateUserLanguage;
+using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.UserSettings.Dto;
 using SimpleTrading.WebApi.Infrastructure;
 
@@ -30,5 +34,20 @@ public class UserSettingsController : ControllerBase
         var nowInUserTimeZone = await localNow();
 
         return Ok(nowInUserTimeZone);
+    }
+
+    [HttpPut("/language", Name = nameof(UpdateUserLanguage))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> UpdateUserLanguage(
+        [FromServices] IUpdateUserLanguage updateUserLanguage,
+        [FromBody] UpdateUserLanguageDto updateLanguageDto)
+    {
+        var requestModel = new UpdateUserLanguageRequestModel(updateLanguageDto.IsoLanguageCode);
+        var result = await updateUserLanguage.Execute(requestModel);
+
+        return result.Match(
+            completed => NoContent(),
+            badInput => badInput.ToActionResult());
     }
 }

@@ -118,7 +118,7 @@ public class CloseTradeTests : DomainTests
         var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         closedTrade.Should().NotBeNull();
 
-        closedTrade!.Balance.Should().Be(requestModel.Balance);
+        closedTrade.Balance.Should().Be(requestModel.Balance);
         closedTrade.Closed.Should().NotBeNull();
         closedTrade.IsClosed.Should().BeTrue();
         closedTrade.PositionPrices.Exit.Should().NotBeNull().And.Be(requestModel.ExitPrice);

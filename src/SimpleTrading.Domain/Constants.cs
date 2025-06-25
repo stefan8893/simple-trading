@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Immutable;
+using System.Globalization;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.Domain;
@@ -11,17 +12,11 @@ public static class Constants
 
     public static readonly CultureInfo DefaultCulture = new("de-AT");
 
-    public static readonly IReadOnlyCollection<CultureInfo> SupportedCultures =
-    [
-        new("de-AT"),
-        new("en-US")
-    ];
+    public static readonly IImmutableSet<CultureInfo> SupportedCultures =
+        ImmutableHashSet.Create(new CultureInfo("de-AT"), new CultureInfo("en-US"));
 
-    public static readonly IReadOnlyList<string> SupportedLanguages =
-    [
-        "de",
-        "en"
-    ];
+    public static readonly IImmutableSet<string> SupportedLanguages =
+        ImmutableHashSet.Create(StringComparer.OrdinalIgnoreCase, "en", "de");
 
     public static readonly Guid UserSettingsId = Guid.Parse("401c519b-956a-4a5f-bd84-77e716817771");
 }

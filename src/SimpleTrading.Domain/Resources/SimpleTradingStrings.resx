@@ -279,4 +279,7 @@
     <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
         <value>'{0}' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.</value>
     </data>
+    <data name="LanguageNotSupported" xml:space="preserve">
+        <value>'{0}' wird nicht unterstützt. Die unterstützten Sprachen sind '{1}'.</value>
+    </data>
 </root>
