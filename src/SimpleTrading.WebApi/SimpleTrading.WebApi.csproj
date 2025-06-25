@@ -17,8 +17,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
         <PackageReference Include="Microsoft.Identity.Web" Version="3.9.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
-        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.4.0" />
-        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.4.0" />
+        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.3.0" />
+        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.3.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
