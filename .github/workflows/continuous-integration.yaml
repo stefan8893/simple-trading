@@ -40,7 +40,7 @@ jobs:
           -property:CoverletOutputFormat='cobertura'
 
       - name: Generate Coverage Report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.2
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.8
         with:
           reports: "test/**/coverage.cobertura.xml"
           targetdir: "CoverageReport"
