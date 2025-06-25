@@ -72,7 +72,7 @@ public class UpdateUserLanguageTests : DomainTests
             .Which.ValidationResult.Errors.Should()
             .Contain(x =>
                 x.PropertyName == "IsoLanguageCode" && 
-                x.ErrorMessage == "'deu' is not supported. Available languages are 'en, de'.").And
+                x.ErrorMessage == "'deu' is not supported. Available languages are 'de, en'.").And
             .HaveCount(1);
     }
 }

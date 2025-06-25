@@ -16,7 +16,7 @@ public class UpdateUserLanguageRequestModelValidator : AbstractValidator<UpdateU
             .WithMessage(x =>
                 string.Format(SimpleTradingStrings.LanguageNotSupported,
                     x.IsoLanguageCode,
-                    string.Join(", ", Constants.SupportedLanguages)))
+                    string.Join(", ", Constants.SupportedLanguages.Order(StringComparer.InvariantCultureIgnoreCase))))
             .When(x => x.IsoLanguageCode is not null);
     }
 }
