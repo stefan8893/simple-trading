@@ -203,7 +203,7 @@ public class UpdateTradeTests : DomainTests
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.AssetId.Should().Be(newAsset.Id);
+        updatedTrade.AssetId.Should().Be(newAsset.Id);
     }
 
     [Fact]
@@ -232,7 +232,7 @@ public class UpdateTradeTests : DomainTests
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == updatedTradeId);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.ProfileId.Should().Be(newProfile.Id);
+        updatedTrade.ProfileId.Should().Be(newProfile.Id);
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public class UpdateTradeTests : DomainTests
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.CurrencyId.Should().Be(newCurrency.Id);
+        updatedTrade.CurrencyId.Should().Be(newCurrency.Id);
     }
 
     [Fact]
@@ -387,7 +387,7 @@ public class UpdateTradeTests : DomainTests
         response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.Balance.Should().Be(newBalance);
+        updatedTrade.Balance.Should().Be(newBalance);
     }
 
     [Fact]
@@ -450,7 +450,7 @@ public class UpdateTradeTests : DomainTests
         response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.PositionPrices.Should().Be(newPositionPrices);
+        updatedTrade.PositionPrices.Should().Be(newPositionPrices);
     }
 
     [Fact]
@@ -520,7 +520,7 @@ public class UpdateTradeTests : DomainTests
         response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.Result.Should().NotBeNull();
+        updatedTrade.Result.Should().NotBeNull();
         updatedTrade.Result!.Name.Should().Be(Result.Mediocre);
         updatedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
     }
@@ -601,7 +601,7 @@ public class UpdateTradeTests : DomainTests
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         updatedTrade.Should().NotBeNull();
-        updatedTrade!.Result.Should().NotBeNull();
+        updatedTrade.Result.Should().NotBeNull();
         updatedTrade.Result!.Name.Should().Be(Result.Loss);
     }
 

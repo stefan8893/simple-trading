@@ -85,7 +85,7 @@ public class AddReferenceTests : DomainTests
         var referenceId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
         var tradeWithAddedReference = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         tradeWithAddedReference.Should().NotBeNull();
-        tradeWithAddedReference!.References.Should().HaveCount(1)
+        tradeWithAddedReference.References.Should().HaveCount(1)
             .And.Contain(x => x.Id == referenceId);
     }
 }

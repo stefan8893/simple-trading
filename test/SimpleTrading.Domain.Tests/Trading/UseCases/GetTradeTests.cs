@@ -38,7 +38,7 @@ public class GetTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task The_Currency_property_must_contain_the_currencys_iso_code()
+    public async Task The_Currency_property_must_contain_the_currency_s_iso_code()
     {
         var currency = TestData.Currency.Default with {IsoCode = "EUR", Name = "Euro"};
         var trade = (TestData.Trade.Default with {CurrencyOrId = currency}).Build();
