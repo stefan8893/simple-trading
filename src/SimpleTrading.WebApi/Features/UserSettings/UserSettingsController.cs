@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using OneOf;
+using NodaTime;
+using NodaTime.TimeZones;
 using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
@@ -36,14 +37,31 @@ public class UserSettingsController : ControllerBase
         return Ok(nowInUserTimeZone);
     }
 
-    [HttpPut("/language", Name = nameof(UpdateUserLanguage))]
+    [HttpGet("available-timezones", Name = "AvailableTimeZones")]
+    [ProducesResponseType<IEnumerable<TimezoneOption>>(StatusCodes.Status200OK)]
+    public ActionResult GetAvailableTimezones()
+    {
+        var timezoneOptions = TzdbDateTimeZoneSource
+            .Default
+            .WindowsMapping
+            .PrimaryMapping
+            .Select(x => new TimezoneOption(x.Key, x.Value));
+
+        return Ok(timezoneOptions);
+    }
+
+    [HttpPut(Name = nameof(UpdateUserLanguage))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateUserLanguage(
         [FromServices] IUpdateUserLanguage updateUserLanguage,
-        [FromBody] UpdateUserLanguageDto updateLanguageDto)
+        [FromBody] UpdateUserSettingsDto updateUserSettingsDto)
     {
-        var requestModel = new UpdateUserLanguageRequestModel(updateLanguageDto.IsoLanguageCode);
+        var requestModel = new UpdateUserSettingsRequestModel(updateUserSettingsDto.Culture,
+            updateUserSettingsDto.IsoLanguageCode is not null
+                ? updateUserSettingsDto.IsoLanguageCode.Value
+                : new None(),
+            updateUserSettingsDto.TimeZone);
         var result = await updateUserLanguage.Execute(requestModel);
 
         return result.Match(

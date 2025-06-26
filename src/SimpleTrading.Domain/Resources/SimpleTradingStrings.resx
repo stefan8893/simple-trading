@@ -280,6 +280,12 @@
         <value>'{0}' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.</value>
     </data>
     <data name="LanguageNotSupported" xml:space="preserve">
-        <value>'{0}' wird nicht unterstützt. Die unterstützten Sprachen sind '{1}'.</value>
+        <value>'{0}' wird nicht unterstützt. Nur '{1}'.</value>
+    </data>
+    <data name="CultureNotSupported" xml:space="preserve">
+        <value>'{0}' wird nicht unterstützt. Nur '{1}'.</value>
+    </data>
+    <data name="TimezoneIsInvalid" xml:space="preserve">
+        <value>'{0}' ist ungültig.</value>
     </data>
 </root>

@@ -177,6 +177,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; wird nicht unterstützt. Nur &apos;{1}&apos;..
+        /// </summary>
+        public static string CultureNotSupported {
+            get {
+                return ResourceManager.GetString("CultureNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Währung.
         /// </summary>
         public static string Currency {
@@ -240,7 +249,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; wird nicht unterstützt. Die unterstützten Sprachen sind &apos;{1}&apos;..
+        ///   Looks up a localized string similar to &apos;{0}&apos; wird nicht unterstützt. Nur &apos;{1}&apos;..
         /// </summary>
         public static string LanguageNotSupported {
             get {
@@ -479,6 +488,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string TakeProfit {
             get {
                 return ResourceManager.GetString("TakeProfit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; ist ungültig..
+        /// </summary>
+        public static string TimezoneIsInvalid {
+            get {
+                return ResourceManager.GetString("TimezoneIsInvalid", resourceCulture);
             }
         }
         

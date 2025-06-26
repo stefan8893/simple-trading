@@ -113,15 +113,20 @@ export interface ISimpleTradingClient {
     getUserSettings(): Promise<SwaggerResponse<UserSettingsDto>>;
 
     /**
+     * @param body (optional) 
+     * @return No Content
+     */
+    updateUserLanguage(body: UpdateUserSettingsDto | undefined): Promise<SwaggerResponse<void>>;
+
+    /**
      * @return OK
      */
     getUserLocalNow(): Promise<SwaggerResponse<Date>>;
 
     /**
-     * @param body (optional) 
-     * @return No Content
+     * @return OK
      */
-    updateUserLanguage(body: UpdateUserLanguageDto | undefined): Promise<SwaggerResponse<void>>;
+    availableTimeZones(): Promise<SwaggerResponse<TimezoneOption[]>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
@@ -1164,6 +1169,55 @@ export class SimpleTradingClient implements ISimpleTradingClient {
     }
 
     /**
+     * @param body (optional) 
+     * @return No Content
+     */
+    updateUserLanguage(body: UpdateUserSettingsDto | undefined): Promise<SwaggerResponse<void>> {
+        let url_ = this.baseUrl + "/usersettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateUserLanguage(_response);
+        });
+    }
+
+    protected processUpdateUserLanguage(response: Response): Promise<SwaggerResponse<void>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+            return new SwaggerResponse(status, _headers, null as any);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = FieldErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
+    }
+
+    /**
      * @return OK
      */
     getUserLocalNow(): Promise<SwaggerResponse<Date>> {
@@ -1206,52 +1260,51 @@ export class SimpleTradingClient implements ISimpleTradingClient {
     }
 
     /**
-     * @param body (optional) 
-     * @return No Content
+     * @return OK
      */
-    updateUserLanguage(body: UpdateUserLanguageDto | undefined): Promise<SwaggerResponse<void>> {
-        let url_ = this.baseUrl + "/language";
+    availableTimeZones(): Promise<SwaggerResponse<TimezoneOption[]>> {
+        let url_ = this.baseUrl + "/usersettings/available-timezones";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_: RequestInit = {
-            body: content_,
-            method: "PUT",
+            method: "GET",
             headers: {
-                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateUserLanguage(_response);
+            return this.processAvailableTimeZones(_response);
         });
     }
 
-    protected processUpdateUserLanguage(response: Response): Promise<SwaggerResponse<void>> {
+    protected processAvailableTimeZones(response: Response): Promise<SwaggerResponse<TimezoneOption[]>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
             return response.text().then((_responseText) => {
             return throwException("Unauthorized", status, _responseText, _headers);
             });
-        } else if (status === 204) {
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
-            return new SwaggerResponse(status, _headers, null as any);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TimezoneOption.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return new SwaggerResponse(status, _headers, result200);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<TimezoneOption[]>>(new SwaggerResponse(status, _headers, null as any));
     }
 }
 
@@ -1975,6 +2028,46 @@ export interface IStringUpdateValue {
     value?: string | undefined;
 }
 
+export class TimezoneOption implements ITimezoneOption {
+    windowsId?: string | undefined;
+    timeZone?: string | undefined;
+
+    constructor(data?: ITimezoneOption) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.windowsId = _data["windowsId"];
+            this.timeZone = _data["timeZone"];
+        }
+    }
+
+    static fromJS(data: any): TimezoneOption {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimezoneOption();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["windowsId"] = this.windowsId;
+        data["timeZone"] = this.timeZone;
+        return data;
+    }
+}
+
+export interface ITimezoneOption {
+    windowsId?: string | undefined;
+    timeZone?: string | undefined;
+}
+
 export class TradeDto implements ITradeDto {
     id?: string;
     assetId?: string;
@@ -2347,10 +2440,12 @@ export interface IUpdateTradeDto {
     notes?: StringUpdateValue;
 }
 
-export class UpdateUserLanguageDto implements IUpdateUserLanguageDto {
-    isoLanguageCode?: string | undefined;
+export class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
+    culture?: string | undefined;
+    isoLanguageCode?: StringUpdateValue;
+    timeZone?: string | undefined;
 
-    constructor(data?: IUpdateUserLanguageDto) {
+    constructor(data?: IUpdateUserSettingsDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2361,26 +2456,32 @@ export class UpdateUserLanguageDto implements IUpdateUserLanguageDto {
 
     init(_data?: any) {
         if (_data) {
-            this.isoLanguageCode = _data["isoLanguageCode"];
+            this.culture = _data["culture"];
+            this.isoLanguageCode = _data["isoLanguageCode"] ? StringUpdateValue.fromJS(_data["isoLanguageCode"]) : <any>undefined;
+            this.timeZone = _data["timeZone"];
         }
     }
 
-    static fromJS(data: any): UpdateUserLanguageDto {
+    static fromJS(data: any): UpdateUserSettingsDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateUserLanguageDto();
+        let result = new UpdateUserSettingsDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["isoLanguageCode"] = this.isoLanguageCode;
+        data["culture"] = this.culture;
+        data["isoLanguageCode"] = this.isoLanguageCode ? this.isoLanguageCode.toJSON() : <any>undefined;
+        data["timeZone"] = this.timeZone;
         return data;
     }
 }
 
-export interface IUpdateUserLanguageDto {
-    isoLanguageCode?: string | undefined;
+export interface IUpdateUserSettingsDto {
+    culture?: string | undefined;
+    isoLanguageCode?: StringUpdateValue;
+    timeZone?: string | undefined;
 }
 
 export class UserSettingsDto implements IUserSettingsDto {

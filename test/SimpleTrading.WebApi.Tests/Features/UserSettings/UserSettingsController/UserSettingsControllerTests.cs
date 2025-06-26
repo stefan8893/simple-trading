@@ -61,26 +61,62 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     }
 
     [Fact]
-    public async Task UserLanguage_can_be_updated_successfully()
+    public async Task UserSettings_can_be_updated_successfully()
     {
         // arrange
         var client = await CreateClient();
         var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
         userSettings.Culture = "en-US";
-        userSettings.TimeZone = "Europe/Vienna";
+        userSettings.TimeZone = "Europe/Berlin";
         userSettings.Language = "de";
         await DbContext.SaveChangesAsync();
 
         // act
-        await client.UpdateUserLanguageAsync(new UpdateUserLanguageDto
+        await client.UpdateUserLanguageAsync(new UpdateUserSettingsDto
         {
-            IsoLanguageCode = "en"
+            Culture = "de-AT",
+            IsoLanguageCode = new StringUpdateValue
+            {
+                Value = "en"
+            },
+            TimeZone = "Europe/Vienna"
         });
 
         // assert
         var updatedUserSettings =
             await DbContextSingleOrDefault<Domain.User.UserSettings>(x => x.Id == userSettings.Id);
         updatedUserSettings.Should().NotBeNull();
+        updatedUserSettings.Culture.Should().Be("de-AT");
         updatedUserSettings.Language.Should().Be("en");
+        updatedUserSettings.TimeZone.Should().Be("Europe/Vienna");
+    }
+
+    [Fact]
+    public async Task Language_can_be_updated_only_without_changing_other_values()
+    {
+        // arrange
+        var client = await CreateClient();
+        var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
+        userSettings.Culture = "en-US";
+        userSettings.TimeZone = "Europe/Berlin";
+        userSettings.Language = "de";
+        await DbContext.SaveChangesAsync();
+
+        // act
+        await client.UpdateUserLanguageAsync(new UpdateUserSettingsDto
+        {
+            IsoLanguageCode = new StringUpdateValue
+            {
+                Value = "en"
+            }
+        });
+
+        // assert
+        var updatedUserSettings =
+            await DbContextSingleOrDefault<Domain.User.UserSettings>(x => x.Id == userSettings.Id);
+        updatedUserSettings.Should().NotBeNull();
+        updatedUserSettings.Culture.Should().Be("en-US");
+        updatedUserSettings.Language.Should().Be("en");
+        updatedUserSettings.TimeZone.Should().Be("Europe/Berlin");
     }
 }

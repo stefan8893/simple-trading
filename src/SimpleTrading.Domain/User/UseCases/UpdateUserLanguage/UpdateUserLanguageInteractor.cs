@@ -7,12 +7,21 @@ namespace SimpleTrading.Domain.User.UseCases.UpdateUserLanguage;
 
 [UsedImplicitly]
 public class UpdateUserLanguageInteractor(IUserSettingsRepository userSettingsRepository, UowCommit uowCommit)
-    : InteractorBase, IInteractor<UpdateUserLanguageRequestModel, OneOf<Completed, BadInput>>
+    : InteractorBase, IInteractor<UpdateUserSettingsRequestModel, OneOf<Completed, BadInput>>
 {
-    public async Task<OneOf<Completed, BadInput>> Execute(UpdateUserLanguageRequestModel requestModel)
+    public async Task<OneOf<Completed, BadInput>> Execute(UpdateUserSettingsRequestModel requestModel)
     {
         var userSettings = await userSettingsRepository.GetUserSettings();
-        userSettings.Language = requestModel.IsoLanguageCode;
+        
+        if(requestModel.Culture is not null)
+            userSettings.Culture = requestModel.Culture;
+        
+        if(requestModel.IsoLanguageCode.IsT0)
+            userSettings.Language = requestModel.IsoLanguageCode.AsT0;
+        
+        if(requestModel.Timezone is not null)
+            userSettings.TimeZone = requestModel.Timezone;
+        
         await uowCommit();
 
         return Completed();
