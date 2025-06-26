@@ -1180,7 +1180,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             body: content_,
-            method: "PUT",
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             }

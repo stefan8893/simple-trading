@@ -50,7 +50,7 @@ public class UserSettingsController : ControllerBase
         return Ok(timezoneOptions);
     }
 
-    [HttpPut(Name = nameof(UpdateUserLanguage))]
+    [HttpPatch(Name = nameof(UpdateUserLanguage))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateUserLanguage(
