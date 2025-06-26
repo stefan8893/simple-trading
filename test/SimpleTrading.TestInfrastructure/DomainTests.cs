@@ -24,10 +24,6 @@ public abstract class DomainTests
     public async Task DisposeAsync()
     {
         await DbContext.Database.EnsureDeletedAsync();
-        
-        if(_dbContext is not null)
-            await _dbContext.DisposeAsync();
-        
         _lifetimeScope?.Dispose();
         _container?.Dispose();
     }
