@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: ["**"]
+    branches: ['**']
 
 jobs:
   ci:
@@ -19,7 +19,7 @@ jobs:
       - name: Setup dotnet 9.x
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.x"
+          dotnet-version: '9.x'
 
       - name: Build
         shell: pwsh
@@ -42,14 +42,14 @@ jobs:
       - name: Generate Coverage Report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.8
         with:
-          reports: "test/**/coverage.cobertura.xml"
-          targetdir: "CoverageReport"
-          reporttypes: "HtmlInline;MarkdownSummaryGithub;Cobertura"
-          assemblyfilters: "-SimpleTrading.TestInfrastructure"
-          verbosity: "Info"
-          title: "Simple Trading Code Coverage"
-          tag: "${{ github.run_number }}_${{ github.run_id }}"
-          toolpath: "reportgeneratortool"
+          reports: 'test/**/coverage.cobertura.xml'
+          targetdir: 'CoverageReport'
+          reporttypes: 'HtmlInline;MarkdownSummaryGithub;Cobertura'
+          assemblyfilters: '-SimpleTrading.TestInfrastructure'
+          verbosity: 'Info'
+          title: 'Simple Trading Code Coverage'
+          tag: '${{ github.run_number }}_${{ github.run_id }}'
+          toolpath: 'reportgeneratortool'
 
       - name: Upload Coverage Report Artifact
         uses: actions/upload-artifact@v4
