@@ -51,6 +51,6 @@ jobs:
         with:
           package-name: 'simple-trading-client'
           package-type: 'npm'
-          token: ${{ secrets.NPM_AUTH_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           min-versions-to-keep: 10
           delete-only-pre-release-versions: 'false'
