@@ -157,7 +157,7 @@ jobs:
   cleanup:
     name: Cleanup
     runs-on: ubuntu-latest
-    needs: deploy_app
+    needs: [deploy_app, publish_clients]
     permissions:
       packages: write
 
@@ -167,7 +167,7 @@ jobs:
         with:
           package-name: 'simple-trading'
           package-type: 'container'
-          min-versions-to-keep: 5
+          min-versions-to-keep: 10
           token: ${{ secrets.GITHUB_TOKEN }}
           delete-only-untagged-versions: 'false'
 
@@ -178,5 +178,5 @@ jobs:
         with:
           package-name: 'simple-trading-client'
           package-type: 'npm'
-          min-versions-to-keep: 5
+          min-versions-to-keep: 10
           delete-only-pre-release-versions: 'false'
