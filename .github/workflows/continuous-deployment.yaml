@@ -77,39 +77,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: Version=${{ env.Version }}
 
-  publish_clients:
-    name: Publish Clients
-    runs-on: ubuntu-latest
-    needs: has_next_version
-    permissions:
-      packages: write
-
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup dotnet 9.x
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.x'
-
-      - name: Setup node 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.x'
-          registry-url: 'https://npm.pkg.github.com'
-
-      - name: Publish js client package
-        shell: pwsh
-        working-directory: src/SimpleTrading.WebApi/Clients
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          $version = git describe --tags --abbrev=0
-          .\publish-js-client.ps1 -Version $version
-
   deploy_app:
     name: Deploy App
     needs: package_app
@@ -154,6 +121,39 @@ jobs:
           app-name: ${{ env.AzureAppName }}
           images: ${{ env.ImageTag }}
 
+  publish_clients:
+    name: Publish Clients
+    runs-on: ubuntu-latest
+    needs: package_app
+    permissions:
+      packages: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup dotnet 9.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Setup node 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Publish js client package
+        shell: pwsh
+        working-directory: src/SimpleTrading.WebApi/Clients
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $version = git describe --tags --abbrev=0
+          .\publish-js-client.ps1 -Version $version
+
   cleanup:
     name: Cleanup
     runs-on: ubuntu-latest
@@ -167,11 +167,10 @@ jobs:
         with:
           package-name: 'simple-trading'
           package-type: 'container'
-          min-versions-to-keep: 10
+          min-versions-to-keep: 5
           token: ${{ secrets.GITHUB_TOKEN }}
           delete-only-untagged-versions: 'false'
 
-    steps:
       - name: Remove old NPM packages
         uses: actions/delete-package-versions@v5
         env:
@@ -179,5 +178,5 @@ jobs:
         with:
           package-name: 'simple-trading-client'
           package-type: 'npm'
-          min-versions-to-keep: 7
+          min-versions-to-keep: 5
           delete-only-pre-release-versions: 'false'
