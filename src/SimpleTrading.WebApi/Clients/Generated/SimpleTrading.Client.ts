@@ -126,7 +126,7 @@ export interface ISimpleTradingClient {
     /**
      * @return OK
      */
-    availableTimeZones(): Promise<SwaggerResponse<TimezoneOption[]>>;
+    getAvailableTimezones(): Promise<SwaggerResponse<TimeZoneOption[]>>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
@@ -1262,7 +1262,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
     /**
      * @return OK
      */
-    availableTimeZones(): Promise<SwaggerResponse<TimezoneOption[]>> {
+    getAvailableTimezones(): Promise<SwaggerResponse<TimeZoneOption[]>> {
         let url_ = this.baseUrl + "/usersettings/available-timezones";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1274,11 +1274,11 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processAvailableTimeZones(_response);
+            return this.processGetAvailableTimezones(_response);
         });
     }
 
-    protected processAvailableTimeZones(response: Response): Promise<SwaggerResponse<TimezoneOption[]>> {
+    protected processGetAvailableTimezones(response: Response): Promise<SwaggerResponse<TimeZoneOption[]>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -1292,7 +1292,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(TimezoneOption.fromJS(item));
+                    result200!.push(TimeZoneOption.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1304,7 +1304,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SwaggerResponse<TimezoneOption[]>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<SwaggerResponse<TimeZoneOption[]>>(new SwaggerResponse(status, _headers, null as any));
     }
 }
 
@@ -2028,11 +2028,12 @@ export interface IStringUpdateValue {
     value?: string | undefined;
 }
 
-export class TimezoneOption implements ITimezoneOption {
+export class TimeZoneOption implements ITimeZoneOption {
     windowsId?: string | undefined;
     timeZone?: string | undefined;
+    offset?: string | undefined;
 
-    constructor(data?: ITimezoneOption) {
+    constructor(data?: ITimeZoneOption) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2045,12 +2046,13 @@ export class TimezoneOption implements ITimezoneOption {
         if (_data) {
             this.windowsId = _data["windowsId"];
             this.timeZone = _data["timeZone"];
+            this.offset = _data["offset"];
         }
     }
 
-    static fromJS(data: any): TimezoneOption {
+    static fromJS(data: any): TimeZoneOption {
         data = typeof data === 'object' ? data : {};
-        let result = new TimezoneOption();
+        let result = new TimeZoneOption();
         result.init(data);
         return result;
     }
@@ -2059,13 +2061,15 @@ export class TimezoneOption implements ITimezoneOption {
         data = typeof data === 'object' ? data : {};
         data["windowsId"] = this.windowsId;
         data["timeZone"] = this.timeZone;
+        data["offset"] = this.offset;
         return data;
     }
 }
 
-export interface ITimezoneOption {
+export interface ITimeZoneOption {
     windowsId?: string | undefined;
     timeZone?: string | undefined;
+    offset?: string | undefined;
 }
 
 export class TradeDto implements ITradeDto {

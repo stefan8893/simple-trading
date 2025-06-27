@@ -38,8 +38,8 @@ public class UserSettingsController : ControllerBase
         return Ok(nowInUserTimeZone);
     }
 
-    [HttpGet("available-timezones", Name = "AvailableTimeZones")]
-    [ProducesResponseType<IEnumerable<TimezoneOption>>(StatusCodes.Status200OK)]
+    [HttpGet("available-timezones", Name = nameof(GetAvailableTimezones))]
+    [ProducesResponseType<IEnumerable<TimeZoneOption>>(StatusCodes.Status200OK)]
     public ActionResult GetAvailableTimezones()
     {
         var timezoneOptions = TzdbDateTimeZoneSource
@@ -51,7 +51,7 @@ public class UserSettingsController : ControllerBase
                 var offset = DateTimeZoneProviders.Tzdb[x.Value].GetUtcOffset(now);
                 var offsetFormatted = offset.ToString("m", CultureInfo.InvariantCulture);
 
-                return new TimezoneOption(x.Key, x.Value, offsetFormatted);
+                return new TimeZoneOption(x.Key, x.Value, offsetFormatted);
             });
 
         return Ok(timezoneOptions);
