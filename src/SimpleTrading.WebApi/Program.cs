@@ -38,13 +38,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("https://simpletrading.z6.web.core.windows.net")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    var corsUrls = builder.Configuration
+        .GetSection("CorsUrls")
+        .Get<string[]>() ?? [];
+
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(corsUrls)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
