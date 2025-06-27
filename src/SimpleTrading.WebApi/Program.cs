@@ -36,6 +36,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(_ => { },
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("https://simpletrading.z6.web.core.windows.net")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 
@@ -53,6 +64,7 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
 app.UseAuthentication();
+app.UseCors();
 app.UseAuthorization();
 app.UseNotFoundMiddleware();
 
