@@ -67,7 +67,6 @@ var app = builder.Build();
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
-app.UseRouting();
 app.UseCors(clientAppCorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
