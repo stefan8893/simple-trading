@@ -63,11 +63,10 @@ builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
 var app = builder.Build();
 
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
-app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
-app.UseAuthentication();
 app.UseCors();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseNotFoundMiddleware();
 
