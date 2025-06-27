@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
@@ -43,9 +44,15 @@ public class UserSettingsController : ControllerBase
     {
         var timezoneOptions = TzdbDateTimeZoneSource
             .Default
-            .WindowsMapping
-            .PrimaryMapping
-            .Select(x => new TimezoneOption(x.Key, x.Value));
+            .WindowsToTzdbIds
+            .Select(x =>
+            {
+                var now = SystemClock.Instance.GetCurrentInstant();
+                var offset = DateTimeZoneProviders.Tzdb[x.Value].GetUtcOffset(now);
+                var offsetFormatted = offset.ToString("m", CultureInfo.InvariantCulture);
+
+                return new TimezoneOption(x.Key, x.Value, offsetFormatted);
+            });
 
         return Ok(timezoneOptions);
     }
