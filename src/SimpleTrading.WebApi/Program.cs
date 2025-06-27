@@ -36,15 +36,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(_ => { },
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 
+const string clientAppCorsPolicy = "ClientAppCorsPolicy";
 builder.Services.AddCors(options =>
 {
     var corsUrls = builder.Configuration
         .GetSection("CorsUrls")
         .Get<string[]>() ?? [];
 
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy(clientAppCorsPolicy, policy =>
     {
         policy.WithOrigins(corsUrls)
+            .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -65,7 +67,8 @@ var app = builder.Build();
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
-app.UseCors();
+app.UseRouting();
+app.UseCors(clientAppCorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseNotFoundMiddleware();
