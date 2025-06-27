@@ -5,7 +5,7 @@ namespace SimpleTrading.WebApi.Features.UserSettings.Dto;
 public class UserSettingsDto
 {
     public required string Culture { get; set; }
-    public required string Language { get; set; }
+    public required string? Language { get; set; }
     public required string TimeZone { get; set; }
     public required DateTimeOffset LastModified { get; set; }
 

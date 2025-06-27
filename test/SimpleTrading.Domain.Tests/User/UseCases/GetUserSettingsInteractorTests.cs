@@ -20,7 +20,7 @@ public class GetUserSettingsTests : DomainTests
     }
 
     [Fact]
-    public async Task Language_is_equal_to_culture_language_if_not_overriden()
+    public async Task Language_can_be_null()
     {
         // arrange
         var userSettings = await ServiceLocator
@@ -28,13 +28,13 @@ public class GetUserSettingsTests : DomainTests
             .GetUserSettings();
 
         userSettings.Language = null;
+        await DbContext.SaveChangesAsync();
 
         // act
         var userSettingsModel = await Interactor.Execute();
 
         // assert
-        var cultureLanguage = new CultureInfo(userSettingsModel.Culture).TwoLetterISOLanguageName;
-        userSettingsModel.Language.Should().Be(cultureLanguage);
+        userSettingsModel.Language.Should().BeNull();
     }
 
     [Fact]
@@ -47,6 +47,7 @@ public class GetUserSettingsTests : DomainTests
 
         userSettings.Culture = "en-US";
         userSettings.Language = "de";
+        await DbContext.SaveChangesAsync();
 
         // act
         var userSettingsModel = await Interactor.Execute();

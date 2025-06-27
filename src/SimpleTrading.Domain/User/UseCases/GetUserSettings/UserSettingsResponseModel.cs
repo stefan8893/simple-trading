@@ -2,6 +2,6 @@
 
 public record UserSettingsResponseModel(
     string Culture,
-    string Language,
+    string? Language,
     string TimeZone,
     DateTimeOffset LastModified);

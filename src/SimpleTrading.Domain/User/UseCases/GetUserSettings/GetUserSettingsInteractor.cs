@@ -13,7 +13,7 @@ public class GetUserSettingsInteractor(IUserSettingsRepository userSettingsRepos
     public async Task<UserSettingsResponseModel> Execute()
     {
         var userSettings = await userSettingsRepository.GetUserSettings();
-        var language = userSettings.Language ?? new CultureInfo(userSettings.Culture).TwoLetterISOLanguageName;
+        var language = userSettings.Language;
 
         return new UserSettingsResponseModel(userSettings.Culture, language, userSettings.TimeZone,
             userSettings.LastModified.ToLocal(userSettings.TimeZone));
