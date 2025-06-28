@@ -37,15 +37,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 
 const string clientAppCorsPolicy = "ClientAppCorsPolicy";
+const string localCorsPolicy = "LocalCorsPolicy";
 builder.Services.AddCors(options =>
 {
-    var corsUrls = builder.Configuration
-        .GetSection("CorsUrls")
+    var clientAppUrls = builder.Configuration
+        .GetSection("CorsUrls:ClientApp")
         .Get<string[]>() ?? [];
 
     options.AddPolicy(clientAppCorsPolicy, policy =>
     {
-        policy.WithOrigins(corsUrls)
+        policy.WithOrigins(clientAppUrls)
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+    
+    var localhostUrls = builder.Configuration
+        .GetSection("CorsUrls:Local")
+        .Get<string[]>() ?? [];
+
+    options.AddPolicy(localCorsPolicy, policy =>
+    {
+        policy.WithOrigins(localhostUrls)
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -68,6 +81,7 @@ app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
 app.UseCors(clientAppCorsPolicy);
+app.UseCors(localCorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseNotFoundMiddleware();
