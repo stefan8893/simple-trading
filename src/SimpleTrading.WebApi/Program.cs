@@ -54,7 +54,7 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
-    
+
     var localhostUrls = builder.Configuration
         .GetSection("CorsUrls:Local")
         .Get<string[]>() ?? [];
@@ -83,8 +83,8 @@ var app = builder.Build();
 app.ConfigureSwaggerUi(clientAppEntraIdConfig);
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
-app.UseCors(localCorsPolicy);
 app.UseCors(clientAppCorsPolicy);
+app.UseCors(localCorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseNotFoundMiddleware();
