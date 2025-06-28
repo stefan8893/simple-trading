@@ -3,6 +3,6 @@
     "TokenEndpoint": "https://login.microsoftonline.com/f64914bc-6b63-492c-9d53-830b704506e2/oauth2/v2.0/token",
     "ClientId": "1525cffd-5dad-4c84-ac26-8ab76a330f44",
     "ClientSecret": "<secret>",
-    "Scope": "api://101d4064-18c2-4f46-9479-5fb73b262754/.default"
+    "Scope": "api://simple-trading-web-api/.default"
   }
 }
