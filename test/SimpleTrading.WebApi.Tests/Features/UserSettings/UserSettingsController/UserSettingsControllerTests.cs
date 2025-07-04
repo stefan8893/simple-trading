@@ -23,11 +23,11 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     public async Task UserSettings_can_be_retrieved_successfully()
     {
         // arrange
+        var client = await CreateClient();
+
         var profile = (TestData.Profile.Default with {IsSelected = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
 
-        var client = await CreateClient();
         var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
@@ -44,12 +44,29 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettingsDto.SelectedProfileId.Should().Be(profile.Id);
         userSettingsDto.SelectedProfileName.Should().Be(profile.Name);
     }
+    
+    [Fact]
+    public async Task An_exception_is_thrown_when_there_is_no_active_profile()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        // act
+        var act = () => client.GetUserSettingsAsync();
+
+        // assert
+        await act.Should().ThrowAsync<SimpleTradingClientException>();
+    }
 
     [Fact]
     public async Task LastModified_is_correctly_converted()
     {
         // arrange
         var client = await CreateClient();
+        
+        var profile = (TestData.Profile.Default with {IsSelected = true, Name = "TestProfile"}).Build();
+        DbContext.Profiles.Add(profile);
+        
         var userSettings = await ServiceLocator
             .Resolve<IUserSettingsRepository>()
             .GetUserSettings();
