@@ -4,4 +4,7 @@ public record UserSettingsResponseModel(
     string Culture,
     string? Language,
     string TimeZone,
-    DateTimeOffset LastModified);
+    DateTimeOffset LastModified,
+    Guid SelectedProfileId,
+    string SelectedProfileName
+);

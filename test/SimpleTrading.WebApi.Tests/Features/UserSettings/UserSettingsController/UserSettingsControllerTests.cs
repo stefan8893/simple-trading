@@ -6,6 +6,7 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.UserSettings.UserSettingsController;
 
@@ -22,6 +23,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     public async Task UserSettings_can_be_retrieved_successfully()
     {
         // arrange
+        var profile = (TestData.Profile.Default with {IsSelected = true, Name = "TestProfile"}).Build();
+        DbContext.Profiles.Add(profile);
+        await DbContext.SaveChangesAsync();
+
         var client = await CreateClient();
         var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
         userSettings.Culture = "en-US";
@@ -36,6 +41,8 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettingsDto.Culture.Should().Be("en-US");
         userSettingsDto.TimeZone.Should().Be("Europe/Vienna");
         userSettingsDto.Language.Should().Be("de");
+        userSettingsDto.SelectedProfileId.Should().Be(profile.Id);
+        userSettingsDto.SelectedProfileName.Should().Be(profile.Name);
     }
 
     [Fact]

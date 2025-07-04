@@ -2735,6 +2735,13 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset LastModified { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("selectedProfileId", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid SelectedProfileId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("selectedProfileName", Required = Newtonsoft.Json.Required.AllowNull)]
+        public string SelectedProfileName { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
