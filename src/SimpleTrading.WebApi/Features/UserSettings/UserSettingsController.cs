@@ -6,7 +6,7 @@ using NodaTime.TimeZones;
 using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
-using SimpleTrading.Domain.User.UseCases.UpdateUserLanguage;
+using SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.UserSettings.Dto;
 using SimpleTrading.WebApi.Infrastructure;
@@ -57,11 +57,11 @@ public class UserSettingsController : ControllerBase
         return Ok(timezoneOptions);
     }
 
-    [HttpPatch(Name = nameof(UpdateUserLanguage))]
+    [HttpPatch(Name = nameof(UpdateUserSettings))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> UpdateUserLanguage(
-        [FromServices] IUpdateUserLanguage updateUserLanguage,
+    public async Task<ActionResult> UpdateUserSettings(
+        [FromServices] IUpdateUserSettings updateUserSettings,
         [FromBody] UpdateUserSettingsDto updateUserSettingsDto)
     {
         var requestModel = new UpdateUserSettingsRequestModel(updateUserSettingsDto.Culture,
@@ -69,7 +69,7 @@ public class UserSettingsController : ControllerBase
                 ? updateUserSettingsDto.IsoLanguageCode.Value
                 : new None(),
             updateUserSettingsDto.TimeZone);
-        var result = await updateUserLanguage.Execute(requestModel);
+        var result = await updateUserSettings.Execute(requestModel);
 
         return result.Match(
             completed => NoContent(),

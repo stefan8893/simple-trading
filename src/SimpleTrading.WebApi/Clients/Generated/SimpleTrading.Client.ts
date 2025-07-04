@@ -116,7 +116,7 @@ export interface ISimpleTradingClient {
      * @param body (optional) 
      * @return No Content
      */
-    updateUserLanguage(body: UpdateUserSettingsDto | undefined): Promise<SwaggerResponse<void>>;
+    updateUserSettings(body: UpdateUserSettingsDto | undefined): Promise<SwaggerResponse<void>>;
 
     /**
      * @return OK
@@ -1172,7 +1172,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param body (optional) 
      * @return No Content
      */
-    updateUserLanguage(body: UpdateUserSettingsDto | undefined): Promise<SwaggerResponse<void>> {
+    updateUserSettings(body: UpdateUserSettingsDto | undefined): Promise<SwaggerResponse<void>> {
         let url_ = this.baseUrl + "/usersettings";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1187,11 +1187,11 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateUserLanguage(_response);
+            return this.processUpdateUserSettings(_response);
         });
     }
 
-    protected processUpdateUserLanguage(response: Response): Promise<SwaggerResponse<void>> {
+    protected processUpdateUserSettings(response: Response): Promise<SwaggerResponse<void>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {

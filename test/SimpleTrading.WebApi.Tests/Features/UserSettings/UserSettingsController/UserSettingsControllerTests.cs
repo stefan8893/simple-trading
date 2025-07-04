@@ -72,7 +72,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         await DbContext.SaveChangesAsync();
 
         // act
-        await client.UpdateUserLanguageAsync(new UpdateUserSettingsDto
+        await client.UpdateUserSettingsAsync(new UpdateUserSettingsDto
         {
             Culture = "de-AT",
             IsoLanguageCode = new StringUpdateValue
@@ -103,7 +103,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         await DbContext.SaveChangesAsync();
 
         // act
-        await client.UpdateUserLanguageAsync(new UpdateUserSettingsDto
+        await client.UpdateUserSettingsAsync(new UpdateUserSettingsDto
         {
             IsoLanguageCode = new StringUpdateValue
             {

@@ -3,14 +3,14 @@ using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User;
 using SimpleTrading.Domain.User.DataAccess;
-using SimpleTrading.Domain.User.UseCases.UpdateUserLanguage;
+using SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
 using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.Domain.Tests.User.UseCases;
 
 public class UpdateUserSettingsTests : DomainTests
 {
-    private IUpdateUserLanguage Interactor => ServiceLocator.Resolve<IUpdateUserLanguage>();
+    private IUpdateUserSettings Interactor => ServiceLocator.Resolve<IUpdateUserSettings>();
 
     [Fact]
     public async Task Initial_user_lang_is_en_and_gets_set_to_null()

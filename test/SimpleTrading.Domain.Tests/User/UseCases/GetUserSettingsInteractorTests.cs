@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Autofac;
+﻿using Autofac;
 using AwesomeAssertions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;

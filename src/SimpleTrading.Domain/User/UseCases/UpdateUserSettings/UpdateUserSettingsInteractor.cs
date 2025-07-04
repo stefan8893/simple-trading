@@ -3,10 +3,10 @@ using OneOf;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;
 
-namespace SimpleTrading.Domain.User.UseCases.UpdateUserLanguage;
+namespace SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
 
 [UsedImplicitly]
-public class UpdateUserLanguageInteractor(IUserSettingsRepository userSettingsRepository, UowCommit uowCommit)
+public class UpdateUserSettingsInteractor(IUserSettingsRepository userSettingsRepository, UowCommit uowCommit)
     : InteractorBase, IInteractor<UpdateUserSettingsRequestModel, OneOf<Completed, BadInput>>
 {
     public async Task<OneOf<Completed, BadInput>> Execute(UpdateUserSettingsRequestModel requestModel)

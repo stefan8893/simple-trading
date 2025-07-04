@@ -6,14 +6,14 @@ using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
 
-namespace SimpleTrading.Domain.User.UseCases.UpdateUserLanguage;
+namespace SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
 
 public record UpdateUserSettingsRequestModel(string? Culture, OneOf<string?, None> IsoLanguageCode, string? Timezone);
 
 [UsedImplicitly]
-public class UpdateUserLanguageRequestModelValidator : AbstractValidator<UpdateUserSettingsRequestModel>
+public class UpdateUserSettingsRequestModelValidator : AbstractValidator<UpdateUserSettingsRequestModel>
 {
-    public UpdateUserLanguageRequestModelValidator()
+    public UpdateUserSettingsRequestModelValidator()
     {
         RuleFor(x => x.Culture)
             .Must(x => Constants.SupportedCultures.Contains(new CultureInfo(x!)))
