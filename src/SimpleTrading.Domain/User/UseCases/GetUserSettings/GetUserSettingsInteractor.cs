@@ -15,13 +15,13 @@ public class GetUserSettingsInteractor(IUserSettingsRepository userSettingsRepos
         var userSettings = await userSettingsRepository.GetUserSettings();
         var language = userSettings.Language;
 
-        var profiles = await profileRepository.Find(x => x.IsSelected);
+        var profiles = await profileRepository.Find(x => x.IsActive);
         if(profiles.Count != 1)
-            throw new Exception("There can be only one selected profile");
+            throw new Exception("There can be only one active profile");
         
-        var selectedProfile = profiles[0];
+        var activeProfile = profiles[0];
         
         return new UserSettingsResponseModel(userSettings.Culture, language, userSettings.TimeZone,
-            userSettings.LastModified.ToLocal(userSettings.TimeZone), selectedProfile.Id, selectedProfile.Name);
+            userSettings.LastModified.ToLocal(userSettings.TimeZone), activeProfile.Id, activeProfile.Name);
     }
 }

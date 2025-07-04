@@ -8,10 +8,8 @@ public class UserSettingsDto
     public required string? Language { get; set; }
     public required string TimeZone { get; set; }
     public required DateTimeOffset LastModified { get; set; }
-
-    public required Guid SelectedProfileId { get; set; }
-
-    public required string SelectedProfileName { get; set; }
+    public required Guid ActiveProfileId { get; set; }
+    public required string ActiveProfileName { get; set; }
 
     public static UserSettingsDto From(UserSettingsResponseModel userSettings)
     {
@@ -21,8 +19,8 @@ public class UserSettingsDto
             Language = userSettings.Language,
             TimeZone = userSettings.TimeZone,
             LastModified = userSettings.LastModified,
-            SelectedProfileId = userSettings.SelectedProfileId,
-            SelectedProfileName = userSettings.SelectedProfileName
+            ActiveProfileId = userSettings.ActiveProfileId,
+            ActiveProfileName = userSettings.ActiveProfileName
         };
     }
 }

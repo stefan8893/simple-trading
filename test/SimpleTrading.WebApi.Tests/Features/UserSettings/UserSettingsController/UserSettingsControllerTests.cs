@@ -25,7 +25,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // arrange
         var client = await CreateClient();
 
-        var profile = (TestData.Profile.Default with {IsSelected = true, Name = "TestProfile"}).Build();
+        var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
 
         var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
@@ -41,8 +41,8 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettingsDto.Culture.Should().Be("en-US");
         userSettingsDto.TimeZone.Should().Be("Europe/Vienna");
         userSettingsDto.Language.Should().Be("de");
-        userSettingsDto.SelectedProfileId.Should().Be(profile.Id);
-        userSettingsDto.SelectedProfileName.Should().Be(profile.Name);
+        userSettingsDto.ActiveProfileId.Should().Be(profile.Id);
+        userSettingsDto.ActiveProfileName.Should().Be(profile.Name);
     }
     
     [Fact]
@@ -64,7 +64,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // arrange
         var client = await CreateClient();
         
-        var profile = (TestData.Profile.Default with {IsSelected = true, Name = "TestProfile"}).Build();
+        var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
         
         var userSettings = await ServiceLocator

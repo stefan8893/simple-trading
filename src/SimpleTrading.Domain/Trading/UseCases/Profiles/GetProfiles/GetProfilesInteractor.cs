@@ -20,7 +20,7 @@ public class GetProfilesInteractor(IProfileRepository profileRepository)
             : await profileRepository.GetAll();
 
         return result
-            .Select(x => new GetProfilesResponseModel(x.Id, x.Name, x.Description, x.IsSelected))
+            .Select(x => new GetProfilesResponseModel(x.Id, x.Name, x.Description, x.IsActive))
             .ToList();
     }
 }

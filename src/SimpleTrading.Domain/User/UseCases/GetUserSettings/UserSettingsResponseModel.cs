@@ -5,6 +5,6 @@ public record UserSettingsResponseModel(
     string? Language,
     string TimeZone,
     DateTimeOffset LastModified,
-    Guid SelectedProfileId,
-    string SelectedProfileName
+    Guid ActiveProfileId,
+    string ActiveProfileName
 );

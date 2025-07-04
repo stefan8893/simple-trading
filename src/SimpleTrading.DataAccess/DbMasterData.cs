@@ -48,7 +48,7 @@ public class DbMasterData(TradingDbContext dbContext)
             Id = Guid.Parse("401c519b-956a-4a5f-bd84-77e716817771"),
             Name = "Default",
             Description = null,
-            IsSelected = true,
+            IsActive = true,
             Created = DateTime.Parse("2024-08-03T08:00:00Z")
         };
 

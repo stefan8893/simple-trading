@@ -2450,8 +2450,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("isSelected", Required = Newtonsoft.Json.Required.Always)]
-        public bool IsSelected { get; set; }
+        [Newtonsoft.Json.JsonProperty("isActive", Required = Newtonsoft.Json.Required.Always)]
+        public bool IsActive { get; set; }
 
     }
 
@@ -2735,12 +2735,12 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset LastModified { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("selectedProfileId", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("activeProfileId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid SelectedProfileId { get; set; }
+        public System.Guid ActiveProfileId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("selectedProfileName", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string SelectedProfileName { get; set; }
+        [Newtonsoft.Json.JsonProperty("activeProfileName", Required = Newtonsoft.Json.Required.AllowNull)]
+        public string ActiveProfileName { get; set; }
 
     }
 

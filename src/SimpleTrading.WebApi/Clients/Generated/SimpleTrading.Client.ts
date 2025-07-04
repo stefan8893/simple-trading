@@ -1852,7 +1852,7 @@ export class ProfileDto implements IProfileDto {
     id!: string;
     name!: string | undefined;
     description?: string | undefined;
-    isSelected!: boolean;
+    isActive!: boolean;
 
     constructor(data?: IProfileDto) {
         if (data) {
@@ -1868,7 +1868,7 @@ export class ProfileDto implements IProfileDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.description = _data["description"];
-            this.isSelected = _data["isSelected"];
+            this.isActive = _data["isActive"];
         }
     }
 
@@ -1884,7 +1884,7 @@ export class ProfileDto implements IProfileDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["isSelected"] = this.isSelected;
+        data["isActive"] = this.isActive;
         return data;
     }
 }
@@ -1893,7 +1893,7 @@ export interface IProfileDto {
     id: string;
     name: string | undefined;
     description?: string | undefined;
-    isSelected: boolean;
+    isActive: boolean;
 }
 
 export class ReferenceDto implements IReferenceDto {
@@ -2493,6 +2493,8 @@ export class UserSettingsDto implements IUserSettingsDto {
     language!: string | undefined;
     timeZone!: string | undefined;
     lastModified!: Date;
+    activeProfileId!: string;
+    activeProfileName!: string | undefined;
 
     constructor(data?: IUserSettingsDto) {
         if (data) {
@@ -2509,6 +2511,8 @@ export class UserSettingsDto implements IUserSettingsDto {
             this.language = _data["language"];
             this.timeZone = _data["timeZone"];
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+            this.activeProfileId = _data["activeProfileId"];
+            this.activeProfileName = _data["activeProfileName"];
         }
     }
 
@@ -2525,6 +2529,8 @@ export class UserSettingsDto implements IUserSettingsDto {
         data["language"] = this.language;
         data["timeZone"] = this.timeZone;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        data["activeProfileId"] = this.activeProfileId;
+        data["activeProfileName"] = this.activeProfileName;
         return data;
     }
 }
@@ -2534,6 +2540,8 @@ export interface IUserSettingsDto {
     language: string | undefined;
     timeZone: string | undefined;
     lastModified: Date;
+    activeProfileId: string;
+    activeProfileName: string | undefined;
 }
 
 export class WarningsDto implements IWarningsDto {
