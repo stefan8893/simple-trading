@@ -2336,8 +2336,9 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid TradeId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> Warnings { get; set; }
+        [Newtonsoft.Json.JsonProperty("warnings", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<string> Warnings { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
     }
 
@@ -2362,10 +2363,12 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("symbol", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("symbol", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Symbol { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
     }
@@ -2394,10 +2397,12 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("isoCode", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("isoCode", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string IsoCode { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
     }
@@ -2413,27 +2418,31 @@ namespace SimpleTrading.Client
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ErrorResponse
     {
-        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> Messages { get; set; }
+        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<string> Messages { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldError
     {
-        [Newtonsoft.Json.JsonProperty("identifier", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("identifier", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Identifier { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string> Messages { get; set; }
+        [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<string> Messages { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldErrorResponse
     {
-        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<FieldError> Errors { get; set; }
+        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<FieldError> Errors { get; set; } = new System.Collections.ObjectModel.Collection<FieldError>();
 
     }
 
@@ -2444,7 +2453,8 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2467,7 +2477,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReferenceTypeDto Type { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Link { get; set; }
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2545,13 +2556,15 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("assetId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? AssetId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("asset", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("asset", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Asset { get; set; }
 
         [Newtonsoft.Json.JsonProperty("profileId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ProfileId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("profile", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("profile", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Profile { get; set; }
 
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2579,7 +2592,8 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("currencyId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? CurrencyId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Currency { get; set; }
 
         [Newtonsoft.Json.JsonProperty("entry", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2597,8 +2611,9 @@ namespace SimpleTrading.Client
         [Newtonsoft.Json.JsonProperty("riskRewardRatio", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? RiskRewardRatio { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("references", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<ReferenceDto> References { get; set; }
+        [Newtonsoft.Json.JsonProperty("references", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<ReferenceDto> References { get; set; } = new System.Collections.ObjectModel.Collection<ReferenceDto>();
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Notes { get; set; }
@@ -2722,13 +2737,15 @@ namespace SimpleTrading.Client
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UserSettingsDto
     {
-        [Newtonsoft.Json.JsonProperty("culture", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("culture", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Culture { get; set; }
 
         [Newtonsoft.Json.JsonProperty("language", Required = Newtonsoft.Json.Required.AllowNull)]
         public string Language { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("timeZone", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("timeZone", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string TimeZone { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastModified", Required = Newtonsoft.Json.Required.Always)]
@@ -2739,7 +2756,8 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid ActiveProfileId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("activeProfileName", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("activeProfileName", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string ActiveProfileName { get; set; }
 
     }

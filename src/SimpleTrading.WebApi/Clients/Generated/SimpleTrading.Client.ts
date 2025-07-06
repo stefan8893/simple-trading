@@ -1450,7 +1450,7 @@ export interface IAddTradeDto {
 
 export class AddTradeResultDto implements IAddTradeResultDto {
     tradeId!: string;
-    warnings!: string[] | undefined;
+    warnings!: string[];
 
     constructor(data?: IAddTradeResultDto) {
         if (data) {
@@ -1458,6 +1458,9 @@ export class AddTradeResultDto implements IAddTradeResultDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.warnings = [];
         }
     }
 
@@ -1493,13 +1496,13 @@ export class AddTradeResultDto implements IAddTradeResultDto {
 
 export interface IAddTradeResultDto {
     tradeId: string;
-    warnings: string[] | undefined;
+    warnings: string[];
 }
 
 export class ApiInfo implements IApiInfo {
-    name?: string | undefined;
-    version?: string | undefined;
-    environment?: string | undefined;
+    name?: string;
+    version?: string;
+    environment?: string;
 
     constructor(data?: IApiInfo) {
         if (data) {
@@ -1535,15 +1538,15 @@ export class ApiInfo implements IApiInfo {
 }
 
 export interface IApiInfo {
-    name?: string | undefined;
-    version?: string | undefined;
-    environment?: string | undefined;
+    name?: string;
+    version?: string;
+    environment?: string;
 }
 
 export class AssetDto implements IAssetDto {
     id!: string;
-    symbol!: string | undefined;
-    name!: string | undefined;
+    symbol!: string;
+    name!: string;
 
     constructor(data?: IAssetDto) {
         if (data) {
@@ -1580,8 +1583,8 @@ export class AssetDto implements IAssetDto {
 
 export interface IAssetDto {
     id: string;
-    symbol: string | undefined;
-    name: string | undefined;
+    symbol: string;
+    name: string;
 }
 
 export class CloseTradeDto implements ICloseTradeDto {
@@ -1634,8 +1637,8 @@ export interface ICloseTradeDto {
 
 export class CurrencyDto implements ICurrencyDto {
     id!: string;
-    isoCode!: string | undefined;
-    name!: string | undefined;
+    isoCode!: string;
+    name!: string;
 
     constructor(data?: ICurrencyDto) {
         if (data) {
@@ -1672,8 +1675,8 @@ export class CurrencyDto implements ICurrencyDto {
 
 export interface ICurrencyDto {
     id: string;
-    isoCode: string | undefined;
-    name: string | undefined;
+    isoCode: string;
+    name: string;
 }
 
 export class DecimalNullableUpdateValue implements IDecimalNullableUpdateValue {
@@ -1713,7 +1716,7 @@ export interface IDecimalNullableUpdateValue {
 }
 
 export class ErrorResponse implements IErrorResponse {
-    messages!: string[] | undefined;
+    messages!: string[];
 
     constructor(data?: IErrorResponse) {
         if (data) {
@@ -1721,6 +1724,9 @@ export class ErrorResponse implements IErrorResponse {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.messages = [];
         }
     }
 
@@ -1753,12 +1759,12 @@ export class ErrorResponse implements IErrorResponse {
 }
 
 export interface IErrorResponse {
-    messages: string[] | undefined;
+    messages: string[];
 }
 
 export class FieldError implements IFieldError {
-    identifier!: string | undefined;
-    messages!: string[] | undefined;
+    identifier!: string;
+    messages!: string[];
 
     constructor(data?: IFieldError) {
         if (data) {
@@ -1766,6 +1772,9 @@ export class FieldError implements IFieldError {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.messages = [];
         }
     }
 
@@ -1800,12 +1809,12 @@ export class FieldError implements IFieldError {
 }
 
 export interface IFieldError {
-    identifier: string | undefined;
-    messages: string[] | undefined;
+    identifier: string;
+    messages: string[];
 }
 
 export class FieldErrorResponse implements IFieldErrorResponse {
-    errors!: FieldError[] | undefined;
+    errors!: FieldError[];
 
     constructor(data?: IFieldErrorResponse) {
         if (data) {
@@ -1813,6 +1822,9 @@ export class FieldErrorResponse implements IFieldErrorResponse {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.errors = [];
         }
     }
 
@@ -1845,12 +1857,12 @@ export class FieldErrorResponse implements IFieldErrorResponse {
 }
 
 export interface IFieldErrorResponse {
-    errors: FieldError[] | undefined;
+    errors: FieldError[];
 }
 
 export class ProfileDto implements IProfileDto {
     id!: string;
-    name!: string | undefined;
+    name!: string;
     description?: string | undefined;
     isActive!: boolean;
 
@@ -1891,7 +1903,7 @@ export class ProfileDto implements IProfileDto {
 
 export interface IProfileDto {
     id: string;
-    name: string | undefined;
+    name: string;
     description?: string | undefined;
     isActive: boolean;
 }
@@ -1899,7 +1911,7 @@ export interface IProfileDto {
 export class ReferenceDto implements IReferenceDto {
     id!: string;
     type!: ReferenceTypeDto;
-    link!: string | undefined;
+    link!: string;
     notes?: string | undefined;
 
     constructor(data?: IReferenceDto) {
@@ -1940,7 +1952,7 @@ export class ReferenceDto implements IReferenceDto {
 export interface IReferenceDto {
     id: string;
     type: ReferenceTypeDto;
-    link: string | undefined;
+    link: string;
     notes?: string | undefined;
 }
 
@@ -2029,9 +2041,9 @@ export interface IStringUpdateValue {
 }
 
 export class TimeZoneOption implements ITimeZoneOption {
-    windowsId?: string | undefined;
-    timeZone?: string | undefined;
-    offset?: string | undefined;
+    windowsId?: string;
+    timeZone?: string;
+    offset?: string;
 
     constructor(data?: ITimeZoneOption) {
         if (data) {
@@ -2067,17 +2079,17 @@ export class TimeZoneOption implements ITimeZoneOption {
 }
 
 export interface ITimeZoneOption {
-    windowsId?: string | undefined;
-    timeZone?: string | undefined;
-    offset?: string | undefined;
+    windowsId?: string;
+    timeZone?: string;
+    offset?: string;
 }
 
 export class TradeDto implements ITradeDto {
     id?: string;
     assetId?: string;
-    asset!: string | undefined;
+    asset!: string;
     profileId?: string;
-    profile!: string | undefined;
+    profile!: string;
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
@@ -2086,13 +2098,13 @@ export class TradeDto implements ITradeDto {
     performance?: number | undefined;
     isClosed?: boolean;
     currencyId?: string;
-    currency!: string | undefined;
+    currency!: string;
     entry?: number;
     stopLoss?: number | undefined;
     takeProfit?: number | undefined;
     exitPrice?: number | undefined;
     riskRewardRatio?: number | undefined;
-    references!: ReferenceDto[] | undefined;
+    references!: ReferenceDto[];
     notes?: string | undefined;
 
     constructor(data?: ITradeDto) {
@@ -2101,6 +2113,9 @@ export class TradeDto implements ITradeDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.references = [];
         }
     }
 
@@ -2175,9 +2190,9 @@ export class TradeDto implements ITradeDto {
 export interface ITradeDto {
     id?: string;
     assetId?: string;
-    asset: string | undefined;
+    asset: string;
     profileId?: string;
-    profile: string | undefined;
+    profile: string;
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
@@ -2186,18 +2201,18 @@ export interface ITradeDto {
     performance?: number | undefined;
     isClosed?: boolean;
     currencyId?: string;
-    currency: string | undefined;
+    currency: string;
     entry?: number;
     stopLoss?: number | undefined;
     takeProfit?: number | undefined;
     exitPrice?: number | undefined;
     riskRewardRatio?: number | undefined;
-    references: ReferenceDto[] | undefined;
+    references: ReferenceDto[];
     notes?: string | undefined;
 }
 
 export class TradeDtoPageDto implements ITradeDtoPageDto {
-    data?: TradeDto[] | undefined;
+    data?: TradeDto[];
     count?: number;
     totalCount?: number;
     totalPages?: number;
@@ -2252,7 +2267,7 @@ export class TradeDtoPageDto implements ITradeDtoPageDto {
 }
 
 export interface ITradeDtoPageDto {
-    data?: TradeDto[] | undefined;
+    data?: TradeDto[];
     count?: number;
     totalCount?: number;
     totalPages?: number;
@@ -2264,7 +2279,7 @@ export class TradeResultDto implements ITradeResultDto {
     tradeId?: string;
     result?: ResultDto;
     performance?: number | undefined;
-    warnings?: string[] | undefined;
+    warnings?: string[];
 
     constructor(data?: ITradeResultDto) {
         if (data) {
@@ -2313,7 +2328,7 @@ export interface ITradeResultDto {
     tradeId?: string;
     result?: ResultDto;
     performance?: number | undefined;
-    warnings?: string[] | undefined;
+    warnings?: string[];
 }
 
 export class UpdateReferenceDto implements IUpdateReferenceDto {
@@ -2489,12 +2504,12 @@ export interface IUpdateUserSettingsDto {
 }
 
 export class UserSettingsDto implements IUserSettingsDto {
-    culture!: string | undefined;
+    culture!: string;
     language!: string | undefined;
-    timeZone!: string | undefined;
+    timeZone!: string;
     lastModified!: Date;
     activeProfileId!: string;
-    activeProfileName!: string | undefined;
+    activeProfileName!: string;
 
     constructor(data?: IUserSettingsDto) {
         if (data) {
@@ -2536,16 +2551,16 @@ export class UserSettingsDto implements IUserSettingsDto {
 }
 
 export interface IUserSettingsDto {
-    culture: string | undefined;
+    culture: string;
     language: string | undefined;
-    timeZone: string | undefined;
+    timeZone: string;
     lastModified: Date;
     activeProfileId: string;
-    activeProfileName: string | undefined;
+    activeProfileName: string;
 }
 
 export class WarningsDto implements IWarningsDto {
-    warnings?: string[] | undefined;
+    warnings?: string[];
 
     constructor(data?: IWarningsDto) {
         if (data) {
@@ -2585,7 +2600,7 @@ export class WarningsDto implements IWarningsDto {
 }
 
 export interface IWarningsDto {
-    warnings?: string[] | undefined;
+    warnings?: string[];
 }
 
 export class SwaggerResponse<TResult> {

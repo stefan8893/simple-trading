@@ -12,9 +12,10 @@ public static class OpenApiServiceCollectionExtensions
         ClientAppEntraIdConfig clientAppEntraIdConfig)
     {
         services
-            .AddSwaggerGen(c =>
+            .AddSwaggerGen(options =>
             {
-                c.AddSecurityDefinition("Entra ID", new OpenApiSecurityScheme
+                options.SupportNonNullableReferenceTypes();
+                options.AddSecurityDefinition("Entra ID", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows
@@ -28,7 +29,7 @@ public static class OpenApiServiceCollectionExtensions
                     }
                 });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -39,7 +40,7 @@ public static class OpenApiServiceCollectionExtensions
                     }
                 });
 
-                c.OrderActionsBy(api =>
+                options.OrderActionsBy(api =>
                 {
                     if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
 
@@ -53,7 +54,7 @@ public static class OpenApiServiceCollectionExtensions
                 });
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
         return services;
