@@ -1189,7 +1189,7 @@ public class SearchTradesTests : DomainTests
     }
 
     [Fact]
-    public async Task Not_equal_to_null_result_returns_all_trades_with_result()
+    public async Task result_not_equal_to_null_returns_all_trades_with_a_result()
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
@@ -1235,7 +1235,7 @@ public class SearchTradesTests : DomainTests
             .And.Contain(x => x.Id == tradesWithResult[2].Id)
             .And.Contain(x => x.Id == tradesWithResult[3].Id);
     }
-
+    
     [Fact]
     public async Task Closed_equal_to_null_returns_all_trades_without_closed_date()
     {
