@@ -17,17 +17,19 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var initialOpenedDate = DateTime.Parse("2024-08-19T10:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         const string searchFilter = "Opened -gt [2024-08-19T11:00Z]";
 
         // act
-        var result = await client.SearchTradesAsync(["opened"], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter]);
 
         // assert
         result.Should().NotBeNull();
@@ -41,11 +43,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
-
+        var profile = TestData.Profile.Default.Build();
         const string searchFilter = "Opened gt [2024-08-19T11:00Z]";
 
         // act
-        var act = () => client.SearchTradesAsync([], [searchFilter]);
+        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
@@ -60,11 +62,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
-
+        var profile = TestData.Profile.Default.Build();
         const string searchFilter = "-gt [2024-08-19T11:00Z]";
 
         // act
-        var act = () => client.SearchTradesAsync([], [searchFilter]);
+        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
@@ -73,17 +75,34 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
                               x.Identifier == "Filter[0]");
     }
+    
+    [Fact]
+    public async Task Trades_always_belong_to_a_profile_therefore_you_cant_search_for_trades_without_a_profile_id()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        // act
+        var act = () => client.SearchTradesAsync(null, [], []);
+
+        // assert
+        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
+        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        exception.Which.Result.Errors.Should().HaveCount(1)
+            .And.Contain(x => x.Messages.Single() == "'Profil' darf nicht leer sein." &&
+                              x.Identifier == "ProfileId");
+    }
 
     [Fact]
     public async Task Balance_filter_with_date_time_as_comparison_value_returns_a_bad_request()
     {
         // arrange
         var client = await CreateClient();
-
+        var profile = TestData.Profile.Default.Build();
         const string searchFilter = "Balance -gt [2024-08-19T11:00Z]";
 
         // act
-        var act = () => client.SearchTradesAsync([], [searchFilter]);
+        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
@@ -98,11 +117,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
-
+        var profile = TestData.Profile.Default.Build();
         const string searchFilter = "Balance -gt 500";
 
         // act
-        var act = () => client.SearchTradesAsync([], [searchFilter]);
+        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
@@ -119,9 +138,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
 
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = now,
                 Closed = now,
                 Balance = 500m * x
@@ -129,12 +150,13 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         const string searchFilter = "    Balance   -gt   [500]    ";
 
         // act
-        var result = await client.SearchTradesAsync([], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         result.Count.Should().Be(2);
@@ -152,18 +174,20 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         // arrange
         var client = await CreateClient();
 
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
-            .Select(_ => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build())
             .ToList();
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var searchFilter = $"Closed -eq {nullLiteral}";
 
         // act
-        var result = await client.SearchTradesAsync([], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         result.Count.Should().Be(3);
@@ -174,18 +198,19 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
-
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
-            .Select(_ => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         const string searchFilter = "Closed -ne null";
 
         // act
-        var result = await client.SearchTradesAsync([], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         result.Count.Should().Be(0);
@@ -196,18 +221,19 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
-
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(_ => TestData.Trade.Default)
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         const string searchFilter = null!;
 
         // act
-        var result = await client.SearchTradesAsync([], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
         result.Count.Should().Be(3);
@@ -220,9 +246,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var openedClosedDate = DateTime.Parse("2024-08-19T19:30:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosedDate,
                 Closed = openedClosedDate,
                 Balance = 500m * x,
@@ -231,12 +259,13 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         List<string> sorting = ["-Result", null!];
 
         // act
-        var result = await client.SearchTradesAsync(sorting, []);
+        var result = await client.SearchTradesAsync(profile.Id, sorting, []);
 
         // assert
         result.Count.Should().Be(3);

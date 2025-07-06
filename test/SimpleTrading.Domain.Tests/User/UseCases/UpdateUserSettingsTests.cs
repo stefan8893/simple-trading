@@ -119,7 +119,7 @@ public class UpdateUserSettingsTests : DomainTests
             .And.Contain(x => x.PropertyName == "Culture" &&
                               x.ErrorMessage == "'de-CH' is not supported. Only 'de-AT, en-US'.");
     }
-    
+
     [Fact]
     public async Task Timezone_must_be_a_known_iana_zone()
     {

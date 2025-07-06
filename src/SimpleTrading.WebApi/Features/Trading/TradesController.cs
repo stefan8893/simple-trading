@@ -165,6 +165,7 @@ public partial class TradesController : ControllerBase
     {
         var searchTradesRequestModel = new SearchTradesRequestModel
         {
+            ProfileId = queryDto.ProfileId!.Value,
             Sort = queryDto.Sort?
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(ParseSorting)

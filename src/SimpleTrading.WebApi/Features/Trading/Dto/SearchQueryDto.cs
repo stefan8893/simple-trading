@@ -6,6 +6,8 @@ namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public class SearchQueryDto : IPagination
 {
+    public Guid? ProfileId { get; set; }
+    
     public List<string>? Sort { get; set; }
 
     /// <example>balance -gt [100]</example>
@@ -22,6 +24,10 @@ public class SearchQueryValidator : AbstractValidator<SearchQueryDto>
 {
     public SearchQueryValidator(PropertyFilterValidator propertyFilterValidator)
     {
+        RuleFor(x => x.ProfileId)
+            .NotEmpty()
+            .WithName(SimpleTradingStrings.Profile);
+        
         RuleForEach(x => x.Filter)
             .SetValidator(propertyFilterValidator);
     }

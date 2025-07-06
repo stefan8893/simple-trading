@@ -16,7 +16,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     public async Task A_request_without_an_access_token_is_not_authorized()
     {
         // arrange
-        var client = await CreateClient(includeAccessToken: false);
+        var client = await CreateClient(false);
 
         var tradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 

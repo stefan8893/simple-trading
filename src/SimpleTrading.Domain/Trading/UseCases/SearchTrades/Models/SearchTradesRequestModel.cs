@@ -6,6 +6,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 
 public class SearchTradesRequestModel : PaginationRequestModel
 {
+    public required Guid ProfileId { get; init; }
     public IReadOnlyList<SortModel> Sort { get; init; } = [];
     public IReadOnlyList<FilterModel> Filter { get; init; } = [];
 }

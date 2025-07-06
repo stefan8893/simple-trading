@@ -17,7 +17,7 @@ public class GetUserSettingsTests : DomainTests
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
-        
+
         var userSettingsModel = await Interactor.Execute();
 
         userSettingsModel.Should().NotBeNull();
@@ -29,7 +29,7 @@ public class GetUserSettingsTests : DomainTests
         // arrange
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
-        
+
         var userSettings = await ServiceLocator
             .Resolve<IUserSettingsRepository>()
             .GetUserSettings();
@@ -50,7 +50,7 @@ public class GetUserSettingsTests : DomainTests
         // arrange
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
-        
+
         var userSettings = await ServiceLocator
             .Resolve<IUserSettingsRepository>()
             .GetUserSettings();

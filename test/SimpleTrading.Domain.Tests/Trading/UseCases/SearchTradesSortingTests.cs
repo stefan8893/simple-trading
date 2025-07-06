@@ -19,7 +19,12 @@ public class SearchTradesSortingTests : DomainTests
     {
         var sorting = new SortModel("Foobar", false);
 
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Sort = [sorting]});
+        var profile = TestData.Profile.Default.Build();
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            ProfileId = profile.Id,
+            Sort = [sorting]
+        });
 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
@@ -32,9 +37,11 @@ public class SearchTradesSortingTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m * x,
@@ -44,12 +51,17 @@ public class SearchTradesSortingTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var sorting = new SortModel("Result", false);
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Sort = [sorting]});
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            ProfileId = profile.Id,
+            Sort = [sorting]
+        });
 
         // assert
         var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -65,9 +77,11 @@ public class SearchTradesSortingTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T15:00:00").ToUtcKind();
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = initialOpenedDate.AddDays(x),
                 Size = 5000m * x,
                 Result = (ResultModel) x
@@ -75,10 +89,14 @@ public class SearchTradesSortingTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel());
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            ProfileId = profile.Id
+        });
 
         // assert
         var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -94,9 +112,11 @@ public class SearchTradesSortingTests : DomainTests
     {
         // arrange
         var openedClosedDateTime = DateTime.Parse("2024-08-19T18:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 2)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosedDateTime.AddHours(x),
                 Closed = openedClosedDateTime.AddHours(x),
                 Balance = 50m
@@ -104,12 +124,17 @@ public class SearchTradesSortingTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var sorting = new SortModel("Closed", false);
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Sort = [sorting]});
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            ProfileId = profile.Id,
+            Sort = [sorting]
+        });
 
         // assert
         var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -125,17 +150,23 @@ public class SearchTradesSortingTests : DomainTests
     public async Task Sort_by_does_not_trim_whitespaces()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 2)
-            .Select(x => TestData.Trade.Default with {Balance = 50m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Balance = 50m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var sorting = new SortModel("   Balance ", false);
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Sort = [sorting]});
+        var response = await Interactor.Execute(new SearchTradesRequestModel
+        {
+            ProfileId = profile.Id,
+            Sort = [sorting]
+        });
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();

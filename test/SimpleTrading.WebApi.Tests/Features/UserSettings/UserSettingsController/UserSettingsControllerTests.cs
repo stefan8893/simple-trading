@@ -44,7 +44,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettingsDto.ActiveProfileId.Should().Be(profile.Id);
         userSettingsDto.ActiveProfileName.Should().Be(profile.Name);
     }
-    
+
     [Fact]
     public async Task An_exception_is_thrown_when_there_is_no_active_profile()
     {
@@ -63,10 +63,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     {
         // arrange
         var client = await CreateClient();
-        
+
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
-        
+
         var userSettings = await ServiceLocator
             .Resolve<IUserSettingsRepository>()
             .GetUserSettings();

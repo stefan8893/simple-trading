@@ -16,7 +16,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     public async Task A_request_without_an_access_token_is_not_authorized()
     {
         // arrange
-        var client = await CreateClient(includeAccessToken: false);
+        var client = await CreateClient(false);
 
         // act
         var act = () => client.AddTradeAsync();

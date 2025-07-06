@@ -16,13 +16,14 @@ export interface ISimpleTradingClient {
     getAppInfo(): Promise<SwaggerResponse<ApiInfo>>;
 
     /**
+     * @param profileId (optional) 
      * @param sort (optional) 
      * @param filter (optional) 
      * @param page (optional) 
      * @param pageSize (optional) 
      * @return OK
      */
-    searchTrades(sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SwaggerResponse<TradeDtoPageDto>>;
+    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SwaggerResponse<TradeDtoPageDto>>;
 
     /**
      * @param body (optional) 
@@ -177,14 +178,19 @@ export class SimpleTradingClient implements ISimpleTradingClient {
     }
 
     /**
+     * @param profileId (optional) 
      * @param sort (optional) 
      * @param filter (optional) 
      * @param page (optional) 
      * @param pageSize (optional) 
      * @return OK
      */
-    searchTrades(sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SwaggerResponse<TradeDtoPageDto>> {
+    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SwaggerResponse<TradeDtoPageDto>> {
         let url_ = this.baseUrl + "/trades?";
+        if (profileId === null)
+            throw new Error("The parameter 'profileId' cannot be null.");
+        else if (profileId !== undefined)
+            url_ += "ProfileId=" + encodeURIComponent("" + profileId) + "&";
         if (sort === null)
             throw new Error("The parameter 'sort' cannot be null.");
         else if (sort !== undefined)

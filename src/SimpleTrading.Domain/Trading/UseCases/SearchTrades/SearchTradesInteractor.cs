@@ -32,9 +32,10 @@ public class SearchTradesInteractor(
             .Select(x => new {Model = x, Filter = filterPredicates.Single(p => p.Match(x.PropertyName, x.Operator))})
             .Select(x => x.Filter.GetPredicate(x.Model.ComparisonValue, x.Model.IsLiteral))
             .Aggregate(Id, Add);
-
+        
+        var filterWithProfileFilter = Add(filter, trade => trade.ProfileId == model.ProfileId);
         var paginationConfig = new PaginationConfiguration(model.Page, model.PageSize);
-        var trades = await tradeRepository.Find(filter, paginationConfig, sortingConfig);
+        var trades = await tradeRepository.Find(filterWithProfileFilter, paginationConfig, sortingConfig);
 
         var userSettings = await userSettingsRepository.GetUserSettings();
 

@@ -19,10 +19,12 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
+        DbContext.Profiles.Add(profile);
         DbContext.Trades.AddRange(trades);
         await DbContext.SaveChangesAsync();
 
@@ -35,7 +37,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
@@ -49,11 +52,13 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -65,7 +70,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
@@ -78,6 +84,7 @@ public class SearchTradesTests : DomainTests
     public async Task Closed_greater_than_null_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Closed",
@@ -87,7 +94,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -99,6 +107,7 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_opened_date_with_invalid_comparison_value_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Opened",
@@ -108,7 +117,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -121,6 +131,8 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_opened_date_with_typo_in_operator_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
+
         var filter = new FilterModel
         {
             PropertyName = "Opened",
@@ -130,7 +142,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -144,6 +157,7 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_opened_date_with_typo_in_property_name_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Openend",
@@ -153,7 +167,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -167,11 +182,13 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -183,7 +200,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
@@ -199,11 +217,13 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -215,7 +235,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
@@ -231,11 +252,13 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -247,7 +270,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
@@ -261,11 +285,13 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -277,7 +303,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
@@ -291,11 +318,13 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -307,7 +336,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
@@ -323,15 +353,18 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = now,
                 Closed = now,
                 Balance = 500m * x
             })
             .Select(x => x.Build());
 
+        DbContext.Profiles.Add(profile);
         DbContext.Trades.AddRange(trades);
         await DbContext.SaveChangesAsync();
 
@@ -344,7 +377,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -356,6 +390,7 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_balance_with_empty_comparison_value_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Balance",
@@ -365,7 +400,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -378,6 +414,7 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_balance_with_empty_operator_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Balance",
@@ -387,7 +424,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -400,6 +438,7 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_balance_with_empty_property_name_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "",
@@ -409,7 +448,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -422,6 +462,7 @@ public class SearchTradesTests : DomainTests
     public async Task Unknown_property_names_cannot_be_used_as_a_filter()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Foobar",
@@ -431,7 +472,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -444,6 +486,7 @@ public class SearchTradesTests : DomainTests
     public async Task An_unknown_operator_cannot_be_used_in_a_filter()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Balance",
@@ -453,7 +496,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -466,6 +510,7 @@ public class SearchTradesTests : DomainTests
     public async Task A_null_property_name_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = null!,
@@ -475,7 +520,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -488,6 +534,7 @@ public class SearchTradesTests : DomainTests
     public async Task Property_names_with_whitespaces_will_not_be_trimmed_and_bad_input_gets_returned()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "balance ",
@@ -497,7 +544,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -510,6 +558,7 @@ public class SearchTradesTests : DomainTests
     public async Task Operators_with_whitespaces_will_not_be_trimmed_and_bad_input_gets_returned()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "balance",
@@ -519,7 +568,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -532,8 +582,9 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_or_equal_to_size_with_valid_input_returns_correct_result()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Size = 5000m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -548,7 +599,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -560,8 +612,9 @@ public class SearchTradesTests : DomainTests
     public async Task Uppercase_operator_works_as_well()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Size = 5000m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -576,7 +629,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -588,11 +642,13 @@ public class SearchTradesTests : DomainTests
     public async Task Less_than_or_equal_to_size_with_valid_input_returns_correct_result()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Size = 5000m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -604,7 +660,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -616,11 +673,13 @@ public class SearchTradesTests : DomainTests
     public async Task Not_equal_to_size_with_valid_input_returns_correct_result()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Size = 5000m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -632,7 +691,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -644,11 +704,13 @@ public class SearchTradesTests : DomainTests
     public async Task Less_than_balance_with_valid_input_returns_correct_result()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {Balance = 500m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Balance = 500m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -660,7 +722,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -672,9 +735,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = now,
                 Closed = now,
                 Balance = 500m * x
@@ -682,6 +747,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -693,7 +759,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -706,15 +773,18 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
+        var profile = TestData.Profile.Default.Build();
         var tradeWithBalance = (TestData.Trade.Default with
         {
+            ProfileOrId = profile,
             Opened = now,
             Closed = now,
             Balance = 500m
         }).Build();
-        var tradeWithoutBalance = TestData.Trade.Default.Build();
+        var tradeWithoutBalance = (TestData.Trade.Default with {ProfileOrId = profile}).Build();
 
         DbContext.Trades.AddRange(tradeWithBalance, tradeWithoutBalance);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -726,7 +796,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -738,11 +809,13 @@ public class SearchTradesTests : DomainTests
     public async Task Greater_than_result_with_invalid_comparison_value_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
-            .Select(x => TestData.Trade.Default with {Result = (ResultModel) x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Result = (ResultModel) x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -754,7 +827,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -768,9 +842,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -779,6 +855,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -790,7 +867,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -805,9 +883,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed.AddHours(x),
                 Closed = openedClosed.AddHours(x),
                 Balance = 50m,
@@ -816,6 +896,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -827,7 +908,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -840,9 +922,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -851,6 +935,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -862,7 +947,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -877,6 +963,7 @@ public class SearchTradesTests : DomainTests
     public async Task Result_greater_than_or_equal_to_null_returns_bad_input()
     {
         // arrange
+        var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
             PropertyName = "Result",
@@ -886,7 +973,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
@@ -900,9 +988,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -911,6 +1001,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -922,7 +1013,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -936,9 +1028,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -947,6 +1041,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -958,7 +1053,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -972,9 +1068,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -983,6 +1081,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -994,7 +1093,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -1007,9 +1107,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -1018,6 +1120,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -1029,7 +1132,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -1044,13 +1148,16 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var tradesWithoutResult = Enumerable.Range(0, 2)
-            .Select(_ => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(x => x.Build())
             .ToList();
 
         var tradesWithResult = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -1071,7 +1178,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -1085,14 +1193,17 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var tradesWithoutResult = Enumerable.Range(0, 2)
-            .Select(_ => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(x => x.Build())
             .ToList();
 
         var tradesWithResult = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 Opened = openedClosed,
+                ProfileOrId = profile,
                 Closed = openedClosed,
                 Balance = 50m,
                 Result = (ResultModel) x
@@ -1101,6 +1212,7 @@ public class SearchTradesTests : DomainTests
             .ToList();
 
         DbContext.Trades.AddRange(tradesWithoutResult.Concat(tradesWithResult));
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -1112,7 +1224,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -1128,13 +1241,16 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var closedTrades = Enumerable.Range(0, 2)
-            .Select(_ => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(x => x.Build())
             .ToList();
 
         var notClosedTrades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -1144,6 +1260,7 @@ public class SearchTradesTests : DomainTests
             .ToList();
 
         DbContext.Trades.AddRange(closedTrades.Concat(notClosedTrades));
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -1155,7 +1272,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -1169,13 +1287,16 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var notClosedTrades = Enumerable.Range(0, 2)
-            .Select(_ => TestData.Trade.Default.Build())
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(x => x.Build())
             .ToList();
 
         var closedTrades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m,
@@ -1185,6 +1306,7 @@ public class SearchTradesTests : DomainTests
             .ToList();
 
         DbContext.Trades.AddRange(notClosedTrades.Concat(closedTrades));
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
@@ -1196,7 +1318,8 @@ public class SearchTradesTests : DomainTests
         };
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = [filter]});
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
@@ -1212,9 +1335,11 @@ public class SearchTradesTests : DomainTests
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
+                ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
                 Balance = 50m * x,
@@ -1224,6 +1349,7 @@ public class SearchTradesTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         List<FilterModel> filter =
@@ -1252,7 +1378,7 @@ public class SearchTradesTests : DomainTests
         ];
 
         // act
-        var response = await Interactor.Execute(new SearchTradesRequestModel {Filter = filter});
+        var response = await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter});
 
         // assert
         var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
