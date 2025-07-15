@@ -36,7 +36,7 @@ EF Core implements the **repository pattern**, making it easy to switch between 
 
 ## 🧩 Adding Migrations
 
-To add a new migration, run the following command from the `SimpleTrading.WebApi` project directory:
+To add a new migration, run the following command from the `SimpleTrading.WebApi` project directory for every db provider:
 
 ```bash
 dotnet ef migrations add '<__INSERT_NAME__>' --startup-project ..\SimpleTrading.WebApi\ --project ..\SimpleTrading.DataAccess.<DB_PROVIDER>\ -- --dbprovider <DB_PROVIDER>
