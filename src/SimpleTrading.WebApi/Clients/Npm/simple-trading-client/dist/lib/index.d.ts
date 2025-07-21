@@ -2,237 +2,250 @@ export interface ISimpleTradingClient {
     /**
      * @return OK
      */
-    getAppInfo(): Promise<SwaggerResponse<ApiInfo>>;
-
+    getAppInfo(): Promise<SimpleTradingClientResponse<ApiInfo>>;
     /**
+     * @param profileId (optional)
+     * @param sort (optional)
+     * @param filter (optional)
+     * @param page (optional)
+     * @param pageSize (optional)
      * @return OK
      */
-    getTrade(tradeId: string): Promise<SwaggerResponse<TradeDto>>;
-
-    /**
-     * @param body (optional)
-     * @return OK
-     */
-    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
-
-    /**
-     * @return OK
-     */
-    deleteTrade(tradeId: string): Promise<SwaggerResponse<SuccessResponse>>;
-
+    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SimpleTradingClientResponse<TradeDtoPageDto>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>>;
-
+    addTrade(body: AddTradeDto | undefined): Promise<SimpleTradingClientResponse<AddTradeResultDto>>;
+    /**
+     * @return OK
+     */
+    getTrade(tradeId: string): Promise<SimpleTradingClientResponse<TradeDto>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
-
+    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SimpleTradingClientResponse<WarningsDto>>;
     /**
-     * @return OK
+     * @return No Content
      */
-    getReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<ReferenceDto>>;
-
+    deleteTrade(tradeId: string): Promise<SimpleTradingClientResponse<void>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
-
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SimpleTradingClientResponse<TradeResultDto>>;
     /**
      * @return OK
      */
-    deleteReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<SuccessResponse>>;
-
+    restoreCalculatedResult(tradeId: string): Promise<SimpleTradingClientResponse<TradeResultDto>>;
     /**
      * @return OK
      */
-    getReferences(tradeId: string): Promise<SwaggerResponse<ReferenceDto[]>>;
-
+    getReference(tradeId: string, referenceId: string): Promise<SimpleTradingClientResponse<ReferenceDto>>;
+    /**
+     * @param body (optional)
+     * @return No Content
+     */
+    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SimpleTradingClientResponse<void>>;
+    /**
+     * @return No Content
+     */
+    deleteReference(tradeId: string, referenceId: string): Promise<SimpleTradingClientResponse<void>>;
+    /**
+     * @return OK
+     */
+    getReferences(tradeId: string): Promise<SimpleTradingClientResponse<ReferenceDto[]>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>>;
-
+    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SimpleTradingClientResponse<string>>;
     /**
      * @return OK
      */
-    deleteReferences(tradeId: string): Promise<SwaggerResponse<UInt16SuccessResponse>>;
-
+    deleteReferences(tradeId: string): Promise<SimpleTradingClientResponse<number>>;
     /**
      * @param searchTerm (optional)
      * @return OK
      */
-    getAssets(searchTerm: string | undefined): Promise<SwaggerResponse<AssetDto[]>>;
-
+    getProfiles(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<ProfileDto[]>>;
     /**
      * @param searchTerm (optional)
      * @return OK
      */
-    getProfiles(searchTerm: string | undefined): Promise<SwaggerResponse<ProfileDto[]>>;
-
+    getAssets(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<AssetDto[]>>;
     /**
      * @param searchTerm (optional)
      * @return OK
      */
-    getCurrencies(searchTerm: string | undefined): Promise<SwaggerResponse<CurrencyDto[]>>;
+    getCurrencies(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<CurrencyDto[]>>;
+    /**
+     * @return OK
+     */
+    getUserSettings(): Promise<SimpleTradingClientResponse<UserSettingsDto>>;
+    /**
+     * @param body (optional)
+     * @return No Content
+     */
+    updateUserSettings(body: UpdateUserSettingsDto | undefined): Promise<SimpleTradingClientResponse<void>>;
+    /**
+     * @return OK
+     */
+    getUserLocalNow(): Promise<SimpleTradingClientResponse<Date>>;
+    /**
+     * @return OK
+     */
+    getAvailableTimezones(): Promise<SimpleTradingClientResponse<TimeZoneOption[]>>;
 }
-
 export declare class SimpleTradingClient implements ISimpleTradingClient {
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined;
     private http;
     private baseUrl;
-
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined;
     constructor(baseUrl?: string, http?: {
         fetch(url: RequestInfo, init?: RequestInit): Promise<Response>;
     });
-
     /**
      * @return OK
      */
-    getAppInfo(): Promise<SwaggerResponse<ApiInfo>>;
-
+    getAppInfo(): Promise<SimpleTradingClientResponse<ApiInfo>>;
+    protected processGetAppInfo(response: Response): Promise<SimpleTradingClientResponse<ApiInfo>>;
     /**
+     * @param profileId (optional)
+     * @param sort (optional)
+     * @param filter (optional)
+     * @param page (optional)
+     * @param pageSize (optional)
      * @return OK
      */
-    getTrade(tradeId: string): Promise<SwaggerResponse<TradeDto>>;
-
-    /**
-     * @param body (optional)
-     * @return OK
-     */
-    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
-
-    /**
-     * @return OK
-     */
-    deleteTrade(tradeId: string): Promise<SwaggerResponse<SuccessResponse>>;
-
+    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SimpleTradingClientResponse<TradeDtoPageDto>>;
+    protected processSearchTrades(response: Response): Promise<SimpleTradingClientResponse<TradeDtoPageDto>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    addTrade(body: AddTradeDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>>;
-
+    addTrade(body: AddTradeDto | undefined): Promise<SimpleTradingClientResponse<AddTradeResultDto>>;
+    protected processAddTrade(response: Response): Promise<SimpleTradingClientResponse<AddTradeResultDto>>;
+    /**
+     * @return OK
+     */
+    getTrade(tradeId: string): Promise<SimpleTradingClientResponse<TradeDto>>;
+    protected processGetTrade(response: Response): Promise<SimpleTradingClientResponse<TradeDto>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
-
+    updateTrade(tradeId: string, body: UpdateTradeDto | undefined): Promise<SimpleTradingClientResponse<WarningsDto>>;
+    protected processUpdateTrade(response: Response): Promise<SimpleTradingClientResponse<WarningsDto>>;
     /**
-     * @return OK
+     * @return No Content
      */
-    getReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<ReferenceDto>>;
-
-    /**
-     * @param body (optional)
-     * @return OK
-     */
-    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SwaggerResponse<SuccessResponse>>;
-
-    /**
-     * @return OK
-     */
-    deleteReference(tradeId: string, referenceId: string): Promise<SwaggerResponse<SuccessResponse>>;
-
-    /**
-     * @return OK
-     */
-    getReferences(tradeId: string): Promise<SwaggerResponse<ReferenceDto[]>>;
-
+    deleteTrade(tradeId: string): Promise<SimpleTradingClientResponse<void>>;
+    protected processDeleteTrade(response: Response): Promise<SimpleTradingClientResponse<void>>;
     /**
      * @param body (optional)
      * @return OK
      */
-    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SwaggerResponse<GuidSuccessResponse>>;
-
+    closeTrade(tradeId: string, body: CloseTradeDto | undefined): Promise<SimpleTradingClientResponse<TradeResultDto>>;
+    protected processCloseTrade(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>>;
     /**
      * @return OK
      */
-    deleteReferences(tradeId: string): Promise<SwaggerResponse<UInt16SuccessResponse>>;
-
+    restoreCalculatedResult(tradeId: string): Promise<SimpleTradingClientResponse<TradeResultDto>>;
+    protected processRestoreCalculatedResult(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>>;
+    /**
+     * @return OK
+     */
+    getReference(tradeId: string, referenceId: string): Promise<SimpleTradingClientResponse<ReferenceDto>>;
+    protected processGetReference(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto>>;
+    /**
+     * @param body (optional)
+     * @return No Content
+     */
+    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto | undefined): Promise<SimpleTradingClientResponse<void>>;
+    protected processUpdateReference(response: Response): Promise<SimpleTradingClientResponse<void>>;
+    /**
+     * @return No Content
+     */
+    deleteReference(tradeId: string, referenceId: string): Promise<SimpleTradingClientResponse<void>>;
+    protected processDeleteReference(response: Response): Promise<SimpleTradingClientResponse<void>>;
+    /**
+     * @return OK
+     */
+    getReferences(tradeId: string): Promise<SimpleTradingClientResponse<ReferenceDto[]>>;
+    protected processGetReferences(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto[]>>;
+    /**
+     * @param body (optional)
+     * @return OK
+     */
+    addReference(tradeId: string, body: AddReferenceDto | undefined): Promise<SimpleTradingClientResponse<string>>;
+    protected processAddReference(response: Response): Promise<SimpleTradingClientResponse<string>>;
+    /**
+     * @return OK
+     */
+    deleteReferences(tradeId: string): Promise<SimpleTradingClientResponse<number>>;
+    protected processDeleteReferences(response: Response): Promise<SimpleTradingClientResponse<number>>;
     /**
      * @param searchTerm (optional)
      * @return OK
      */
-    getAssets(searchTerm: string | undefined): Promise<SwaggerResponse<AssetDto[]>>;
-
+    getProfiles(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<ProfileDto[]>>;
+    protected processGetProfiles(response: Response): Promise<SimpleTradingClientResponse<ProfileDto[]>>;
     /**
      * @param searchTerm (optional)
      * @return OK
      */
-    getProfiles(searchTerm: string | undefined): Promise<SwaggerResponse<ProfileDto[]>>;
-
+    getAssets(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<AssetDto[]>>;
+    protected processGetAssets(response: Response): Promise<SimpleTradingClientResponse<AssetDto[]>>;
     /**
      * @param searchTerm (optional)
      * @return OK
      */
-    getCurrencies(searchTerm: string | undefined): Promise<SwaggerResponse<CurrencyDto[]>>;
-
-    protected processGetAppInfo(response: Response): Promise<SwaggerResponse<ApiInfo>>;
-
-    protected processGetTrade(response: Response): Promise<SwaggerResponse<TradeDto>>;
-
-    protected processUpdateTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>>;
-
-    protected processDeleteTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>>;
-
-    protected processAddTrade(response: Response): Promise<SwaggerResponse<GuidSuccessResponse>>;
-
-    protected processCloseTrade(response: Response): Promise<SwaggerResponse<SuccessResponse>>;
-
-    protected processGetReference(response: Response): Promise<SwaggerResponse<ReferenceDto>>;
-
-    protected processUpdateReference(response: Response): Promise<SwaggerResponse<SuccessResponse>>;
-
-    protected processDeleteReference(response: Response): Promise<SwaggerResponse<SuccessResponse>>;
-
-    protected processGetReferences(response: Response): Promise<SwaggerResponse<ReferenceDto[]>>;
-
-    protected processAddReference(response: Response): Promise<SwaggerResponse<GuidSuccessResponse>>;
-
-    protected processDeleteReferences(response: Response): Promise<SwaggerResponse<UInt16SuccessResponse>>;
-
-    protected processGetAssets(response: Response): Promise<SwaggerResponse<AssetDto[]>>;
-
-    protected processGetProfiles(response: Response): Promise<SwaggerResponse<ProfileDto[]>>;
-
-    protected processGetCurrencies(response: Response): Promise<SwaggerResponse<CurrencyDto[]>>;
+    getCurrencies(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<CurrencyDto[]>>;
+    protected processGetCurrencies(response: Response): Promise<SimpleTradingClientResponse<CurrencyDto[]>>;
+    /**
+     * @return OK
+     */
+    getUserSettings(): Promise<SimpleTradingClientResponse<UserSettingsDto>>;
+    protected processGetUserSettings(response: Response): Promise<SimpleTradingClientResponse<UserSettingsDto>>;
+    /**
+     * @param body (optional)
+     * @return No Content
+     */
+    updateUserSettings(body: UpdateUserSettingsDto | undefined): Promise<SimpleTradingClientResponse<void>>;
+    protected processUpdateUserSettings(response: Response): Promise<SimpleTradingClientResponse<void>>;
+    /**
+     * @return OK
+     */
+    getUserLocalNow(): Promise<SimpleTradingClientResponse<Date>>;
+    protected processGetUserLocalNow(response: Response): Promise<SimpleTradingClientResponse<Date>>;
+    /**
+     * @return OK
+     */
+    getAvailableTimezones(): Promise<SimpleTradingClientResponse<TimeZoneOption[]>>;
+    protected processGetAvailableTimezones(response: Response): Promise<SimpleTradingClientResponse<TimeZoneOption[]>>;
 }
-
 export declare class AddReferenceDto implements IAddReferenceDto {
     type?: ReferenceTypeDto;
     link?: string | undefined;
     notes?: string | undefined;
-
     constructor(data?: IAddReferenceDto);
-
-    static fromJS(data: any): AddReferenceDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): AddReferenceDto;
     toJSON(data?: any): any;
 }
-
 export interface IAddReferenceDto {
     type?: ReferenceTypeDto;
     link?: string | undefined;
     notes?: string | undefined;
 }
-
 export declare class AddTradeDto implements IAddTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
@@ -241,23 +254,18 @@ export declare class AddTradeDto implements IAddTradeDto {
     exitPrice?: number | undefined;
     notes?: string | undefined;
     references?: AddReferenceDto[] | undefined;
-
     constructor(data?: IAddTradeDto);
-
-    static fromJS(data: any): AddTradeDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): AddTradeDto;
     toJSON(data?: any): any;
 }
-
 export interface IAddTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
@@ -267,297 +275,200 @@ export interface IAddTradeDto {
     notes?: string | undefined;
     references?: AddReferenceDto[] | undefined;
 }
-
-export declare class ApiInfo implements IApiInfo {
-    name?: string | undefined;
-    version?: string | undefined;
-    environment?: string | undefined;
-
-    constructor(data?: IApiInfo);
-
-    static fromJS(data: any): ApiInfo;
-
+export declare class AddTradeResultDto implements IAddTradeResultDto {
+    tradeId: string;
+    warnings: string[];
+    constructor(data?: IAddTradeResultDto);
     init(_data?: any): void;
-
+    static fromJS(data: any): AddTradeResultDto;
     toJSON(data?: any): any;
 }
-
-export interface IApiInfo {
-    name?: string | undefined;
-    version?: string | undefined;
-    environment?: string | undefined;
+export interface IAddTradeResultDto {
+    tradeId: string;
+    warnings: string[];
 }
-
+export declare class ApiInfo implements IApiInfo {
+    name?: string;
+    version?: string;
+    environment?: string;
+    constructor(data?: IApiInfo);
+    init(_data?: any): void;
+    static fromJS(data: any): ApiInfo;
+    toJSON(data?: any): any;
+}
+export interface IApiInfo {
+    name?: string;
+    version?: string;
+    environment?: string;
+}
 export declare class AssetDto implements IAssetDto {
     id: string;
-    symbol: string | undefined;
-    name: string | undefined;
-
+    symbol: string;
+    name: string;
     constructor(data?: IAssetDto);
-
-    static fromJS(data: any): AssetDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): AssetDto;
     toJSON(data?: any): any;
 }
-
 export interface IAssetDto {
     id: string;
-    symbol: string | undefined;
-    name: string | undefined;
+    symbol: string;
+    name: string;
 }
-
 export declare class CloseTradeDto implements ICloseTradeDto {
     balance?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
-    result?: ResultDto;
-
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     constructor(data?: ICloseTradeDto);
-
-    static fromJS(data: any): CloseTradeDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): CloseTradeDto;
     toJSON(data?: any): any;
 }
-
 export interface ICloseTradeDto {
     balance?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
-    result?: ResultDto;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
 }
-
 export declare class CurrencyDto implements ICurrencyDto {
     id: string;
-    isoCode: string | undefined;
-    name: string | undefined;
-
+    isoCode: string;
+    name: string;
     constructor(data?: ICurrencyDto);
-
-    static fromJS(data: any): CurrencyDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): CurrencyDto;
     toJSON(data?: any): any;
 }
-
 export interface ICurrencyDto {
     id: string;
-    isoCode: string | undefined;
-    name: string | undefined;
+    isoCode: string;
+    name: string;
 }
-
-export declare class DecimalNullableUpdatedValue implements IDecimalNullableUpdatedValue {
+export declare class DecimalNullableUpdateValue implements IDecimalNullableUpdateValue {
     value?: number | undefined;
-
-    constructor(data?: IDecimalNullableUpdatedValue);
-
-    static fromJS(data: any): DecimalNullableUpdatedValue;
-
+    constructor(data?: IDecimalNullableUpdateValue);
     init(_data?: any): void;
-
+    static fromJS(data: any): DecimalNullableUpdateValue;
     toJSON(data?: any): any;
 }
-
-export interface IDecimalNullableUpdatedValue {
+export interface IDecimalNullableUpdateValue {
     value?: number | undefined;
 }
-
 export declare class ErrorResponse implements IErrorResponse {
-    fieldErrors: FieldError[] | undefined;
-    commonErrors: string[] | undefined;
-
+    messages: string[];
     constructor(data?: IErrorResponse);
-
+    init(_data?: any): void;
     static fromJS(data: any): ErrorResponse;
-
-    init(_data?: any): void;
-
     toJSON(data?: any): any;
 }
-
 export interface IErrorResponse {
-    fieldErrors: FieldError[] | undefined;
-    commonErrors: string[] | undefined;
+    messages: string[];
 }
-
 export declare class FieldError implements IFieldError {
-    identifier: string | undefined;
-    messages: string[] | undefined;
-
+    identifier: string;
+    messages: string[];
     constructor(data?: IFieldError);
-
+    init(_data?: any): void;
     static fromJS(data: any): FieldError;
-
-    init(_data?: any): void;
-
     toJSON(data?: any): any;
 }
-
 export interface IFieldError {
-    identifier: string | undefined;
-    messages: string[] | undefined;
+    identifier: string;
+    messages: string[];
 }
-
-export declare class GuidSuccessResponse implements IGuidSuccessResponse {
-    data?: string;
-    warnings?: string[] | undefined;
-
-    constructor(data?: IGuidSuccessResponse);
-
-    static fromJS(data: any): GuidSuccessResponse;
-
+export declare class FieldErrorResponse implements IFieldErrorResponse {
+    errors: FieldError[];
+    constructor(data?: IFieldErrorResponse);
     init(_data?: any): void;
-
+    static fromJS(data: any): FieldErrorResponse;
     toJSON(data?: any): any;
 }
-
-export interface IGuidSuccessResponse {
-    data?: string;
-    warnings?: string[] | undefined;
+export interface IFieldErrorResponse {
+    errors: FieldError[];
 }
-
-export declare class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IProblemDetails);
-
-    static fromJS(data: any): ProblemDetails;
-
-    init(_data?: any): void;
-
-    toJSON(data?: any): any;
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
-}
-
 export declare class ProfileDto implements IProfileDto {
     id: string;
-    name: string | undefined;
+    name: string;
     description?: string | undefined;
-    isSelected: boolean;
-
+    isActive: boolean;
     constructor(data?: IProfileDto);
-
-    static fromJS(data: any): ProfileDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): ProfileDto;
     toJSON(data?: any): any;
 }
-
 export interface IProfileDto {
     id: string;
-    name: string | undefined;
+    name: string;
     description?: string | undefined;
-    isSelected: boolean;
+    isActive: boolean;
 }
-
 export declare class ReferenceDto implements IReferenceDto {
     id: string;
     type: ReferenceTypeDto;
-    link: string | undefined;
+    link: string;
     notes?: string | undefined;
-
     constructor(data?: IReferenceDto);
-
-    static fromJS(data: any): ReferenceDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): ReferenceDto;
     toJSON(data?: any): any;
 }
-
 export interface IReferenceDto {
     id: string;
     type: ReferenceTypeDto;
-    link: string | undefined;
+    link: string;
     notes?: string | undefined;
 }
-
 export declare enum ReferenceTypeDto {
     TradingView = "TradingView",
     Other = "Other"
 }
-
 export declare enum ResultDto {
     Win = "Win",
     Mediocre = "Mediocre",
     BreakEven = "BreakEven",
     Loss = "Loss"
 }
-
-export declare class ResultDtoNullableUpdatedValue implements IResultDtoNullableUpdatedValue {
+export declare class ResultDtoNullableUpdateValue implements IResultDtoNullableUpdateValue {
     value?: ResultDto;
-
-    constructor(data?: IResultDtoNullableUpdatedValue);
-
-    static fromJS(data: any): ResultDtoNullableUpdatedValue;
-
+    constructor(data?: IResultDtoNullableUpdateValue);
     init(_data?: any): void;
-
+    static fromJS(data: any): ResultDtoNullableUpdateValue;
     toJSON(data?: any): any;
 }
-
-export interface IResultDtoNullableUpdatedValue {
+export interface IResultDtoNullableUpdateValue {
     value?: ResultDto;
 }
-
-export declare class StringUpdatedValue implements IStringUpdatedValue {
+export declare class StringUpdateValue implements IStringUpdateValue {
     value?: string | undefined;
-
-    constructor(data?: IStringUpdatedValue);
-
-    static fromJS(data: any): StringUpdatedValue;
-
+    constructor(data?: IStringUpdateValue);
     init(_data?: any): void;
-
+    static fromJS(data: any): StringUpdateValue;
     toJSON(data?: any): any;
 }
-
-export interface IStringUpdatedValue {
+export interface IStringUpdateValue {
     value?: string | undefined;
 }
-
-export declare class SuccessResponse implements ISuccessResponse {
-    warnings?: string[] | undefined;
-
-    constructor(data?: ISuccessResponse);
-
-    static fromJS(data: any): SuccessResponse;
-
+export declare class TimeZoneOption implements ITimeZoneOption {
+    windowsId?: string;
+    timeZone?: string;
+    offset?: string;
+    constructor(data?: ITimeZoneOption);
     init(_data?: any): void;
-
+    static fromJS(data: any): TimeZoneOption;
     toJSON(data?: any): any;
 }
-
-export interface ISuccessResponse {
-    warnings?: string[] | undefined;
+export interface ITimeZoneOption {
+    windowsId?: string;
+    timeZone?: string;
+    offset?: string;
 }
-
 export declare class TradeDto implements ITradeDto {
     id?: string;
     assetId?: string;
-    asset: string | undefined;
+    asset: string;
     profileId?: string;
-    profile: string | undefined;
+    profile: string;
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
@@ -566,30 +477,25 @@ export declare class TradeDto implements ITradeDto {
     performance?: number | undefined;
     isClosed?: boolean;
     currencyId?: string;
-    currency: string | undefined;
+    currency: string;
     entry?: number;
     stopLoss?: number | undefined;
     takeProfit?: number | undefined;
     exitPrice?: number | undefined;
     riskRewardRatio?: number | undefined;
-    references: ReferenceDto[] | undefined;
+    references: ReferenceDto[];
     notes?: string | undefined;
-
     constructor(data?: ITradeDto);
-
-    static fromJS(data: any): TradeDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): TradeDto;
     toJSON(data?: any): any;
 }
-
 export interface ITradeDto {
     id?: string;
     assetId?: string;
-    asset: string | undefined;
+    asset: string;
     profileId?: string;
-    profile: string | undefined;
+    profile: string;
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
@@ -598,106 +504,153 @@ export interface ITradeDto {
     performance?: number | undefined;
     isClosed?: boolean;
     currencyId?: string;
-    currency: string | undefined;
+    currency: string;
     entry?: number;
     stopLoss?: number | undefined;
     takeProfit?: number | undefined;
     exitPrice?: number | undefined;
     riskRewardRatio?: number | undefined;
-    references: ReferenceDto[] | undefined;
+    references: ReferenceDto[];
     notes?: string | undefined;
 }
-
-export declare class UInt16SuccessResponse implements IUInt16SuccessResponse {
-    data?: number;
-    warnings?: string[] | undefined;
-
-    constructor(data?: IUInt16SuccessResponse);
-
-    static fromJS(data: any): UInt16SuccessResponse;
-
+export declare class TradeDtoPageDto implements ITradeDtoPageDto {
+    data?: TradeDto[];
+    count?: number;
+    totalCount?: number;
+    totalPages?: number;
+    page?: number;
+    pageSize?: number;
+    constructor(data?: ITradeDtoPageDto);
     init(_data?: any): void;
-
+    static fromJS(data: any): TradeDtoPageDto;
     toJSON(data?: any): any;
 }
-
-export interface IUInt16SuccessResponse {
-    data?: number;
-    warnings?: string[] | undefined;
+export interface ITradeDtoPageDto {
+    data?: TradeDto[];
+    count?: number;
+    totalCount?: number;
+    totalPages?: number;
+    page?: number;
+    pageSize?: number;
 }
-
+export declare class TradeResultDto implements ITradeResultDto {
+    tradeId?: string;
+    result?: ResultDto;
+    performance?: number | undefined;
+    warnings?: string[];
+    constructor(data?: ITradeResultDto);
+    init(_data?: any): void;
+    static fromJS(data: any): TradeResultDto;
+    toJSON(data?: any): any;
+}
+export interface ITradeResultDto {
+    tradeId?: string;
+    result?: ResultDto;
+    performance?: number | undefined;
+    warnings?: string[];
+}
 export declare class UpdateReferenceDto implements IUpdateReferenceDto {
     type?: ReferenceTypeDto;
     link?: string | undefined;
-    notes?: StringUpdatedValue;
-
+    notes?: StringUpdateValue;
     constructor(data?: IUpdateReferenceDto);
-
-    static fromJS(data: any): UpdateReferenceDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): UpdateReferenceDto;
     toJSON(data?: any): any;
 }
-
 export interface IUpdateReferenceDto {
     type?: ReferenceTypeDto;
     link?: string | undefined;
-    notes?: StringUpdatedValue;
+    notes?: StringUpdateValue;
 }
-
 export declare class UpdateTradeDto implements IUpdateTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDtoNullableUpdatedValue;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
-    stopLoss?: DecimalNullableUpdatedValue;
-    takeProfit?: DecimalNullableUpdatedValue;
-    exitPrice?: DecimalNullableUpdatedValue;
-    notes?: StringUpdatedValue;
-
+    stopLoss?: DecimalNullableUpdateValue;
+    takeProfit?: DecimalNullableUpdateValue;
+    exitPrice?: DecimalNullableUpdateValue;
+    notes?: StringUpdateValue;
     constructor(data?: IUpdateTradeDto);
-
-    static fromJS(data: any): UpdateTradeDto;
-
     init(_data?: any): void;
-
+    static fromJS(data: any): UpdateTradeDto;
     toJSON(data?: any): any;
 }
-
 export interface IUpdateTradeDto {
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    result?: ResultDtoNullableUpdatedValue;
+    manuallyEnteredResult?: ResultDtoNullableUpdateValue;
     balance?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
-    stopLoss?: DecimalNullableUpdatedValue;
-    takeProfit?: DecimalNullableUpdatedValue;
-    exitPrice?: DecimalNullableUpdatedValue;
-    notes?: StringUpdatedValue;
+    stopLoss?: DecimalNullableUpdateValue;
+    takeProfit?: DecimalNullableUpdateValue;
+    exitPrice?: DecimalNullableUpdateValue;
+    notes?: StringUpdateValue;
 }
-
-export declare class SwaggerResponse<TResult> {
+export declare class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
+    culture?: string | undefined;
+    isoLanguageCode?: StringUpdateValue;
+    timeZone?: string | undefined;
+    constructor(data?: IUpdateUserSettingsDto);
+    init(_data?: any): void;
+    static fromJS(data: any): UpdateUserSettingsDto;
+    toJSON(data?: any): any;
+}
+export interface IUpdateUserSettingsDto {
+    culture?: string | undefined;
+    isoLanguageCode?: StringUpdateValue;
+    timeZone?: string | undefined;
+}
+export declare class UserSettingsDto implements IUserSettingsDto {
+    culture: string;
+    language: string | undefined;
+    timeZone: string;
+    lastModified: Date;
+    activeProfileId: string;
+    activeProfileName: string;
+    constructor(data?: IUserSettingsDto);
+    init(_data?: any): void;
+    static fromJS(data: any): UserSettingsDto;
+    toJSON(data?: any): any;
+}
+export interface IUserSettingsDto {
+    culture: string;
+    language: string | undefined;
+    timeZone: string;
+    lastModified: Date;
+    activeProfileId: string;
+    activeProfileName: string;
+}
+export declare class WarningsDto implements IWarningsDto {
+    warnings?: string[];
+    constructor(data?: IWarningsDto);
+    init(_data?: any): void;
+    static fromJS(data: any): WarningsDto;
+    toJSON(data?: any): any;
+}
+export interface IWarningsDto {
+    warnings?: string[];
+}
+export declare class SimpleTradingClientResponse<TResult> {
     status: number;
     headers: {
         [key: string]: any;
     };
     result: TResult;
-
     constructor(status: number, headers: {
         [key: string]: any;
     }, result: TResult);
 }
-
 export declare class SimpleTradingClientException extends Error {
     message: string;
     status: number;
@@ -706,11 +659,9 @@ export declare class SimpleTradingClientException extends Error {
         [key: string]: any;
     };
     result: any;
-    protected isSimpleTradingClientException: boolean;
-
     constructor(message: string, status: number, response: string, headers: {
         [key: string]: any;
     }, result: any);
-
+    protected isSimpleTradingClientException: boolean;
     static isSimpleTradingClientException(obj: any): obj is SimpleTradingClientException;
 }
