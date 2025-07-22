@@ -79,7 +79,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         exception.Which.Result.Errors
             .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Balance")
+            .And.Contain(x => x.Identifier == "balance")
             .And.Contain(x => x.Messages.Single() == "'Bilanz' darf kein Nullwert sein.");
     }
 
@@ -105,7 +105,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         exception.Which.Result.Errors
             .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Closed")
+            .And.Contain(x => x.Identifier == "closed")
             .And.Contain(x => x.Messages.Single() == "'Abgeschlossen' darf kein Nullwert sein.");
     }
 

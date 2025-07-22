@@ -57,7 +57,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Type")
+            .And.Contain(x => x.Identifier == "type")
             .And.Contain(x => x.Messages.Single() == "'Referenztyp' hat einen Wertebereich, der '50' nicht enthält.");
     }
 

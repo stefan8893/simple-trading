@@ -158,7 +158,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors
             .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Size")
+            .And.Contain(x => x.Identifier == "size")
             .And.Contain(x => x.Messages.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
     }
 
@@ -226,7 +226,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             .Should().HaveCount(1)
             .And.Contain(x =>
                 x.Messages.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
-                x.Identifier == "Balance");
+                x.Identifier == "balance");
     }
 
     [Fact]
@@ -261,7 +261,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             .Should().HaveCount(1)
             .And.Contain(x =>
                 x.Messages.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
-                x.Identifier == "Closed");
+                x.Identifier == "closed");
     }
 
     [Fact]

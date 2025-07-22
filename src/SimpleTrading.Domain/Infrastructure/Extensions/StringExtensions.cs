@@ -13,6 +13,14 @@ public static class StringExtensions
             .Trim()
             .Equals("null", StringComparison.OrdinalIgnoreCase);
     }
+    
+    public static string FirstCharToLower(this string s)
+    {
+        if (string.IsNullOrEmpty(s) || char.IsLower(s[0]))
+            return s;
+
+        return char.ToLower(s[0]) + s[1..];
+    }
 
     public static string LocalizeMe(this string s,
         [CallerMemberName] string memberName = "",

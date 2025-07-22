@@ -54,7 +54,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
-                              x.Identifier == "Filter[0]");
+                              x.Identifier == "filter[0]");
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
-                              x.Identifier == "Filter[0]");
+                              x.Identifier == "filter[0]");
     }
     
     [Fact]
@@ -90,7 +90,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Messages.Single() == "'Profil' darf nicht leer sein." &&
-                              x.Identifier == "ProfileId");
+                              x.Identifier == "profileId");
     }
 
     [Fact]
@@ -109,7 +109,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Messages.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
-                              x.Identifier == "Filter[0].ComparisonValue");
+                              x.Identifier == "filter[0].ComparisonValue");
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
-                              x.Identifier == "Filter[0]");
+                              x.Identifier == "filter[0]");
     }
 
     [Fact]

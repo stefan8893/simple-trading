@@ -90,7 +90,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "ManuallyEnteredResult" &&
+            .And.Contain(x => x.Identifier == "manuallyEnteredResult" &&
                               x.Messages.Single() ==
                               "'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
     }
@@ -193,7 +193,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "Closed" &&
+            .And.Contain(x => x.Identifier == "closed" &&
                               x.Messages.Single() ==
                               "'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
     }

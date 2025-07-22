@@ -53,7 +53,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         exception.Which.Result.Errors.Should().HaveCount(1)
             .And.Contain(x => x.Messages.Single() == "Ungültiger Link.")
-            .And.Contain(x => x.Identifier == "Link");
+            .And.Contain(x => x.Identifier == "link");
     }
 
     [Fact]

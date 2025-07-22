@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.WebApi.Infrastructure;
 
@@ -21,7 +22,7 @@ public static class ResponseExtension
                 .GroupBy(x => x.PropertyName)
                 .Select(x => new FieldError
                 {
-                    Identifier = x.Key,
+                    Identifier = x.Key.FirstCharToLower(),
                     Messages = x.Select(e => e.ErrorMessage).ToList()
                 })
                 .ToList()
