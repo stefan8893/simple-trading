@@ -6,14 +6,25 @@ public static class TestConstants
 {
     private static readonly string CurrentDirectory = Environment.CurrentDirectory;
 
-    public static readonly string PathToTestProjectFile = Path.Combine(Environment.CurrentDirectory,
-        "../../../../SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate/SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate.csproj");
+    public const string InteractorSource = """
+                                           namespace SimpleTrading.Domain.Infrastructure;
 
+                                           public interface IInteractor<TResponseModel>
+                                           {
+                                               Task<TResponseModel> Execute();
+                                           }
+
+                                           public interface IInteractor<in TRequestModel, TResponseModel>
+                                           {
+                                               Task<TResponseModel> Execute(TRequestModel model);
+                                           }
+                                           """;
+    
 
     public static class TestSourceFiles
     {
         private static readonly string TestSourceFilesDir = Path.Combine(CurrentDirectory, nameof(TestSourceFiles));
-
+        
         public static readonly string ValidatorAndBadInputCaseExistsFile =
             Path.Combine(TestSourceFilesDir, $"{nameof(ValidatorAndBadInputCaseExists)}.cs");
 

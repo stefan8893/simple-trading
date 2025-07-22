@@ -9,9 +9,11 @@ namespace SimpleTrading.Domain.Analyzers;
 public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
-        ImmutableArray.Create(Rules.MissingBadInputCase,
-            Rules.ResponseModelTypeMustBeOneOf,
-            Rules.MissingInteractorSuffix);
+    [
+        Rules.MissingBadInputCase,
+        Rules.ResponseModelTypeMustBeOneOf,
+        Rules.MissingInteractorSuffix
+    ];
 
     public override void Initialize(AnalysisContext context)
     {

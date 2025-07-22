@@ -39,8 +39,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.Domain.Analyz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.Domain.Analyzers.Tests", "test\SimpleTrading.Domain.Analyzers.Tests\SimpleTrading.Domain.Analyzers.Tests.csproj", "{4149219C-1A29-4D6F-B74A-C28221C0193B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate", "test\SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate\SimpleTrading.Domain.Analyzers.Tests.ProjectTemplate.csproj", "{CD7A8C2E-735D-4F57-B78D-C5A482ABE86F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTrading.Domain.Generators", "src\SimpleTrading.Domain.Generators\SimpleTrading.Domain.Generators.csproj", "{CB4D7B78-7A90-4C15-AE09-6228B9F59F68}"
 EndProject
 Global
@@ -97,10 +95,6 @@ Global
 		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4149219C-1A29-4D6F-B74A-C28221C0193B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD7A8C2E-735D-4F57-B78D-C5A482ABE86F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD7A8C2E-735D-4F57-B78D-C5A482ABE86F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD7A8C2E-735D-4F57-B78D-C5A482ABE86F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD7A8C2E-735D-4F57-B78D-C5A482ABE86F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB4D7B78-7A90-4C15-AE09-6228B9F59F68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB4D7B78-7A90-4C15-AE09-6228B9F59F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB4D7B78-7A90-4C15-AE09-6228B9F59F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -122,7 +116,6 @@ Global
 		{54FEB882-7381-4BD4-B234-4B4183EDFF76} = {356313D4-DC33-453D-8085-4B6792499BB8}
 		{B9D652FC-3D02-4E61-8747-FBA6B44BBDFA} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 		{4149219C-1A29-4D6F-B74A-C28221C0193B} = {356313D4-DC33-453D-8085-4B6792499BB8}
-		{CD7A8C2E-735D-4F57-B78D-C5A482ABE86F} = {356313D4-DC33-453D-8085-4B6792499BB8}
 		{CB4D7B78-7A90-4C15-AE09-6228B9F59F68} = {08E51543-C730-4BE8-8344-2C04F5085BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
