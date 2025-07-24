@@ -39,7 +39,7 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Trade size' must be greater than '0'.");
+            .And.Contain(x => x.ErrorMessage == "'Trade Size' must be greater than '0'.");
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Entry price' must be greater than '0'." &&
+            .And.Contain(x => x.ErrorMessage == "'Entry Price' must be greater than '0'." &&
                               x.PropertyName == "EntryPrice");
     }
 
@@ -112,7 +112,7 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Stop loss' must be greater than '0'." &&
+            .And.Contain(x => x.ErrorMessage == "'Stop Loss' must be greater than '0'." &&
                               x.PropertyName == "StopLoss");
     }
 
@@ -134,7 +134,7 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Take profit' must be greater than '0'." &&
+            .And.Contain(x => x.ErrorMessage == "'Take Profit' must be greater than '0'." &&
                               x.PropertyName == "TakeProfit");
     }
 
@@ -156,7 +156,7 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Exit price' must be greater than '0'." &&
+            .And.Contain(x => x.ErrorMessage == "'Exit Price' must be greater than '0'." &&
                               x.PropertyName == "ExitPrice");
     }
 

@@ -309,7 +309,7 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
             .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Break-even'.");
+            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.");
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
         trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
@@ -340,7 +340,7 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
             .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "Your trade indicates a 'Win' result, but you have entered 'Break-even'.");
+            .And.Contain(x => x == "Your trade indicates a 'Win' result, but you have entered 'Break-Even'.");
         trade.Result.Should().NotBeNull();
         trade.Result!.Name.Should().Be(Result.BreakEven);
         trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
@@ -740,7 +740,7 @@ public class CloseTradeTests : TestBase
         // assert
         response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
             .Which.Data.Warnings.Should().HaveCount(2)
-            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Break-even'.")
+            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.")
             .And.Contain(x =>
                 x == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
     }
@@ -771,7 +771,7 @@ public class CloseTradeTests : TestBase
             .Which.Data.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
                 x ==
-                "Your position indicates the result 'Mediocre', but based on the balance it is 'Break-even'.");
+                "Your position indicates the result 'Mediocre', but based on the balance it is 'Break-Even'.");
     }
 
     [Fact]
@@ -799,7 +799,7 @@ public class CloseTradeTests : TestBase
         response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
             .Which.Data.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
+                x == "Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.");
     }
 
     [Fact]
@@ -827,7 +827,7 @@ public class CloseTradeTests : TestBase
         response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
             .Which.Data.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Your position indicates the result 'Win', but based on the balance it is 'Break-even'.");
+                x == "Your position indicates the result 'Win', but based on the balance it is 'Break-Even'.");
     }
 
     [Fact]
@@ -855,7 +855,7 @@ public class CloseTradeTests : TestBase
         response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
             .Which.Data.Warnings.Should().HaveCount(1)
             .And.Contain(x =>
-                x == "Your position indicates the result 'Loss', but based on the balance it is 'Break-even'.");
+                x == "Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.");
     }
 
     [Fact]

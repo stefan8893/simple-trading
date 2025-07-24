@@ -7,14 +7,13 @@ internal class BalanceDiffersFromPositionPricesAnalyzerDecorator(ITradeResultAna
 {
     public IEnumerable<string> AnalyzeResults(Trade trade, TradeResultAnalyzerConfiguration config)
     {
-        var additionalWarnings = AnalyzeBalanceAndPositionPrices(trade, config);
+        var additionalWarnings = AnalyzeBalanceAndPositionPrices(trade);
 
         return innerComponent.AnalyzeResults(trade, config)
             .Concat(additionalWarnings);
     }
 
-    private static IEnumerable<string> AnalyzeBalanceAndPositionPrices(Trade trade,
-        TradeResultAnalyzerConfiguration config)
+    private static IEnumerable<string> AnalyzeBalanceAndPositionPrices(Trade trade)
     {
         var prices = trade.PositionPrices;
         var isLongOrShortPosition = prices.IsLongPosition || prices.IsShortPosition;

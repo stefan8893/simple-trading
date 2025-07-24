@@ -133,11 +133,11 @@
     <value>Currency</value>
   </data>
     <data name="EntryPrice" xml:space="preserve">
-    <value>Entry price</value>
-  </data>
+        <value>Entry Price</value>
+    </data>
     <data name="ExitPrice" xml:space="preserve">
-    <value>Exit price</value>
-  </data>
+        <value>Exit Price</value>
+    </data>
     <data name="Closed" xml:space="preserve">
     <value>Closed</value>
   </data>
@@ -172,20 +172,20 @@
     <value>Profile</value>
   </data>
     <data name="ReferenceType" xml:space="preserve">
-        <value>Reference type</value>
+        <value>Reference Type</value>
     </data>
     <data name="Result" xml:space="preserve">
     <value>Result</value>
   </data>
     <data name="StopLoss" xml:space="preserve">
-    <value>Stop loss</value>
-  </data>
+        <value>Stop Loss</value>
+    </data>
     <data name="TakeProfit" xml:space="preserve">
-    <value>Take profit</value>
-  </data>
+        <value>Take Profit</value>
+    </data>
     <data name="TradeSize" xml:space="preserve">
-    <value>Trade size</value>
-  </data>
+        <value>Trade Size</value>
+    </data>
     <data name="Trade" xml:space="preserve">
         <value>Trade</value>
     </data>
@@ -193,7 +193,7 @@
         <value>Loss</value>
     </data>
     <data name="BreakEven" xml:space="preserve">
-        <value>Break-even</value>
+        <value>Break-Even</value>
     </data>
     <data name="Mediocre" xml:space="preserve">
         <value>Mediocre</value>
@@ -232,7 +232,7 @@
         <value>You can't add more than {0} references per trade.</value>
     </data>
     <data name="SearchTerm" xml:space="preserve">
-        <value>Search term</value>
+        <value>Search Term</value>
     </data>
     <data name="Sort" xml:space="preserve">
         <value>Sort</value>
@@ -256,7 +256,7 @@
         <value>Page</value>
     </data>
     <data name="PageSize" xml:space="preserve">
-        <value>Page size</value>
+        <value>Page Size</value>
     </data>
     <data name="Operator" xml:space="preserve">
         <value>Operator</value>

@@ -184,7 +184,7 @@ public class SearchTradesPagingTests : DomainTests
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x => x.PropertyName == "PageSize" &&
-                              x.ErrorMessage == "'Page size' must be greater than or equal to '1'.");
+                              x.ErrorMessage == "'Page Size' must be greater than or equal to '1'.");
     }
 
     [Fact]

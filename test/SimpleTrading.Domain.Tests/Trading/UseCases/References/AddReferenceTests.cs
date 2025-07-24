@@ -23,7 +23,7 @@ public class AddReferenceTests : DomainTests
 
         var badInput = response.Value.Should().BeOfType<BadInput>();
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Reference type' has a range of values which does not include '50'.");
+            .And.Contain(x => x.ErrorMessage == "'Reference Type' has a range of values which does not include '50'.");
     }
 
     [Fact]

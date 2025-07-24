@@ -89,7 +89,7 @@ public class AddTradeTests : DomainTests
     }
 
     [Theory]
-    [InlineData("en-US", "'Trade size' must be greater than '0'.")]
+    [InlineData("en-US", "'Trade Size' must be greater than '0'.")]
     [InlineData("de-AT", "Der Wert von 'Handelsvolumen' muss grösser sein als '0'.")]
     public async Task Size_must_be_above_zero(string culture, string errorMessage)
     {
@@ -519,13 +519,13 @@ public class AddTradeTests : DomainTests
         var businessError = response.Value.Should().BeOfType<BadInput>();
         businessError.Which.ValidationResult.Errors.Should().HaveCount(4)
             .And.Contain(x =>
-                x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry price' must be greater than '0'.")
+                x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry Price' must be greater than '0'.")
             .And.Contain(x =>
-                x.PropertyName == "StopLoss" && x.ErrorMessage == "'Stop loss' must be greater than '0'.")
+                x.PropertyName == "StopLoss" && x.ErrorMessage == "'Stop Loss' must be greater than '0'.")
             .And.Contain(x =>
-                x.PropertyName == "TakeProfit" && x.ErrorMessage == "'Take profit' must be greater than '0'.")
+                x.PropertyName == "TakeProfit" && x.ErrorMessage == "'Take Profit' must be greater than '0'.")
             .And.Contain(x =>
-                x.PropertyName == "ExitPrice" && x.ErrorMessage == "'Exit price' must be greater than '0'.");
+                x.PropertyName == "ExitPrice" && x.ErrorMessage == "'Exit Price' must be greater than '0'.");
     }
 
     [Fact]

@@ -40,7 +40,7 @@ public class GetCurrenciesTests : DomainTests
         badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
             .And.Contain(x =>
                 x.ErrorMessage ==
-                "The length of 'Search term' must be 50 characters or fewer. You entered 51 characters.")
+                "The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.")
             .And.Contain(x => x.PropertyName == "SearchTerm");
     }
 }

@@ -125,7 +125,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
     {
         var trade = await _tradeRepository.Find(tradeId);
 
-        // return true if the trade does not exist
+        // return true if the trade does not exist.
         // the interactor itself will then handle that case
         return trade?.IsClosed ?? true;
     }
