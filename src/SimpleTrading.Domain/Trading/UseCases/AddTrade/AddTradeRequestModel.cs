@@ -10,6 +10,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 public record AddTradeRequestModel
 {
+    public bool DryRun { get; init; }
     public required Guid AssetId { get; init; }
     public required Guid ProfileId { get; init; }
     public required DateTimeOffset Opened { get; init; }

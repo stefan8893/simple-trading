@@ -228,6 +228,7 @@ public partial class TradesController : ControllerBase
     {
         return new AddTradeRequestModel
         {
+            DryRun = dto.DryRun ?? false,
             AssetId = dto.AssetId!.Value,
             ProfileId = dto.ProfileId!.Value,
             Opened = dto.Opened!.Value,

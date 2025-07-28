@@ -243,7 +243,7 @@ public class AddTradeTests : DomainTests
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
         var reference = new ReferenceRequestModel(ReferenceType.Other,
-            "http://example.org",
+            "https://example.org",
             new string('a', 40001));
 
         var requestModel = new AddTradeRequestModel
@@ -414,6 +414,37 @@ public class AddTradeTests : DomainTests
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
 
         newlyAddedTrade.Should().NotBeNull();
+    }
+    
+    [Fact]
+    public async Task A_trade_is_not_saved_when_executing_a_dry_run()
+    {
+        // arrange
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        var requestModel = new AddTradeRequestModel
+        {
+            DryRun = true,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = new DateTimeOffset(_utcNow),
+            Size = 5000,
+            EntryPrice = 1.05m,
+            CurrencyId = currency.Id
+        };
+
+        // act
+        var response = await Interactor.Execute(requestModel);
+
+        // assert
+        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
+
+        newlyAddedTrade.Should().BeNull();
     }
 
     [Fact]

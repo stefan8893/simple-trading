@@ -57,6 +57,35 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         newlyAddedTrade.Should().NotBeNull();
     }
+    
+    [Fact]
+    public async Task A_trade_is_not_saved_when_executing_a_dry_run()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync();
+
+        // act
+        var response = await client.AddTradeAsync(new AddTradeDto
+        {
+            DryRun = true,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = _utcNow,
+            Size = 5000,
+            CurrencyId = currency.Id,
+            EntryPrice = 1.08
+        });
+
+        // assert
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
+        newlyAddedTrade.Should().BeNull();
+    }
 
     [Fact]
     public async Task A_closed_trade_with_an_overriden_null_result_will_be_added()
@@ -91,7 +120,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade!.Result.Should().BeNull();
+        newlyAddedTrade.Result.Should().BeNull();
     }
 
     [Fact]
@@ -126,7 +155,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
 
         newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade!.Result.Should().NotBeNull();
+        newlyAddedTrade.Result.Should().NotBeNull();
         newlyAddedTrade.Result!.Name.Should().Be(Result.Loss);
     }
 
@@ -296,7 +325,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         newlyAddedTrade.Should().NotBeNull();
         var expected = DateTime.Parse("2024-08-05T12:00:00");
         expected.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade!.Opened.Should().Be(expected);
+        newlyAddedTrade.Opened.Should().Be(expected);
     }
 
 
@@ -332,6 +361,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         newlyAddedTrade.Should().NotBeNull();
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");
         expectedOpenedDate.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade!.Opened.Should().Be(expectedOpenedDate);
+        newlyAddedTrade.Opened.Should().Be(expectedOpenedDate);
     }
 }

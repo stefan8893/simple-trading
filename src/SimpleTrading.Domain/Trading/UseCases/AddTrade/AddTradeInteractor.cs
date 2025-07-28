@@ -48,7 +48,8 @@ public class AddTradeInteractor(
             return businessError;
 
         tradeRepository.Add(trade);
-        await uowCommit();
+        if (!model.DryRun)
+            await uowCommit();
 
         return potentiallyClosedTrade.Match<AddTradeResponse>(
             x => Completed(new AddTradeResponseModel(x.Data.TradeId,

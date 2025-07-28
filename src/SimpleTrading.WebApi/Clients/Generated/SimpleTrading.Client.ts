@@ -1359,6 +1359,7 @@ export interface IAddReferenceDto {
 }
 
 export class AddTradeDto implements IAddTradeDto {
+    dryRun?: boolean | undefined;
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
@@ -1385,6 +1386,7 @@ export class AddTradeDto implements IAddTradeDto {
 
     init(_data?: any) {
         if (_data) {
+            this.dryRun = _data["dryRun"];
             this.assetId = _data["assetId"];
             this.profileId = _data["profileId"];
             this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
@@ -1415,6 +1417,7 @@ export class AddTradeDto implements IAddTradeDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["dryRun"] = this.dryRun;
         data["assetId"] = this.assetId;
         data["profileId"] = this.profileId;
         data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
@@ -1438,6 +1441,7 @@ export class AddTradeDto implements IAddTradeDto {
 }
 
 export interface IAddTradeDto {
+    dryRun?: boolean | undefined;
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;

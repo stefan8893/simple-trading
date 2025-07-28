@@ -8,6 +8,7 @@ namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public record AddTradeDto
 {
+    public bool? DryRun { get; set; }
     /// <example>0c275c78-0508-4836-81d5-342e2445d60c</example>
     public Guid? AssetId { get; set; }
 
