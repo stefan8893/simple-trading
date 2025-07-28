@@ -63,7 +63,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .Empty()
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
-            .WithMessage(SimpleTradingStrings.BalanceAndClosedMustBePresentWhenOverridingResult)
+            .WithMessage(SimpleTradingStrings.BalanceAndClosedMustBeSpecifiedWhenOverridingResult)
             .When(x => !(x.Balance.HasValue && x.Closed.HasValue) && x.ManuallyEnteredResult.IsT0);
 
         RuleFor(x => x.Balance)

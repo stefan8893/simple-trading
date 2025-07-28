@@ -78,11 +78,11 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Ergebnis kann nur überschrieben werden, wenn &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; angegeben ist..
+        ///   Looks up a localized string similar to Das Ergebnis kann nur überschrieben werden, wenn &apos;Bilanz&apos; und &apos;Abgeschlossen&apos; angegeben sind..
         /// </summary>
-        public static string BalanceAndClosedMustBePresentWhenOverridingResult {
+        public static string BalanceAndClosedMustBeSpecifiedWhenOverridingResult {
             get {
-                return ResourceManager.GetString("BalanceAndClosedMustBePresentWhenOverridingResult", resourceCulture);
+                return ResourceManager.GetString("BalanceAndClosedMustBeSpecifiedWhenOverridingResult", resourceCulture);
             }
         }
         

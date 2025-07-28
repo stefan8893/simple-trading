@@ -273,8 +273,8 @@
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Ungültiges Filterformat.</value>
     </data>
-    <data name="BalanceAndClosedMustBePresentWhenOverridingResult" xml:space="preserve">
-        <value>Das Ergebnis kann nur überschrieben werden, wenn 'Bilanz' und 'Abgeschlossen' angegeben ist.</value>
+    <data name="BalanceAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
+        <value>Das Ergebnis kann nur überschrieben werden, wenn 'Bilanz' und 'Abgeschlossen' angegeben sind.</value>
     </data>
     <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
         <value>'{0}' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.</value>

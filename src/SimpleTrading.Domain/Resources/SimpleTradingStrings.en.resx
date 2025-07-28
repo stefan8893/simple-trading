@@ -273,7 +273,7 @@
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Invalid filter format.</value>
     </data>
-    <data name="BalanceAndClosedMustBePresentWhenOverridingResult" xml:space="preserve">
+    <data name="BalanceAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
         <value>The result can only be overridden if 'Balance' and 'Closed' are specified.</value>
     </data>
     <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
