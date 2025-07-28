@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -25,6 +26,7 @@ public class TradeResponseModel
     public required double? RiskRewardRatio { get; init; }
     public required IReadOnlyList<ReferenceModel> References { get; init; }
     public required string? Notes { get; init; }
+    public required IImmutableList<string> Warnings { get; init; }
 
     public static TradeResponseModel From(Trade trade, string timeZone)
     {
@@ -52,7 +54,8 @@ public class TradeResponseModel
             References = trade.References
                 .Select(ReferenceModel.From)
                 .ToList(),
-            Notes = trade.Notes
+            Notes = trade.Notes,
+            Warnings = trade.GetWarnings()
         };
     }
 }

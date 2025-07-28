@@ -26,6 +26,7 @@ public class TradeDto
     public double? RiskRewardRatio { get; init; }
     public required IReadOnlyList<ReferenceDto> References { get; init; }
     public string? Notes { get; init; }
+    public required List<string> Warnings { get; init; }
 
     public static TradeDto From(TradeResponseModel model)
     {
@@ -51,7 +52,8 @@ public class TradeDto
             ExitPrice = model.ExitPrice,
             RiskRewardRatio = model.RiskRewardRatio,
             References = model.References.Select(ReferenceDto.From).ToList(),
-            Notes = model.Notes
+            Notes = model.Notes,
+            Warnings = model.Warnings.ToList()
         };
 
         ResultDto? MapToResultDto(ResultModel? result)

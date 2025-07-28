@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
@@ -31,6 +32,18 @@ public class Trade : IEntity
     public bool IsClosed => Closed.HasValue && Balance.HasValue;
     public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
+
+    internal IImmutableList<string> GetWarnings()
+    {
+        if(!IsClosed)
+            return ImmutableList<string>.Empty;
+        
+        var results = CalculateResults(new None());
+        var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
+
+        return AnalyzeResults(results, calculatedResult)
+            .ToImmutableList();
+    }
 
     internal OneOf<Completed<CloseTradeResult>, BusinessError> RestoreCalculatedResult(UtcNow utcNow)
     {
@@ -84,16 +97,16 @@ public class Trade : IEntity
 
     private (Result? result, IReadOnlyList<string> warnings) CalculateResult(CloseTradeConfiguration configuration)
     {
-        var results = CalculateResults(configuration);
+        var results = CalculateResults(configuration.ManuallyEnteredResult);
         var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
         var result = results.ManuallyEntered.Match(r => r, _ => calculatedResult);
 
         return (result, AnalyzeResults(results, calculatedResult));
     }
 
-    private TradingResultsDto CalculateResults(CloseTradeConfiguration configuration)
+    private TradingResultsDto CalculateResults(OneOf<ResultModel?, None> manuallyEntered)
     {
-        var manuallyEnteredResult = configuration.ManuallyEnteredResult
+        var manuallyEnteredResult = manuallyEntered
             .Match<OneOf<Result?, None>>(x => CreateManuallyEnteredResult(x), _ =>
                 Result?.Source == ResultSource.ManuallyEntered
                     ? Result
