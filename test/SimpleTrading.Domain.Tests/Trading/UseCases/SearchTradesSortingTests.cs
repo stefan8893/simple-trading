@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
@@ -26,10 +25,10 @@ public class SearchTradesSortingTests : DomainTests
             Sort = [sorting]
         });
 
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Sort[0].Property" &&
-                              x.ErrorMessage == "The sorting based on 'Foobar' does not work.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The sorting based on 'Foobar' does not work.", error.ErrorMessage);
+        Assert.Equal("Sort[0].Property", error.PropertyName);
     }
 
     [Fact]
@@ -64,12 +63,14 @@ public class SearchTradesSortingTests : DomainTests
         });
 
         // assert
-        var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTraded.Which.Should().HaveCount(4);
-        pagedTraded.Which.ElementAt(0).Result.Should().Be(ResultModel.Win);
-        pagedTraded.Which.ElementAt(1).Result.Should().Be(ResultModel.Mediocre);
-        pagedTraded.Which.ElementAt(2).Result.Should().Be(ResultModel.BreakEven);
-        pagedTraded.Which.ElementAt(3).Result.Should().Be(ResultModel.Loss);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+
+        Assert.Collection(pagedTrades,
+            first => Assert.Equal(ResultModel.Win, first.Result),
+            second => Assert.Equal(ResultModel.Mediocre, second.Result),
+            third => Assert.Equal(ResultModel.BreakEven, third.Result),
+            fourth => Assert.Equal(ResultModel.Loss, fourth.Result)
+        );
     }
 
     [Fact]
@@ -99,12 +100,14 @@ public class SearchTradesSortingTests : DomainTests
         });
 
         // assert
-        var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTraded.Which.Should().HaveCount(4);
-        pagedTraded.Which.ElementAt(0).Opened.UtcDateTime.Should().Be(initialOpenedDate.AddDays(3));
-        pagedTraded.Which.ElementAt(1).Opened.UtcDateTime.Should().Be(initialOpenedDate.AddDays(2));
-        pagedTraded.Which.ElementAt(2).Opened.UtcDateTime.Should().Be(initialOpenedDate.AddDays(1));
-        pagedTraded.Which.ElementAt(3).Opened.UtcDateTime.Should().Be(initialOpenedDate);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+
+        Assert.Collection(pagedTrades,
+            first => Assert.Equal(initialOpenedDate.AddDays(3), first.Opened.UtcDateTime),
+            second => Assert.Equal(initialOpenedDate.AddDays(2), second.Opened.UtcDateTime),
+            third => Assert.Equal(initialOpenedDate.AddDays(1), third.Opened.UtcDateTime),
+            fourth => Assert.Equal(initialOpenedDate, fourth.Opened.UtcDateTime)
+        );
     }
 
     [Fact]
@@ -137,12 +140,13 @@ public class SearchTradesSortingTests : DomainTests
         });
 
         // assert
-        var pagedTraded = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var firstExpected = DateTimeOffset.Parse("2024-08-19T21:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T20:00:00+02:00");
-        pagedTraded.Which.Should().HaveCount(2);
-        pagedTraded.Which.ElementAt(0).Closed.Should().Be(firstExpected);
-        pagedTraded.Which.ElementAt(1).Closed.Should().Be(secondExpected);
+
+        Assert.Collection(pagedTrades,
+            first => Assert.Equal(firstExpected, first.Closed),
+            second => Assert.Equal(secondExpected, second.Closed));
     }
 
 
@@ -169,9 +173,9 @@ public class SearchTradesSortingTests : DomainTests
         });
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Sort[0].Property" &&
-                              x.ErrorMessage == "The sorting based on '   Balance ' does not work.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The sorting based on '   Balance ' does not work.", error.ErrorMessage);
+        Assert.Equal("Sort[0].Property", error.PropertyName);
     }
 }
