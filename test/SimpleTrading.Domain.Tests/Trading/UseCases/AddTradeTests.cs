@@ -1,6 +1,5 @@
 using System.Globalization;
 using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -37,11 +36,10 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "'Asset' must not be empty.")
-            .And.Contain(x => x.PropertyName == "AssetId")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Asset' must not be empty.", error.ErrorMessage);
+        Assert.Equal("AssetId", error.PropertyName);
     }
 
     [Fact]
@@ -59,11 +57,10 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "'Profile' must not be empty.")
-            .And.Contain(x => x.PropertyName == "ProfileId")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Profile' must not be empty.", error.ErrorMessage);
+        Assert.Equal("ProfileId", error.PropertyName);
     }
 
     [Fact]
@@ -81,11 +78,10 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "'Currency' must not be empty.")
-            .And.Contain(x => x.PropertyName == "CurrencyId")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Currency' must not be empty.", error.ErrorMessage);
+        Assert.Equal("CurrencyId", error.PropertyName);
     }
 
     [Theory]
@@ -107,11 +103,10 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == errorMessage)
-            .And.Contain(x => x.PropertyName == "Size")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal(errorMessage, error.ErrorMessage);
+        Assert.Equal("Size", error.PropertyName);
     }
 
     [Theory]
@@ -131,16 +126,15 @@ public class AddTradeTests : DomainTests
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
-            ManuallyEnteredResult = (ResultModel) 50
+            ManuallyEnteredResult = (ResultModel)50
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == errorMessage)
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal(errorMessage, error.ErrorMessage);
+        Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Theory]
@@ -148,7 +142,6 @@ public class AddTradeTests : DomainTests
     [InlineData("en-US", "'Opened' must be greater than or equal to '01.01.2000 00:00:00'.")]
     public async Task Opened_must_not_be_before_min_date(string culture, string errorMessage)
     {
-        // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
         var longTimeAgo = new DateTimeOffset(DateTime.Parse("1998-08-05T12:00:00").ToUtcKind());
@@ -163,21 +156,17 @@ public class AddTradeTests : DomainTests
             CurrencyId = TestData.Currency.Default.Build().Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == errorMessage)
-            .And.Contain(x => x.PropertyName == "Opened")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal(errorMessage, error.ErrorMessage);
+        Assert.Equal("Opened", error.PropertyName);
     }
 
     [Fact]
     public async Task Opened_must_not_be_greater_than_one_day_in_the_future()
     {
-        // arrange
         var opened = new DateTimeOffset(_utcNow.AddDays(1).AddSeconds(1));
 
         var asset = TestData.Asset.Default.Build();
@@ -197,15 +186,12 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "'Opened' must be less than or equal to '06.08.2024 16:00'.")
-            .And.Contain(x => x.PropertyName == "Opened")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Opened' must be less than or equal to '06.08.2024 16:00'.", error.ErrorMessage);
+        Assert.Equal("Opened", error.PropertyName);
     }
 
     [Fact]
@@ -226,11 +212,10 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "Invalid link.")
-            .And.Contain(x => x.PropertyName == "References[0].Link")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Invalid link.", error.ErrorMessage);
+        Assert.Equal("References[0].Link", error.PropertyName);
     }
 
     [Theory]
@@ -239,7 +224,6 @@ public class AddTradeTests : DomainTests
         "Die Länge von 'Anmerkungen' muss kleiner oder gleich 4000 sein. Sie haben 40001 Zeichen eingegeben.")]
     public async Task Reference_notes_with_more_than_4000_chars_are_not_allowed(string culture, string errorMessage)
     {
-        // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
         var reference = new ReferenceRequestModel(ReferenceType.Other,
@@ -257,21 +241,17 @@ public class AddTradeTests : DomainTests
             References = [reference]
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == errorMessage)
-            .And.Contain(x => x.PropertyName == "References[0].Notes")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal(errorMessage, error.ErrorMessage);
+        Assert.Equal("References[0].Notes", error.PropertyName);
     }
 
     [Fact]
     public async Task Notes_with_more_than_4000_chars_are_not_allowed()
     {
-        // arrange
         var requestModel = new AddTradeRequestModel
         {
             AssetId = TestData.Asset.Default.Build().Id,
@@ -283,23 +263,18 @@ public class AddTradeTests : DomainTests
             Notes = new string('a', 4001)
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x =>
-                x.ErrorMessage ==
-                "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
-            .And.Contain(x => x.PropertyName == "Notes")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", 
+            error.ErrorMessage);
+        Assert.Equal("Notes", error.PropertyName);
     }
 
     [Fact]
     public async Task You_cant_add_a_trade_if_the_currency_does_not_exist()
     {
-        // arrange
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         DbContext.AddRange(asset, profile);
@@ -317,19 +292,16 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var notFound = response.Value.Should().BeAssignableTo<NotFound>();
-        notFound.Which.ResourceId.Should().Be(currency.Id);
-        notFound.Which.ResourceType.Should().Be(nameof(Currency));
+        var notFound = Assert.IsType<NotFound>(response.Value, exactMatch: false);
+        Assert.Equal(currency.Id, notFound.ResourceId);
+        Assert.Equal(nameof(Currency), notFound.ResourceType);
     }
 
     [Fact]
     public async Task You_cant_add_a_trade_if_the_profile_does_not_exist()
     {
-        // arrange
         var asset = TestData.Asset.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, currency);
@@ -347,19 +319,16 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var notFound = response.Value.Should().BeAssignableTo<NotFound>();
-        notFound.Which.ResourceId.Should().Be(profile.Id);
-        notFound.Which.ResourceType.Should().Be(nameof(Profile));
+        var notFound = Assert.IsType<NotFound>(response.Value, exactMatch: false);
+        Assert.Equal(profile.Id, notFound.ResourceId);
+        Assert.Equal(nameof(Profile), notFound.ResourceType);
     }
 
     [Fact]
     public async Task You_cant_add_a_trade_if_the_asset_does_not_exist()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         DbContext.AddRange(currency, profile);
@@ -377,19 +346,16 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var notFound = response.Value.Should().BeAssignableTo<NotFound>();
-        notFound.Which.ResourceId.Should().Be(asset.Id);
-        notFound.Which.ResourceType.Should().Be(nameof(Asset));
+        var notFound = Assert.IsType<NotFound>(response.Value, exactMatch: false);
+        Assert.Equal(asset.Id, notFound.ResourceId);
+        Assert.Equal(nameof(Asset), notFound.ResourceType);
     }
 
     [Fact]
     public async Task A_trade_can_be_added_successfully()
     {
-        // arrange
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
@@ -406,20 +372,15 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
-
-        newlyAddedTrade.Should().NotBeNull();
+        var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
+        Assert.NotNull(await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId));
     }
     
     [Fact]
     public async Task A_trade_is_not_saved_when_executing_a_dry_run()
     {
-        // arrange
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
@@ -437,20 +398,15 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
-
-        newlyAddedTrade.Should().BeNull();
+        var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
+        Assert.Null(await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId));
     }
 
     [Fact]
     public async Task Reference_notes_are_successfully_stored()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -469,23 +425,17 @@ public class AddTradeTests : DomainTests
                 [new ReferenceRequestModel(ReferenceType.Other, "https://example.org", "some notes")]
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
-
-        newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade.References
-            .Should().HaveCount(1)
-            .And.Contain(x => x.Notes == "some notes");
+        var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
+        Assert.NotNull(newlyAddedTrade?.References);
+        Assert.Equal("some notes", newlyAddedTrade.References.Single().Notes);
     }
 
     [Fact]
     public async Task A_closed_trade_can_be_added_successfully()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -506,21 +456,17 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
-        newlyAddedTrade.Should().NotBeNull();
-
-        newlyAddedTrade.IsClosed.Should().BeTrue();
+        var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
+        Assert.NotNull(newlyAddedTrade);
+        Assert.True(newlyAddedTrade.IsClosed);
     }
 
     [Fact]
     public async Task PositionPrices_must_be_greater_than_zero()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -543,26 +489,24 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var businessError = response.Value.Should().BeOfType<BadInput>();
-        businessError.Which.ValidationResult.Errors.Should().HaveCount(4)
-            .And.Contain(x =>
-                x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry Price' must be greater than '0'.")
-            .And.Contain(x =>
-                x.PropertyName == "StopLoss" && x.ErrorMessage == "'Stop Loss' must be greater than '0'.")
-            .And.Contain(x =>
-                x.PropertyName == "TakeProfit" && x.ErrorMessage == "'Take Profit' must be greater than '0'.")
-            .And.Contain(x =>
-                x.PropertyName == "ExitPrice" && x.ErrorMessage == "'Exit Price' must be greater than '0'.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var errors = badInput.ValidationResult.Errors;
+        Assert.Equal(4, errors.Count);
+        Assert.Contains(errors, x => 
+            x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry Price' must be greater than '0'.");
+        Assert.Contains(errors, x =>
+            x.PropertyName == "StopLoss" && x.ErrorMessage == "'Stop Loss' must be greater than '0'.");
+        Assert.Contains(errors, x =>
+            x.PropertyName == "TakeProfit" && x.ErrorMessage == "'Take Profit' must be greater than '0'.");
+        Assert.Contains(errors, x =>
+            x.PropertyName == "ExitPrice" && x.ErrorMessage == "'Exit Price' must be greater than '0'.");
     }
 
     [Fact]
     public async Task A_new_closed_trade_without_a_balance_cant_be_closed()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -581,21 +525,17 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var businessError = response.Value.Should().BeOfType<BadInput>();
-        businessError.Which.ValidationResult
-            .Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Balance" &&
-                              x.ErrorMessage == "'Balance' must not be empty, if 'Closed' is specified.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Balance' must not be empty, if 'Closed' is specified.", error.ErrorMessage);
+        Assert.Equal("Balance", error.PropertyName);
     }
 
     [Fact]
     public async Task Opened_passed_as_utc_and_closed_as_local_time_will_both_stored_in_utc()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -618,22 +558,18 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var newId = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>().Which.Data.TradeId;
-        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == newId);
-        newlyAddedTrade.Should().NotBeNull();
-
-        newlyAddedTrade.Opened.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
-        newlyAddedTrade.Closed.Should().Be(DateTime.Parse("2024-08-05T14:00:00"));
+        var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
+        Assert.NotNull(newlyAddedTrade);
+        Assert.Equal(DateTime.Parse("2024-08-05T14:00:00"), newlyAddedTrade.Opened);
+        Assert.Equal(DateTime.Parse("2024-08-05T14:00:00"), newlyAddedTrade.Closed);
     }
 
     [Fact]
     public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_balance_and_no_closed_date()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -653,22 +589,18 @@ public class AddTradeTests : DomainTests
             ManuallyEnteredResult = ResultModel.Loss
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().HaveCount(1)
-            .And.Contain(x =>
-                x.ErrorMessage == "The result can only be overridden if 'Balance' and 'Closed' are specified.")
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The result can only be overridden if 'Balance' and 'Closed' are specified.", 
+            error.ErrorMessage);
+        Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
     public async Task Specifying_a_manually_entered_result_is_possible_if_balance_and_closed_date_are_present()
     {
-        // arrange
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
@@ -690,17 +622,12 @@ public class AddTradeTests : DomainTests
             ManuallyEnteredResult = ResultModel.Loss
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
-        var completed = response.Value.Should().BeOfType<Completed<AddTradeResponseModel>>();
-        var addedTradeId = completed.Which.Data.TradeId;
-
-        var addedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == addedTradeId);
-        addedTrade.Should().NotBeNull();
-        addedTrade.Result.Should().NotBeNull();
-        addedTrade.Result!.Name.Should().Be(Result.Loss);
-        addedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
+        var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
+        var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
+        Assert.NotNull(newlyAddedTrade?.Result);
+        Assert.Equal(Result.Loss, newlyAddedTrade.Result.Name);
+        Assert.Equal(ResultSource.ManuallyEntered, newlyAddedTrade.Result.Source);
     }
 }

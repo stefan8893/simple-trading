@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain.Trading;
 
 namespace SimpleTrading.Domain.Tests.Trading;
 
@@ -13,7 +12,7 @@ public class PositionPricesTests
             Entry = 1.08m
         };
 
-        prices.RiskRewardRatio.Should().BeNull();
+        Assert.Null(prices.RiskRewardRatio);
     }
 
     [Fact]
@@ -27,7 +26,7 @@ public class PositionPricesTests
         };
 
         const double expectedRrr = 3d;
-        prices.RiskRewardRatio.Should().Be(expectedRrr);
+        Assert.Equal(expectedRrr, prices.RiskRewardRatio);
     }
 
     [Fact]
@@ -41,7 +40,7 @@ public class PositionPricesTests
         };
 
         const double expectedRrr = 3d;
-        prices.RiskRewardRatio.Should().Be(expectedRrr);
+        Assert.Equal(expectedRrr, prices.RiskRewardRatio);
     }
 
     [Fact]
@@ -55,7 +54,7 @@ public class PositionPricesTests
         };
 
         const double expectedRrr = 2.83;
-        prices.RiskRewardRatio.Should().Be(expectedRrr);
+        Assert.Equal(expectedRrr, prices.RiskRewardRatio);
     }
 
     [Fact]
@@ -67,7 +66,7 @@ public class PositionPricesTests
             TakeProfit = 1.08300m
         };
 
-        prices.RiskRewardRatio.Should().BeNull();
+        Assert.Null(prices.RiskRewardRatio);
     }
 
     [Fact]
@@ -79,7 +78,7 @@ public class PositionPricesTests
             StopLoss = 1.08300m
         };
 
-        prices.RiskRewardRatio.Should().BeNull();
+        Assert.Null(prices.RiskRewardRatio);
     }
 
     [Fact]
@@ -94,8 +93,8 @@ public class PositionPricesTests
 
         var positionType = prices.Type;
 
-        positionType.Should().NotBeNull()
-            .And.Be(PositionType.Long);
+        Assert.NotNull(positionType);
+        Assert.Equal(PositionType.Long, positionType);
     }
 
     [Fact]
@@ -110,8 +109,8 @@ public class PositionPricesTests
 
         var positionType = prices.Type;
 
-        positionType.Should().NotBeNull()
-            .And.Be(PositionType.Long);
+        Assert.NotNull(positionType);
+        Assert.Equal(PositionType.Long, positionType);
     }
 
     [Fact]
@@ -126,8 +125,8 @@ public class PositionPricesTests
 
         var positionType = prices.Type;
 
-        positionType.Should().NotBeNull()
-            .And.Be(PositionType.Short);
+        Assert.NotNull(positionType);
+        Assert.Equal(PositionType.Short, positionType);
     }
 
     [Fact]
@@ -142,8 +141,8 @@ public class PositionPricesTests
 
         var positionType = prices.Type;
 
-        positionType.Should().NotBeNull()
-            .And.Be(PositionType.Short);
+        Assert.NotNull(positionType);
+        Assert.Equal(PositionType.Short, positionType);
     }
 
     [Fact]
@@ -159,9 +158,9 @@ public class PositionPricesTests
 
         var result = prices.CalculateResult();
 
-        result.Should().NotBeNull();
-        result.Name.Should().Be(Result.Win);
-        result.Performance.Should().Be(100);
+        Assert.NotNull(result);
+        Assert.Equal(Result.Win, result.Name);
+        Assert.Equal((short)100, result.Performance);
     }
 
     [Fact]
@@ -177,6 +176,6 @@ public class PositionPricesTests
 
         var result = prices.CalculateResult();
 
-        result.Should().BeNull();
+        Assert.Null(result);
     }
 }

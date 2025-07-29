@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
@@ -20,8 +19,8 @@ public class GetTradeTests : DomainTests
 
         var response = await Interactor.Execute(new GetTradeRequestModel(notExistingTradeId));
 
-        response.Value.Should().BeOfType<NotFound<Trade>>()
-            .Which.ResourceId.Should().Be(notExistingTradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
 
     [Fact]
@@ -33,8 +32,8 @@ public class GetTradeTests : DomainTests
 
         var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
-        response.Value.Should().BeOfType<TradeResponseModel>()
-            .Which.Id.Should().Be(trade.Id);
+        var result = Assert.IsType<TradeResponseModel>(response.Value);
+        Assert.Equal(trade.Id, result.Id);
     }
 
     [Fact]
@@ -47,8 +46,8 @@ public class GetTradeTests : DomainTests
 
         var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
-        response.Value.Should().BeOfType<TradeResponseModel>()
-            .Which.Currency.Should().Be(currency.IsoCode);
+        var result = Assert.IsType<TradeResponseModel>(response.Value);
+        Assert.Equal(currency.IsoCode, result.Currency);
     }
 
     [Fact]
@@ -61,7 +60,7 @@ public class GetTradeTests : DomainTests
 
         var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
-        response.Value.Should().BeOfType<TradeResponseModel>()
-            .Which.Asset.Should().Be(asset.Symbol);
+        var result = Assert.IsType<TradeResponseModel>(response.Value);
+        Assert.Equal(asset.Symbol, result.Asset);
     }
 }

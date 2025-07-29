@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
@@ -27,10 +26,11 @@ public class DeleteReferencesTests : DomainTests
         var response = await Interactor.Execute(new DeleteReferencesRequestModel(trade.Id));
 
         // assert
-        response.Value.Should().BeOfType<Completed<ushort>>().Which.Data.Should().Be(2);
+        var result = Assert.IsType<Completed<ushort>>(response.Value);
+        Assert.Equal(2, result.Data);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.References.Should().BeEmpty();
+        Assert.NotNull(updatedTrade);
+        Assert.Empty(updatedTrade.References);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class DeleteReferencesTests : DomainTests
 
         var response = await Interactor.Execute(new DeleteReferencesRequestModel(notExistingTradeId));
 
-        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
-        notFound.Which.ResourceId.Should().Be(notExistingTradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -37,18 +36,19 @@ public class RestoreCalculatedResultTests : DomainTests
         DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
         await DbContext.SaveChangesAsync();
 
-        tradeWithCalculatedMediocreResult.Result!.Name.Should().Be(Result.Mediocre);
-        tradeWithCalculatedMediocreResult.Result.Performance.Should().Be(83);
+        Assert.Equal(Result.Mediocre, tradeWithCalculatedMediocreResult.Result!.Name);
+        Assert.Equal((short)83, tradeWithCalculatedMediocreResult.Result.Performance);
 
         // act
         var requestModel = new RestoreCalculatedResultRequestModel(tradeWithCalculatedMediocreResult.Id);
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var responseModel = response.Value.Should().BeOfType<Completed<RestoreCalculatedResultResponseModel>>();
-        responseModel.Which.Data.Warnings.Should().BeEmpty();
-        responseModel.Which.Data.Result.Should().NotBeNull().And.Be(ResultModel.Mediocre);
-        responseModel.Which.Data.Performance.Should().Be(83);
+        var responseModel = Assert.IsType<Completed<RestoreCalculatedResultResponseModel>>(response.Value);
+        Assert.Empty(responseModel.Data.Warnings);
+        Assert.NotNull(responseModel.Data.Result);
+        Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
+        Assert.Equal((short)83, responseModel.Data.Performance);
     }
 
     [Fact]
@@ -62,9 +62,9 @@ public class RestoreCalculatedResultTests : DomainTests
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
-        notFound.Which.ResourceId.Should().Be(notExistingTradeId);
-        notFound.Which.ResourceType.Should().Be("Trade");
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
+        Assert.Equal("Trade", notFound.ResourceType);
     }
 
     [Fact]
@@ -95,16 +95,17 @@ public class RestoreCalculatedResultTests : DomainTests
         DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
         await DbContext.SaveChangesAsync();
 
-        tradeWithCalculatedMediocreResult.Result!.Name.Should().Be(Result.Loss);
+        Assert.Equal(Result.Loss, tradeWithCalculatedMediocreResult.Result!.Name);
 
         // act
         var requestModel = new RestoreCalculatedResultRequestModel(tradeWithCalculatedMediocreResult.Id);
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var responseModel = response.Value.Should().BeOfType<Completed<RestoreCalculatedResultResponseModel>>();
-        responseModel.Which.Data.Warnings.Should().BeEmpty();
-        responseModel.Which.Data.Result.Should().NotBeNull().And.Be(ResultModel.Mediocre);
-        responseModel.Which.Data.Performance.Should().Be(83);
+        var responseModel = Assert.IsType<Completed<RestoreCalculatedResultResponseModel>>(response.Value);
+        Assert.Empty(responseModel.Data.Warnings);
+        Assert.NotNull(responseModel.Data.Result);
+        Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
+        Assert.Equal((short)83, responseModel.Data.Performance);
     }
 }

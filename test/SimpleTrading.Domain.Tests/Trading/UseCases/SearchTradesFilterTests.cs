@@ -9,7 +9,7 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class SearchTradesTests : DomainTests
+public class SearchTradesFilterTests : DomainTests
 {
     private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
 

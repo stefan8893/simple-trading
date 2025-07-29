@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 using SimpleTrading.TestInfrastructure;
@@ -25,8 +24,8 @@ public class GetAssetsTests : DomainTests
         var response = await Interactor.Execute(new GetAssetsRequestModel(null));
 
         // assert
-        var assets = response.Value.Should().BeAssignableTo<IReadOnlyList<GetAssetsResponseModel>>();
-        assets.Which.Should().HaveCount(2);
+        var assets = Assert.IsType<IReadOnlyList<GetAssetsResponseModel>>(response.Value, exactMatch: false);
+        Assert.Equal(2, assets.Count);
     }
 
     [Fact]
@@ -36,11 +35,10 @@ public class GetAssetsTests : DomainTests
 
         var response = await Interactor.Execute(new GetAssetsRequestModel(tooLongSearchTerm));
 
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x =>
-                x.ErrorMessage ==
-                "The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.")
-            .And.Contain(x => x.PropertyName == "SearchTerm");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.", 
+            error.ErrorMessage);
+        Assert.Equal("SearchTerm", error.PropertyName);
     }
 }

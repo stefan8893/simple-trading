@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.TestInfrastructure;
@@ -20,7 +19,7 @@ public class GetUserSettingsTests : DomainTests
 
         var userSettingsModel = await Interactor.Execute();
 
-        userSettingsModel.Should().NotBeNull();
+        Assert.NotNull(userSettingsModel);
     }
 
     [Fact]
@@ -41,7 +40,7 @@ public class GetUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute();
 
         // assert
-        userSettingsModel.Language.Should().BeNull();
+        Assert.Null(userSettingsModel.Language);
     }
 
     [Fact]
@@ -63,6 +62,6 @@ public class GetUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute();
 
         // assert
-        userSettingsModel.Language.Should().Be("de");
+        Assert.Equal("de", userSettingsModel.Language);
     }
 }

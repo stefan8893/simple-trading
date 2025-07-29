@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.AddReference;
@@ -17,13 +16,13 @@ public class AddReferenceTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
         var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, (ReferenceType) 50, "https://example.org", "some notes");
+            new AddReferenceRequestModel(trade.Id, (ReferenceType)50, "https://example.org", "some notes");
 
         var response = await Interactor.Execute(referenceRequestModel);
 
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Reference Type' has a range of values which does not include '50'.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
     }
 
     [Fact]
@@ -35,8 +34,8 @@ public class AddReferenceTests : DomainTests
 
         var response = await Interactor.Execute(referenceRequestModel);
 
-        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
-        notFound.Which.ResourceId.Should().Be(notExistingTradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
 
     [Fact]
@@ -60,10 +59,9 @@ public class AddReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var businessError = response.Value.Should().BeOfType<BusinessError>();
-        businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Details.Should()
-            .Be("You can't add more than 50 references per trade.");
+        var businessError = Assert.IsType<BusinessError>(response.Value);
+        Assert.Equal(trade.Id, businessError.ResourceId);
+        Assert.Equal("You can't add more than 50 references per trade.", businessError.Details);
     }
 
     [Fact]
@@ -82,10 +80,11 @@ public class AddReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var referenceId = response.Value.Should().BeOfType<Completed<Guid>>().Which.Data;
+        var result = Assert.IsType<Completed<Guid>>(response.Value);
+        var referenceId = result.Data;
         var tradeWithAddedReference = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        tradeWithAddedReference.Should().NotBeNull();
-        tradeWithAddedReference.References.Should().HaveCount(1)
-            .And.Contain(x => x.Id == referenceId);
+        Assert.NotNull(tradeWithAddedReference);
+        var reference = Assert.Single(tradeWithAddedReference.References);
+        Assert.Equal(referenceId, reference.Id);
     }
 }

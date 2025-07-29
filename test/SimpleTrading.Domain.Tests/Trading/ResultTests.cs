@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.Domain.Tests.Trading;
@@ -11,11 +10,12 @@ public class ResultTests : TestBase
     {
         const string notSupportedName = "NotThatBad";
 
-        var act = () => new Result(notSupportedName, ResultSource.ManuallyEntered);
-
-        var exception = act.Should().ThrowExactly<ArgumentException>();
-        exception.Which.Message.Should()
-            .Be("Invalid result name. It must be one of 'Loss, BreakEven, Mediocre, Win'");
+        var exception = Assert.Throws<ArgumentException>(
+            () => new Result(notSupportedName, ResultSource.ManuallyEntered));
+            
+        Assert.Equal(
+            "Invalid result name. It must be one of 'Loss, BreakEven, Mediocre, Win'", 
+            exception.Message);
     }
 
     [Theory]
@@ -29,7 +29,7 @@ public class ResultTests : TestBase
     {
         var result = new Result(nameCandidate, ResultSource.ManuallyEntered);
 
-        result.Name.Should().Be(expectedName);
+        Assert.Equal(expectedName, result.Name);
     }
 
     [Theory]
@@ -41,6 +41,6 @@ public class ResultTests : TestBase
     {
         var result = new Result(name, ResultSource.ManuallyEntered);
 
-        result.Name.Should().Be(Result.Win);
+        Assert.Equal(Result.Win, result.Name);
     }
 }

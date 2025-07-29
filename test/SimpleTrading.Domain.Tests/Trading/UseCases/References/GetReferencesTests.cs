@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
@@ -21,8 +20,8 @@ public class GetReferencesTests : DomainTests
         var response = await Interactor
             .Execute(new GetReferencesRequestModel(notExistingTradeId));
 
-        response.Value.Should().BeOfType<NotFound<Trade>>()
-            .Which.ResourceId.Should().Be(notExistingTradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
 
     [Fact]
@@ -41,9 +40,9 @@ public class GetReferencesTests : DomainTests
             .Execute(new GetReferencesRequestModel(trade.Id));
 
         // assert
-        var responseModel = response.Value.Should().BeAssignableTo<IReadOnlyList<ReferenceModel>>();
-        responseModel.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Id == reference1.Id)
-            .And.Contain(x => x.Id == reference2.Id);
+        var references = Assert.IsType<IReadOnlyList<ReferenceModel>>(response.Value, exactMatch: false);
+        Assert.Equal(2, references.Count);
+        Assert.Contains(references, x => x.Id == reference1.Id);
+        Assert.Contains(references, x => x.Id == reference2.Id);
     }
 }

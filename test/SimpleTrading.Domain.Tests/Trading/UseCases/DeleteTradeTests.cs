@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
@@ -19,8 +18,8 @@ public class DeleteTradeTests : DomainTests
 
         var response = await Interactor.Execute(new DeleteTradeRequestModel(notExistingTradeId));
 
-        response.Value.Should().BeOfType<NotFound<Trade>>()
-            .Which.ResourceId.Should().Be(notExistingTradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
 
     [Fact]
@@ -36,8 +35,8 @@ public class DeleteTradeTests : DomainTests
         var response = await Interactor.Execute(new DeleteTradeRequestModel(trade.Id));
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        Assert.IsType<Completed>(response.Value);
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        storedTrade.Should().BeNull();
+        Assert.Null(storedTrade);
     }
 }

@@ -1,6 +1,5 @@
 using System.Globalization;
 using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -33,7 +32,7 @@ public class CloseTradeTests : DomainTests
             0m
         )
         {
-            ManuallyEnteredResult = (ResultModel) 50,
+            ManuallyEnteredResult = (ResultModel)50,
             ExitPrice = 1.05m
         };
 
@@ -41,11 +40,10 @@ public class CloseTradeTests : DomainTests
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors
-            .Should().Contain(x => x.ErrorMessage == "'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.")
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult")
-            .And.HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.", error.ErrorMessage);
+        Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
@@ -61,16 +59,16 @@ public class CloseTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
-        notFound.Which.ResourceType.Should().Be("Trade");
-        notFound.Which.ResourceId.Should().Be(tradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal("Trade", notFound.ResourceType);
+        Assert.Equal(tradeId, notFound.ResourceId);
     }
 
     [Fact]
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
         // arrange
-        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
+        var trade = (TestData.Trade.Default with { Opened = _utcNow }).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync();
 
@@ -85,10 +83,10 @@ public class CloseTradeTests : DomainTests
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ExitPrice" &&
-                              x.ErrorMessage == "'Exit Price' must be greater than '0'.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("ExitPrice", error.PropertyName);
+        Assert.Equal("'Exit Price' must be greater than '0'.", error.ErrorMessage);
     }
 
     [Fact]
@@ -97,7 +95,7 @@ public class CloseTradeTests : DomainTests
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m},
+            PositionPrices = new TestData.PositionPrices { EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m },
             Opened = _utcNow
         }).Build();
         DbContext.Add(trade);
@@ -105,22 +103,23 @@ public class CloseTradeTests : DomainTests
 
         var requestModel =
             new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
-                {ExitPrice = 1.2m};
+            { ExitPrice = 1.2m };
 
         // act
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var responseModel = response.Value.Should().BeOfType<Completed<CloseTradeResponseModel>>();
-        responseModel.Which.Data.Performance.Should().Be(50);
-        responseModel.Which.Data.Result.Should().Be(ResultModel.Mediocre);
+        var responseModel = Assert.IsType<Completed<CloseTradeResponseModel>>(response.Value);
+        Assert.Equal((short)50, responseModel.Data.Performance);
+        Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
 
         var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        closedTrade.Should().NotBeNull();
+        Assert.NotNull(closedTrade);
 
-        closedTrade.Balance.Should().Be(requestModel.Balance);
-        closedTrade.Closed.Should().NotBeNull();
-        closedTrade.IsClosed.Should().BeTrue();
-        closedTrade.PositionPrices.Exit.Should().NotBeNull().And.Be(requestModel.ExitPrice);
+        Assert.Equal(requestModel.Balance, closedTrade.Balance);
+        Assert.NotNull(closedTrade.Closed);
+        Assert.True(closedTrade.IsClosed);
+        Assert.NotNull(closedTrade.PositionPrices.Exit);
+        Assert.Equal(requestModel.ExitPrice, closedTrade.PositionPrices.Exit);
     }
 }

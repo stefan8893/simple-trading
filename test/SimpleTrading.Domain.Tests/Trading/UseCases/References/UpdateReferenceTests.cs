@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
@@ -37,12 +36,12 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(updateReferenceRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed>();
+        Assert.IsType<Completed>(response.Value);
 
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
 
-        updatedReference.Should().NotBeNull();
-        updatedReference.Notes.Should().BeNull();
+        Assert.NotNull(updatedReference);
+        Assert.Null(updatedReference.Notes);
     }
 
     [Fact]
@@ -69,8 +68,8 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(updateReferenceRequestModel);
 
         // assert
-        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
-        notFound.Which.ResourceId.Should().Be(notExistingTradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
 
     [Fact]
@@ -94,8 +93,8 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(updateReferenceRequestModel);
 
         // assert
-        var notFound = response.Value.Should().BeOfType<NotFound<Reference>>();
-        notFound.Which.ResourceId.Should().Be(notExistingReferenceId);
+        var notFound = Assert.IsType<NotFound<Reference>>(response.Value);
+        Assert.Equal(notExistingReferenceId, notFound.ResourceId);
     }
 
     [Fact]
@@ -124,10 +123,10 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Reference Type' has a range of values which does not include '50'.")
-            .And.Contain(x => x.PropertyName == "Type");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
+        Assert.Equal("Type", error.PropertyName);
     }
 
     [Fact]
@@ -156,10 +155,10 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "Invalid link.")
-            .And.Contain(x => x.PropertyName == "Link");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Invalid link.", error.ErrorMessage);
+        Assert.Equal("Link", error.PropertyName);
     }
 
     [Fact]
@@ -188,11 +187,10 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x =>
-                x.ErrorMessage ==
-                "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
-            .And.Contain(x => x.PropertyName == "Notes");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", 
+            error.ErrorMessage);
+        Assert.Equal("Notes", error.PropertyName);
     }
 }

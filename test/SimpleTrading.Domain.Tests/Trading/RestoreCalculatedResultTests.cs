@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.Domain.Infrastructure.Extensions;
+﻿using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
@@ -18,7 +17,7 @@ public class RestoreCalculatedResultTests : TestBase
 
         trade.RestoreCalculatedResult(UtcNowStub);
 
-        trade.Result.Should().BeNull();
+        Assert.Null(trade.Result);
     }
 
     private static DateTime UtcNowStub()

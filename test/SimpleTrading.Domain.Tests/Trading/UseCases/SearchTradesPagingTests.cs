@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
@@ -31,13 +30,13 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, PageSize = 5
+            Page = 1, 
+            PageSize = 5
         });
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(5);
-        pagedTrades.Which.Count.Should().Be(5);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(5, pagedTrades.Count);
     }
 
     [Fact]
@@ -58,12 +57,13 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, PageSize = 5
+            Page = 1, 
+            PageSize = 5
         });
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.TotalCount.Should().Be(20);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(20, pagedTrades.TotalCount);
     }
 
     [Fact]
@@ -84,12 +84,13 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, PageSize = 5
+            Page = 1, 
+            PageSize = 5
         });
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.TotalPages.Should().Be(4);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(4, pagedTrades.TotalPages);
     }
 
     [Fact]
@@ -110,12 +111,13 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 2, PageSize = 5
+            Page = 2, 
+            PageSize = 5
         });
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.IsFirstPage.Should().BeFalse();
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.False(pagedTrades.IsFirstPage);
     }
 
     [Fact]
@@ -136,12 +138,13 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, PageSize = 5
+            Page = 1, 
+            PageSize = 5
         });
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.IsFirstPage.Should().BeTrue();
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.True(pagedTrades.IsFirstPage);
     }
 
     [Fact]
@@ -162,13 +165,14 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 4, PageSize = 5
+            Page = 4, 
+            PageSize = 5
         });
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(3);
-        pagedTrades.Which.IsLastPage.Should().BeTrue();
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(3, pagedTrades.Count);
+        Assert.True(pagedTrades.IsLastPage);
     }
 
     [Fact]
@@ -181,10 +185,10 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 0
         });
 
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "PageSize" &&
-                              x.ErrorMessage == "'Page Size' must be greater than or equal to '1'.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("PageSize", error.PropertyName);
+        Assert.Equal("'Page Size' must be greater than or equal to '1'.", error.ErrorMessage);
     }
 
     [Fact]
@@ -197,9 +201,9 @@ public class SearchTradesPagingTests : DomainTests
             Page = 0
         });
 
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Page" &&
-                              x.ErrorMessage == "'Page' must be greater than or equal to '1'.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Page", error.PropertyName);
+        Assert.Equal("'Page' must be greater than or equal to '1'.", error.ErrorMessage);
     }
 }
