@@ -64,7 +64,7 @@ public class AddTradeInteractor(
     {
         var newTrade = new Trade
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             AssetId = asset.Id,
             Asset = asset,
             ProfileId = profile.Id,
@@ -87,7 +87,7 @@ public class AddTradeInteractor(
         foreach (var m in model.References)
             newTrade.References.Add(new Reference
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.CreateVersion7(),
                 TradeId = newTrade.Id,
                 Trade = newTrade,
                 Type = m.Type,

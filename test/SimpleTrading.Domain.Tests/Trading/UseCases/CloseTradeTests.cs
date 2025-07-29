@@ -27,7 +27,7 @@ public class CloseTradeTests : DomainTests
         // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
 
-        var requestModel = new CloseTradeRequestModel(Guid.NewGuid(),
+        var requestModel = new CloseTradeRequestModel(Guid.CreateVersion7(),
             DateTime.Parse("2024-08-03T16:00:00+00:00"),
             0m
         )

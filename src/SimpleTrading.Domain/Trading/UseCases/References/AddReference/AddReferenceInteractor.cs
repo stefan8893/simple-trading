@@ -34,7 +34,7 @@ public class AddReferenceInteractor(
     {
         var reference = new Reference
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             TradeId = trade.Id,
             Trade = trade,
             Type = model.Type,
