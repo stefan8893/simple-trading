@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
@@ -37,9 +36,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Trade Size' must be greater than '0'.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Trade Size' must be greater than '0'.", error.ErrorMessage);
+        Assert.Equal("Size", error.PropertyName);
     }
 
     [Fact]
@@ -66,10 +66,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Result' has a range of values which does not include '50'." &&
-                              x.PropertyName == "ManuallyEnteredResult");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Result' has a range of values which does not include '50'.", error.ErrorMessage);
+        Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
@@ -88,10 +88,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Entry Price' must be greater than '0'." &&
-                              x.PropertyName == "EntryPrice");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Entry Price' must be greater than '0'.", error.ErrorMessage);
+        Assert.Equal("EntryPrice", error.PropertyName);
     }
 
     [Fact]
@@ -110,10 +110,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Stop Loss' must be greater than '0'." &&
-                              x.PropertyName == "StopLoss");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Stop Loss' must be greater than '0'.", error.ErrorMessage);
+        Assert.Equal("StopLoss", error.PropertyName);
     }
 
     [Fact]
@@ -132,10 +132,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Take Profit' must be greater than '0'." &&
-                              x.PropertyName == "TakeProfit");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Take Profit' must be greater than '0'.", error.ErrorMessage);
+        Assert.Equal("TakeProfit", error.PropertyName);
     }
 
     [Fact]
@@ -152,12 +152,11 @@ public class UpdateTradeTests : DomainTests
 
         // act
         var response = await Interactor.Execute(updateTradeRequestModel);
-
-        // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "'Exit Price' must be greater than '0'." &&
-                              x.PropertyName == "ExitPrice");
+        
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Exit Price' must be greater than '0'.", error.ErrorMessage);
+        Assert.Equal("ExitPrice", error.PropertyName);
     }
 
     [Fact]
@@ -175,8 +174,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var notFound = response.Value.Should().BeOfType<NotFound<Trade>>();
-        notFound.Which.ResourceId.Should().Be(tradeId);
+        var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
+        Assert.Equal(tradeId, notFound.ResourceId);
     }
 
     [Fact]
@@ -199,11 +198,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.AssetId.Should().Be(newAsset.Id);
+        Assert.NotNull(updatedTrade);
+        Assert.Equal(newAsset.Id, updatedTrade.AssetId);
     }
 
     [Fact]
@@ -226,13 +225,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var updatedTradeId = response.Value.Should()
-            .BeOfType<Completed<UpdateTradeResponseModel>>()
-            .Which.Data.TradeId;
+        var updatedTradeId = Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value).Data.TradeId;
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == updatedTradeId);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.ProfileId.Should().Be(newProfile.Id);
+        Assert.NotNull(updatedTrade);
+        Assert.Equal(newProfile.Id, updatedTrade.ProfileId);
     }
 
     [Fact]
@@ -255,11 +252,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.CurrencyId.Should().Be(newCurrency.Id);
+        Assert.NotNull(updatedTrade);
+        Assert.Equal(newCurrency.Id, updatedTrade.CurrencyId);
     }
 
     [Fact]
@@ -282,8 +279,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<BusinessError>()
-            .Which.Details.Should().Be("'Closed' must be after 'Opened'.");
+        var businessError = Assert.IsType<BusinessError>(response.Value);
+        Assert.Equal("'Closed' must be after 'Opened'.", businessError.Details);
     }
 
     [Fact]
@@ -306,11 +303,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x =>
-                x.ErrorMessage == "'Opened' must be less than or equal to '15.08.2024 14:00'.")
-            .And.Contain(x => x.PropertyName == "Opened");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Opened' must be less than or equal to '15.08.2024 14:00'.", error.ErrorMessage);
+        Assert.Equal("Opened", error.PropertyName);
     }
 
     [Fact]
@@ -332,10 +328,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Closed" &&
-                              x.ErrorMessage == "'Closed' can only be updated, if the trade has already been closed.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Closed' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("Closed", error.PropertyName);
     }
 
     [Fact]
@@ -357,10 +353,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Balance" &&
-                              x.ErrorMessage == "'Balance' can only be updated, if the trade has already been closed.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Balance' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("Balance", error.PropertyName);
     }
 
     [Fact]
@@ -384,10 +380,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
+        
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.Balance.Should().Be(newBalance);
+        Assert.NotNull(updatedTrade);
+        Assert.Equal(newBalance, updatedTrade.Balance);
     }
 
     [Fact]
@@ -409,12 +406,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x =>
-                x.ErrorMessage ==
-                "The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.")
-            .And.Contain(x => x.PropertyName == "Notes");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", error.ErrorMessage);
+        Assert.Equal("Notes", error.PropertyName);
+
     }
 
     [Fact]
@@ -447,10 +443,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
+        
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.PositionPrices.Should().Be(newPositionPrices);
+        Assert.NotNull(updatedTrade);
+        Assert.Equal(newPositionPrices, updatedTrade.PositionPrices);
     }
 
     [Fact]
@@ -485,10 +482,11 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
+        
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade?.Result.Should().NotBeNull();
-        updatedTrade!.Result!.Performance.Should().Be(85);
+        Assert.NotNull(updatedTrade?.Result);
+        Assert.Equal((short)85, updatedTrade.Result.Performance);
     }
 
     [Fact]
@@ -505,7 +503,8 @@ public class UpdateTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        trade.IsClosed.Should().BeTrue();
+        Assert.True(trade.IsClosed);
+        
         _ = await Interactor.Execute(new UpdateTradeRequestModel
             {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win});
 
@@ -517,12 +516,13 @@ public class UpdateTradeTests : DomainTests
         });
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
+        
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.Result.Should().NotBeNull();
-        updatedTrade.Result!.Name.Should().Be(Result.Mediocre);
-        updatedTrade.Result.Source.Should().Be(ResultSource.ManuallyEntered);
+        
+        Assert.NotNull(updatedTrade?.Result);
+        Assert.Equal(Result.Mediocre, updatedTrade.Result.Name);
+        Assert.Equal(ResultSource.ManuallyEntered,  updatedTrade.Result.Source);
     }
 
     [Fact]
@@ -533,7 +533,7 @@ public class UpdateTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        trade.IsClosed.Should().BeFalse();
+        Assert.False(trade.IsClosed);
 
         // act
         var response = await Interactor.Execute(new UpdateTradeRequestModel
@@ -543,10 +543,11 @@ public class UpdateTradeTests : DomainTests
         });
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" &&
-                              x.ErrorMessage == "'Result' can only be updated, if the trade has already been closed.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("ManuallyEnteredResult", error.PropertyName);
+
     }
 
     [Fact]
@@ -557,7 +558,7 @@ public class UpdateTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        trade.IsClosed.Should().BeFalse();
+        Assert.False(trade.IsClosed);
 
         // act
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -568,10 +569,10 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "ManuallyEnteredResult" &&
-                              x.ErrorMessage == "'Result' can only be updated, if the trade has already been closed.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
@@ -587,7 +588,7 @@ public class UpdateTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
 
-        trade.IsClosed.Should().BeTrue();
+        Assert.True(trade.IsClosed);
 
         // act
         var response = await Interactor.Execute(new UpdateTradeRequestModel
@@ -597,12 +598,11 @@ public class UpdateTradeTests : DomainTests
         });
 
         // assert
-        response.Value.Should().BeOfType<Completed<UpdateTradeResponseModel>>();
+        Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        updatedTrade.Should().NotBeNull();
-        updatedTrade.Result.Should().NotBeNull();
-        updatedTrade.Result!.Name.Should().Be(Result.Loss);
+        Assert.NotNull(updatedTrade?.Result);
+        Assert.Equal(Result.Loss, updatedTrade.Result.Name);
     }
 
     private DateTime UtcNowStub()
