@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime;
-using AwesomeAssertions;
 using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -14,7 +13,6 @@ public class InteractorRequestModelValidationAnalyzerTests
 {
     private readonly Project _testProject = CreateProject("SimpleTrading.Domain.Analyzer.Tests");
 
-
     private Project AddDocumentsToTestProject(Dictionary<string, string> files)
     {
         return files
@@ -24,8 +22,7 @@ public class InteractorRequestModelValidationAnalyzerTests
     }
 
     [Fact]
-    public async Task
-        An_interactor_that_has_a_request_model_with_a_validator_must_have_a_bad_input_case_in_its_response_model()
+    public async Task An_interactor_that_has_a_request_model_with_a_validator_must_have_a_bad_input_case_in_its_response_model()
     {
         // arrange
         var files = new Dictionary<string, string>
@@ -36,7 +33,7 @@ public class InteractorRequestModelValidationAnalyzerTests
 
         var project = AddDocumentsToTestProject(files);
         var compilation = await project.GetCompilationAsync();
-        compilation.Should().NotBeNull();
+        Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
@@ -44,19 +41,17 @@ public class InteractorRequestModelValidationAnalyzerTests
             .GetAnalyzerDiagnosticsAsync();
 
         // assert
-        diagnostics.Should().HaveCount(1);
-        var missingBadInputCaseError = diagnostics[0];
-        missingBadInputCaseError.Id.Should().Be("ST0001");
-        missingBadInputCaseError.Location.GetMappedLineSpan().Path.Should().Be("Test.cs");
-        missingBadInputCaseError.Descriptor.Category.Should().Be("Usage");
-        missingBadInputCaseError.GetMessage().Should()
-            .Be(
-                "Response model type 'OneOf' does not contain a case for 'BadInput', but this is required since there is a validator for 'GetFoobarRequestModel'");
+        var missingBadInputCaseError = Assert.Single(diagnostics);
+        Assert.Equal("ST0001", missingBadInputCaseError.Id);
+        Assert.Equal("Test.cs", missingBadInputCaseError.Location.GetMappedLineSpan().Path);
+        Assert.Equal("Usage", missingBadInputCaseError.Descriptor.Category);
+        Assert.Equal(
+            "Response model type 'OneOf' does not contain a case for 'BadInput', but this is required since there is a validator for 'GetFoobarRequestModel'",
+            missingBadInputCaseError.GetMessage());
     }
 
     [Fact]
-    public async Task
-        An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_that_is_not_of_type_OneOf_results_in_an_error()
+    public async Task An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_that_is_not_of_type_OneOf_results_in_an_error()
     {
         // arrange
         var files = new Dictionary<string, string>
@@ -67,7 +62,7 @@ public class InteractorRequestModelValidationAnalyzerTests
 
         var project = AddDocumentsToTestProject(files);
         var compilation = await project.GetCompilationAsync();
-        compilation.Should().NotBeNull();
+        Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
@@ -75,19 +70,17 @@ public class InteractorRequestModelValidationAnalyzerTests
             .GetAnalyzerDiagnosticsAsync();
 
         // assert
-        diagnostics.Should().HaveCount(1);
-        var responseTypeMustBeOneOfError = diagnostics[0];
-        responseTypeMustBeOneOfError.Id.Should().Be("ST0002");
-        responseTypeMustBeOneOfError.Location.GetMappedLineSpan().Path.Should().Be("Test.cs");
-        responseTypeMustBeOneOfError.Descriptor.Category.Should().Be("Usage");
-        responseTypeMustBeOneOfError.GetMessage().Should()
-            .Be(
-                "Response model must be of type 'OneOf' including a 'BadInput' case, because there is a validator for 'GetFoobarRequestModel'");
+        var responseTypeMustBeOneOfError = Assert.Single(diagnostics);
+        Assert.Equal("ST0002", responseTypeMustBeOneOfError.Id);
+        Assert.Equal("Test.cs", responseTypeMustBeOneOfError.Location.GetMappedLineSpan().Path);
+        Assert.Equal("Usage", responseTypeMustBeOneOfError.Descriptor.Category);
+        Assert.Equal(
+            "Response model must be of type 'OneOf' including a 'BadInput' case, because there is a validator for 'GetFoobarRequestModel'",
+            responseTypeMustBeOneOfError.GetMessage());
     }
 
     [Fact]
-    public async Task
-        An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_with_a_bad_input_case_does_not_result_in_an_error()
+    public async Task An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_with_a_bad_input_case_does_not_result_in_an_error()
     {
         // arrange
         var files = new Dictionary<string, string>
@@ -98,7 +91,7 @@ public class InteractorRequestModelValidationAnalyzerTests
 
         var project = AddDocumentsToTestProject(files);
         var compilation = await project.GetCompilationAsync();
-        compilation.Should().NotBeNull();
+        Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
@@ -106,7 +99,7 @@ public class InteractorRequestModelValidationAnalyzerTests
             .GetAnalyzerDiagnosticsAsync();
 
         // assert
-        diagnostics.Should().BeEmpty();
+        Assert.Empty(diagnostics);
     }
 
     [Fact]
@@ -116,13 +109,12 @@ public class InteractorRequestModelValidationAnalyzerTests
         var files = new Dictionary<string, string>
         {
             ["IInteractor.cs"] = TestConstants.InteractorSource,
-            ["Test.cs"] =
-                await File.ReadAllTextAsync(TestConstants.TestSourceFiles.InteractorWithMissingInteractorSuffixFile)
+            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.InteractorWithMissingInteractorSuffixFile)
         };
 
         var project = AddDocumentsToTestProject(files);
         var compilation = await project.GetCompilationAsync();
-        compilation.Should().NotBeNull();
+        Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
@@ -130,13 +122,13 @@ public class InteractorRequestModelValidationAnalyzerTests
             .GetAnalyzerDiagnosticsAsync();
 
         // assert
-        diagnostics.Should().HaveCount(1);
-        var missingInteractorSuffixError = diagnostics[0];
-        missingInteractorSuffixError.Id.Should().Be("ST0003");
-        missingInteractorSuffixError.Location.GetMappedLineSpan().Path.Should().Be("Test.cs");
-        missingInteractorSuffixError.Descriptor.Category.Should().Be("Convention");
-        missingInteractorSuffixError.GetMessage().Should()
-            .Be("GetFoobarInteractorWithoutProperSuffix must end with 'Interactor', since it implements 'IInteractor'");
+        var missingInteractorSuffixError = Assert.Single(diagnostics);
+        Assert.Equal("ST0003", missingInteractorSuffixError.Id);
+        Assert.Equal("Test.cs", missingInteractorSuffixError.Location.GetMappedLineSpan().Path);
+        Assert.Equal("Convention", missingInteractorSuffixError.Descriptor.Category);
+        Assert.Equal(
+            "GetFoobarInteractorWithoutProperSuffix must end with 'Interactor', since it implements 'IInteractor'",
+            missingInteractorSuffixError.GetMessage());
     }
 
     private static Project CreateProject(string projectName)

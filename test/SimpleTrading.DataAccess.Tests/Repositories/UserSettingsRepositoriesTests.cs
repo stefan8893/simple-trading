@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
@@ -25,7 +24,7 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
         var uowCommit = ServiceLocator.Resolve<UowCommit>();
         var userSettingsRepository = ServiceLocator.Resolve<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
-        userSettings.LastModified.Should().NotBe(_utcNow);
+        Assert.NotEqual(_utcNow, userSettings.LastModified);
 
         // act
         userSettings.TimeZone = "America/New_York";
@@ -33,7 +32,7 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
 
         // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();
-        updatedUserSettings.LastModified.Should().Be(_utcNow);
+        Assert.Equal(_utcNow, updatedUserSettings.LastModified);
     }
 
     [Fact]
@@ -49,6 +48,6 @@ public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program>
 
         // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();
-        updatedUserSettings.LastModified.Should().Be(initialUpdatedDate);
+        Assert.Equal(initialUpdatedDate, updatedUserSettings.LastModified);
     }
 }
