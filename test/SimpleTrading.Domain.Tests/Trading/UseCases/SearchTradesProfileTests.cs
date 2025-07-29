@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
@@ -33,8 +32,8 @@ public class SearchTradesProfileTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = Guid.Empty});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().BeEmpty();
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Empty(pagedTrades);
     }
     
     [Fact]
@@ -64,8 +63,8 @@ public class SearchTradesProfileTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profileA.Id});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(3)
-            .And.Contain(x => tradesA.Any(y => y.Id == x.Id));
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(3, pagedTrades.Count);
+        Assert.All(pagedTrades, t => Assert.Contains(tradesA, a => t.Id == a.Id));
     }
 }
