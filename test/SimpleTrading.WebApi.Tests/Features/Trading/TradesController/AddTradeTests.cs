@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -19,11 +18,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var client = await CreateClient(false);
 
         // act
-        var act = () => client.AddTradeAsync();
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<AddTradeResultDto> Act() => client.AddTradeAsync();
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
+        Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
 
     [Fact]
@@ -50,12 +50,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        response.Should().NotBeNull();
-        response.Warnings.Should().BeEmpty();
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
+        Assert.Empty(response.Warnings);
+        Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
-
-        newlyAddedTrade.Should().NotBeNull();
+        Assert.NotNull(newlyAddedTrade);
     }
     
     [Fact]
@@ -84,7 +83,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
-        newlyAddedTrade.Should().BeNull();
+        Assert.Null(newlyAddedTrade);
     }
 
     [Fact]
@@ -114,13 +113,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        response.Should().NotBeNull();
-        response.Warnings.Should().BeEmpty();
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
+        Assert.Empty(response.Warnings);
+        Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
-
-        newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade.Result.Should().BeNull();
+        Assert.NotNull(newlyAddedTrade);
+        Assert.Null(newlyAddedTrade.Result);
     }
 
     [Fact]
@@ -150,13 +148,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        response.Should().NotBeNull();
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
+        Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
-
-        newlyAddedTrade.Should().NotBeNull();
-        newlyAddedTrade.Result.Should().NotBeNull();
-        newlyAddedTrade.Result!.Name.Should().Be(Result.Loss);
+        Assert.NotNull(newlyAddedTrade);
+        Assert.NotNull(newlyAddedTrade.Result);
+        Assert.Equal(Result.Loss, newlyAddedTrade.Result!.Name);
     }
 
     [Fact]
@@ -172,23 +169,24 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.AddTradeAsync(new AddTradeDto
-        {
-            AssetId = asset.Id,
-            ProfileId = profile.Id,
-            Opened = _utcNow,
-            Size = null,
-            CurrencyId = currency.Id,
-            EntryPrice = 1.08
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<AddTradeResultDto> Act() =>
+            client.AddTradeAsync(new AddTradeDto
+            {
+                AssetId = asset.Id,
+                ProfileId = profile.Id,
+                Opened = _utcNow,
+                Size = null,
+                CurrencyId = currency.Id,
+                EntryPrice = 1.08
+            });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors
-            .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "size")
-            .And.Contain(x => x.Messages.Single() == "'Handelsvolumen' darf kein Nullwert sein.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("size", error.Identifier);
+        Assert.Equal("'Handelsvolumen' darf kein Nullwert sein.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -204,22 +202,22 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.AddTradeAsync(new AddTradeDto
-        {
-            AssetId = notExistingAssetId,
-            ProfileId = profile.Id,
-            Opened = _utcNow,
-            Size = 5000,
-            CurrencyId = currency.Id,
-            EntryPrice = 1.08
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<AddTradeResultDto> Act() =>
+            client.AddTradeAsync(new AddTradeDto
+            {
+                AssetId = notExistingAssetId,
+                ProfileId = profile.Id,
+                Opened = _utcNow,
+                Size = 5000,
+                CurrencyId = currency.Id,
+                EntryPrice = 1.08
+            });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages
-            .Should().HaveCount(1)
-            .And.Contain(x => x == "Asset nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Asset nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 
     [Fact]
@@ -235,27 +233,28 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.AddTradeAsync(new AddTradeDto
-        {
-            AssetId = asset.Id,
-            ProfileId = profile.Id,
-            Opened = _utcNow,
-            Closed = _utcNow,
-            ManuallyEnteredResult = null,
-            Size = 5000,
-            Balance = null,
-            CurrencyId = currency.Id,
-            EntryPrice = 1.08
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<AddTradeResultDto> Act() =>
+            client.AddTradeAsync(new AddTradeDto
+            {
+                AssetId = asset.Id,
+                ProfileId = profile.Id,
+                Opened = _utcNow,
+                Closed = _utcNow,
+                ManuallyEnteredResult = null,
+                Size = 5000,
+                Balance = null,
+                CurrencyId = currency.Id,
+                EntryPrice = 1.08
+            });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors
-            .Should().HaveCount(1)
-            .And.Contain(x =>
-                x.Messages.Single() == "'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist." &&
-                x.Identifier == "balance");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("balance", error.Identifier);
+        Assert.Equal("'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist.", 
+            Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -271,26 +270,27 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.AddTradeAsync(new AddTradeDto
-        {
-            AssetId = asset.Id,
-            ProfileId = profile.Id,
-            Opened = _utcNow,
-            Closed = null,
-            Size = 5000,
-            Balance = 50,
-            CurrencyId = currency.Id,
-            EntryPrice = 1.08
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<AddTradeResultDto> Act() =>
+            client.AddTradeAsync(new AddTradeDto
+            {
+                AssetId = asset.Id,
+                ProfileId = profile.Id,
+                Opened = _utcNow,
+                Closed = null,
+                Size = 5000,
+                Balance = 50,
+                CurrencyId = currency.Id,
+                EntryPrice = 1.08
+            });
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors
-            .Should().HaveCount(1)
-            .And.Contain(x =>
-                x.Messages.Single() == "'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist." &&
-                x.Identifier == "closed");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("closed", error.Identifier);
+        Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist.", 
+            Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -319,15 +319,13 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
-
-        newlyAddedTrade.Should().NotBeNull();
+        Assert.NotNull(newlyAddedTrade);
         var expected = DateTime.Parse("2024-08-05T12:00:00");
-        expected.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade.Opened.Should().Be(expected);
+        Assert.NotEqual(DateTimeKind.Local, expected.Kind);
+        Assert.Equal(expected, newlyAddedTrade.Opened);
     }
-
 
     [Fact]
     public async Task A_trade_with_opened_date_in_local_time_will_be_stored_as_utc_there_is_no_implicit_conversion()
@@ -355,12 +353,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         });
 
         // assert
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
-
-        newlyAddedTrade.Should().NotBeNull();
+        Assert.NotNull(newlyAddedTrade);
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");
-        expectedOpenedDate.Kind.Should().NotBe(DateTimeKind.Local);
-        newlyAddedTrade.Opened.Should().Be(expectedOpenedDate);
+        Assert.NotEqual(DateTimeKind.Local, expectedOpenedDate.Kind);
+        Assert.Equal(expectedOpenedDate, newlyAddedTrade.Opened);
     }
 }

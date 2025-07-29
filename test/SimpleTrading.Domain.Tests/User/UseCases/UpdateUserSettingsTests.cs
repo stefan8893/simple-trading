@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User;
 using SimpleTrading.Domain.User.DataAccess;
@@ -29,10 +28,10 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        userSettingsModel.Value.Should().BeOfType<Completed>();
+        Assert.IsType<Completed>(userSettingsModel.Value);
         var userSettingsUpdated = await DbContextSingleOrDefault<UserSettings>(x => x.Id == userSettings.Id);
-        userSettingsUpdated.Should().NotBeNull();
-        userSettingsUpdated.Language.Should().BeNull();
+        Assert.NotNull(userSettingsUpdated);
+        Assert.Null(userSettingsUpdated.Language);
     }
 
     [Fact]
@@ -54,12 +53,12 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        userSettingsModel.Value.Should().BeOfType<Completed>();
+        Assert.IsType<Completed>(userSettingsModel.Value);
         var userSettingsUpdated = await DbContextSingleOrDefault<UserSettings>(x => x.Id == userSettings.Id);
-        userSettingsUpdated.Should().NotBeNull();
-        userSettingsUpdated.Culture.Should().Be("de-AT");
-        userSettingsUpdated.Language.Should().Be("de");
-        userSettingsUpdated.TimeZone.Should().Be("Europe/Vienna");
+        Assert.NotNull(userSettingsUpdated);
+        Assert.Equal("de-AT", userSettingsUpdated.Culture);
+        Assert.Equal("de", userSettingsUpdated.Language);
+        Assert.Equal("Europe/Vienna", userSettingsUpdated.TimeZone);
     }
 
     [Fact]
@@ -79,10 +78,10 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        userSettingsModel.Value.Should().BeOfType<Completed>();
+        Assert.IsType<Completed>(userSettingsModel.Value);
         var userSettingsUpdated = await DbContextSingleOrDefault<UserSettings>(x => x.Id == userSettings.Id);
-        userSettingsUpdated.Should().NotBeNull();
-        userSettingsUpdated.Language.Should().Be("de");
+        Assert.NotNull(userSettingsUpdated);
+        Assert.Equal("de", userSettingsUpdated.Language);
     }
 
     [Fact]
@@ -95,12 +94,10 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        userSettingsModel.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should()
-            .Contain(x =>
-                x.PropertyName == "IsoLanguageCode" &&
-                x.ErrorMessage == "'deu' is not supported. Only 'de, en'.").And
-            .HaveCount(1);
+        var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("IsoLanguageCode", error.PropertyName);
+        Assert.Equal("'deu' is not supported. Only 'de, en'.", error.ErrorMessage);
     }
 
     [Fact]
@@ -114,10 +111,10 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        userSettingsModel.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Culture" &&
-                              x.ErrorMessage == "'de-CH' is not supported. Only 'de-AT, en-US'.");
+        var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Culture", error.PropertyName);
+        Assert.Equal("'de-CH' is not supported. Only 'de-AT, en-US'.", error.ErrorMessage);
     }
 
     [Fact]
@@ -131,9 +128,9 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        userSettingsModel.Value.Should().BeOfType<BadInput>()
-            .Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Timezone" &&
-                              x.ErrorMessage == "'Europe/Bregenz' is invalid.");
+        var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Timezone", error.PropertyName);
+        Assert.Equal("'Europe/Bregenz' is invalid.", error.ErrorMessage);
     }
 }

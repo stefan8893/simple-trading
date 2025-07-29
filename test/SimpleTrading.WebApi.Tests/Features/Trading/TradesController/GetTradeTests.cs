@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure.Extensions;
@@ -18,10 +17,11 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
-        var act = () => client.GetTradeAsync(notExistingTradeId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeDto> Act() => client.GetTradeAsync(notExistingTradeId);
 
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var returnedTrade = await client.GetTradeAsync(trade.Id);
 
         // assert
-        returnedTrade.Id.Should().Be(trade.Id);
+        Assert.Equal(trade.Id, returnedTrade.Id);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // assert
         var expectedOpenedDate = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
-        returnedTrade.Opened.Should().Be(expectedOpenedDate);
+        Assert.Equal(expectedOpenedDate, returnedTrade.Opened);
     }
 
     [Fact]
@@ -99,8 +99,8 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var returnedTrade = await client.GetTradeAsync(trade.Id);
 
         // assert
-        returnedTrade.References.Should().HaveCount(2)
-            .And.Contain(x => x.Id == exampleReference.Id)
-            .And.Contain(x => x.Id == tradingViewReference.Id);
+        Assert.Equal(2, returnedTrade.References.Count);
+        Assert.Contains(returnedTrade.References, x => x.Id == exampleReference.Id);
+        Assert.Contains(returnedTrade.References, x => x.Id == tradingViewReference.Id);
     }
 }

@@ -1,4 +1,3 @@
-using AwesomeAssertions;
 using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.WebApi.Tests.Features;
@@ -12,9 +11,9 @@ public class HomeControllerTests(TestingWebApplicationFactory<Program> factory) 
 
         var response = await client.GetAppInfoAsync();
 
-        response.Should().NotBeNull();
-        response.Name.Should().NotBeNull();
-        response.Environment.Should().NotBeNull();
-        response.Version.Should().NotBeNull();
+        Assert.NotNull(response);
+        Assert.NotNull(response.Name);
+        Assert.NotNull(response.Environment);
+        Assert.NotNull(response.Version);
     }
 }

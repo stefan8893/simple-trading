@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Client;
@@ -36,10 +35,10 @@ public class RestoreCalculatedResultTests(
         var result = await client.RestoreCalculatedResultAsync(tradeId);
 
         // assert
-        result.Result.Should().Be(ResultDto.Loss);
-        result.Performance.Should().Be(55);
-        result.TradeId.Should().Be(tradeId);
-        result.Warnings.Should().BeEmpty();
+        Assert.Equal(ResultDto.Loss, result.Result);
+        Assert.Equal(55, result.Performance);
+        Assert.Equal(tradeId, result.TradeId);
+        Assert.Empty(result.Warnings);
     }
 
     [Fact]
@@ -51,13 +50,14 @@ public class RestoreCalculatedResultTests(
         restoreCalculatedResultInteractorStub.ResponseModel = new NotFound<Trade>(tradeId);
 
         // act
-        var act = () => client.RestoreCalculatedResultAsync(tradeId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeResultDto> Act() => client.RestoreCalculatedResultAsync(tradeId);
 
         // assert
-        var notFound = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        notFound.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        notFound.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain("Trade nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        var singleError = Assert.Single(exception.Result.Messages);
+        Assert.Equal("Trade nicht gefunden.", singleError);
     }
 
     [Fact]
@@ -69,12 +69,13 @@ public class RestoreCalculatedResultTests(
         restoreCalculatedResultInteractorStub.ResponseModel = new BusinessError(tradeId, "Something went badly wrong.");
 
         // act
-        var act = () => client.RestoreCalculatedResultAsync(tradeId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeResultDto> Act() => client.RestoreCalculatedResultAsync(tradeId);
 
         // assert
-        var unprocessableEntity = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        unprocessableEntity.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        unprocessableEntity.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Something went badly wrong.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
+        var singleError = Assert.Single(exception.Result.Messages);
+        Assert.Equal("Something went badly wrong.", singleError);
     }
 }

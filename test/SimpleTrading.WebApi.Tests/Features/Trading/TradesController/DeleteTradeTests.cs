@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.Domain.Trading;
+﻿using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -13,9 +12,7 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        var act = () => client.DeleteTradeAsync(notExistingTradeId);
-
-        await act.Should().NotThrowAsync();
+        await client.DeleteTradeAsync(notExistingTradeId);
     }
 
     [Fact]
@@ -29,11 +26,10 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.DeleteTradeAsync(trade.Id);
+        await client.DeleteTradeAsync(trade.Id);
 
         // assert
-        await act.Should().NotThrowAsync();
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        storedTrade.Should().BeNull();
+        Assert.Null(storedTrade);
     }
 }

@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
@@ -32,10 +31,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter]);
 
         // assert
-        result.Should().NotBeNull();
-        result.Count.Should().Be(1);
-        result.Data.Should().HaveCount(1)
-            .And.Contain(x => x.Opened!.Value == DateTimeOffset.Parse("2024-08-19T14:00:00+02:00"));
+        Assert.NotNull(result);
+        Assert.Equal(1, result.Count);
+        var trade = Assert.Single(result.Data);
+        Assert.Equal(DateTimeOffset.Parse("2024-08-19T14:00:00+02:00"), trade.Opened);
     }
 
     [Fact]
@@ -47,14 +46,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "Opened gt [2024-08-19T11:00Z]";
 
         // act
-        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
-                              x.Identifier == "filter[0]");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("filter[0]", error.Identifier);
+        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -66,14 +66,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "-gt [2024-08-19T11:00Z]";
 
         // act
-        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
-                              x.Identifier == "filter[0]");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("filter[0]", error.Identifier);
+        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
     }
     
     [Fact]
@@ -83,14 +84,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         // act
-        var act = () => client.SearchTradesAsync(null, [], []);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(null, [], []);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "'Profil' darf nicht leer sein." &&
-                              x.Identifier == "profileId");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("profileId", error.Identifier);
+        Assert.Equal("'Profil' darf nicht leer sein.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -102,14 +104,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "Balance -gt [2024-08-19T11:00Z]";
 
         // act
-        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "'2024-08-19T11:00Z' ist nicht zulässig." &&
-                              x.Identifier == "filter[0].ComparisonValue");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("filter[0].ComparisonValue", error.Identifier);
+        Assert.Equal("'2024-08-19T11:00Z' ist nicht zulässig.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -121,14 +124,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "Balance -gt 500";
 
         // act
-        var act = () => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiges Filterformat." &&
-                              x.Identifier == "filter[0]");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("filter[0]", error.Identifier);
+        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -159,7 +163,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        result.Count.Should().Be(2);
+        Assert.Equal(2, result.Count);
     }
 
     [Theory]
@@ -190,7 +194,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        result.Count.Should().Be(3);
+        Assert.Equal(3, result.Count);
     }
 
     [Fact]
@@ -213,7 +217,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        result.Count.Should().Be(0);
+        Assert.Equal(0, result.Count);
     }
 
     [Fact]
@@ -236,7 +240,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
 
         // assert
-        result.Count.Should().Be(3);
+        Assert.Equal(3, result.Count);
     }
 
     [Fact]
@@ -268,9 +272,9 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var result = await client.SearchTradesAsync(profile.Id, sorting, []);
 
         // assert
-        result.Count.Should().Be(3);
-        result.Data.ElementAt(0).Result!.Value.Should().Be(ResultDto.Mediocre);
-        result.Data.ElementAt(1).Result!.Value.Should().Be(ResultDto.BreakEven);
-        result.Data.ElementAt(2).Result!.Value.Should().Be(ResultDto.Loss);
+        Assert.Equal(3, result.Count);
+        Assert.Equal(ResultDto.Mediocre, result.Data.ElementAt(0).Result!.Value);
+        Assert.Equal(ResultDto.BreakEven, result.Data.ElementAt(1).Result!.Value);
+        Assert.Equal(ResultDto.Loss, result.Data.ElementAt(2).Result!.Value);
     }
 }

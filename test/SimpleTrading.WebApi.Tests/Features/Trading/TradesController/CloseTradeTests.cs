@@ -1,4 +1,3 @@
-using AwesomeAssertions;
 using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure.Extensions;
@@ -21,16 +20,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var tradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => client.CloseTradeAsync(tradeId, new CloseTradeDto
-        {
-            Closed = new DateTimeOffset(_utcNow),
-            Balance = -20d,
-            ExitPrice = 1.05
-        });
+        Task<TradeResultDto> Act() => client.CloseTradeAsync(tradeId, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
+        Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
 
     [Fact]
@@ -42,19 +36,13 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
-        {
-            Closed = new DateTimeOffset(_utcNow),
-            Balance = -20d,
-            ExitPrice = 1.05
-        });
+        Task<TradeResultDto> Act() => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages
-            .Should().Contain(x => x == "Trade nicht gefunden.")
-            .And.HaveCount(1);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        var singleError = Assert.Single(exception.Result.Messages);
+        Assert.Equal("Trade nicht gefunden.", singleError);
     }
 
     [Fact]
@@ -66,21 +54,15 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
-        {
-            Closed = new DateTimeOffset(_utcNow),
-            Balance = null,
-            ExitPrice = 1.05
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeResultDto> Act() => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = null, ExitPrice = 1.05});
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-
-        exception.Which.Result.Errors
-            .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "balance")
-            .And.Contain(x => x.Messages.Single() == "'Bilanz' darf kein Nullwert sein.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("balance", error.Identifier);
+        Assert.Equal("'Bilanz' darf kein Nullwert sein.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -92,21 +74,15 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        var act = () => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto
-        {
-            Closed = null,
-            Balance = 0d,
-            ExitPrice = 1.05
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeResultDto> Act() => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto {Closed = null, Balance = 0d, ExitPrice = 1.05});
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-
-        exception.Which.Result.Errors
-            .Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "closed")
-            .And.Contain(x => x.Messages.Single() == "'Abgeschlossen' darf kein Nullwert sein.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("closed", error.Identifier);
+        Assert.Equal("'Abgeschlossen' darf kein Nullwert sein.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -120,19 +96,14 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
-        {
-            Closed = new DateTimeOffset(_utcNow).AddDays(-1),
-            Balance = -50d,
-            ExitPrice = 1.05
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<TradeResultDto> Act() => client.CloseTradeAsync(trade.Id, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow).AddDays(-1), Balance = -50d, ExitPrice = 1.05});
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status422UnprocessableEntity);
-        exception.Which.Result.Messages
-            .Should().HaveCount(1)
-            .And.Contain(x => x == "'Abgeschlossen' muss nach 'Eröffnet' liegen.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
+        var singleError = Assert.Single(exception.Result.Messages);
+        Assert.Equal("'Abgeschlossen' muss nach 'Eröffnet' liegen.", singleError);
     }
 
     [Fact]
@@ -154,15 +125,14 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         });
 
         // assert
-        result.Should().NotBeNull();
+        Assert.NotNull(result);
         var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-
-        tradeAfterClosing.Should().NotBeNull();
-        tradeAfterClosing!.IsClosed.Should().BeTrue();
+        Assert.NotNull(tradeAfterClosing);
+        Assert.True(tradeAfterClosing.IsClosed);
     }
 
     [Fact]
-    public async Task The_result_gets_overriden_()
+    public async Task The_result_gets_overriden()
     {
         // arrange
         var client = await CreateClient();
@@ -172,7 +142,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.CloseTradeAsync(trade.Id, new CloseTradeDto
+        await client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = new DateTimeOffset(_utcNow),
             Balance = -50d,
@@ -180,11 +150,9 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         });
 
         // assert
-        await act.Should().NotThrowAsync();
         var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-
-        tradeAfterClosing.Should().NotBeNull();
-        tradeAfterClosing!.IsClosed.Should().BeTrue();
+        Assert.NotNull(tradeAfterClosing);
+        Assert.True(tradeAfterClosing.IsClosed);
     }
 
     [Fact]
@@ -208,12 +176,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         });
 
         // assert
-        result.Should().NotBeNull();
+        Assert.NotNull(result);
         var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-
-        tradeAfterClosing.Should().NotBeNull();
+        Assert.NotNull(tradeAfterClosing);
         var expectedClosedDate = DateTime.Parse("2024-08-05T16:00:00");
-        tradeAfterClosing!.Closed.Should().HaveValue()
-            .And.Be(expectedClosedDate);
+        Assert.True(tradeAfterClosing.Closed.HasValue);
+        Assert.Equal(expectedClosedDate, tradeAfterClosing.Closed.Value);
     }
 }

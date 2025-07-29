@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -30,12 +29,12 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Should().NotBeNull();
-        response.Warnings.Should().BeEmpty();
+        Assert.NotNull(response);
+        Assert.Empty(response.Warnings);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
-        updatedTrade.Should().NotBeNull();
-        updatedTrade!.Size.Should().Be(50_000);
+        Assert.NotNull(updatedTrade);
+        Assert.Equal(50_000, updatedTrade.Size);
     }
 
     [Fact]
@@ -61,12 +60,12 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
-        updatedTrade.Should().NotBeNull();
-        updatedTrade!.Result.Should().NotBeNull();
-        updatedTrade.Result!.Name.Should().Be(Result.Loss);
+        Assert.NotNull(updatedTrade);
+        Assert.NotNull(updatedTrade.Result);
+        Assert.Equal(Result.Loss, updatedTrade.Result.Name);
     }
 
     [Fact]
@@ -81,18 +80,20 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<WarningsDto> Act()
         {
-            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss}
-        });
+            return client.UpdateTradeAsync(trade.Id,
+                new UpdateTradeDto {ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss}});
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "manuallyEnteredResult" &&
-                              x.Messages.Single() ==
-                              "'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var singleError = Assert.Single(exception.Result.Errors);
+        Assert.Equal("manuallyEnteredResult", singleError.Identifier);
+        var singleMessage = Assert.Single(singleError.Messages);
+        Assert.Equal("'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.", singleMessage);
     }
 
     [Fact]
@@ -118,11 +119,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
-        updatedTrade.Should().NotBeNull();
-        updatedTrade!.Result.Should().BeNull();
+        Assert.NotNull(updatedTrade);
+        Assert.Null(updatedTrade.Result);
     }
 
     [Fact]
@@ -148,13 +149,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         });
 
         // assert
-        response.Should().NotBeNull();
+        Assert.NotNull(response);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
-        updatedTrade.Should().NotBeNull();
-        updatedTrade!.Result.Should().NotBeNull();
-        updatedTrade.Result!.Name.Should().Be(Result.BreakEven);
-        updatedTrade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
+        Assert.NotNull(updatedTrade);
+        Assert.NotNull(updatedTrade.Result);
+        Assert.Equal(Result.BreakEven, updatedTrade.Result.Name);
+        Assert.Equal(ResultSource.CalculatedByBalance, updatedTrade.Result.Source);
     }
 
     [Fact]
@@ -162,15 +163,15 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     {
         // arrange
         var client = await CreateClient();
-
         var notExistingTradeId = Guid.Parse("74af4aee-9582-49ab-956a-1fd7d6f8609d");
 
         // act
-        var act = () => client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<WarningsDto> Act() => client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
     }
 
     [Fact]
@@ -184,17 +185,15 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
-        {
-            Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")
-        });
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<WarningsDto> Act() => client.UpdateTradeAsync(trade.Id, new UpdateTradeDto {Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")});
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Identifier == "closed" &&
-                              x.Messages.Single() ==
-                              "'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var singleError = Assert.Single(exception.Result.Errors);
+        Assert.Equal("closed", singleError.Identifier);
+        var singleMessage = Assert.Single(singleError.Messages);
+        Assert.Equal("'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.", singleMessage);
     }
 }

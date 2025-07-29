@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Infrastructure;
@@ -38,24 +37,22 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         var userSettingsDto = await client.GetUserSettingsAsync();
 
         // assert
-        userSettingsDto.Culture.Should().Be("en-US");
-        userSettingsDto.TimeZone.Should().Be("Europe/Vienna");
-        userSettingsDto.Language.Should().Be("de");
-        userSettingsDto.ActiveProfileId.Should().Be(profile.Id);
-        userSettingsDto.ActiveProfileName.Should().Be(profile.Name);
+        Assert.Equal("en-US", userSettingsDto.Culture);
+        Assert.Equal("Europe/Vienna", userSettingsDto.TimeZone);
+        Assert.Equal("de", userSettingsDto.Language);
+        Assert.Equal(profile.Id, userSettingsDto.ActiveProfileId);
+        Assert.Equal(profile.Name, userSettingsDto.ActiveProfileName);
     }
 
     [Fact]
     public async Task An_exception_is_thrown_when_there_is_no_active_profile()
     {
-        // arrange
         var client = await CreateClient();
 
-        // act
+        // ReSharper disable once ConvertToLocalFunction
         var act = () => client.GetUserSettingsAsync();
 
-        // assert
-        await act.Should().ThrowAsync<SimpleTradingClientException>();
+        await Assert.ThrowsAsync<SimpleTradingClientException>(act);
     }
 
     [Fact]
@@ -81,7 +78,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
 
         // assert
         var nowInLocalTime = _utcNow.ToLocal(userSettings.TimeZone).DateTime;
-        userSettingsDto.LastModified.DateTime.Should().Be(nowInLocalTime);
+        Assert.Equal(nowInLocalTime, userSettingsDto.LastModified.DateTime);
     }
 
     [Fact]
@@ -109,10 +106,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // assert
         var updatedUserSettings =
             await DbContextSingleOrDefault<Domain.User.UserSettings>(x => x.Id == userSettings.Id);
-        updatedUserSettings.Should().NotBeNull();
-        updatedUserSettings.Culture.Should().Be("de-AT");
-        updatedUserSettings.Language.Should().Be("en");
-        updatedUserSettings.TimeZone.Should().Be("Europe/Vienna");
+        Assert.NotNull(updatedUserSettings);
+        Assert.Equal("de-AT", updatedUserSettings.Culture);
+        Assert.Equal("en", updatedUserSettings.Language);
+        Assert.Equal("Europe/Vienna", updatedUserSettings.TimeZone);
     }
 
     [Fact]
@@ -138,9 +135,9 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // assert
         var updatedUserSettings =
             await DbContextSingleOrDefault<Domain.User.UserSettings>(x => x.Id == userSettings.Id);
-        updatedUserSettings.Should().NotBeNull();
-        updatedUserSettings.Culture.Should().Be("en-US");
-        updatedUserSettings.Language.Should().Be("en");
-        updatedUserSettings.TimeZone.Should().Be("Europe/Berlin");
+        Assert.NotNull(updatedUserSettings);
+        Assert.Equal("en-US", updatedUserSettings.Culture);
+        Assert.Equal("en", updatedUserSettings.Language);
+        Assert.Equal("Europe/Berlin", updatedUserSettings.TimeZone);
     }
 }

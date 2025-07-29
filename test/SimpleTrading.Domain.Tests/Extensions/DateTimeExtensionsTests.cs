@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.Domain.Infrastructure.Extensions;
+﻿using SimpleTrading.Domain.Infrastructure.Extensions;
 
 namespace SimpleTrading.Domain.Tests.Extensions;
 
@@ -13,7 +12,7 @@ public class DateTimeExtensionsTests
         var newYork = utc.ToLocal("America/New_York");
 
         var expected = DateTimeOffset.Parse("2024-08-03T14:00:00-04:00");
-        newYork.Should().Be(expected);
+        Assert.Equal(expected, newYork);
     }
 
     [Fact]
@@ -21,9 +20,10 @@ public class DateTimeExtensionsTests
     {
         var utc = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
 
-        var act = () => utc.ToLocal("FooBar");
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        void Act() => utc.ToLocal("FooBar");
 
-        act.Should().ThrowExactly<TimeZoneNotFoundException>();
+        Assert.Throws<TimeZoneNotFoundException>(Act);
     }
 
     [Theory]
@@ -33,9 +33,8 @@ public class DateTimeExtensionsTests
     {
         var utc = DateTime.SpecifyKind(DateTime.Parse("2024-08-03T18:00:00"), kind);
 
-        var act = () => utc.ToLocal("Europe/Vienna");
-
-        act.Should().ThrowExactly<ArgumentException>().WithMessage("The given dateTime is not in UTC");
+        var exception = Assert.Throws<ArgumentException>(() => utc.ToLocal("Europe/Vienna"));
+        Assert.Equal("The given DateTime is not in UTC", exception.Message);
     }
 
     [Theory]
@@ -48,6 +47,6 @@ public class DateTimeExtensionsTests
 
         var unspecifiedDateTime = dateTime.ToUnspecifiedKind();
 
-        unspecifiedDateTime.Kind.Should().Be(DateTimeKind.Unspecified);
+        Assert.Equal(DateTimeKind.Unspecified, unspecifiedDateTime.Kind);
     }
 }
