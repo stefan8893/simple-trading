@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using OneOf.Types;
+﻿using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -31,9 +30,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var businessError = response.Value.Should().BeOfType<BusinessError>();
-        businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Details.Should().Be("'Closed' must be after 'Opened'.");
+        var businessError = Assert.IsType<BusinessError>(response.Value);
+        Assert.Equal(trade.Id, businessError.ResourceId);
+        Assert.Equal("'Closed' must be after 'Opened'.", businessError.Details);
     }
 
     [Fact]
@@ -43,7 +42,7 @@ public class CloseTradeTests : TestBase
 
         var isClosed = trade.IsClosed;
 
-        isClosed.Should().BeTrue();
+        Assert.True(isClosed);
     }
 
     [Fact]
@@ -64,9 +63,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var businessError = response.Value.Should().BeOfType<BusinessError>();
-        businessError.Which.ResourceId.Should().Be(trade.Id);
-        businessError.Which.Details.Should().Be("'Closed' must not be greater than one day in the future.");
+        var businessError = Assert.IsType<BusinessError>(response.Value);
+            
+        Assert.Equal(trade.Id, businessError.ResourceId);
+        Assert.Equal("'Closed' must not be greater than one day in the future.", businessError.Details);
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
     }
 
     [Fact]
@@ -107,7 +107,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
     }
 
     [Fact]
@@ -122,11 +122,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.IsClosed.Should().BeTrue();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByBalance, trade.Result?.Source);
     }
 
     [Fact]
@@ -145,11 +144,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.IsClosed.Should().BeTrue();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.Loss, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByBalance, trade.Result?.Source);
     }
 
     [Fact]
@@ -168,10 +167,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "The balance is 0, but the position indicates a balance not equal to 0.");
-        trade.IsClosed.Should().BeTrue();
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("The balance is 0, but the position indicates a balance not equal to 0.", singleWarning);
+        Assert.True(trade.IsClosed);
     }
 
     [Fact]
@@ -190,10 +189,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "The balance is not 0, but the position indicates a balance equal to 0.");
-        trade.IsClosed.Should().BeTrue();
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("The balance is not 0, but the position indicates a balance equal to 0.", singleWarning);
+        Assert.True(trade.IsClosed);
     }
 
     [Fact]
@@ -211,8 +210,8 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.IsClosed.Should().BeTrue();
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.True(trade.IsClosed);
     }
 
     [Fact]
@@ -231,11 +230,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.IsClosed.Should().BeTrue();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByBalance);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByBalance, trade.Result?.Source);
     }
 
     [Fact]
@@ -257,11 +255,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.IsClosed.Should().BeTrue();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.Mediocre, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
 
     [Fact]
@@ -282,10 +279,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        Assert.Equal(ResultSource.ManuallyEntered, trade.Result?.Source);
     }
 
     [Fact]
@@ -307,12 +303,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.");
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.", singleWarning);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        Assert.Equal(ResultSource.ManuallyEntered, trade.Result?.Source);
     }
 
     [Fact]
@@ -338,12 +333,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "Your trade indicates a 'Win' result, but you have entered 'Break-Even'.");
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your trade indicates a 'Win' result, but you have entered 'Break-Even'.", singleWarning);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        Assert.Equal(ResultSource.ManuallyEntered, trade.Result?.Source);
     }
 
     [Fact]
@@ -369,12 +363,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Mediocre'.");
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(ResultSource.ManuallyEntered);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your trade indicates a 'Loss' result, but you have entered 'Mediocre'.", singleWarning);
+        Assert.Equal(Result.Mediocre, trade.Result?.Name);
+        Assert.Equal(ResultSource.ManuallyEntered, trade.Result?.Source);
     }
 
     [Fact]
@@ -396,11 +389,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.IsClosed.Should().BeTrue();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
 
     [Fact]
@@ -422,10 +414,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.IsClosed.Should().BeTrue();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.Win);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.Win, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
 
     [Fact]
@@ -444,9 +435,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.Equal(Result.Loss, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
 
     [Fact]
@@ -465,9 +456,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
-        trade.Result!.Performance.Should().Be(-50);
+        Assert.Equal(Result.Loss, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
+        Assert.Equal((short)-50, trade.Result?.Performance);
     }
 
     [Fact]
@@ -486,9 +477,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result!.Name.Should().Be(Result.Loss);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
-        trade.Result!.Performance.Should().Be(-150);
+        Assert.Equal(Result.Loss, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
+        Assert.Equal((short)-150, trade.Result?.Performance);
     }
 
     [Fact]
@@ -507,9 +498,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
-        trade.Result!.Performance.Should().Be(25);
+        Assert.Equal(Result.Mediocre, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
+        Assert.Equal((short)25, trade.Result?.Performance);
     }
 
     [Fact]
@@ -528,9 +519,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result!.Name.Should().Be(Result.Mediocre);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
-        trade.Result!.Performance.Should().Be(99);
+        Assert.Equal(Result.Mediocre, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
+        Assert.Equal((short)99, trade.Result?.Performance);
     }
 
     [Fact]
@@ -549,9 +540,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result!.Name.Should().Be(Result.Win);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
-        trade.Result!.Performance.Should().Be(100);
+        Assert.Equal(Result.Win, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
+        Assert.Equal((short)100, trade.Result?.Performance);
     }
 
     [Fact]
@@ -570,9 +561,9 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result!.Name.Should().Be(Result.Win);
-        trade.Result!.Source.Should().Be(ResultSource.CalculatedByPositionPrices);
-        trade.Result!.Performance.Should().Be(120);
+        Assert.Equal(Result.Win, trade.Result?.Name);
+        Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
+        Assert.Equal((short)120, trade.Result?.Performance);
     }
 
     [Fact]
@@ -594,8 +585,10 @@ public class CloseTradeTests : TestBase
         // act
         var response = trade.Close(closeTradeDto);
 
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1);
+        // assert
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("The balance is positive, but your long position indicates a loss.", singleWarning);
     }
 
     [Fact]
@@ -617,12 +610,12 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        trade.IsClosed.Should().BeTrue();
-        trade.Result!.Name.Should().Be(Result.Loss);
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x =>
-                x == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.", singleWarning);
+        
+        Assert.True(trade.IsClosed);
+        Assert.Equal(Result.Loss, trade.Result?.Name);
     }
 
     [Fact]
@@ -645,10 +638,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result.Should().BeNull();
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "The balance is positive, but your short position indicates a loss.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("The balance is positive, but your short position indicates a loss.", singleWarning);
+        
+        Assert.Null(trade.Result);
     }
 
     [Fact]
@@ -671,10 +665,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result.Should().BeNull();
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x => x == "The balance is positive, but your long position indicates a loss.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("The balance is positive, but your long position indicates a loss.", singleWarning);
+        
+        Assert.Null(trade.Result);
     }
 
     [Fact]
@@ -685,9 +680,8 @@ public class CloseTradeTests : TestBase
 
         var response = trade.Close(closeTradeDto);
 
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>();
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Performance.Should().Be(0);
+        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.Equal((short)0, trade.Result?.Performance);
     }
 
     [Fact]
@@ -712,10 +706,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         //assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x =>
-                x == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.", singleWarning);
     }
 
     [Fact]
@@ -738,11 +731,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(2)
-            .And.Contain(x => x == "Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.")
-            .And.Contain(x =>
-                x == "Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.");
+        var warnings =  Assert.IsType<Completed<CloseTradeResult>>(response.Value).Data.Warnings.ToList();
+        Assert.Equal(2, warnings.Count);
+        Assert.Contains("Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.", warnings);
+        Assert.Contains("Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.", warnings);
     }
 
     [Fact]
@@ -767,11 +759,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x =>
-                x ==
-                "Your position indicates the result 'Mediocre', but based on the balance it is 'Break-Even'.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on the balance it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
@@ -796,10 +786,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x =>
-                x == "Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
@@ -824,10 +813,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x =>
-                x == "Your position indicates the result 'Win', but based on the balance it is 'Break-Even'.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your position indicates the result 'Win', but based on the balance it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
@@ -852,10 +840,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        response.Value.Should().BeOfType<Completed<CloseTradeResult>>()
-            .Which.Data.Warnings.Should().HaveCount(1)
-            .And.Contain(x =>
-                x == "Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.");
+        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var singleWarning = Assert.Single(result.Data.Warnings);
+        Assert.Equal("Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
@@ -878,7 +865,7 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result.Should().BeNull();
+        Assert.Null(trade.Result);
     }
 
     [Fact]
@@ -901,8 +888,7 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        trade.Result.Should().NotBeNull();
-        trade.Result!.Name.Should().Be(Result.BreakEven);
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);;
     }
 
     private DateTime UtcNowStub()
