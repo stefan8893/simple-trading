@@ -47,7 +47,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        Task<TradeDtoPageDto> Act()
+        {
+            return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -67,7 +70,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        Task<TradeDtoPageDto> Act()
+        {
+            return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -76,7 +82,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         Assert.Equal("filter[0]", error.Identifier);
         Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
     }
-    
+
     [Fact]
     public async Task Trades_always_belong_to_a_profile_therefore_you_cant_search_for_trades_without_a_profile_id()
     {
@@ -85,7 +91,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(null, [], []);
+        Task<TradeDtoPageDto> Act()
+        {
+            return client.SearchTradesAsync(null, [], []);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -105,7 +114,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        Task<TradeDtoPageDto> Act()
+        {
+            return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -125,7 +137,10 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act() => client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        Task<TradeDtoPageDto> Act()
+        {
+            return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);

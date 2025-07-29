@@ -18,7 +18,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDto> Act() => client.GetTradeAsync(notExistingTradeId);
+        Task<TradeDto> Act()
+        {
+            return client.GetTradeAsync(notExistingTradeId);
+        }
 
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);

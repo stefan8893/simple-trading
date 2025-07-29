@@ -19,7 +19,10 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<AddTradeResultDto> Act() => client.AddTradeAsync();
+        Task<AddTradeResultDto> Act()
+        {
+            return client.AddTradeAsync();
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
@@ -56,7 +59,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
         Assert.NotNull(newlyAddedTrade);
     }
-    
+
     [Fact]
     public async Task A_trade_is_not_saved_when_executing_a_dry_run()
     {
@@ -170,8 +173,9 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<AddTradeResultDto> Act() =>
-            client.AddTradeAsync(new AddTradeDto
+        Task<AddTradeResultDto> Act()
+        {
+            return client.AddTradeAsync(new AddTradeDto
             {
                 AssetId = asset.Id,
                 ProfileId = profile.Id,
@@ -180,6 +184,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08
             });
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -203,8 +208,9 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<AddTradeResultDto> Act() =>
-            client.AddTradeAsync(new AddTradeDto
+        Task<AddTradeResultDto> Act()
+        {
+            return client.AddTradeAsync(new AddTradeDto
             {
                 AssetId = notExistingAssetId,
                 ProfileId = profile.Id,
@@ -213,6 +219,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08
             });
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
@@ -234,8 +241,9 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<AddTradeResultDto> Act() =>
-            client.AddTradeAsync(new AddTradeDto
+        Task<AddTradeResultDto> Act()
+        {
+            return client.AddTradeAsync(new AddTradeDto
             {
                 AssetId = asset.Id,
                 ProfileId = profile.Id,
@@ -247,13 +255,14 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08
             });
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("balance", error.Identifier);
-        Assert.Equal("'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist.", 
+        Assert.Equal("'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist.",
             Assert.Single(error.Messages));
     }
 
@@ -271,8 +280,9 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<AddTradeResultDto> Act() =>
-            client.AddTradeAsync(new AddTradeDto
+        Task<AddTradeResultDto> Act()
+        {
+            return client.AddTradeAsync(new AddTradeDto
             {
                 AssetId = asset.Id,
                 ProfileId = profile.Id,
@@ -283,13 +293,14 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08
             });
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("closed", error.Identifier);
-        Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist.", 
+        Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist.",
             Assert.Single(error.Messages));
     }
 

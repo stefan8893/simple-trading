@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.TestInfrastructure;
+﻿using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.ProfilesController;
@@ -19,12 +18,12 @@ public class GetProfilesTests(TestingWebApplicationFactory<Program> factory) : W
         await DbContext.SaveChangesAsync();
 
         // act
-        var assets = await client.GetProfilesAsync();
+        var profiles = await client.GetProfilesAsync();
 
         // assert
-        assets.Should().NotBeNull();
-        assets.Should().HaveCount(2)
-            .And.Contain(x => x.Id == profile1.Id)
-            .And.Contain(x => x.Id == profile2.Id);
+        Assert.NotNull(profiles);
+        Assert.Equal(2, profiles.Count);
+        Assert.Contains(profiles, x => x.Id == profile1.Id);
+        Assert.Contains(profiles, x => x.Id == profile2.Id);
     }
 }

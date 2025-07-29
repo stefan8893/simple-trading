@@ -51,7 +51,10 @@ public class RestoreCalculatedResultTests(
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeResultDto> Act() => client.RestoreCalculatedResultAsync(tradeId);
+        Task<TradeResultDto> Act()
+        {
+            return client.RestoreCalculatedResultAsync(tradeId);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
@@ -70,7 +73,10 @@ public class RestoreCalculatedResultTests(
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeResultDto> Act() => client.RestoreCalculatedResultAsync(tradeId);
+        Task<TradeResultDto> Act()
+        {
+            return client.RestoreCalculatedResultAsync(tradeId);
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);

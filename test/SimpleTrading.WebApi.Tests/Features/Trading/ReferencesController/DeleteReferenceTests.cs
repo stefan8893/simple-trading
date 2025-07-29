@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -18,13 +17,16 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         var notExistingReferenceId = Guid.Parse("d5b9a98d-b4b0-44b7-9ae2-f4aac2edfde1");
 
         // act
-        var act = () => client.DeleteReferenceAsync(notExistingTradeId, notExistingReferenceId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task Act()
+        {
+            return client.DeleteReferenceAsync(notExistingTradeId, notExistingReferenceId);
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Trade nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 
     [Fact]
@@ -43,10 +45,9 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         var countOfDeletedReferences = await client.DeleteReferencesAsync(trade.Id);
 
         // assert
-        countOfDeletedReferences.Should().Be(2);
+        Assert.Equal(2, countOfDeletedReferences);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-
-        updatedTrade.Should().NotBeNull();
-        updatedTrade!.References.Should().BeEmpty();
+        Assert.NotNull(updatedTrade);
+        Assert.Empty(updatedTrade.References);
     }
 }

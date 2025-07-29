@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -16,13 +15,16 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
         var notExistingTradeId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => client.GetReferencesAsync(notExistingTradeId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task Act()
+        {
+            return client.GetReferencesAsync(notExistingTradeId);
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Trade nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 
     [Fact]
@@ -41,9 +43,9 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
         var response = await client.GetReferencesAsync(trade.Id);
 
         // assert
-        response.Should().NotBeNull()
-            .And.HaveCount(2)
-            .And.Contain(x => x.Id == reference1.Id)
-            .And.Contain(x => x.Id == reference2.Id);
+        Assert.NotNull(response);
+        Assert.Equal(2, response.Count);
+        Assert.Contains(response, x => x.Id == reference1.Id);
+        Assert.Contains(response, x => x.Id == reference2.Id);
     }
 }

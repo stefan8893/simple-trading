@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -7,7 +6,7 @@ using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.ReferencesController;
 
-public class DeletesReferenceTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class DeleteReferencesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
 {
     [Fact]
     public async Task References_of_a_non_existing_trade_cannot_be_deleted()
@@ -17,13 +16,16 @@ public class DeletesReferenceTests(TestingWebApplicationFactory<Program> factory
         var notExistingTradeId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => client.DeleteReferencesAsync(notExistingTradeId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task Act()
+        {
+            return client.DeleteReferencesAsync(notExistingTradeId);
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Trade nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 
     [Fact]
@@ -39,14 +41,12 @@ public class DeletesReferenceTests(TestingWebApplicationFactory<Program> factory
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.DeleteReferenceAsync(trade.Id, reference1.Id);
+        await client.DeleteReferenceAsync(trade.Id, reference1.Id);
 
         // assert
-        await act.Should().NotThrowAsync();
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-
-        updatedTrade.Should().NotBeNull();
-        updatedTrade!.References.Should().HaveCount(1)
-            .And.Contain(x => x.Id == reference2.Id);
+        Assert.NotNull(updatedTrade);
+        var remainingReference = Assert.Single(updatedTrade.References);
+        Assert.Equal(reference2.Id, remainingReference.Id);
     }
 }

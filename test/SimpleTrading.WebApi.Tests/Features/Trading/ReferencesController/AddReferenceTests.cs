@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -28,7 +27,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
 
         // assert
         var newlyAddedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == idOfAddedReference);
-        newlyAddedReference.Should().NotBeNull();
+        Assert.NotNull(newlyAddedReference);
     }
 
     [Fact]
@@ -42,18 +41,22 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         await DbContext.SaveChangesAsync();
 
         // act
-        var act = () => client.AddReferenceAsync(trade.Id, new AddReferenceDto
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<Guid> Act()
         {
-            Type = ReferenceTypeDto.Other,
-            Link = "invalid-uri"
-        });
+            return client.AddReferenceAsync(trade.Id, new AddReferenceDto
+            {
+                Type = ReferenceTypeDto.Other,
+                Link = "invalid-uri"
+            });
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<FieldErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        exception.Which.Result.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.Messages.Single() == "Ungültiger Link.")
-            .And.Contain(x => x.Identifier == "link");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("link", error.Identifier);
+        Assert.Equal("Ungültiger Link.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -61,20 +64,22 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
     {
         // arrange
         var client = await CreateClient();
-
         var notExistingTradeId = Guid.Parse("c2e4edf0-8fa9-492b-9f9f-be883c7ad3ed");
 
         // act
-        var act = () => client.AddReferenceAsync(notExistingTradeId, new AddReferenceDto
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<Guid> Act()
         {
-            Type = ReferenceTypeDto.Other,
-            Link = "https://example.org"
-        });
+            return client.AddReferenceAsync(notExistingTradeId, new AddReferenceDto
+            {
+                Type = ReferenceTypeDto.Other,
+                Link = "https://example.org"
+            });
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Trade nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 }

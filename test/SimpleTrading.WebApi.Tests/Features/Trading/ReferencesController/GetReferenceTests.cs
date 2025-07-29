@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SimpleTrading.Client;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -18,13 +17,16 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var notExistingReferenceId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => client.GetReferenceAsync(notExistingTradeId, notExistingReferenceId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task Act()
+        {
+            return client.GetReferenceAsync(notExistingTradeId, notExistingReferenceId);
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Trade nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 
     [Fact]
@@ -41,13 +43,16 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var notExistingReferenceId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
         // act
-        var act = () => client.GetReferenceAsync(trade.Id, notExistingReferenceId);
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task Act()
+        {
+            return client.GetReferenceAsync(trade.Id, notExistingReferenceId);
+        }
 
         // assert
-        var exception = await act.Should().ThrowExactlyAsync<SimpleTradingClientException<ErrorResponse>>();
-        exception.Which.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        exception.Which.Result.Messages.Should().HaveCount(1)
-            .And.Contain(x => x == "Referenz nicht gefunden.");
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Referenz nicht gefunden.", Assert.Single(exception.Result.Messages));
     }
 
     [Fact]
@@ -66,9 +71,9 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var response = await client.GetReferenceAsync(trade.Id, reference2.Id);
 
         // assert
-        response.Should().NotBeNull();
-        response.Id.Should().Be(reference2.Id);
-        response.Link.Should().Be(reference2.Link.AbsoluteUri);
-        response.Notes.Should().Be(reference2.Notes);
+        Assert.NotNull(response);
+        Assert.Equal(reference2.Id, response.Id);
+        Assert.Equal(reference2.Link.AbsoluteUri, response.Link);
+        Assert.Equal(reference2.Notes, response.Notes);
     }
 }

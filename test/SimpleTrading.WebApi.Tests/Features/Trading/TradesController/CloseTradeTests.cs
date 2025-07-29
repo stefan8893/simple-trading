@@ -20,7 +20,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var tradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        Task<TradeResultDto> Act() => client.CloseTradeAsync(tradeId, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
+        Task<TradeResultDto> Act()
+        {
+            return client.CloseTradeAsync(tradeId,
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
@@ -36,7 +40,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
         // act
-        Task<TradeResultDto> Act() => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
+        Task<TradeResultDto> Act()
+        {
+            return client.CloseTradeAsync(notExistingTradeId,
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
@@ -55,7 +63,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeResultDto> Act() => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = null, ExitPrice = 1.05});
+        Task<TradeResultDto> Act()
+        {
+            return client.CloseTradeAsync(notExistingTradeId,
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = null, ExitPrice = 1.05});
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -75,7 +87,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeResultDto> Act() => client.CloseTradeAsync(notExistingTradeId, new CloseTradeDto {Closed = null, Balance = 0d, ExitPrice = 1.05});
+        Task<TradeResultDto> Act()
+        {
+            return client.CloseTradeAsync(notExistingTradeId,
+                new CloseTradeDto {Closed = null, Balance = 0d, ExitPrice = 1.05});
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -97,7 +113,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeResultDto> Act() => client.CloseTradeAsync(trade.Id, new CloseTradeDto {Closed = new DateTimeOffset(_utcNow).AddDays(-1), Balance = -50d, ExitPrice = 1.05});
+        Task<TradeResultDto> Act()
+        {
+            return client.CloseTradeAsync(trade.Id,
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow).AddDays(-1), Balance = -50d, ExitPrice = 1.05});
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);

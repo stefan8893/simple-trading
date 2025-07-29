@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using SimpleTrading.TestInfrastructure;
+﻿using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.AssetController;
@@ -22,9 +21,9 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
         var assets = await client.GetAssetsAsync();
 
         // assert
-        assets.Should().NotBeNull();
-        assets.Should().HaveCount(2)
-            .And.Contain(x => x.Id == asset1.Id)
-            .And.Contain(x => x.Id == asset2.Id);
+        Assert.NotNull(assets);
+        Assert.Equal(2, assets.Count);
+        Assert.Contains(assets, x => x.Id == asset1.Id);
+        Assert.Contains(assets, x => x.Id == asset2.Id);
     }
 }

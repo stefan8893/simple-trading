@@ -93,7 +93,8 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var singleError = Assert.Single(exception.Result.Errors);
         Assert.Equal("manuallyEnteredResult", singleError.Identifier);
         var singleMessage = Assert.Single(singleError.Messages);
-        Assert.Equal("'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.", singleMessage);
+        Assert.Equal("'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.",
+            singleMessage);
     }
 
     [Fact]
@@ -167,7 +168,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<WarningsDto> Act() => client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
+        Task<WarningsDto> Act()
+        {
+            return client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
@@ -186,7 +190,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<WarningsDto> Act() => client.UpdateTradeAsync(trade.Id, new UpdateTradeDto {Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")});
+        Task<WarningsDto> Act()
+        {
+            return client.UpdateTradeAsync(trade.Id,
+                new UpdateTradeDto {Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")});
+        }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
@@ -194,6 +202,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var singleError = Assert.Single(exception.Result.Errors);
         Assert.Equal("closed", singleError.Identifier);
         var singleMessage = Assert.Single(singleError.Messages);
-        Assert.Equal("'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.", singleMessage);
+        Assert.Equal("'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.",
+            singleMessage);
     }
 }
