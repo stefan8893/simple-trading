@@ -21,7 +21,7 @@ public class RestoreCalculatedResultTests : TestBase
         trade.Result.Should().BeNull();
     }
 
-    private DateTime UtcNowStub()
+    private static DateTime UtcNowStub()
     {
         return DateTime.Parse("2024-08-14T12:00:00").ToUtcKind();
     }
