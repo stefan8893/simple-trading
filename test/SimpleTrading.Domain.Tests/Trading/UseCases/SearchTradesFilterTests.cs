@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AwesomeAssertions;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
@@ -42,9 +41,10 @@ public class SearchTradesTests : DomainTests
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Opened == expected);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+
+        var trade = Assert.Single(pagedTrades);
+        Assert.Equal(expected, trade.Opened);
     }
 
     [Fact]
@@ -75,9 +75,10 @@ public class SearchTradesTests : DomainTests
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Opened == expected);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        
+        var trade = Assert.Single(pagedTrades);
+        Assert.Equal(expected, trade.Opened);
     }
 
     [Fact]
@@ -98,9 +99,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.ErrorMessage == "Null is not allowed here.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Null is not allowed here.", error.ErrorMessage);
     }
 
     [Fact]
@@ -121,10 +122,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].ComparisonValue" &&
-                              x.ErrorMessage == "'2024-08-19T17:00:' is not valid.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'2024-08-19T17:00:' is not valid.", error.ErrorMessage);
+        Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
 
     [Fact]
@@ -146,10 +147,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].Operator" &&
-                              x.ErrorMessage == "The operator 'grt' is not supported.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The operator 'grt' is not supported.", error.ErrorMessage);
+        Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
 
@@ -171,10 +172,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].PropertyName" &&
-                              x.ErrorMessage == "'Openend' cannot be used as a filter.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Openend' cannot be used as a filter.", error.ErrorMessage);
+        Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
 
     [Fact]
@@ -206,10 +207,11 @@ public class SearchTradesTests : DomainTests
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Opened == firstExpected)
-            .And.Contain(x => x.Opened == secondExpected);
+
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => firstExpected == item.Opened);
+        Assert.Contains(pagedTrades, item => secondExpected == item.Opened);
     }
 
     [Fact]
@@ -241,10 +243,11 @@ public class SearchTradesTests : DomainTests
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Opened == firstExpected)
-            .And.Contain(x => x.Opened == secondExpected);
+
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => firstExpected == item.Opened);
+        Assert.Contains(pagedTrades, item => secondExpected == item.Opened);
     }
 
     [Fact]
@@ -275,9 +278,10 @@ public class SearchTradesTests : DomainTests
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Opened == expected);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(expected, singleTrade.Opened);
     }
 
     [Fact]
@@ -308,9 +312,10 @@ public class SearchTradesTests : DomainTests
 
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Opened == expected);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(expected, singleTrade.Opened);
     }
 
     [Fact]
@@ -342,10 +347,11 @@ public class SearchTradesTests : DomainTests
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Opened == firstExpected)
-            .And.Contain(x => x.Opened == secondExpected);
+        
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => firstExpected == item.Opened);
+        Assert.Contains(pagedTrades, item => secondExpected == item.Opened);
     }
 
     [Fact]
@@ -381,9 +387,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Balance == 1000m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(1000m, singleTrade.Balance);
     }
 
     [Fact]
@@ -404,10 +411,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].ComparisonValue" &&
-                              x.ErrorMessage == "'Comparison value' must not be empty.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Comparison value' must not be empty.", error.ErrorMessage);
+        Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
 
     [Fact]
@@ -428,10 +435,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].Operator" &&
-                              x.ErrorMessage == "'Operator' must not be empty.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Operator' must not be empty.", error.ErrorMessage);
+        Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
     [Fact]
@@ -452,10 +459,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].PropertyName" &&
-                              x.ErrorMessage == "'Field' must not be empty.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
+        Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
 
     [Fact]
@@ -476,10 +483,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].PropertyName" &&
-                              x.ErrorMessage == "'Foobar' cannot be used as a filter.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Foobar' cannot be used as a filter.", error.ErrorMessage);
+        Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
 
     [Fact]
@@ -500,10 +507,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].Operator" &&
-                              x.ErrorMessage == "The operator 'gr' is not supported.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The operator 'gr' is not supported.", error.ErrorMessage);
+        Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
     [Fact]
@@ -524,10 +531,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].PropertyName" &&
-                              x.ErrorMessage == "'Field' must not be empty.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
+        Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
 
     [Fact]
@@ -548,10 +555,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].PropertyName" &&
-                              x.ErrorMessage == "'balance ' cannot be used as a filter.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'balance ' cannot be used as a filter.", error.ErrorMessage);
+        Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
 
     [Fact]
@@ -572,10 +579,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].Operator" &&
-                              x.ErrorMessage == "The operator ' gt' is not supported.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("The operator ' gt' is not supported.", error.ErrorMessage);
+        Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
     [Fact]
@@ -603,9 +610,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Size == 10_000m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(10_000m, singleTrade.Size);
     }
 
     [Fact]
@@ -633,9 +640,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Size == 10_000m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(10_000m, singleTrade.Size);
     }
 
     [Fact]
@@ -664,9 +671,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Size == 5000m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(5_000m, singleTrade.Size);
     }
 
     [Fact]
@@ -695,9 +702,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Size == 10_000m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(10_000m, singleTrade.Size);
     }
 
     [Fact]
@@ -726,8 +733,8 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().BeEmpty();
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Empty(pagedTrades);
     }
 
     [Fact]
@@ -763,9 +770,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Balance == 500m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(500m, singleTrade.Balance);
     }
 
     [Fact]
@@ -800,9 +807,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Id == tradeWithoutBalance.Id);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(tradeWithoutBalance.Id, singleTrade.Id);
     }
 
     [Fact]
@@ -831,10 +838,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.Contain(x => x.PropertyName == "Filter[0].ComparisonValue" &&
-                              x.ErrorMessage == "'NotThatBad' is not valid.");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("'NotThatBad' is not valid.", error.ErrorMessage);
+        Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
 
     [Fact]
@@ -871,10 +878,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Result == ResultModel.Mediocre)
-            .And.Contain(x => x.Result == ResultModel.Win);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => ResultModel.Mediocre == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.Win == item.Result);
     }
 
 
@@ -912,9 +919,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(3)
-            .And.NotContain(x => x.Closed!.Value.UtcDateTime == openedClosed);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(3, pagedTrades.Count);
+        Assert.DoesNotContain(pagedTrades, item => item.Closed!.Value.UtcDateTime == openedClosed);
     }
 
     [Fact]
@@ -951,11 +958,11 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(3)
-            .And.Contain(x => x.Result == ResultModel.BreakEven)
-            .And.Contain(x => x.Result == ResultModel.Mediocre)
-            .And.Contain(x => x.Result == ResultModel.Win);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(3, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.Mediocre == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.Win == item.Result);
     }
 
 
@@ -977,10 +984,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = response.Value.Should().BeOfType<BadInput>();
-        badInput.Which.ValidationResult.Errors.Should().HaveCount(1)
-            .And.ContainSingle(x =>
-                x.ErrorMessage == "Null is not allowed here." && x.PropertyName == "Filter[0].ComparisonValue");
+        var badInput = Assert.IsType<BadInput>(response.Value);
+        var error = Assert.Single(badInput.ValidationResult.Errors);
+        Assert.Equal("Null is not allowed here.", error.ErrorMessage);
+        Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
 
     [Fact]
@@ -1017,10 +1024,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Result == ResultModel.BreakEven)
-            .And.Contain(x => x.Result == ResultModel.Loss);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.Loss == item.Result);
     }
 
     [Fact]
@@ -1057,10 +1064,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Result == ResultModel.BreakEven)
-            .And.Contain(x => x.Result == ResultModel.Loss);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.Loss == item.Result);
     }
 
     [Fact]
@@ -1097,9 +1104,9 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Result == ResultModel.Mediocre);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(ResultModel.Mediocre,  singleTrade.Result);
     }
 
     [Fact]
@@ -1136,11 +1143,11 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(3)
-            .And.Contain(x => x.Result == ResultModel.Loss)
-            .And.Contain(x => x.Result == ResultModel.BreakEven)
-            .And.Contain(x => x.Result == ResultModel.Win);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(3, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => ResultModel.Loss == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
+        Assert.Contains(pagedTrades, item => ResultModel.Win == item.Result);
     }
 
     [Fact]
@@ -1182,14 +1189,14 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Id == tradesWithoutResult[0].Id)
-            .And.Contain(x => x.Id == tradesWithoutResult[1].Id);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => tradesWithoutResult[0].Id == item.Id);
+        Assert.Contains(pagedTrades, item => tradesWithoutResult[1].Id == item.Id);
     }
 
     [Fact]
-    public async Task result_not_equal_to_null_returns_all_trades_with_a_result()
+    public async Task Result_not_equal_to_null_returns_all_trades_with_a_result()
     {
         // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
@@ -1228,12 +1235,12 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(4)
-            .And.Contain(x => x.Id == tradesWithResult[0].Id)
-            .And.Contain(x => x.Id == tradesWithResult[1].Id)
-            .And.Contain(x => x.Id == tradesWithResult[2].Id)
-            .And.Contain(x => x.Id == tradesWithResult[3].Id);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(4, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => tradesWithResult[0].Id == item.Id);
+        Assert.Contains(pagedTrades, item => tradesWithResult[1].Id == item.Id);
+        Assert.Contains(pagedTrades, item => tradesWithResult[2].Id == item.Id);
+        Assert.Contains(pagedTrades, item => tradesWithResult[3].Id == item.Id);
     }
     
     [Fact]
@@ -1276,10 +1283,10 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(2)
-            .And.Contain(x => x.Id == closedTrades[0].Id)
-            .And.Contain(x => x.Id == closedTrades[1].Id);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(2, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => closedTrades[0].Id == item.Id);
+        Assert.Contains(pagedTrades, item => closedTrades[1].Id == item.Id);
     }
 
     [Fact]
@@ -1322,12 +1329,12 @@ public class SearchTradesTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(4)
-            .And.Contain(x => x.Id == closedTrades[0].Id)
-            .And.Contain(x => x.Id == closedTrades[1].Id)
-            .And.Contain(x => x.Id == closedTrades[2].Id)
-            .And.Contain(x => x.Id == closedTrades[3].Id);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        Assert.Equal(4, pagedTrades.Count);
+        Assert.Contains(pagedTrades, item => closedTrades[0].Id == item.Id);
+        Assert.Contains(pagedTrades, item => closedTrades[1].Id == item.Id);
+        Assert.Contains(pagedTrades, item => closedTrades[2].Id == item.Id);
+        Assert.Contains(pagedTrades, item => closedTrades[3].Id == item.Id);
     }
 
     [Fact]
@@ -1381,10 +1388,10 @@ public class SearchTradesTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter});
 
         // assert
-        var pagedTrades = response.Value.Should().BeOfType<PagedList<TradeResponseModel>>();
-        pagedTrades.Which.Should().HaveCount(1)
-            .And.Contain(x => x.Result == ResultModel.BreakEven)
-            .And.Contain(x => x.Balance == 100m)
-            .And.Contain(x => x.Size == 10_000m);
+        var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
+        var singleTrade = Assert.Single(pagedTrades);
+        Assert.Equal(ResultModel.BreakEven,  singleTrade.Result);
+        Assert.Equal(100m,  singleTrade.Balance);
+        Assert.Equal(10_000m,  singleTrade.Size);
     }
 }

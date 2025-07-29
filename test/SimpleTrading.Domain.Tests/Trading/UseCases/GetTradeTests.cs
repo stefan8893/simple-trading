@@ -14,7 +14,7 @@ public class GetTradeTests : DomainTests
     private IGetTrade Interactor => ServiceLocator.Resolve<IGetTrade>();
 
     [Fact]
-    public async Task A_not_existing_trade_cant_be_returned()
+    public async Task Returns_not_found_if_the_trade_does_not_exist()
     {
         var notExistingTradeId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
 
