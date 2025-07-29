@@ -18,7 +18,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var initialOpenedDate = DateTime.Parse("2024-08-19T10:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
+            .Select(x => TestData.Trade.Default with { ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x) })
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -195,7 +195,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
-            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(_ => TestData.Trade.Default with { ProfileOrId = profile })
             .Select(x => x.Build())
             .ToList();
 
@@ -213,13 +213,13 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task A_filter_for_trades_that_dont_have_a_closed_value_return_correct_result()
+    public async Task Filtering_for_trades_that_have_a_closed_date_returns_nothing_when_there_are_no_closed_trades()
     {
         // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
-            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(_ => TestData.Trade.Default with { ProfileOrId = profile })
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -242,7 +242,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
+            .Select(_ => TestData.Trade.Default with { ProfileOrId = profile })
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -273,7 +273,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
                 Opened = openedClosedDate,
                 Closed = openedClosedDate,
                 Balance = 500m * x,
-                Result = (ResultModel) x
+                Result = (ResultModel)x
             })
             .Select(x => x.Build());
 
