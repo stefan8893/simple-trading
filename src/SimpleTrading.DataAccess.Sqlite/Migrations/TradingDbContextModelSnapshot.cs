@@ -17,7 +17,7 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
@@ -147,10 +147,6 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal?>("Balance")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime?>("Closed")
                         .HasColumnType("TEXT");
 
@@ -168,6 +164,10 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("ProfitLoss")
+                        .HasPrecision(24, 8)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Size")

@@ -355,7 +355,7 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Greater_than_balance_with_uppercase_property_name_returns_correct_result()
+    public async Task Greater_than_profitLoss_with_uppercase_property_name_returns_correct_result()
     {
         // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
@@ -366,7 +366,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = now,
                 Closed = now,
-                Balance = 500m * x
+                ProfitLoss = 500m * x
             })
             .Select(x => x.Build());
 
@@ -376,7 +376,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var filter = new FilterModel
         {
-            PropertyName = "BALANCE",
+            PropertyName = "PROFITLOSS",
             Operator = "gt",
             ComparisonValue = "500",
             IsLiteral = false
@@ -390,17 +390,17 @@ public class SearchTradesFilterTests : DomainTests
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         
         var singleTrade = Assert.Single(pagedTrades);
-        Assert.Equal(1000m, singleTrade.Balance);
+        Assert.Equal(1000m, singleTrade.ProfitLoss);
     }
 
     [Fact]
-    public async Task Greater_than_balance_with_empty_comparison_value_returns_bad_input()
+    public async Task Greater_than_profitLoss_with_empty_comparison_value_returns_bad_input()
     {
         // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
-            PropertyName = "Balance",
+            PropertyName = "ProfitLoss",
             Operator = "gt",
             ComparisonValue = "",
             IsLiteral = false
@@ -418,13 +418,13 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Greater_than_balance_with_empty_operator_returns_bad_input()
+    public async Task Greater_than_profitLoss_with_empty_operator_returns_bad_input()
     {
         // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
-            PropertyName = "Balance",
+            PropertyName = "ProfitLoss",
             Operator = "",
             ComparisonValue = "50",
             IsLiteral = false
@@ -442,7 +442,7 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Greater_than_balance_with_empty_property_name_returns_bad_input()
+    public async Task Greater_than_profitLoss_with_empty_property_name_returns_bad_input()
     {
         // arrange
         var profile = TestData.Profile.Default.Build();
@@ -496,7 +496,7 @@ public class SearchTradesFilterTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
-            PropertyName = "Balance",
+            PropertyName = "ProfitLoss",
             Operator = "gr",
             ComparisonValue = "50",
             IsLiteral = false
@@ -544,7 +544,7 @@ public class SearchTradesFilterTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
-            PropertyName = "balance ",
+            PropertyName = "profitLoss ",
             Operator = "gt",
             ComparisonValue = "50",
             IsLiteral = false
@@ -557,7 +557,7 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var badInput = Assert.IsType<BadInput>(response.Value);
         var error = Assert.Single(badInput.ValidationResult.Errors);
-        Assert.Equal("'balance ' cannot be used as a filter.", error.ErrorMessage);
+        Assert.Equal("'profitLoss ' cannot be used as a filter.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
 
@@ -568,7 +568,7 @@ public class SearchTradesFilterTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
-            PropertyName = "balance",
+            PropertyName = "profitLoss",
             Operator = " gt",
             ComparisonValue = "50",
             IsLiteral = false
@@ -708,12 +708,12 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Less_than_balance_with_valid_input_returns_correct_result()
+    public async Task Less_than_profitLoss_with_valid_input_returns_correct_result()
     {
         // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
-            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Balance = 500m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, ProfitLoss = 500m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -722,7 +722,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var filter = new FilterModel
         {
-            PropertyName = "Balance",
+            PropertyName = "ProfitLoss",
             Operator = "lt",
             ComparisonValue = "500",
             IsLiteral = false
@@ -738,7 +738,7 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Equal_to_balance_with_valid_input_returns_correct_result()
+    public async Task Equal_to_profitLoss_with_valid_input_returns_correct_result()
     {
         // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
@@ -749,7 +749,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = now,
                 Closed = now,
-                Balance = 500m * x
+                ProfitLoss = 500m * x
             })
             .Select(x => x.Build());
 
@@ -759,7 +759,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var filter = new FilterModel
         {
-            PropertyName = "Balance",
+            PropertyName = "ProfitLoss",
             Operator = "eq",
             ComparisonValue = "500",
             IsLiteral = false
@@ -772,31 +772,31 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
-        Assert.Equal(500m, singleTrade.Balance);
+        Assert.Equal(500m, singleTrade.ProfitLoss);
     }
 
     [Fact]
-    public async Task Balance_equal_to_null_returns_trades_without_a_balance()
+    public async Task ProfitLoss_equal_to_null_returns_trades_without_a_profitLoss()
     {
         // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
         var profile = TestData.Profile.Default.Build();
-        var tradeWithBalance = (TestData.Trade.Default with
+        var tradeWithProfitLoss = (TestData.Trade.Default with
         {
             ProfileOrId = profile,
             Opened = now,
             Closed = now,
-            Balance = 500m
+            ProfitLoss = 500m
         }).Build();
-        var tradeWithoutBalance = (TestData.Trade.Default with {ProfileOrId = profile}).Build();
+        var tradeWithoutProfitLoss = (TestData.Trade.Default with {ProfileOrId = profile}).Build();
 
-        DbContext.Trades.AddRange(tradeWithBalance, tradeWithoutBalance);
+        DbContext.Trades.AddRange(tradeWithProfitLoss, tradeWithoutProfitLoss);
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
         var filter = new FilterModel
         {
-            PropertyName = "Balance",
+            PropertyName = "ProfitLoss",
             Operator = "eq",
             ComparisonValue = "null",
             IsLiteral = true
@@ -809,7 +809,7 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
-        Assert.Equal(tradeWithoutBalance.Id, singleTrade.Id);
+        Assert.Equal(tradeWithoutProfitLoss.Id, singleTrade.Id);
     }
 
     [Fact]
@@ -856,7 +856,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -897,7 +897,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed.AddHours(x),
                 Closed = openedClosed.AddHours(x),
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -936,7 +936,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -1002,7 +1002,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -1042,7 +1042,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -1082,7 +1082,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -1121,7 +1121,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build());
@@ -1167,7 +1167,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build())
@@ -1212,7 +1212,7 @@ public class SearchTradesFilterTests : DomainTests
                 Opened = openedClosed,
                 ProfileOrId = profile,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build())
@@ -1260,7 +1260,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build())
@@ -1306,7 +1306,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m,
+                ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build())
@@ -1349,7 +1349,7 @@ public class SearchTradesFilterTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m * x,
+                ProfitLoss = 50m * x,
                 Size = 5000m * x,
                 Result = (ResultModel) x
             })
@@ -1370,7 +1370,7 @@ public class SearchTradesFilterTests : DomainTests
             },
             new()
             {
-                PropertyName = "Balance",
+                PropertyName = "ProfitLoss",
                 Operator = "lt",
                 ComparisonValue = "150",
                 IsLiteral = false
@@ -1391,7 +1391,7 @@ public class SearchTradesFilterTests : DomainTests
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(ResultModel.BreakEven,  singleTrade.Result);
-        Assert.Equal(100m,  singleTrade.Balance);
+        Assert.Equal(100m,  singleTrade.ProfitLoss);
         Assert.Equal(10_000m,  singleTrade.Size);
     }
 }

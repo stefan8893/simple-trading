@@ -63,7 +63,7 @@ public class DataAccessModule : Module
                 {
                     [nameof(Trade.Opened)] = order => new SortByOpened(order),
                     [nameof(Trade.Closed)] = order => new SortByClosed(order),
-                    [nameof(Trade.Balance)] = order => new SortByBalance(order),
+                    [nameof(Trade.ProfitLoss)] = order => new SortByProfitLoss(order),
                     [nameof(Trade.Size)] = order => new SortBySize(order),
                     [nameof(Trade.Result)] = order => new SortByResult(order)
                 })

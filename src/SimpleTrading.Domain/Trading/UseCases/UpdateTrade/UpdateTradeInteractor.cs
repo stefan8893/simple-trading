@@ -148,13 +148,13 @@ public class UpdateTradeInteractor(
         if (!trade.IsClosed)
             return new NothingToClose(trade);
 
-        var balanceHasChanged = model.Balance.HasValue && model.Balance.Value != trade.Balance;
+        var profitLossHasChanged = model.ProfitLoss.HasValue && model.ProfitLoss.Value != trade.ProfitLoss;
         var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
         var manuallyEnteredResultIsSpecified = model.ManuallyEnteredResult.IsT0;
 
         var nothingHasChanged =
             !positionPricesHaveChanged &&
-            !balanceHasChanged &&
+            !profitLossHasChanged &&
             !closedHasChanged &&
             !manuallyEnteredResultIsSpecified;
 
@@ -162,9 +162,9 @@ public class UpdateTradeInteractor(
             return new NothingToClose(trade);
 
         var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
-        var balance = model.Balance ?? trade.Balance!.Value;
+        var profitLoss = model.ProfitLoss ?? trade.ProfitLoss!.Value;
 
-        var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, balance, utcNow)
+        var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, profitLoss, utcNow)
         {
             ManuallyEnteredResult = model.ManuallyEnteredResult
         };

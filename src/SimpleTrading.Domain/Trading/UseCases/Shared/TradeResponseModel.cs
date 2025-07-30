@@ -13,7 +13,7 @@ public class TradeResponseModel
     public required decimal Size { get; init; }
     public required DateTimeOffset Opened { get; init; }
     public required DateTimeOffset? Closed { get; init; }
-    public required decimal? Balance { get; init; }
+    public required decimal? ProfitLoss { get; init; }
     public required ResultModel? Result { get; init; }
     public required short? Performance { get; init; }
     public required bool IsClosed { get; init; }
@@ -40,7 +40,7 @@ public class TradeResponseModel
             Size = trade.Size,
             Opened = trade.Opened.ToLocal(timeZone),
             Closed = trade.Closed?.ToLocal(timeZone),
-            Balance = trade.Balance,
+            ProfitLoss = trade.ProfitLoss,
             Result = trade.Result?.ToResultModel(),
             Performance = trade.Result?.Performance,
             IsClosed = trade.IsClosed,

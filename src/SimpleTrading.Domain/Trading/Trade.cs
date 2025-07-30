@@ -21,7 +21,7 @@ public class Trade : IEntity
     public required DateTime Opened { get; set; }
     public required decimal Size { get; set; }
     public DateTime? Closed { get; private set; }
-    public decimal? Balance { get; private set; }
+    public decimal? ProfitLoss { get; private set; }
     public Result? Result { get; private set; }
     public required Guid CurrencyId { get; set; }
     public virtual required Currency Currency { get; set; }
@@ -29,7 +29,7 @@ public class Trade : IEntity
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public virtual ICollection<Reference> References { get; set; } = [];
     public string? Notes { get; set; }
-    public bool IsClosed => Closed.HasValue && Balance.HasValue;
+    public bool IsClosed => Closed.HasValue && ProfitLoss.HasValue;
     public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
@@ -39,7 +39,7 @@ public class Trade : IEntity
             return ImmutableList<string>.Empty;
         
         var results = CalculateResults(new None());
-        var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
+        var calculatedResult = PickAppropriateResult(results.CalculatedByProfitLoss, results.CalculatedByPositionPrices);
 
         return AnalyzeResults(results, calculatedResult)
             .ToImmutableList();
@@ -51,7 +51,7 @@ public class Trade : IEntity
             return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
 
         Result = null;
-        return Close(new CloseTradeConfiguration(Closed!.Value, Balance!.Value, utcNow));
+        return Close(new CloseTradeConfiguration(Closed!.Value, ProfitLoss!.Value, utcNow));
     }
 
     internal OneOf<Completed<CloseTradeResult>, BusinessError> Close(CloseTradeConfiguration configuration)
@@ -72,7 +72,7 @@ public class Trade : IEntity
     private CloseTradeResult CloseTrade(CloseTradeConfiguration configuration)
     {
         Closed = configuration.Closed.ToUtcKind();
-        Balance = configuration.Balance;
+        ProfitLoss = configuration.ProfitLoss;
 
         if (configuration.ExitPrice.HasValue)
             PositionPrices.Exit = configuration.ExitPrice;
@@ -98,7 +98,7 @@ public class Trade : IEntity
     private (Result? result, IReadOnlyList<string> warnings) CalculateResult(CloseTradeConfiguration configuration)
     {
         var results = CalculateResults(configuration.ManuallyEnteredResult);
-        var calculatedResult = PickAppropriateResult(results.CalculatedByBalance, results.CalculatedByPositionPrices);
+        var calculatedResult = PickAppropriateResult(results.CalculatedByProfitLoss, results.CalculatedByPositionPrices);
         var result = results.ManuallyEntered.Match(r => r, _ => calculatedResult);
 
         return (result, AnalyzeResults(results, calculatedResult));
@@ -112,39 +112,39 @@ public class Trade : IEntity
                     ? Result
                     : new None());
 
-        var calculatedByBalance = CalculateResultByBalance(Balance!.Value);
+        var calculatedByProfitLoss = CalculateResultByProfitLoss(ProfitLoss!.Value);
         var calculatedByPositionPrices = PositionPrices.CalculateResult();
 
-        return new TradingResultsDto(manuallyEnteredResult, calculatedByBalance, calculatedByPositionPrices);
+        return new TradingResultsDto(manuallyEnteredResult, calculatedByProfitLoss, calculatedByPositionPrices);
     }
 
-    private Result? PickAppropriateResult(Result? balanceResult,
+    private Result? PickAppropriateResult(Result? profitLossResult,
         Result? positionPricesResult)
     {
-        var hasBalanceResult = balanceResult is not null;
+        var hasProfitLossResult = profitLossResult is not null;
         var hasPositionPricesResult = positionPricesResult is not null;
-        var isPositiveBalance = Balance!.Value > 0m;
+        var isProfit = ProfitLoss!.Value > 0m;
 
         var positionPricesResultIsLossOrBreakEven =
             hasPositionPricesResult &&
             positionPricesResult?.Name is nameof(Result.Loss) or nameof(Result.BreakEven);
 
-        if (isPositiveBalance && positionPricesResultIsLossOrBreakEven)
+        if (isProfit && positionPricesResultIsLossOrBreakEven)
             return null;
 
-        if (!hasBalanceResult)
+        if (!hasProfitLossResult)
             return positionPricesResult;
 
         if (!hasPositionPricesResult)
-            return balanceResult;
+            return profitLossResult;
 
-        return positionPricesResult!.Name == balanceResult!.Name
+        return positionPricesResult!.Name == profitLossResult!.Name
             // pick the result from position prices if both are equal
             // it contains more information (performance indicator)
             ? positionPricesResult
-            // otherwise, pick the result by balance, because it is more important than the result by position prices
-            // at the end of the day the balance counts and not position prices
-            : balanceResult;
+            // otherwise, pick the result by profit/loss, because it is more important than the result by position prices
+            // at the end of the day the profit/loss counts and not position prices
+            : profitLossResult;
     }
 
     private List<string> AnalyzeResults(TradingResultsDto results,
@@ -156,18 +156,18 @@ public class Trade : IEntity
             new LongPositionAnalyzerDecorator(enteredResultDiffersFromCalculatedResultAnalysis);
         var shortPositionResultAnalysisDecorator =
             new ShortPositionTradeResultAnalyzerDecorator(longPositionResultAnalysisDecorator);
-        var balanceDiffersFromPositionPricesAnalysisDecorator =
-            new BalanceDiffersFromPositionPricesAnalyzerDecorator(shortPositionResultAnalysisDecorator);
+        var profitLossDiffersFromPositionPricesAnalysisDecorator =
+            new ProfitLossDiffersFromPositionPricesAnalyzerDecorator(shortPositionResultAnalysisDecorator);
 
         var analyzeResultsConfiguration = new TradeResultAnalyzerConfiguration
         {
             ManuallyEntered = results.ManuallyEntered.Match(x => x, _ => null),
-            CalculatedByBalance = results.CalculatedByBalance,
+            CalculatedByProfitLoss = results.CalculatedByProfitLoss,
             CalculatedByPositionPrices = results.CalculatedByPositionPrices,
             CalculatedResult = calculatedResult
         };
 
-        var analysisReport = balanceDiffersFromPositionPricesAnalysisDecorator
+        var analysisReport = profitLossDiffersFromPositionPricesAnalysisDecorator
             .AnalyzeResults(this, analyzeResultsConfiguration)
             .ToList();
 
@@ -187,23 +187,23 @@ public class Trade : IEntity
         };
     }
 
-    private static Result? CalculateResultByBalance(decimal balance)
+    private static Result? CalculateResultByProfitLoss(decimal profitLoss)
     {
-        return balance switch
+        return profitLoss switch
         {
-            0m => new Result(Result.BreakEven, ResultSource.CalculatedByBalance, 0),
-            < 0m => new Result(Result.Loss, ResultSource.CalculatedByBalance),
+            0m => new Result(Result.BreakEven, ResultSource.CalculatedByProfitLoss, 0),
+            < 0m => new Result(Result.Loss, ResultSource.CalculatedByProfitLoss),
             _ => null
         };
     }
 
     private record TradingResultsDto(
         OneOf<Result?, None> ManuallyEntered,
-        Result? CalculatedByBalance,
+        Result? CalculatedByProfitLoss,
         Result? CalculatedByPositionPrices);
 }
 
-internal record CloseTradeConfiguration(DateTime Closed, decimal Balance, UtcNow UtcNow)
+internal record CloseTradeConfiguration(DateTime Closed, decimal ProfitLoss, UtcNow UtcNow)
 {
     public decimal? ExitPrice { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();

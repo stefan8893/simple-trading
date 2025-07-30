@@ -116,7 +116,7 @@ public class CloseTradeTests : DomainTests
         var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.NotNull(closedTrade);
 
-        Assert.Equal(requestModel.Balance, closedTrade.Balance);
+        Assert.Equal(requestModel.ProfitLoss, closedTrade.ProfitLoss);
         Assert.NotNull(closedTrade.Closed);
         Assert.True(closedTrade.IsClosed);
         Assert.NotNull(closedTrade.PositionPrices.Exit);

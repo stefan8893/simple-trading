@@ -6,7 +6,7 @@ public enum ResultSource
 {
     Unspecified,
     ManuallyEntered,
-    CalculatedByBalance,
+    CalculatedByProfitLoss,
     CalculatedByPositionPrices
 }
 

@@ -15,14 +15,14 @@ internal class LongPositionAnalyzerDecorator(ITradeResultAnalyzer innerComponent
     private static IEnumerable<string> AnalyzeLongPositionPrices(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var isLongPosition = trade.PositionPrices.IsLongPosition;
-        var hasBalanceResult = config.CalculatedByBalance is not null;
-        if (!isLongPosition || hasBalanceResult)
+        var hasProfitLossResult = config.CalculatedByProfitLoss is not null;
+        if (!isLongPosition || hasProfitLossResult)
             yield break;
 
         var prices = trade.PositionPrices;
-        var balance = trade.Balance!.Value;
+        var profitLoss = trade.ProfitLoss!.Value;
 
-        if (balance > 0 && prices.Exit.HasValue && prices.Exit < prices.Entry)
-            yield return SimpleTradingStrings.LongPositionExitLessThanEntryAndPositiveBalance;
+        if (profitLoss > 0 && prices.Exit.HasValue && prices.Exit < prices.Entry)
+            yield return SimpleTradingStrings.LongPositionExitLessThanEntryAndPositiveProfitLoss;
     }
 }

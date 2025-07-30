@@ -29,7 +29,7 @@ public class CloseTradeInteractor(
     private async Task<CloseTradeResponse> CloseTrade(Trade trade, CloseTradeRequestModel model)
     {
         var closeTradeDto = new CloseTradeConfiguration(model.Closed.UtcDateTime,
-            model.Balance,
+            model.ProfitLoss,
             utcNow)
         {
             ExitPrice = model.ExitPrice,

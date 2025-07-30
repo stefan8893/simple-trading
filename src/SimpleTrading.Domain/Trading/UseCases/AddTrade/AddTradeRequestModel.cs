@@ -17,7 +17,7 @@ public record AddTradeRequestModel
     public DateTimeOffset? Closed { get; set; }
     public required decimal Size { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
-    public decimal? Balance { get; set; }
+    public decimal? ProfitLoss { get; set; }
     public required Guid CurrencyId { get; init; }
     public required decimal EntryPrice { get; init; }
     public decimal? StopLoss { get; set; }
@@ -64,12 +64,12 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .Empty()
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
-            .WithMessage(SimpleTradingStrings.BalanceAndClosedMustBeSpecifiedWhenOverridingResult)
-            .When(x => !(x.Balance.HasValue && x.Closed.HasValue) && x.ManuallyEnteredResult.IsT0);
+            .WithMessage(SimpleTradingStrings.ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult)
+            .When(x => !(x.ProfitLoss.HasValue && x.Closed.HasValue) && x.ManuallyEnteredResult.IsT0);
 
-        RuleFor(x => x.Balance)
+        RuleFor(x => x.ProfitLoss)
             .NotEmpty()
-            .WithName(SimpleTradingStrings.Balance)
+            .WithName(SimpleTradingStrings.ProfitLoss)
             .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsPresent, "{PropertyName}",
                 SimpleTradingStrings.Closed))
             .When(x => x.Closed.HasValue);
@@ -78,8 +78,8 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .NotEmpty()
             .WithName(SimpleTradingStrings.Closed)
             .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsPresent, "{PropertyName}",
-                SimpleTradingStrings.Balance))
-            .When(x => x.Balance.HasValue);
+                SimpleTradingStrings.ProfitLoss))
+            .When(x => x.ProfitLoss.HasValue);
 
         RuleFor(x => x.EntryPrice)
             .GreaterThan(0)

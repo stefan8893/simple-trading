@@ -23,7 +23,7 @@ public class RestoreCalculatedResultTests : DomainTests
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 50,
+            ProfitLoss = 50,
             PositionPrices = new PositionPrices
             {
                 Entry = 1.0m,
@@ -75,7 +75,7 @@ public class RestoreCalculatedResultTests : DomainTests
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 50,
+            ProfitLoss = 50,
             PositionPrices = new PositionPrices
             {
                 Entry = 1.0m,
@@ -86,7 +86,7 @@ public class RestoreCalculatedResultTests : DomainTests
         }).Build();
 
         tradeWithCalculatedMediocreResult.Close(new CloseTradeConfiguration(
-            tradeWithCalculatedMediocreResult.Closed!.Value, tradeWithCalculatedMediocreResult.Balance!.Value,
+            tradeWithCalculatedMediocreResult.Closed!.Value, tradeWithCalculatedMediocreResult.ProfitLoss!.Value,
             () => _utcNow)
         {
             ManuallyEnteredResult = ResultModel.Loss

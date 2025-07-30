@@ -122,7 +122,7 @@ public class AddTradeTests : DomainTests
             ProfileId = TestData.Profile.Default.Build().Id,
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
-            Balance = 500,
+            ProfitLoss = 500,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
@@ -449,7 +449,7 @@ public class AddTradeTests : DomainTests
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
             ManuallyEnteredResult = ResultModel.Win,
-            Balance = 10,
+            ProfitLoss = 10,
             EntryPrice = 1.00m,
             ExitPrice = 1.05m,
             Size = 5000,
@@ -480,7 +480,7 @@ public class AddTradeTests : DomainTests
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
             ManuallyEnteredResult = ResultModel.Win,
-            Balance = 10m,
+            ProfitLoss = 10m,
             EntryPrice = 0m,
             StopLoss = 0m,
             TakeProfit = 0m,
@@ -505,7 +505,7 @@ public class AddTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task A_new_closed_trade_without_a_balance_cant_be_closed()
+    public async Task A_new_closed_trade_without_a_profitLoss_cant_be_closed()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -519,7 +519,7 @@ public class AddTradeTests : DomainTests
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
-            Balance = null,
+            ProfitLoss = null,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id
@@ -529,8 +529,8 @@ public class AddTradeTests : DomainTests
 
         var badInput = Assert.IsType<BadInput>(response.Value);
         var error = Assert.Single(badInput.ValidationResult.Errors);
-        Assert.Equal("'Balance' must not be empty, if 'Closed' is specified.", error.ErrorMessage);
-        Assert.Equal("Balance", error.PropertyName);
+        Assert.Equal("'Profit/Loss' must not be empty, if 'Closed' is specified.", error.ErrorMessage);
+        Assert.Equal("ProfitLoss", error.PropertyName);
     }
 
     [Fact]
@@ -552,7 +552,7 @@ public class AddTradeTests : DomainTests
             Opened = opened,
             Closed = closed,
             Size = 5000,
-            Balance = 50,
+            ProfitLoss = 50,
             EntryPrice = 1.05m,
             ExitPrice = 1.15m,
             CurrencyId = currency.Id
@@ -568,7 +568,7 @@ public class AddTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_balance_and_no_closed_date()
+    public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_profitLoss_and_no_closed_date()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -593,13 +593,13 @@ public class AddTradeTests : DomainTests
 
         var badInput = Assert.IsType<BadInput>(response.Value);
         var error = Assert.Single(badInput.ValidationResult.Errors);
-        Assert.Equal("The result can only be overridden if 'Balance' and 'Closed' are specified.", 
+        Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.", 
             error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
-    public async Task Specifying_a_manually_entered_result_is_possible_if_balance_and_closed_date_are_present()
+    public async Task Specifying_a_manually_entered_result_is_possible_if_profitLoss_and_closed_date_are_present()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -615,7 +615,7 @@ public class AddTradeTests : DomainTests
             ProfileId = profile.Id,
             Opened = now,
             Closed = now,
-            Balance = 500m,
+            ProfitLoss = 500m,
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = currency.Id,

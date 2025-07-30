@@ -119,7 +119,7 @@ public partial class TradesController : ControllerBase
 
         var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
             closeTradeDto.Closed!.Value,
-            closeTradeDto.Balance!.Value)
+            closeTradeDto.ProfitLoss!.Value)
         {
             ManuallyEnteredResult = tradeResult,
             ExitPrice = closeTradeDto.ExitPrice
@@ -237,7 +237,7 @@ public partial class TradesController : ControllerBase
             ManuallyEnteredResult = dto.ManuallyEnteredResult is null
                 ? new None()
                 : MapToResultModel(dto.ManuallyEnteredResult.Value),
-            Balance = dto.Balance,
+            ProfitLoss = dto.ProfitLoss,
             CurrencyId = dto.CurrencyId!.Value,
             EntryPrice = dto.EntryPrice!.Value,
             StopLoss = dto.StopLoss,
@@ -264,7 +264,7 @@ public partial class TradesController : ControllerBase
             ManuallyEnteredResult = dto.ManuallyEnteredResult is null
                 ? new None()
                 : MapToResultModel(dto.ManuallyEnteredResult.Value),
-            Balance = dto.Balance,
+            ProfitLoss = dto.ProfitLoss,
             CurrencyId = dto.CurrencyId,
             EntryPrice = dto.EntryPrice,
             StopLoss = dto.StopLoss is null ? new None() : dto.StopLoss.Value,

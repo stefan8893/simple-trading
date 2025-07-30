@@ -15,14 +15,14 @@ internal class ShortPositionTradeResultAnalyzerDecorator(ITradeResultAnalyzer in
     private static IEnumerable<string> AnalyzeShortPositionPrices(Trade trade, TradeResultAnalyzerConfiguration config)
     {
         var isShortPosition = trade.PositionPrices.IsShortPosition;
-        var hasBalanceResult = config.CalculatedByBalance is not null;
-        if (!isShortPosition || hasBalanceResult)
+        var hasProfitLossResult = config.CalculatedByProfitLoss is not null;
+        if (!isShortPosition || hasProfitLossResult)
             yield break;
 
         var prices = trade.PositionPrices;
-        var balance = trade.Balance!.Value;
+        var profitLoss = trade.ProfitLoss!.Value;
 
-        if (balance > 0 && prices.Exit.HasValue && prices.Exit > prices.Entry)
-            yield return SimpleTradingStrings.ShortPositionExitGreaterThanEntryAndPositiveBalance;
+        if (profitLoss > 0 && prices.Exit.HasValue && prices.Exit > prices.Entry)
+            yield return SimpleTradingStrings.ShortPositionExitGreaterThanEntryAndPositiveProfitLoss;
     }
 }

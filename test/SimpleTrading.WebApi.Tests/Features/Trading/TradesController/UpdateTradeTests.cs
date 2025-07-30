@@ -48,7 +48,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             Opened = now,
             Closed = now,
-            Balance = 0m
+            ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -70,7 +70,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
     [Fact]
     public async Task
-        A_trades_result_cannot_be_successfully_updated_since_balance_and_closed_date_are_missing_and_the_trade_is_not_closed()
+        A_trades_result_cannot_be_successfully_updated_since_profitLoss_and_closed_date_are_missing_and_the_trade_is_not_closed()
     {
         // arrange
         var client = await CreateClient();
@@ -108,7 +108,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             Opened = now,
             Closed = now,
-            Balance = 0m
+            ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -138,7 +138,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             Opened = now,
             Closed = now,
-            Balance = 0m
+            ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -156,7 +156,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         Assert.NotNull(updatedTrade);
         Assert.NotNull(updatedTrade.Result);
         Assert.Equal(Result.BreakEven, updatedTrade.Result.Name);
-        Assert.Equal(ResultSource.CalculatedByBalance, updatedTrade.Result.Source);
+        Assert.Equal(ResultSource.CalculatedByProfitLoss, updatedTrade.Result.Source);
     }
 
     [Fact]

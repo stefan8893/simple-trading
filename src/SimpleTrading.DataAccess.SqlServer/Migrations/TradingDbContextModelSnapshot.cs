@@ -18,7 +18,7 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -151,10 +151,6 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("Balance")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("decimal(24,8)");
-
                     b.Property<DateTime?>("Closed")
                         .HasColumnType("datetime2");
 
@@ -173,6 +169,10 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
 
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("ProfitLoss")
+                        .HasPrecision(24, 8)
+                        .HasColumnType("decimal(24,8)");
 
                     b.Property<decimal>("Size")
                         .HasPrecision(24, 8)

@@ -10,7 +10,7 @@ public class SearchQueryDto : IPagination
     
     public List<string>? Sort { get; set; }
 
-    /// <example>balance -gt [100]</example>
+    /// <example>profitloss -gt [100]</example>
     /// <example>size -eq [5000]</example>
     /// <example>opened -ge [2024-08-19T00:00:00+02:00]</example>
     public List<string>? Filter { get; set; }

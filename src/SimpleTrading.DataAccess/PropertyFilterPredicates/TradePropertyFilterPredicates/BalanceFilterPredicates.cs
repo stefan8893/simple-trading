@@ -6,63 +6,63 @@ using SimpleTrading.Domain.Trading;
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 [UsedImplicitly]
-public class BalanceEqualToFilterPredicate(IValueParser<decimal?> valueParser)
-    : FilterPredicateBase<Trade, decimal?>(TradeProperty.Balance, Operator.EqualTo, valueParser)
+public class ProfitLossEqualToFilterPredicate(IValueParser<decimal?> valueParser)
+    : FilterPredicateBase<Trade, decimal?>(TradeProperty.ProfitLoss, Operator.EqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal? value)
     {
-        return t => t.Balance == value;
+        return t => t.ProfitLoss == value;
     }
 }
 
 [UsedImplicitly]
-public class BalanceGreaterThanFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.GreaterThan, valueParser)
+public class ProfitLossGreaterThanFilterPredicate(IValueParser<decimal> valueParser)
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.ProfitLoss, Operator.GreaterThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
-        return t => t.Balance != null && t.Balance.Value > value;
+        return t => t.ProfitLoss != null && t.ProfitLoss.Value > value;
     }
 }
 
 [UsedImplicitly]
-public class BalanceGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.GreaterThanOrEqualTo,
+public class ProfitLossGreaterThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.ProfitLoss, Operator.GreaterThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
-        return t => t.Balance != null && t.Balance.Value >= value;
+        return t => t.ProfitLoss != null && t.ProfitLoss.Value >= value;
     }
 }
 
 [UsedImplicitly]
-public class BalanceLessThanFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.LessThan, valueParser)
+public class ProfitLossLessThanFilterPredicate(IValueParser<decimal> valueParser)
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.ProfitLoss, Operator.LessThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
-        return t => t.Balance != null && t.Balance.Value < value;
+        return t => t.ProfitLoss != null && t.ProfitLoss.Value < value;
     }
 }
 
 [UsedImplicitly]
-public class BalanceLessThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
-    : FilterPredicateBase<Trade, decimal>(TradeProperty.Balance, Operator.LessThanOrEqualTo,
+public class ProfitLossLessThanOrEqualToFilterPredicate(IValueParser<decimal> valueParser)
+    : FilterPredicateBase<Trade, decimal>(TradeProperty.ProfitLoss, Operator.LessThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal value)
     {
-        return t => t.Balance != null && t.Balance.Value <= value;
+        return t => t.ProfitLoss != null && t.ProfitLoss.Value <= value;
     }
 }
 
 [UsedImplicitly]
-public class BalanceNotEqualToFilterPredicate(IValueParser<decimal?> valueParser)
-    : FilterPredicateBase<Trade, decimal?>(TradeProperty.Balance, Operator.NotEqualTo, valueParser)
+public class ProfitLossNotEqualToFilterPredicate(IValueParser<decimal?> valueParser)
+    : FilterPredicateBase<Trade, decimal?>(TradeProperty.ProfitLoss, Operator.NotEqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(decimal? value)
     {
-        return t => t.Balance != value;
+        return t => t.ProfitLoss != value;
     }
 }

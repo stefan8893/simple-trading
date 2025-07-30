@@ -1366,7 +1366,7 @@ export class AddTradeDto implements IAddTradeDto {
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: number | undefined;
@@ -1393,7 +1393,7 @@ export class AddTradeDto implements IAddTradeDto {
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
             this.size = _data["size"];
             this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? ResultDtoNullableUpdateValue.fromJS(_data["manuallyEnteredResult"]) : <any>undefined;
-            this.balance = _data["balance"];
+            this.profitLoss = _data["profitLoss"];
             this.currencyId = _data["currencyId"];
             this.entryPrice = _data["entryPrice"];
             this.stopLoss = _data["stopLoss"];
@@ -1424,7 +1424,7 @@ export class AddTradeDto implements IAddTradeDto {
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
         data["size"] = this.size;
         data["manuallyEnteredResult"] = this.manuallyEnteredResult ? this.manuallyEnteredResult.toJSON() : <any>undefined;
-        data["balance"] = this.balance;
+        data["profitLoss"] = this.profitLoss;
         data["currencyId"] = this.currencyId;
         data["entryPrice"] = this.entryPrice;
         data["stopLoss"] = this.stopLoss;
@@ -1448,7 +1448,7 @@ export interface IAddTradeDto {
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: number | undefined;
@@ -1598,7 +1598,7 @@ export interface IAssetDto {
 }
 
 export class CloseTradeDto implements ICloseTradeDto {
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
@@ -1614,7 +1614,7 @@ export class CloseTradeDto implements ICloseTradeDto {
 
     init(_data?: any) {
         if (_data) {
-            this.balance = _data["balance"];
+            this.profitLoss = _data["profitLoss"];
             this.exitPrice = _data["exitPrice"];
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
             this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? ResultDtoNullableUpdateValue.fromJS(_data["manuallyEnteredResult"]) : <any>undefined;
@@ -1630,7 +1630,7 @@ export class CloseTradeDto implements ICloseTradeDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["balance"] = this.balance;
+        data["profitLoss"] = this.profitLoss;
         data["exitPrice"] = this.exitPrice;
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
         data["manuallyEnteredResult"] = this.manuallyEnteredResult ? this.manuallyEnteredResult.toJSON() : <any>undefined;
@@ -1639,7 +1639,7 @@ export class CloseTradeDto implements ICloseTradeDto {
 }
 
 export interface ICloseTradeDto {
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
@@ -2103,7 +2103,7 @@ export class TradeDto implements ITradeDto {
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     result?: ResultDto;
     performance?: number | undefined;
     isClosed?: boolean;
@@ -2116,6 +2116,7 @@ export class TradeDto implements ITradeDto {
     riskRewardRatio?: number | undefined;
     references!: ReferenceDto[];
     notes?: string | undefined;
+    warnings!: string[];
 
     constructor(data?: ITradeDto) {
         if (data) {
@@ -2126,6 +2127,7 @@ export class TradeDto implements ITradeDto {
         }
         if (!data) {
             this.references = [];
+            this.warnings = [];
         }
     }
 
@@ -2139,7 +2141,7 @@ export class TradeDto implements ITradeDto {
             this.size = _data["size"];
             this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : <any>undefined;
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
-            this.balance = _data["balance"];
+            this.profitLoss = _data["profitLoss"];
             this.result = _data["result"];
             this.performance = _data["performance"];
             this.isClosed = _data["isClosed"];
@@ -2156,6 +2158,11 @@ export class TradeDto implements ITradeDto {
                     this.references!.push(ReferenceDto.fromJS(item));
             }
             this.notes = _data["notes"];
+            if (Array.isArray(_data["warnings"])) {
+                this.warnings = [] as any;
+                for (let item of _data["warnings"])
+                    this.warnings!.push(item);
+            }
         }
     }
 
@@ -2176,7 +2183,7 @@ export class TradeDto implements ITradeDto {
         data["size"] = this.size;
         data["opened"] = this.opened ? this.opened.toISOString() : <any>undefined;
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
-        data["balance"] = this.balance;
+        data["profitLoss"] = this.profitLoss;
         data["result"] = this.result;
         data["performance"] = this.performance;
         data["isClosed"] = this.isClosed;
@@ -2193,6 +2200,11 @@ export class TradeDto implements ITradeDto {
                 data["references"].push(item.toJSON());
         }
         data["notes"] = this.notes;
+        if (Array.isArray(this.warnings)) {
+            data["warnings"] = [];
+            for (let item of this.warnings)
+                data["warnings"].push(item);
+        }
         return data;
     }
 }
@@ -2206,7 +2218,7 @@ export interface ITradeDto {
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     result?: ResultDto;
     performance?: number | undefined;
     isClosed?: boolean;
@@ -2219,6 +2231,7 @@ export interface ITradeDto {
     riskRewardRatio?: number | undefined;
     references: ReferenceDto[];
     notes?: string | undefined;
+    warnings: string[];
 }
 
 export class TradeDtoPageDto implements ITradeDtoPageDto {
@@ -2392,7 +2405,7 @@ export class UpdateTradeDto implements IUpdateTradeDto {
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: DecimalNullableUpdateValue;
@@ -2417,7 +2430,7 @@ export class UpdateTradeDto implements IUpdateTradeDto {
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : <any>undefined;
             this.size = _data["size"];
             this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? ResultDtoNullableUpdateValue.fromJS(_data["manuallyEnteredResult"]) : <any>undefined;
-            this.balance = _data["balance"];
+            this.profitLoss = _data["profitLoss"];
             this.currencyId = _data["currencyId"];
             this.entryPrice = _data["entryPrice"];
             this.stopLoss = _data["stopLoss"] ? DecimalNullableUpdateValue.fromJS(_data["stopLoss"]) : <any>undefined;
@@ -2442,7 +2455,7 @@ export class UpdateTradeDto implements IUpdateTradeDto {
         data["closed"] = this.closed ? this.closed.toISOString() : <any>undefined;
         data["size"] = this.size;
         data["manuallyEnteredResult"] = this.manuallyEnteredResult ? this.manuallyEnteredResult.toJSON() : <any>undefined;
-        data["balance"] = this.balance;
+        data["profitLoss"] = this.profitLoss;
         data["currencyId"] = this.currencyId;
         data["entryPrice"] = this.entryPrice;
         data["stopLoss"] = this.stopLoss ? this.stopLoss.toJSON() : <any>undefined;
@@ -2460,7 +2473,7 @@ export interface IUpdateTradeDto {
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: DecimalNullableUpdateValue;

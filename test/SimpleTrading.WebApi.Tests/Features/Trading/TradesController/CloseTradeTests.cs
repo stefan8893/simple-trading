@@ -23,7 +23,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(tradeId,
-                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), ProfitLoss = -20d, ExitPrice = 1.05});
         }
 
         // assert
@@ -43,7 +43,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(notExistingTradeId,
-                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = -20d, ExitPrice = 1.05});
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), ProfitLoss = -20d, ExitPrice = 1.05});
         }
 
         // assert
@@ -54,7 +54,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
     }
 
     [Fact]
-    public async Task The_balance_must_not_be_null()
+    public async Task The_profitLoss_must_not_be_null()
     {
         // arrange
         var client = await CreateClient();
@@ -66,15 +66,15 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(notExistingTradeId,
-                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), Balance = null, ExitPrice = 1.05});
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow), ProfitLoss = null, ExitPrice = 1.05});
         }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("balance", error.Identifier);
-        Assert.Equal("'Bilanz' darf kein Nullwert sein.", Assert.Single(error.Messages));
+        Assert.Equal("profitLoss", error.Identifier);
+        Assert.Equal("'Gewinn/Verlust' darf kein Nullwert sein.", Assert.Single(error.Messages));
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(notExistingTradeId,
-                new CloseTradeDto {Closed = null, Balance = 0d, ExitPrice = 1.05});
+                new CloseTradeDto {Closed = null, ProfitLoss = 0d, ExitPrice = 1.05});
         }
 
         // assert
@@ -116,7 +116,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(trade.Id,
-                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow).AddDays(-1), Balance = -50d, ExitPrice = 1.05});
+                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow).AddDays(-1), ProfitLoss = -50d, ExitPrice = 1.05});
         }
 
         // assert
@@ -140,7 +140,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var result = await client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = new DateTimeOffset(_utcNow),
-            Balance = -50d,
+            ProfitLoss = -50d,
             ExitPrice = 1.05
         });
 
@@ -165,7 +165,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         await client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = new DateTimeOffset(_utcNow),
-            Balance = -50d,
+            ProfitLoss = -50d,
             ExitPrice = 1.05
         });
 
@@ -191,7 +191,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         var result = await client.CloseTradeAsync(trade.Id, new CloseTradeDto
         {
             Closed = closedInNewYork,
-            Balance = -50d,
+            ProfitLoss = -50d,
             ExitPrice = 1.05
         });
 

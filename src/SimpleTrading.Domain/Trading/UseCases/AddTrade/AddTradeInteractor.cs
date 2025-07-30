@@ -105,16 +105,16 @@ public class AddTradeInteractor(
     {
         return model switch
         {
-            {Balance: not null, Closed: not null} => Map(Close()),
-            {Balance: null, Closed: null} => new NothingToClose(trade),
-            _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndBalance)
+            {ProfitLoss: not null, Closed: not null} => Map(Close()),
+            {ProfitLoss: null, Closed: null} => new NothingToClose(trade),
+            _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndProfitLoss)
         };
 
         OneOf<Completed<CloseTradeResult>, BusinessError> Close()
         {
             return trade.Close(new CloseTradeConfiguration(
                 model.Closed!.Value.UtcDateTime,
-                model.Balance!.Value,
+                model.ProfitLoss!.Value,
                 utcNow)
             {
                 ExitPrice = model.ExitPrice,

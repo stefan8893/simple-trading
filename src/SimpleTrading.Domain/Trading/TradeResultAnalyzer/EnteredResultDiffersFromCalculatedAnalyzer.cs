@@ -13,22 +13,22 @@ internal class EnteredResultDiffersFromCalculatedAnalyzer : ITradeResultAnalyzer
             config.CalculatedResult!.Name != config.ManuallyEntered!.Name)
             yield return CreateManuallyEnteredAndCalculatedResultMismatchWarning(config);
 
-        var hasCalculatedByBalanceResult = config.CalculatedByBalance is not null;
+        var hasCalculatedByProfitLossResult = config.CalculatedByProfitLoss is not null;
         var hasCalculatedByPositionPricesResult = config.CalculatedByPositionPrices is not null;
 
-        if (hasCalculatedByBalanceResult && hasCalculatedByPositionPricesResult &&
-            config.CalculatedByBalance!.Name != config.CalculatedByPositionPrices!.Name)
+        if (hasCalculatedByProfitLossResult && hasCalculatedByPositionPricesResult &&
+            config.CalculatedByProfitLoss!.Name != config.CalculatedByPositionPrices!.Name)
             yield return CreateMismatchBetweenCalculatedResultsWarning(config);
     }
 
     private static string CreateMismatchBetweenCalculatedResultsWarning(TradeResultAnalyzerConfiguration config)
     {
-        var balanceResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByBalance!.Name);
+        var profitLossResultName = SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByProfitLoss!.Name);
         var positionResultName =
             SimpleTradingStrings.ResourceManager.GetString(config.CalculatedByPositionPrices!.Name);
 
         return string.Format(SimpleTradingStrings.CalculatedResultsMismatch,
-            positionResultName, balanceResultName);
+            positionResultName, profitLossResultName);
     }
 
     private static string CreateManuallyEnteredAndCalculatedResultMismatchWarning(

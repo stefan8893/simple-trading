@@ -108,7 +108,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 0,
+            ProfitLoss = 0,
             ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = null},
             Size = 5000,
             CurrencyId = currency.Id,
@@ -143,7 +143,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             ProfileId = profile.Id,
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 0,
+            ProfitLoss = 0,
             ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss},
             Size = 5000,
             CurrencyId = currency.Id,
@@ -228,7 +228,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_closed_trade_cant_be_added_if_the_balance_is_missing()
+    public async Task A_closed_trade_cant_be_added_if_the_profitLoss_is_missing()
     {
         // arrange
         var client = await CreateClient();
@@ -251,7 +251,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 Closed = _utcNow,
                 ManuallyEnteredResult = null,
                 Size = 5000,
-                Balance = null,
+                ProfitLoss = null,
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08
             });
@@ -261,8 +261,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("balance", error.Identifier);
-        Assert.Equal("'Bilanz' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist.",
+        Assert.Equal("profitLoss", error.Identifier);
+        Assert.Equal("'Gewinn/Verlust' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist.",
             Assert.Single(error.Messages));
     }
 
@@ -289,7 +289,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 Opened = _utcNow,
                 Closed = null,
                 Size = 5000,
-                Balance = 50,
+                ProfitLoss = 50,
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08
             });
@@ -300,7 +300,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("closed", error.Identifier);
-        Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Bilanz' angegeben ist.",
+        Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Gewinn/Verlust' angegeben ist.",
             Assert.Single(error.Messages));
     }
 

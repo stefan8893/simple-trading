@@ -36,9 +36,9 @@ public class CloseTradeTests : TestBase
     }
 
     [Fact]
-    public void A_trade_is_considered_as_closed_when_closed_date_and_balance_are_specified()
+    public void A_trade_is_considered_as_closed_when_closed_date_and_profitLoss_are_specified()
     {
-        var trade = (TestData.Trade.Default with {Opened = _utcNow, Closed = _utcNow, Balance = 50m}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow, Closed = _utcNow, ProfitLoss = 50m}).Build();
 
         var isClosed = trade.IsClosed;
 
@@ -112,7 +112,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        The_result_gets_calculated_by_the_balance_if_ExitPrice_SL_and_TP_are_missing_and_the_user_has_not_entered_the_result_manually()
+        The_result_gets_calculated_by_the_profitLoss_if_ExitPrice_SL_and_TP_are_missing_and_the_user_has_not_entered_the_result_manually()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -125,12 +125,12 @@ public class CloseTradeTests : TestBase
         Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         Assert.True(trade.IsClosed);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
-        Assert.Equal(ResultSource.CalculatedByBalance, trade.Result?.Source);
+        Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
     }
 
     [Fact]
     public void
-        The_result_gets_calculated_by_the_balance_if_SL_and_TP_are_missing_and_the_user_has_not_entered_the_result_manually()
+        The_result_gets_calculated_by_the_profitLoss_if_SL_and_TP_are_missing_and_the_user_has_not_entered_the_result_manually()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -148,12 +148,12 @@ public class CloseTradeTests : TestBase
         
         Assert.True(trade.IsClosed);
         Assert.Equal(Result.Loss, trade.Result?.Name);
-        Assert.Equal(ResultSource.CalculatedByBalance, trade.Result?.Source);
+        Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
     }
 
     [Fact]
     public void
-        If_the_balance_is_zero_and_the_entry_and_exit_prices_are_not_equal_the_trade_gets_closed_but_returns_a_warning()
+        If_the_profitLoss_is_zero_and_the_entry_and_exit_prices_are_not_equal_the_trade_gets_closed_but_returns_a_warning()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -169,13 +169,13 @@ public class CloseTradeTests : TestBase
         // assert
         var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("The balance is 0, but the position indicates a balance not equal to 0.", singleWarning);
+        Assert.Equal("Profit/loss is 0, but the position indicates a profit or a loss.", singleWarning);
         Assert.True(trade.IsClosed);
     }
 
     [Fact]
     public void
-        If_the_balance_is_below_zero_and_the_entry_and_exit_prices_are_equal_the_trade_gets_closed_but_returns_a_warning()
+        If_the_profitLoss_is_below_zero_and_the_entry_and_exit_prices_are_equal_the_trade_gets_closed_but_returns_a_warning()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -191,7 +191,7 @@ public class CloseTradeTests : TestBase
         // assert
         var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("The balance is not 0, but the position indicates a balance equal to 0.", singleWarning);
+        Assert.Equal("Profit/loss is not 0, but the position indicates a break-even trade.", singleWarning);
         Assert.True(trade.IsClosed);
     }
 
@@ -216,7 +216,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        The_result_gets_calculated_by_the_balance_if_ExitPrice_and_SL_are_specified_and_the_user_has_not_entered_the_result_manually()
+        The_result_gets_calculated_by_the_profitLoss_if_ExitPrice_and_SL_are_specified_and_the_user_has_not_entered_the_result_manually()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -233,7 +233,7 @@ public class CloseTradeTests : TestBase
         Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         Assert.True(trade.IsClosed);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
-        Assert.Equal(ResultSource.CalculatedByBalance, trade.Result?.Source);
+        Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
     }
 
     [Fact]
@@ -286,7 +286,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        A_BreakEven_result_given_as_input_overrides_all_calculated_results_but_returns_a_warning_because_the_result_differs_from_the_calculated_by_balance_result()
+        A_BreakEven_result_given_as_input_overrides_all_calculated_results_but_returns_a_warning_because_the_result_differs_from_the_calculated_by_profitLoss_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -372,7 +372,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        The_result_gets_calculated_by_the_positions_prices_even_the_SL_is_missing_but_only_if_it_equal_to_the_balance_result()
+        The_result_gets_calculated_by_the_positions_prices_even_the_SL_is_missing_but_only_if_it_equal_to_the_profitLoss_result()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -567,7 +567,7 @@ public class CloseTradeTests : TestBase
     }
 
     [Fact]
-    public void A_loss_result_calculated_by_position_prices_and_a_positive_balances_is_acceptable_but_returns_warnings()
+    public void A_loss_result_calculated_by_position_prices_and_a_positive_profitLosss_is_acceptable_but_returns_warnings()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -578,7 +578,7 @@ public class CloseTradeTests : TestBase
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
-            Balance = 10m,
+            ProfitLoss = 10m,
             ExitPrice = 1.0m
         };
 
@@ -588,12 +588,12 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("The balance is positive, but your long position indicates a loss.", singleWarning);
+        Assert.Equal("You have entered a profit, but your long position indicates a loss.", singleWarning);
     }
 
     [Fact]
     public void
-        If_position_prices_indicate_a_mediocre_result_but_balance_is_negative__the_trade_gets_negatively_closed_and_a_warnings_is_returned()
+        If_position_prices_indicate_a_mediocre_result_but_profitLoss_is_negative__the_trade_gets_negatively_closed_and_a_warnings_is_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -612,7 +612,7 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.", singleWarning);
         
         Assert.True(trade.IsClosed);
         Assert.Equal(Result.Loss, trade.Result?.Name);
@@ -620,7 +620,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        If_position_prices_indicate_a_loss_but_balance_is_positive__the_trade_gets_closed_without_a_result_and_a_warning_is_returned()
+        If_position_prices_indicate_a_loss_but_profitLoss_is_positive__the_trade_gets_closed_without_a_result_and_a_warning_is_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -640,14 +640,14 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("The balance is positive, but your short position indicates a loss.", singleWarning);
+        Assert.Equal("You have entered a profit, but your short position indicates a loss.", singleWarning);
         
         Assert.Null(trade.Result);
     }
 
     [Fact]
     public void
-        If_position_prices_indicate_a_loss_of_a_long_position_but_balance_is_positive__the_trade_gets_closed_without_a_result_and_a_warning_is_returned()
+        If_position_prices_indicate_a_loss_of_a_long_position_but_profitLoss_is_positive__the_trade_gets_closed_without_a_result_and_a_warning_is_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -667,13 +667,13 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("The balance is positive, but your long position indicates a loss.", singleWarning);
+        Assert.Equal("You have entered a profit, but your long position indicates a loss.", singleWarning);
         
         Assert.Null(trade.Result);
     }
 
     [Fact]
-    public void Performance_is_zero_if_the_result_break_even_calculated_by_balance()
+    public void Performance_is_zero_if_the_result_break_even_calculated_by_profitLoss()
     {
         var trade = TestData.Trade.Default.Build();
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub);
@@ -686,7 +686,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        A_short_position_with_an_exit_price_below_entry_and_a_negative_balance_has_no_result_and_a_warning_is_returned()
+        A_short_position_with_an_exit_price_below_entry_and_a_negative_profitLoss_has_no_result_and_a_warning_is_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -708,12 +708,12 @@ public class CloseTradeTests : TestBase
         //assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.", singleWarning);
     }
 
     [Fact]
     public void
-        The_given_result_is_BreakEven_the_balance_is_negative_and_the_position_prices_indicate_a_mediocre_result_in_this_case_the_given_result_is_taken_and_warnings_will_be_returned()
+        The_given_result_is_BreakEven_the_profitLoss_is_negative_and_the_position_prices_indicate_a_mediocre_result_in_this_case_the_given_result_is_taken_and_warnings_will_be_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -734,12 +734,12 @@ public class CloseTradeTests : TestBase
         var warnings =  Assert.IsType<Completed<CloseTradeResult>>(response.Value).Data.Warnings.ToList();
         Assert.Equal(2, warnings.Count);
         Assert.Contains("Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.", warnings);
-        Assert.Contains("Your position indicates the result 'Mediocre', but based on the balance it is 'Loss'.", warnings);
+        Assert.Contains("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.", warnings);
     }
 
     [Fact]
     public void
-        Long_position_indicates_a_mediocre_result_but_the_balance_is_zero__the_trade_gets_closed_as_BreakEven_but_a_warning_is_returned()
+        Long_position_indicates_a_mediocre_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_but_a_warning_is_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
@@ -761,12 +761,12 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Mediocre', but based on the balance it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
     public void
-        Long_position_indicates_a_loss_result_but_the_balance_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
+        Long_position_indicates_a_loss_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -788,12 +788,12 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
     public void
-        Short_position_indicates_a_win_result_but_the_balance_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
+        Short_position_indicates_a_win_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
@@ -815,12 +815,12 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Win', but based on the balance it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Win', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
     public void
-        Short_position_indicates_a_loss_result_but_the_balance_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
+        Short_position_indicates_a_loss_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
@@ -842,7 +842,7 @@ public class CloseTradeTests : TestBase
         // assert
         var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Loss', but based on the balance it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
     }
 
     [Fact]
@@ -853,7 +853,7 @@ public class CloseTradeTests : TestBase
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 0m
+            ProfitLoss = 0m
         }).Build();
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
@@ -876,7 +876,7 @@ public class CloseTradeTests : TestBase
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 0m
+            ProfitLoss = 0m
         }).Build();
 
         var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)

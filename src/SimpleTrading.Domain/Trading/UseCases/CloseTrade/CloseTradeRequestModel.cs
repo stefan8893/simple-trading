@@ -9,11 +9,11 @@ namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 public class CloseTradeRequestModel(
     Guid tradeId,
     DateTimeOffset closed,
-    decimal balance)
+    decimal profitLoss)
 {
     public Guid TradeId { get; init; } = tradeId;
     public DateTimeOffset Closed { get; init; } = closed;
-    public decimal Balance { get; init; } = balance;
+    public decimal ProfitLoss { get; init; } = profitLoss;
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();
     public decimal? ExitPrice { get; init; }
 }

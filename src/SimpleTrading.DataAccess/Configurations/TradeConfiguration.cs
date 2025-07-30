@@ -37,7 +37,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         builder.Property(x => x.Size)
             .HasPrecision(24, 8);
 
-        builder.Property(x => x.Balance)
+        builder.Property(x => x.ProfitLoss)
             .HasPrecision(24, 8);
 
         builder.OwnsOne(x => x.Result,

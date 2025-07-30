@@ -10,7 +10,7 @@ public class UpdateTradeDto
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; set; }
     public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
-    public decimal? Balance { get; set; }
+    public decimal? ProfitLoss { get; set; }
     public Guid? CurrencyId { get; set; }
     public decimal? EntryPrice { get; set; }
     public UpdateValue<decimal?>? StopLoss { get; set; }

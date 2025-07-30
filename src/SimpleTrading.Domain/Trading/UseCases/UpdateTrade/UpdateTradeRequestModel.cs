@@ -18,7 +18,7 @@ public record UpdateTradeRequestModel
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; } = new None();
-    public decimal? Balance { get; set; }
+    public decimal? ProfitLoss { get; set; }
     public Guid? CurrencyId { get; init; }
     public decimal? EntryPrice { get; init; }
     public OneOf<decimal?, None> StopLoss { get; set; }
@@ -68,11 +68,11 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .WithName(SimpleTradingStrings.TradeSize)
             .When(x => x.Size.HasValue);
 
-        RuleFor(x => x.Balance)
+        RuleFor(x => x.ProfitLoss)
             .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
             .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
-                SimpleTradingStrings.Balance))
-            .When(x => x.Balance.HasValue);
+                SimpleTradingStrings.ProfitLoss))
+            .When(x => x.ProfitLoss.HasValue);
 
         RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .IsInEnum()

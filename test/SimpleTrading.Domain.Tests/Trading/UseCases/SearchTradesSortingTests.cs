@@ -43,7 +43,7 @@ public class SearchTradesSortingTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosed,
                 Closed = openedClosed,
-                Balance = 50m * x,
+                ProfitLoss = 50m * x,
                 Size = 5000m * x,
                 Result = (ResultModel) x
             })
@@ -122,7 +122,7 @@ public class SearchTradesSortingTests : DomainTests
                 ProfileOrId = profile,
                 Opened = openedClosedDateTime.AddHours(x),
                 Closed = openedClosedDateTime.AddHours(x),
-                Balance = 50m
+                ProfitLoss = 50m
             })
             .Select(x => x.Build());
 
@@ -156,14 +156,14 @@ public class SearchTradesSortingTests : DomainTests
         // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 2)
-            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Balance = 50m * x})
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, ProfitLoss = 50m * x})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
-        var sorting = new SortModel("   Balance ", false);
+        var sorting = new SortModel("   ProfitLoss ", false);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
@@ -175,7 +175,7 @@ public class SearchTradesSortingTests : DomainTests
         // assert
         var badInput = Assert.IsType<BadInput>(response.Value);
         var error = Assert.Single(badInput.ValidationResult.Errors);
-        Assert.Equal("The sorting based on '   Balance ' does not work.", error.ErrorMessage);
+        Assert.Equal("The sorting based on '   ProfitLoss ' does not work.", error.ErrorMessage);
         Assert.Equal("Sort[0].Property", error.PropertyName);
     }
 }

@@ -45,6 +45,9 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
                  namespace {{context.Interactor.ContainingNamespace.ToDisplayString()}};
 
+                 /// <summary>
+                 /// Concrete Interactor <see cref="{{context.Interactor.ToDisplayString()}}"/>
+                 /// </summary>
                  public interface {{context.InteractorInterfaceName}}
                  {
                      Task<{{context.ResponseModel.ToDisplayString()}}> Execute({{OnContainsRequestModel(requestModelParameter)}});

@@ -25,7 +25,7 @@ public record AddTradeDto
     public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
 
     /// <example>125</example>
-    public decimal? Balance { get; set; }
+    public decimal? ProfitLoss { get; set; }
 
     /// <example>dd1f1281-7ec9-450e-8dd8-da1f4eb78629</example>
     public Guid? CurrencyId { get; set; }

@@ -15,7 +15,7 @@ public enum ResultDto
 
 public class CloseTradeDto
 {
-    public decimal? Balance { get; set; }
+    public decimal? ProfitLoss { get; set; }
     public decimal? ExitPrice { get; set; }
     public DateTimeOffset? Closed { get; set; }
     public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
@@ -26,9 +26,9 @@ public class CloseTradeDtoValidator : AbstractValidator<CloseTradeDto>
 {
     public CloseTradeDtoValidator()
     {
-        RuleFor(x => x.Balance)
+        RuleFor(x => x.ProfitLoss)
             .NotNull()
-            .WithName(SimpleTradingStrings.Balance);
+            .WithName(SimpleTradingStrings.ProfitLoss);
 
         RuleFor(x => x.Closed)
             .NotNull()

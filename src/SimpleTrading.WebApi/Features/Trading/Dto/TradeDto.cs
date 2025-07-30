@@ -13,7 +13,7 @@ public class TradeDto
     public decimal Size { get; init; }
     public DateTimeOffset Opened { get; init; }
     public DateTimeOffset? Closed { get; init; }
-    public decimal? Balance { get; init; }
+    public decimal? ProfitLoss { get; init; }
     public ResultDto? Result { get; init; }
     public short? Performance { get; init; }
     public bool IsClosed { get; init; }
@@ -40,7 +40,7 @@ public class TradeDto
             Size = model.Size,
             Opened = model.Opened,
             Closed = model.Closed,
-            Balance = model.Balance,
+            ProfitLoss = model.ProfitLoss,
             Result = MapToResultDto(model.Result),
             Performance = model.Performance,
             IsClosed = model.IsClosed,

@@ -240,13 +240,14 @@ export interface IAddReferenceDto {
     notes?: string | undefined;
 }
 export declare class AddTradeDto implements IAddTradeDto {
+    dryRun?: boolean | undefined;
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: number | undefined;
@@ -260,13 +261,14 @@ export declare class AddTradeDto implements IAddTradeDto {
     toJSON(data?: any): any;
 }
 export interface IAddTradeDto {
+    dryRun?: boolean | undefined;
     assetId?: string | undefined;
     profileId?: string | undefined;
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: number | undefined;
@@ -316,7 +318,7 @@ export interface IAssetDto {
     name: string;
 }
 export declare class CloseTradeDto implements ICloseTradeDto {
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
@@ -326,7 +328,7 @@ export declare class CloseTradeDto implements ICloseTradeDto {
     toJSON(data?: any): any;
 }
 export interface ICloseTradeDto {
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
@@ -472,7 +474,7 @@ export declare class TradeDto implements ITradeDto {
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     result?: ResultDto;
     performance?: number | undefined;
     isClosed?: boolean;
@@ -485,6 +487,7 @@ export declare class TradeDto implements ITradeDto {
     riskRewardRatio?: number | undefined;
     references: ReferenceDto[];
     notes?: string | undefined;
+    warnings: string[];
     constructor(data?: ITradeDto);
     init(_data?: any): void;
     static fromJS(data: any): TradeDto;
@@ -499,7 +502,7 @@ export interface ITradeDto {
     size?: number;
     opened?: Date;
     closed?: Date | undefined;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     result?: ResultDto;
     performance?: number | undefined;
     isClosed?: boolean;
@@ -512,6 +515,7 @@ export interface ITradeDto {
     riskRewardRatio?: number | undefined;
     references: ReferenceDto[];
     notes?: string | undefined;
+    warnings: string[];
 }
 export declare class TradeDtoPageDto implements ITradeDtoPageDto {
     data?: TradeDto[];
@@ -570,7 +574,7 @@ export declare class UpdateTradeDto implements IUpdateTradeDto {
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: DecimalNullableUpdateValue;
@@ -589,7 +593,7 @@ export interface IUpdateTradeDto {
     closed?: Date | undefined;
     size?: number | undefined;
     manuallyEnteredResult?: ResultDtoNullableUpdateValue;
-    balance?: number | undefined;
+    profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: DecimalNullableUpdateValue;

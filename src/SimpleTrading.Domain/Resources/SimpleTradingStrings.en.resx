@@ -126,9 +126,6 @@
     <data name="Asset" xml:space="preserve">
     <value>Asset</value>
   </data>
-    <data name="Balance" xml:space="preserve">
-    <value>Balance</value>
-  </data>
     <data name="Currency" xml:space="preserve">
     <value>Currency</value>
   </data>
@@ -147,8 +144,8 @@
     <data name="ClosedBeforeOpened" xml:space="preserve">
         <value>'Closed' must be after 'Opened'.</value>
     </data>
-    <data name="ClosedTradeNeedsClosedAndBalance" xml:space="preserve">
-        <value>In order to add a closed trade, you must specify 'Balance' and 'Closed'.</value>
+    <data name="ClosedTradeNeedsClosedAndProfitLoss" xml:space="preserve">
+        <value>In order to add a closed trade, you must specify 'Profit/Loss' and 'Closed'.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Invalid link.</value>
@@ -204,20 +201,20 @@
     <data name="CalculatedAndManualResultMismatch" xml:space="preserve">
         <value>Your trade indicates a '{0}' result, but you have entered '{1}'.</value>
     </data>
-    <data name="BalanceNotZeroAndExitEntryPricesSame" xml:space="preserve">
-        <value>The balance is not 0, but the position indicates a balance equal to 0.</value>
+    <data name="ProfitLossNotZeroAndExitEntryPricesSame" xml:space="preserve">
+        <value>Profit/loss is not 0, but the position indicates a break-even trade.</value>
     </data>
-    <data name="BalanceZeroAndExitEntryPricesNotTheSame" xml:space="preserve">
-        <value>The balance is 0, but the position indicates a balance not equal to 0.</value>
+    <data name="ProfitLossZeroAndExitEntryPricesNotTheSame" xml:space="preserve">
+        <value>Profit/loss is 0, but the position indicates a profit or a loss.</value>
     </data>
-    <data name="LongPositionExitLessThanEntryAndPositiveBalance" xml:space="preserve">
-        <value>The balance is positive, but your long position indicates a loss.</value>
+    <data name="LongPositionExitLessThanEntryAndPositiveProfitLoss" xml:space="preserve">
+        <value>You have entered a profit, but your long position indicates a loss.</value>
     </data>
-    <data name="ShortPositionExitGreaterThanEntryAndPositiveBalance" xml:space="preserve">
-        <value>The balance is positive, but your short position indicates a loss.</value>
+    <data name="ShortPositionExitGreaterThanEntryAndPositiveProfitLoss" xml:space="preserve">
+        <value>You have entered a profit, but your short position indicates a loss.</value>
     </data>
     <data name="CalculatedResultsMismatch" xml:space="preserve">
-        <value>Your position indicates the result '{0}', but based on the balance it is '{1}'.</value>
+        <value>Your position indicates the result '{0}', but based on your Profit/Loss it is '{1}'.</value>
     </data>
     <data name="XMustNotBeEmptyIfYIsPresent" xml:space="preserve">
         <value>'{0}' must not be empty, if '{1}' is specified.</value>
@@ -273,8 +270,8 @@
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Invalid filter format.</value>
     </data>
-    <data name="BalanceAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
-        <value>The result can only be overridden if 'Balance' and 'Closed' are specified.</value>
+    <data name="ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
+        <value>The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.</value>
     </data>
     <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
         <value>'{0}' can only be updated, if the trade has already been closed.</value>
@@ -287,5 +284,8 @@
     </data>
     <data name="TimezoneIsInvalid" xml:space="preserve">
         <value>'{0}' is invalid.</value>
+    </data>
+    <data name="ProfitLoss" xml:space="preserve">
+        <value>Profit/Loss</value>
     </data>
 </root>

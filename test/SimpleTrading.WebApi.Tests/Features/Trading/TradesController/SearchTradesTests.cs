@@ -105,12 +105,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task Balance_filter_with_date_time_as_comparison_value_returns_a_bad_request()
+    public async Task ProfitLoss_filter_with_date_time_as_comparison_value_returns_a_bad_request()
     {
         // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
-        const string searchFilter = "Balance -gt [2024-08-19T11:00Z]";
+        const string searchFilter = "ProfitLoss -gt [2024-08-19T11:00Z]";
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -128,12 +128,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task Balance_filter_with_a_comparison_value_that_does_not_contain_brackets_is_not_valid()
+    public async Task ProfitLoss_filter_with_a_comparison_value_that_does_not_contain_brackets_is_not_valid()
     {
         // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
-        const string searchFilter = "Balance -gt 500";
+        const string searchFilter = "ProfitLoss -gt 500";
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -164,7 +164,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
                 ProfileOrId = profile,
                 Opened = now,
                 Closed = now,
-                Balance = 500m * x
+                ProfitLoss = 500m * x
             })
             .Select(x => x.Build());
 
@@ -172,7 +172,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync();
 
-        const string searchFilter = "    Balance   -gt   [500]    ";
+        const string searchFilter = "    ProfitLoss   -gt   [500]    ";
 
         // act
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
@@ -272,8 +272,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
                 ProfileOrId = profile,
                 Opened = openedClosedDate,
                 Closed = openedClosedDate,
-                Balance = 500m * x,
-                Result = (ResultModel)x
+                ProfitLoss = 500m * x,
+                Result = (ResultModel) x
             })
             .Select(x => x.Build());
 

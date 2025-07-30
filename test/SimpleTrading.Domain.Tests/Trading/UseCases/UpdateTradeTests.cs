@@ -50,7 +50,7 @@ public class UpdateTradeTests : DomainTests
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 0
+            ProfitLoss = 0
         }).Build();
 
         DbContext.Trades.Add(trade);
@@ -335,7 +335,7 @@ public class UpdateTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task You_cant_update_the_balance_if_the_trade_has_not_yet_been_closed()
+    public async Task You_cant_update_the_profitLoss_if_the_trade_has_not_yet_been_closed()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
@@ -346,7 +346,7 @@ public class UpdateTradeTests : DomainTests
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Balance = 50m
+            ProfitLoss = 50m
         };
 
         // act
@@ -355,17 +355,17 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = Assert.IsType<BadInput>(response.Value);
         var error = Assert.Single(badInput.ValidationResult.Errors);
-        Assert.Equal("'Balance' can only be updated, if the trade has already been closed.", error.ErrorMessage);
-        Assert.Equal("Balance", error.PropertyName);
+        Assert.Equal("'Profit/Loss' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("ProfitLoss", error.PropertyName);
     }
 
     [Fact]
-    public async Task The_balance_of_a_trade_can_be_updated_when_a_trade_is_finished()
+    public async Task The_profitLoss_of_a_trade_can_be_updated_when_a_trade_is_finished()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
         _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
-        const decimal newBalance = 100m;
+        const decimal newProfitLoss = 100m;
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();
@@ -373,7 +373,7 @@ public class UpdateTradeTests : DomainTests
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Balance = newBalance
+            ProfitLoss = newProfitLoss
         };
 
         // act
@@ -384,7 +384,7 @@ public class UpdateTradeTests : DomainTests
         
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.NotNull(updatedTrade);
-        Assert.Equal(newBalance, updatedTrade.Balance);
+        Assert.Equal(newProfitLoss, updatedTrade.ProfitLoss);
     }
 
     [Fact]
@@ -458,7 +458,7 @@ public class UpdateTradeTests : DomainTests
 
         var trade = (TestData.Trade.Default with
                 {
-                    Balance = 500,
+                    ProfitLoss = 500,
                     Opened = UtcNowStub(),
                     Closed = UtcNowStub(),
                     PositionPrices = oldPositionPrice
@@ -497,7 +497,7 @@ public class UpdateTradeTests : DomainTests
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 500m,
+            ProfitLoss = 500m,
             Result = ResultModel.Win
         }).Build();
         DbContext.Trades.Add(trade);
@@ -583,7 +583,7 @@ public class UpdateTradeTests : DomainTests
         {
             Opened = _utcNow,
             Closed = _utcNow,
-            Balance = 0m
+            ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync();

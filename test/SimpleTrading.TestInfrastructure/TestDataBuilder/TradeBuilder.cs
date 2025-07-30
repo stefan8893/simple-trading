@@ -16,7 +16,7 @@ public static partial class TestData
         public decimal Size { get; init; } = 10_000m;
         public DateTime Opened { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
         public DateTime? Closed { get; init; }
-        public decimal? Balance { get; init; }
+        public decimal? ProfitLoss { get; init; }
         public OneOf<ResultModel?, None> Result { get; init; } = new None();
         public OneOf<Guid, Currency, Domain.Trading.Currency> CurrencyOrId { get; init; } = Currency.Default;
 
@@ -73,9 +73,9 @@ public static partial class TestData
                 Created = Created
             };
 
-            if (Closed.HasValue && Balance.HasValue)
+            if (Closed.HasValue && ProfitLoss.HasValue)
                 trade.Close(new CloseTradeConfiguration(Closed.Value,
-                    Balance.Value,
+                    ProfitLoss.Value,
                     () => opened)
                 {
                     ExitPrice = positionPrices.Exit,

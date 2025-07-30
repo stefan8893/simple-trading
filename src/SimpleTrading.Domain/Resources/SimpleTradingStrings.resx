@@ -126,9 +126,6 @@
     <data name="Asset" xml:space="preserve">
     <value>Asset</value>
   </data>
-    <data name="Balance" xml:space="preserve">
-    <value>Bilanz</value>
-  </data>
     <data name="Currency" xml:space="preserve">
     <value>Währung</value>
   </data>
@@ -147,8 +144,8 @@
     <data name="ClosedBeforeOpened" xml:space="preserve">
         <value>'Abgeschlossen' muss nach 'Eröffnet' liegen.</value>
     </data>
-    <data name="ClosedTradeNeedsClosedAndBalance" xml:space="preserve">
-        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Bilanz' und 'Abgeschlossen' angeben.</value>
+    <data name="ClosedTradeNeedsClosedAndProfitLoss" xml:space="preserve">
+        <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Gewinn/Verlust' und 'Abgeschlossen' angeben.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Ungültiger Link.</value>
@@ -204,20 +201,20 @@
     <data name="CalculatedAndManualResultMismatch" xml:space="preserve">
         <value>Ihr Trade deutet auf das Ergebnis '{0}' hin, aber Sie haben '{1}' angegeben.</value>
     </data>
-    <data name="BalanceNotZeroAndExitEntryPricesSame" xml:space="preserve">
-        <value>Die Bilanz ist nicht 0, aber die Position deutet auf eine Bilanz gleich 0 hin.</value>
+    <data name="ProfitLossNotZeroAndExitEntryPricesSame" xml:space="preserve">
+        <value>Gewinn/Verlust ist nicht 0, aber die Position deutet auf einen kostendeckenden Trade hin.</value>
     </data>
-    <data name="BalanceZeroAndExitEntryPricesNotTheSame" xml:space="preserve">
-        <value>Die Bilanz ist 0, aber die Position deutet auf eine Bilanz ungleich 0 hin.</value>
+    <data name="ProfitLossZeroAndExitEntryPricesNotTheSame" xml:space="preserve">
+        <value>Gewinn/Verlust ist 0, aber die Position deutet auf einen Gewinn oder einen Verlust hin.</value>
     </data>
-    <data name="LongPositionExitLessThanEntryAndPositiveBalance" xml:space="preserve">
-        <value>Die Bilanz ist positiv, aber Ihre Long-Position deutet auf einen Verlust hin.</value>
+    <data name="LongPositionExitLessThanEntryAndPositiveProfitLoss" xml:space="preserve">
+        <value>Sie haben einen Gewinn angegeben, aber Ihre Long-Position deutet auf einen Verlust hin.</value>
     </data>
-    <data name="ShortPositionExitGreaterThanEntryAndPositiveBalance" xml:space="preserve">
-        <value>Die Bilanz ist positiv, aber Ihre Short-Position deutet auf einen Verlust hin.</value>
+    <data name="ShortPositionExitGreaterThanEntryAndPositiveProfitLoss" xml:space="preserve">
+        <value>Sie haben einen Gewinn angegeben, aber Ihre Short-Position deutet auf einen Verlust hin.</value>
     </data>
     <data name="CalculatedResultsMismatch" xml:space="preserve">
-        <value>Ihre Position deutet auf das Ergebnis '{0}' hin, aber anhand der Bilanz ist es '{1}'.</value>
+        <value>Ihre Position deutet auf das Ergebnis '{0}' hin, aber anhand von Gewinn/Verlust ist es '{1}'.</value>
     </data>
     <data name="XMustNotBeEmptyIfYIsPresent" xml:space="preserve">
         <value>'{0}' darf nicht leer sein, wenn '{1}' angegeben ist.</value>
@@ -273,8 +270,8 @@
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Ungültiges Filterformat.</value>
     </data>
-    <data name="BalanceAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
-        <value>Das Ergebnis kann nur überschrieben werden, wenn 'Bilanz' und 'Abgeschlossen' angegeben sind.</value>
+    <data name="ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
+        <value>Das Ergebnis kann nur überschrieben werden, wenn 'Gewinn/Verlust' und 'Abgeschlossen' angegeben sind.</value>
     </data>
     <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
         <value>'{0}' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.</value>
@@ -287,5 +284,8 @@
     </data>
     <data name="TimezoneIsInvalid" xml:space="preserve">
         <value>'{0}' ist ungültig.</value>
+    </data>
+    <data name="ProfitLoss" xml:space="preserve">
+        <value>Gewinn/Verlust</value>
     </data>
 </root>
