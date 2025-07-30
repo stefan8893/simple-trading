@@ -5,11 +5,12 @@ namespace SimpleTrading.Domain.Generators;
 public class InteractorContext(
     INamedTypeSymbol interactor,
     INamedTypeSymbol closedInteractorInterface,
+    INamedTypeSymbol? requestModel,
     INamedTypeSymbol responseModel)
 {
     public INamedTypeSymbol Interactor { get; } = interactor;
     public INamedTypeSymbol ClosedInteractorInterface { get; } = closedInteractorInterface;
-    public INamedTypeSymbol? RequestModel { get; set; }
+    public INamedTypeSymbol? RequestModel { get; } = requestModel;
     public INamedTypeSymbol ResponseModel { get; } = responseModel;
 
     public string InteractorName => Interactor.Name.Replace("Interactor", "");

@@ -2,7 +2,7 @@
 
 namespace SimpleTrading.Domain.Analyzers.SymbolCollector;
 
-public class AbstractValidatorSymbolCollector(CancellationToken cancellationToken)
+public class FluentValidatorSymbolCollector(CancellationToken cancellationToken)
     : SymbolCollectorBase(cancellationToken)
 {
     protected override bool SatisfiesFilterPredicate(INamedTypeSymbol symbol)

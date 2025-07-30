@@ -18,7 +18,7 @@ public abstract class SymbolCollectorBase(
         _collector.Clear();
         Visit(symbol);
 
-        return _collector.ToImmutableArray();
+        return [.._collector];
     }
 
     public override void VisitAssembly(IAssemblySymbol assembly)

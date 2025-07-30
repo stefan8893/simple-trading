@@ -59,10 +59,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             ? (null, genericTypeArguments[0])
             : (genericTypeArguments[0], genericTypeArguments[1]);
 
-        return new InteractorContext(concreteInteractor, closedInteractorInterface, responseModel)
-        {
-            RequestModel = requestModel
-        };
+        return new InteractorContext(concreteInteractor, closedInteractorInterface, requestModel, responseModel);
     }
 
     private static bool ImplementsInteractor(INamedTypeSymbol candidate)

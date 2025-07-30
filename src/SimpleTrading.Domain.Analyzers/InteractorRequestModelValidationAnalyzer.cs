@@ -57,7 +57,7 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
 
     private static IEnumerable<INamedTypeSymbol> FindAbstractValidators(CompilationAnalysisContext context)
     {
-        return new AbstractValidatorSymbolCollector(context.CancellationToken)
+        return new FluentValidatorSymbolCollector(context.CancellationToken)
             .CollectIn(context.Compilation.GlobalNamespace);
     }
 
