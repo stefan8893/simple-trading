@@ -10,7 +10,7 @@ public static partial class TestData
 
         public Guid Id { get; init; } = Guid.NewGuid();
         public string Symbol { get; init; } = $"ASSET{_assetNumber++:000}";
-        public string Name { get; init; } = "TestAsset";
+        public string Name { get; init; } = $"TestAsset{_assetNumber++:000}";
         public DateTime Created { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
         public static Asset Default => new();

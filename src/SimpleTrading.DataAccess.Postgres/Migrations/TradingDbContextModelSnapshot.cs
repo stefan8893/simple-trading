@@ -47,6 +47,9 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("Symbol")
                         .IsUnique();
 
@@ -75,6 +78,9 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IsoCode")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Currency");

@@ -23,5 +23,9 @@ public class AssetConfiguration : IEntityTypeConfiguration<Asset>
             .Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(50);
+
+        builder
+            .HasIndex(x => x.Name)
+            .IsUnique();
     }
 }
