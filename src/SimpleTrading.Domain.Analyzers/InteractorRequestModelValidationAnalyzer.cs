@@ -106,15 +106,12 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
             .ToList();
 
         var missingBadInputCaseDiagnostics = DetectMissingBadInputCaseDiagnostics(
-            interactorsWithRequestModelValidators,
-            validatorByRequestModelName);
+            interactorsWithRequestModelValidators);
 
         var responseModelTypeIsNotOneOfDiagnostics = DetectResponseModelTypeIsNotOneOfDiagnostics(
-            interactorsWithRequestModelValidators,
-            validatorByRequestModelName);
+            interactorsWithRequestModelValidators);
 
-        var missingInteractorSuffixDiagnostics = DetectMissingInteractorSuffixDiagnostics(interactorImplementors,
-            validatorByRequestModelName);
+        var missingInteractorSuffixDiagnostics = DetectMissingInteractorSuffixDiagnostics(interactorImplementors);
 
         return missingBadInputCaseDiagnostics
             .Concat(responseModelTypeIsNotOneOfDiagnostics)
@@ -122,13 +119,10 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     }
 
     private static IEnumerable<Diagnostic> DetectResponseModelTypeIsNotOneOfDiagnostics(
-        List<InteractorImplementorContext> validatableInteractors,
-        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+        List<InteractorImplementorContext> validatableInteractors)
     {
         var validatableInteractorsWithoutOneOfResponseModel = validatableInteractors
-            .Where(x => !x.IsResponseModelOneOf)
-            .Select(x =>
-                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]));
+            .Where(x => !x.IsResponseModelOneOf);
 
         return validatableInteractorsWithoutOneOfResponseModel
             .Where(x => x.Interactor.Locations.Any())
@@ -140,14 +134,11 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     }
 
     private static IEnumerable<Diagnostic> DetectMissingBadInputCaseDiagnostics(
-        List<InteractorImplementorContext> validatableInteractors,
-        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+        List<InteractorImplementorContext> validatableInteractors)
     {
         var validatableInteractorsWithoutBadInputCase = validatableInteractors
             .Where(x => x.IsResponseModelOneOf)
-            .Where(x => !x.HasResponseModelOneOfCase("BadInput"))
-            .Select(x =>
-                new BadInteractorDiagnosticContext(x, abstractValidatorByRequestModelName[x.RequestModel.Name]));
+            .Where(x => !x.HasResponseModelOneOfCase("BadInput"));
 
         return validatableInteractorsWithoutBadInputCase
             .Where(x => x.Interactor.Locations.Any())
@@ -159,13 +150,10 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
     }
 
     private static IEnumerable<Diagnostic> DetectMissingInteractorSuffixDiagnostics(
-        List<InteractorImplementorContext> interactorImplementors,
-        IReadOnlyDictionary<string, List<INamedTypeSymbol>> abstractValidatorByRequestModelName)
+        List<InteractorImplementorContext> interactorImplementors)
     {
         var interactorWithMissingSuffix = interactorImplementors
-            .Where(x => !x.Interactor.Name.EndsWith("Interactor"))
-            .Select(x =>
-                new BadInteractorDiagnosticContext(x, GetValidatorsOrDefault(x)));
+            .Where(x => !x.Interactor.Name.EndsWith("Interactor"));
 
         return interactorWithMissingSuffix
             .Where(x => x.Interactor.Locations.Any())
@@ -174,12 +162,5 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
                 badInteractor.Interactor.Locations.First(),
                 badInteractor.Interactor.Name)
             );
-
-        List<INamedTypeSymbol> GetValidatorsOrDefault(InteractorImplementorContext x)
-        {
-            return abstractValidatorByRequestModelName.TryGetValue(x.RequestModel.Name, out var validators)
-                ? validators
-                : [];
-        }
     }
 }
