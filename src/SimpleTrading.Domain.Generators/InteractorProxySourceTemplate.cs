@@ -68,16 +68,16 @@ public class InteractorProxySourceTemplate(InteractorContext context)
   
                      public async Task<{{context.ResponseModel.ToDisplayString()}}> Execute({{OnContainsRequestModel(requestModelParameter)}}) 
                      {
-                            {{OnValidation(
-                                // lang=C#
-                                """
-                                foreach(var validator in _validators) 
-                                            {
-                                                var validationResult = await validator.ValidateAsync(requestModel);
-                                                if (!validationResult.IsValid)
-                                                    return new BadInput(validationResult);
-                                            }
-                                """)}}
+                        {{OnValidation(
+                            // lang=C#
+                            """
+                             foreach(var validator in _validators) 
+                                    {
+                                        var validationResult = await validator.ValidateAsync(requestModel);
+                                        if (!validationResult.IsValid)
+                                            return new BadInput(validationResult);
+                                    }
+                            """)}}
                  
                          return await {{OnContainsRequestModel("_interactor.Execute(requestModel);", "_interactor.Execute();")}}
                      }
