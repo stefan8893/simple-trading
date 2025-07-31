@@ -27,7 +27,7 @@ public class Trade : IEntity
     public virtual required Currency Currency { get; set; }
     public required PositionPrices PositionPrices { get; set; }
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
-    public virtual ICollection<Reference> References { get; set; } = [];
+    public virtual ICollection<Reference> References { get; [UsedImplicitly] set; } = [];
     public string? Notes { get; set; }
     public bool IsClosed => Closed.HasValue && ProfitLoss.HasValue;
     public required Guid Id { get; init; }
@@ -35,11 +35,12 @@ public class Trade : IEntity
 
     internal IImmutableList<string> GetWarnings()
     {
-        if(!IsClosed)
+        if (!IsClosed)
             return ImmutableList<string>.Empty;
-        
+
         var results = CalculateResults(new None());
-        var calculatedResult = PickAppropriateResult(results.CalculatedByProfitLoss, results.CalculatedByPositionPrices);
+        var calculatedResult =
+            PickAppropriateResult(results.CalculatedByProfitLoss, results.CalculatedByPositionPrices);
 
         return AnalyzeResults(results, calculatedResult)
             .ToImmutableList();
@@ -98,7 +99,8 @@ public class Trade : IEntity
     private (Result? result, IReadOnlyList<string> warnings) CalculateResult(CloseTradeConfiguration configuration)
     {
         var results = CalculateResults(configuration.ManuallyEnteredResult);
-        var calculatedResult = PickAppropriateResult(results.CalculatedByProfitLoss, results.CalculatedByPositionPrices);
+        var calculatedResult =
+            PickAppropriateResult(results.CalculatedByProfitLoss, results.CalculatedByPositionPrices);
         var result = results.ManuallyEntered.Match(r => r, _ => calculatedResult);
 
         return (result, AnalyzeResults(results, calculatedResult));

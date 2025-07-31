@@ -11,7 +11,7 @@ public class InteractorImplementorContext(
     public INamedTypeSymbol RequestModel { get; } = requestModel;
     public INamedTypeSymbol ResponseModel { get; } = responseModel;
 
-    public bool IsResponseModelOneOf => ResponseModel.Name == "OneOf";
+    public bool IsResponseModelOneOf { get; } = responseModel.Name == "OneOf";
 
     public bool HasResponseModelOneOfCase(string oneOfCase)
     {
