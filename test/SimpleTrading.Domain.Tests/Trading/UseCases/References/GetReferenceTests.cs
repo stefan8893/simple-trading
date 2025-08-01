@@ -41,7 +41,7 @@ public class GetReferenceTests : DomainTests
             .Execute(new GetReferenceRequestModel(trade.Id, reference1.Id));
 
         // assert
-        var referenceModel = Assert.IsType<ReferenceModel>(response.Value);
+        var referenceModel = Assert.IsType<ReferenceResponseModel>(response.Value);
         Assert.Equal(reference1.Id, referenceModel.Id);
         Assert.Equal(reference1.Link.AbsoluteUri, referenceModel.Link);
         Assert.Equal(reference1.Type, referenceModel.Type);

@@ -10,14 +10,14 @@ public record ReferenceDto
     public required string Link { get; init; }
     public string? Notes { get; set; }
 
-    public static ReferenceDto From(ReferenceModel referenceModel)
+    public static ReferenceDto From(ReferenceResponseModel referenceResponseModel)
     {
         return new ReferenceDto
         {
-            Id = referenceModel.Id,
-            Type = MapToReferenceDto(referenceModel.Type),
-            Link = referenceModel.Link,
-            Notes = referenceModel.Notes
+            Id = referenceResponseModel.Id,
+            Type = MapToReferenceDto(referenceResponseModel.Type),
+            Link = referenceResponseModel.Link,
+            Notes = referenceResponseModel.Notes
         };
 
         ReferenceTypeDto MapToReferenceDto(ReferenceType type)

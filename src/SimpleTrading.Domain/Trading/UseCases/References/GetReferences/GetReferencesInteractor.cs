@@ -6,7 +6,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 
-using GetReferencesResponse = OneOf<IReadOnlyList<ReferenceModel>, NotFound>;
+using GetReferencesResponse = OneOf<IReadOnlyList<ReferenceResponseModel>, NotFound>;
 
 [UsedImplicitly]
 public class GetReferencesInteractor(ITradeRepository tradeRepository) : InteractorBase,
@@ -19,7 +19,7 @@ public class GetReferencesInteractor(ITradeRepository tradeRepository) : Interac
             return NotFound<Trade>(model.TradeId);
 
         return trade.References
-            .Select(ReferenceModel.From)
+            .Select(ReferenceResponseModel.From)
             .ToList();
     }
 }

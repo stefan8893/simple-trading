@@ -1,4 +1,4 @@
-﻿using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
+﻿using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
@@ -9,7 +9,7 @@ public class ProfileDto
     public string? Description { get; init; }
     public required bool IsActive { get; init; }
 
-    public static ProfileDto From(GetProfilesResponseModel model)
+    public static ProfileDto From(ProfileResponseModel model)
     {
         return new ProfileDto
         {

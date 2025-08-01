@@ -24,7 +24,7 @@ public class TradeResponseModel
     public required decimal? TakeProfit { get; init; }
     public required decimal? ExitPrice { get; init; }
     public required double? RiskRewardRatio { get; init; }
-    public required IReadOnlyList<ReferenceModel> References { get; init; }
+    public required IReadOnlyList<ReferenceResponseModel> References { get; init; }
     public required string? Notes { get; init; }
     public required IImmutableList<string> Warnings { get; init; }
 
@@ -52,7 +52,7 @@ public class TradeResponseModel
             ExitPrice = trade.PositionPrices.Exit,
             RiskRewardRatio = trade.RiskRewardRatio,
             References = trade.References
-                .Select(ReferenceModel.From)
+                .Select(ReferenceResponseModel.From)
                 .ToList(),
             Notes = trade.Notes,
             Warnings = trade.GetWarnings()

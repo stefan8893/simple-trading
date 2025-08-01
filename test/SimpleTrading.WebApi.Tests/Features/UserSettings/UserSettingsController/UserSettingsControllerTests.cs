@@ -24,9 +24,6 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // arrange
         var client = await CreateClient();
 
-        var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
-        DbContext.Profiles.Add(profile);
-
         var userSettings = await ServiceLocator.Resolve<IUserSettingsRepository>().GetUserSettings();
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
@@ -40,19 +37,6 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         Assert.Equal("en-US", userSettingsDto.Culture);
         Assert.Equal("Europe/Vienna", userSettingsDto.TimeZone);
         Assert.Equal("de", userSettingsDto.Language);
-        Assert.Equal(profile.Id, userSettingsDto.ActiveProfileId);
-        Assert.Equal(profile.Name, userSettingsDto.ActiveProfileName);
-    }
-
-    [Fact]
-    public async Task An_exception_is_thrown_when_there_is_no_active_profile()
-    {
-        var client = await CreateClient();
-
-        // ReSharper disable once ConvertToLocalFunction
-        var act = () => client.GetUserSettingsAsync();
-
-        await Assert.ThrowsAsync<SimpleTradingClientException>(act);
     }
 
     [Fact]
@@ -60,9 +44,6 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
     {
         // arrange
         var client = await CreateClient();
-
-        var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
-        DbContext.Profiles.Add(profile);
 
         var userSettings = await ServiceLocator
             .Resolve<IUserSettingsRepository>()

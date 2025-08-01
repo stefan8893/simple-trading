@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -24,7 +25,7 @@ public class GetCurrenciesTests : DomainTests
         var response = await Interactor.Execute(new GetProfilesRequestModel(null));
 
         // assert
-        var profiles = Assert.IsType<IReadOnlyList<GetProfilesResponseModel>>(response.Value, exactMatch: false);
+        var profiles = Assert.IsType<IReadOnlyList<ProfileResponseModel>>(response.Value, exactMatch: false);
         Assert.Equal(2, profiles.Count);
     }
 

@@ -97,6 +97,11 @@ export interface ISimpleTradingClient {
     getProfiles(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<ProfileDto[]>>;
 
     /**
+     * @return OK
+     */
+    getActiveProfile(): Promise<SimpleTradingClientResponse<ProfileDto>>;
+
+    /**
      * @param searchTerm (optional) 
      * @return OK
      */
@@ -1011,6 +1016,47 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             });
         }
         return Promise.resolve<SimpleTradingClientResponse<ProfileDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    getActiveProfile(): Promise<SimpleTradingClientResponse<ProfileDto>> {
+        let url_ = this.baseUrl + "/profiles/active";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetActiveProfile(_response);
+        });
+    }
+
+    protected processGetActiveProfile(response: Response): Promise<SimpleTradingClientResponse<ProfileDto>> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProfileDto.fromJS(resultData200);
+            return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<ProfileDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -2531,8 +2577,6 @@ export class UserSettingsDto implements IUserSettingsDto {
     language!: string | undefined;
     timeZone!: string;
     lastModified!: Date;
-    activeProfileId!: string;
-    activeProfileName!: string;
 
     constructor(data?: IUserSettingsDto) {
         if (data) {
@@ -2549,8 +2593,6 @@ export class UserSettingsDto implements IUserSettingsDto {
             this.language = _data["language"];
             this.timeZone = _data["timeZone"];
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
-            this.activeProfileId = _data["activeProfileId"];
-            this.activeProfileName = _data["activeProfileName"];
         }
     }
 
@@ -2567,8 +2609,6 @@ export class UserSettingsDto implements IUserSettingsDto {
         data["language"] = this.language;
         data["timeZone"] = this.timeZone;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
-        data["activeProfileId"] = this.activeProfileId;
-        data["activeProfileName"] = this.activeProfileName;
         return data;
     }
 }
@@ -2578,8 +2618,6 @@ export interface IUserSettingsDto {
     language: string | undefined;
     timeZone: string;
     lastModified: Date;
-    activeProfileId: string;
-    activeProfileName: string;
 }
 
 export class WarningsDto implements IWarningsDto {

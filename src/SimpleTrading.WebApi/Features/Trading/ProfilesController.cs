@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using SimpleTrading.Domain.Trading.UseCases.Profiles.GetActiveProfile;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
@@ -28,5 +29,14 @@ public class ProfilesController : ControllerBase
             profiles => Ok(profiles.Select(ProfileDto.From)),
             badInput => badInput.ToActionResult()
         );
+    }
+
+    [HttpGet("active", Name = nameof(GetActiveProfile))]
+    [ProducesResponseType<ProfileDto>(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetActiveProfile([FromServices] IGetActiveProfile getActiveProfile)
+    {
+        var activeProfile = await getActiveProfile.Execute();
+        
+        return Ok(ProfileDto.From(activeProfile));
     }
 }

@@ -2,10 +2,11 @@
 using OneOf;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
+using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
-using GetProfilesResponse = OneOf<IReadOnlyList<GetProfilesResponseModel>, BadInput>;
+using GetProfilesResponse = OneOf<IReadOnlyList<ProfileResponseModel>, BadInput>;
 
 [UsedImplicitly]
 public class GetProfilesInteractor(IProfileRepository profileRepository)
@@ -20,7 +21,7 @@ public class GetProfilesInteractor(IProfileRepository profileRepository)
             : await profileRepository.GetAll();
 
         return result
-            .Select(x => new GetProfilesResponseModel(x.Id, x.Name, x.Description, x.IsActive))
+            .Select(ProfileResponseModel.From)
             .ToList();
     }
 }
