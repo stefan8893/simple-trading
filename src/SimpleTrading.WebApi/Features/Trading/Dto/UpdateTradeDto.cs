@@ -9,12 +9,12 @@ public class UpdateTradeDto
     public DateTimeOffset? Opened { get; set; }
     public DateTimeOffset? Closed { get; set; }
     public decimal? Size { get; set; }
-    public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
+    public UpdateResultValue? ManuallyEnteredResult { get; set; }
     public decimal? ProfitLoss { get; set; }
     public Guid? CurrencyId { get; set; }
     public decimal? EntryPrice { get; set; }
     public UpdateValue<decimal?>? StopLoss { get; set; }
     public UpdateValue<decimal?>? TakeProfit { get; set; }
     public UpdateValue<decimal?>? ExitPrice { get; set; }
-    public UpdateValue<string?>? Notes { get; set; }
+    public UpdateStringValue? Notes { get; set; }
 }

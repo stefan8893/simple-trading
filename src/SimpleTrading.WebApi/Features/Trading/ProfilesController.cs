@@ -12,7 +12,6 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[SwaggerUiControllerPosition(3)]
 public class ProfilesController : ControllerBase
 {
     [HttpGet(Name = nameof(GetProfiles))]

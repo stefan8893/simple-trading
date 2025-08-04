@@ -45,7 +45,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
     /// <summary>
     ///     There is only one web server that gets started for each test class.<br />
-    ///     This means, OverrideServices is only called once before the first test run
+    ///     This means OverrideServices is only called once before the first test run
     /// </summary>
     /// <param name="ctx"></param>
     /// <param name="builder"></param>
@@ -57,13 +57,14 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     {
         var client = factory.CreateClient();
 
-        if (!includeAccessToken)
-            return new SimpleTradingClient(client);
+        // ReSharper disable once InvertIf
+        if (includeAccessToken)
+        {
+            var accessToken = await TestIdentity.AccessToken;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        }
 
-        var accessToken = await TestIdentity.AccessToken;
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-        return new SimpleTradingClient(client);
+        return new SimpleTradingClient(client.BaseAddress?.AbsolutePath, client);
     }
 
     protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity

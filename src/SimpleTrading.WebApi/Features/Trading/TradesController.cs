@@ -23,7 +23,6 @@ namespace SimpleTrading.WebApi.Features.Trading;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[SwaggerUiControllerPosition(1)]
 public partial class TradesController : ControllerBase
 {
     [HttpGet(Name = nameof(SearchTrades))]
@@ -52,6 +51,7 @@ public partial class TradesController : ControllerBase
     [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
     [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetTrade([FromServices] IGetTrade getTrade, [FromRoute] Guid tradeId)
     {
         var result = await getTrade.Execute(new GetTradeRequestModel(tradeId));

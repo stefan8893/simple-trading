@@ -21,7 +21,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         // act
         var idOfAddedReference = await client.AddReferenceAsync(trade.Id, new AddReferenceDto
         {
-            Type = ReferenceTypeDto.Other,
+            Type = NullableOfReferenceTypeDto.Other,
             Link = "https://example.org"
         });
 
@@ -46,7 +46,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         {
             return client.AddReferenceAsync(trade.Id, new AddReferenceDto
             {
-                Type = ReferenceTypeDto.Other,
+                Type = NullableOfReferenceTypeDto.Other,
                 Link = "invalid-uri"
             });
         }
@@ -72,7 +72,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         {
             return client.AddReferenceAsync(notExistingTradeId, new AddReferenceDto
             {
-                Type = ReferenceTypeDto.Other,
+                Type = NullableOfReferenceTypeDto.Other,
                 Link = "https://example.org"
             });
         }

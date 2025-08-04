@@ -27,6 +27,6 @@
   "homepage": "https://github.com/stefan8893/simple-trading#readme",
   "devDependencies": {
     "@types/node": "^22.3.0",
-    "typescript": "~5.8.0"
+    "typescript": "^5.9.2"
   }
 }

@@ -47,7 +47,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act()
+        Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
@@ -70,7 +70,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act()
+        Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
@@ -91,7 +91,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act()
+        Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(null, [], []);
         }
@@ -114,7 +114,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act()
+        Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
@@ -137,7 +137,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<TradeDtoPageDto> Act()
+        Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
@@ -288,8 +288,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         // assert
         Assert.Equal(3, result.Count);
-        Assert.Equal(ResultDto.Mediocre, result.Data.ElementAt(0).Result!.Value);
-        Assert.Equal(ResultDto.BreakEven, result.Data.ElementAt(1).Result!.Value);
-        Assert.Equal(ResultDto.Loss, result.Data.ElementAt(2).Result!.Value);
+        Assert.Equal(NullableOfResultDto.Mediocre, result.Data.ElementAt(0).Result!.Value);
+        Assert.Equal(NullableOfResultDto.BreakEven, result.Data.ElementAt(1).Result!.Value);
+        Assert.Equal(NullableOfResultDto.Loss, result.Data.ElementAt(2).Result!.Value);
     }
 }

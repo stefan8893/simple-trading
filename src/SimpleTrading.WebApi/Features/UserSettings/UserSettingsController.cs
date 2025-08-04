@@ -17,7 +17,6 @@ namespace SimpleTrading.WebApi.Features.UserSettings;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[SwaggerUiControllerPosition(6)]
 public class UserSettingsController : ControllerBase
 {
     [HttpGet(Name = nameof(GetUserSettings))]

@@ -5,7 +5,6 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
-using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.UserSettings.UserSettingsController;
 
@@ -77,7 +76,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         await client.UpdateUserSettingsAsync(new UpdateUserSettingsDto
         {
             Culture = "de-AT",
-            IsoLanguageCode = new StringUpdateValue
+            IsoLanguageCode = new UpdateStringValue
             {
                 Value = "en"
             },
@@ -107,7 +106,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         // act
         await client.UpdateUserSettingsAsync(new UpdateUserSettingsDto
         {
-            IsoLanguageCode = new StringUpdateValue
+            IsoLanguageCode = new UpdateStringValue
             {
                 Value = "en"
             }

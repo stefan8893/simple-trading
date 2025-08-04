@@ -5,20 +5,12 @@ using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
-public enum ResultDto
-{
-    Win,
-    Mediocre,
-    BreakEven,
-    Loss
-}
-
 public class CloseTradeDto
 {
     public decimal? ProfitLoss { get; set; }
     public decimal? ExitPrice { get; set; }
     public DateTimeOffset? Closed { get; set; }
-    public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
+    public UpdateResultValue? ManuallyEnteredResult { get; set; }
 }
 
 [UsedImplicitly]
