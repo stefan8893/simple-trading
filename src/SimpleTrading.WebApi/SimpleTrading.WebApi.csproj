@@ -15,8 +15,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.6.8" />
         <PackageReference Include="Microsoft.Identity.Web" Version="3.12.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
         <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.5.0" />
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.5.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
@@ -38,6 +39,10 @@
 
     <ItemGroup>
         <None Include="Clients\Generated\SimpleTrading.Client.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
 </Project>

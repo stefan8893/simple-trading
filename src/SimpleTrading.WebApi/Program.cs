@@ -5,12 +5,14 @@ using Autofac.Extensions.DependencyInjection;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Scalar.AspNetCore;
 using Serilog;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Configuration;
 using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Filter;
 using SimpleTrading.WebApi.Modules;
+using SimpleTrading.WebApi.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -56,18 +58,20 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-builder.Services.AddEndpointsApiExplorer();
 
 var clientAppEntraIdConfig = builder.Configuration
                                  .GetSection("Auth:SimpleTradingClientApp")
                                  .Get<ClientAppEntraIdConfig>()
                              ?? throw new Exception("Missing Entra ID settings");
 
-builder.Services.ConfigureOpenApiDocumentation(clientAppEntraIdConfig);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocumentation(clientAppEntraIdConfig);
 
 var app = builder.Build();
 
-app.ConfigureSwaggerUi(clientAppEntraIdConfig);
+app.MapOpenApi();
+app.UseScalarUi(clientAppEntraIdConfig);
+
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
 
