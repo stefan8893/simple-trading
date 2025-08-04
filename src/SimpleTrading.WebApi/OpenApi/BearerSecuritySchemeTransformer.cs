@@ -21,19 +21,18 @@ public class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authe
                     Type = SecuritySchemeType.OAuth2,
                     Scheme = "bearer",
                     In = ParameterLocation.Header,
-                    BearerFormat = "Json Web Token",
+                    BearerFormat = "Json Web Token"
                 }
             };
             document.Components ??= new OpenApiComponents();
             document.Components.SecuritySchemes = requirements;
         }
 
-        // Apply it as a requirement for all operations
-        foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
-            operation.Value.Security.Add(new OpenApiSecurityRequirement
-            {
-                [new OpenApiSecurityScheme {Reference = new OpenApiReference {Id = "Bearer", Type = ReferenceType.SecurityScheme}}] =
-                    Array.Empty<string>()
-            });
+        // foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
+        //     operation.Value.Security.Add(new OpenApiSecurityRequirement
+        //     {
+        //         [new OpenApiSecurityScheme {Reference = new OpenApiReference {Id = "Bearer", Type = ReferenceType.SecurityScheme}}] =
+        //             Array.Empty<string>()
+        //     });
     }
 }

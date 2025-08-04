@@ -9,30 +9,30 @@ namespace SimpleTrading.WebApi.Clients;
 
 public class ClientGenerator(ILogger<ClientGenerator> logger)
 {
-    public Task Generate(Target target, DirectoryInfo[] outputDirectories, string fileName)
+    private const string ApiDescriptionFileName = "simple-trading-api-description.json";
+    
+    public async Task Generate(Target target, DirectoryInfo[] outputDirectories, string fileName)
     {
         logger.LogInformation("Generate {target} Client", target);
-        //
-        // var swaggerDocument = swaggerProvider.GetSwagger("v1", null, "/");
-        // var swaggerFile = swaggerDocument.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
-        // var openApiDocument = await OpenApiDocument.FromJsonAsync(swaggerFile);
-        //
-        // var fileContent = target switch
-        // {
-        //     Target.CSharp => GenerateCSharpClient(openApiDocument),
-        //     Target.TypeScript => GenerateTypeScriptClient(openApiDocument),
-        //     _ => throw new ArgumentOutOfRangeException(nameof(target), target, null)
-        // };
-        //
-        // foreach (var outputDirectory in outputDirectories)
-        // {
-        //     var fullFileName = Path.Combine(outputDirectory.FullName, fileName);
-        //     await File.WriteAllTextAsync(fullFileName, fileContent, Encoding.UTF8);
-        //
-        //     logger.LogInformation("'{clientName}' created in '{directory}'", fileName, outputDirectory.FullName);
-        // }
         
-        return Task.CompletedTask;
+        var apiDescriptionFile = Path.Combine(AppContext.BaseDirectory, ApiDescriptionFileName);
+        var openDescription = await File.ReadAllTextAsync(apiDescriptionFile);
+        var openApiDocument = await OpenApiDocument.FromJsonAsync(openDescription);
+        
+        var fileContent = target switch
+        {
+            Target.CSharp => GenerateCSharpClient(openApiDocument),
+            Target.TypeScript => GenerateTypeScriptClient(openApiDocument),
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target, null)
+        };
+        
+        foreach (var outputDirectory in outputDirectories)
+        {
+            var fullFileName = Path.Combine(outputDirectory.FullName, fileName);
+            await File.WriteAllTextAsync(fullFileName, fileContent, Encoding.UTF8);
+        
+            logger.LogInformation("'{clientName}' created in '{directory}'", fileName, outputDirectory.FullName);
+        }
     }
 
     private static string GenerateTypeScriptClient(OpenApiDocument openApiDocument)

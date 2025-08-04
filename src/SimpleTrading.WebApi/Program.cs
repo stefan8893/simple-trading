@@ -5,7 +5,6 @@ using Autofac.Extensions.DependencyInjection;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using Scalar.AspNetCore;
 using Serilog;
 using SimpleTrading.WebApi.CliCommands;
 using SimpleTrading.WebApi.Configuration;
