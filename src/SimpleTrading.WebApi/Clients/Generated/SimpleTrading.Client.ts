@@ -1359,7 +1359,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 }
 
 export class AddReferenceDto implements IAddReferenceDto {
-    type?: number | undefined;
+    type?: NullableOfReferenceTypeDto | undefined;
     link?: string | undefined;
     notes?: string | undefined;
 
@@ -1407,7 +1407,7 @@ export class AddReferenceDto implements IAddReferenceDto {
 }
 
 export interface IAddReferenceDto {
-    type?: number | undefined;
+    type?: NullableOfReferenceTypeDto | undefined;
     link?: string | undefined;
     notes?: string | undefined;
 
@@ -1421,7 +1421,7 @@ export class AddTradeDto implements IAddTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    manuallyEnteredResult?: UpdateValueOfNullableOfResultDto | undefined;
+    manuallyEnteredResult?: UpdateResultValue | undefined;
     profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
@@ -1454,7 +1454,7 @@ export class AddTradeDto implements IAddTradeDto {
             this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : undefined as any;
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : undefined as any;
             this.size = _data["size"];
-            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateValueOfNullableOfResultDto.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
+            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateResultValue.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
             this.profitLoss = _data["profitLoss"];
             this.currencyId = _data["currencyId"];
             this.entryPrice = _data["entryPrice"];
@@ -1513,7 +1513,7 @@ export interface IAddTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    manuallyEnteredResult?: UpdateValueOfNullableOfResultDto | undefined;
+    manuallyEnteredResult?: UpdateResultValue | undefined;
     profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
@@ -1705,7 +1705,7 @@ export class CloseTradeDto implements ICloseTradeDto {
     profitLoss?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
-    manuallyEnteredResult?: UpdateValueOfNullableOfResultDto | undefined;
+    manuallyEnteredResult?: UpdateResultValue | undefined;
 
     [key: string]: any;
 
@@ -1727,7 +1727,7 @@ export class CloseTradeDto implements ICloseTradeDto {
             this.profitLoss = _data["profitLoss"];
             this.exitPrice = _data["exitPrice"];
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : undefined as any;
-            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateValueOfNullableOfResultDto.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
+            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateResultValue.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
         }
     }
 
@@ -1756,7 +1756,7 @@ export interface ICloseTradeDto {
     profitLoss?: number | undefined;
     exitPrice?: number | undefined;
     closed?: Date | undefined;
-    manuallyEnteredResult?: UpdateValueOfNullableOfResultDto | undefined;
+    manuallyEnteredResult?: UpdateResultValue | undefined;
 
     [key: string]: any;
 }
@@ -1998,6 +1998,18 @@ export interface IFieldErrorResponse {
     [key: string]: any;
 }
 
+export enum NullableOfReferenceTypeDto {
+    TradingView = "TradingView",
+    Other = "Other",
+}
+
+export enum NullableOfResultDto {
+    Win = "Win",
+    Mediocre = "Mediocre",
+    BreakEven = "BreakEven",
+    Loss = "Loss",
+}
+
 export class PageDtoOfTradeDto implements IPageDtoOfTradeDto {
     data!: TradeDto[];
     count!: number;
@@ -2139,7 +2151,7 @@ export interface IProfileDto {
 
 export class ReferenceDto implements IReferenceDto {
     id!: string;
-    type!: number;
+    type!: ReferenceDtoType;
     link!: string;
     notes?: string | undefined;
 
@@ -2190,7 +2202,7 @@ export class ReferenceDto implements IReferenceDto {
 
 export interface IReferenceDto {
     id: string;
-    type: number;
+    type: ReferenceDtoType;
     link: string;
     notes?: string | undefined;
 
@@ -2263,7 +2275,7 @@ export class TradeDto implements ITradeDto {
     opened?: Date;
     closed?: Date | undefined;
     profitLoss?: number | undefined;
-    result?: number | undefined;
+    result?: NullableOfResultDto | undefined;
     performance?: number | undefined;
     isClosed?: boolean;
     currencyId?: string;
@@ -2388,7 +2400,7 @@ export interface ITradeDto {
     opened?: Date;
     closed?: Date | undefined;
     profitLoss?: number | undefined;
-    result?: number | undefined;
+    result?: NullableOfResultDto | undefined;
     performance?: number | undefined;
     isClosed?: boolean;
     currencyId?: string;
@@ -2407,7 +2419,7 @@ export interface ITradeDto {
 
 export class TradeResultDto implements ITradeResultDto {
     tradeId!: string;
-    result!: number | undefined;
+    result!: NullableOfResultDto | undefined;
     performance!: number | undefined;
     warnings!: string[];
 
@@ -2469,7 +2481,7 @@ export class TradeResultDto implements ITradeResultDto {
 
 export interface ITradeResultDto {
     tradeId: string;
-    result: number | undefined;
+    result: NullableOfResultDto | undefined;
     performance: number | undefined;
     warnings: string[];
 
@@ -2477,9 +2489,9 @@ export interface ITradeResultDto {
 }
 
 export class UpdateReferenceDto implements IUpdateReferenceDto {
-    type?: number | undefined;
+    type?: NullableOfReferenceTypeDto | undefined;
     link?: string | undefined;
-    notes?: UpdateValueOfstring | undefined;
+    notes?: UpdateStringValue | undefined;
 
     [key: string]: any;
 
@@ -2500,7 +2512,7 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
             }
             this.type = _data["type"];
             this.link = _data["link"];
-            this.notes = _data["notes"] ? UpdateValueOfstring.fromJS(_data["notes"]) : undefined as any;
+            this.notes = _data["notes"] ? UpdateStringValue.fromJS(_data["notes"]) : undefined as any;
         }
     }
 
@@ -2525,9 +2537,105 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
 }
 
 export interface IUpdateReferenceDto {
-    type?: number | undefined;
+    type?: NullableOfReferenceTypeDto | undefined;
     link?: string | undefined;
-    notes?: UpdateValueOfstring | undefined;
+    notes?: UpdateStringValue | undefined;
+
+    [key: string]: any;
+}
+
+export class UpdateResultValue implements IUpdateResultValue {
+    value?: NullableOfResultDto | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateResultValue) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): UpdateResultValue {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateResultValue();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IUpdateResultValue {
+    value?: NullableOfResultDto | undefined;
+
+    [key: string]: any;
+}
+
+export class UpdateStringValue implements IUpdateStringValue {
+    value?: string | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateStringValue) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): UpdateStringValue {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateStringValue();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IUpdateStringValue {
+    value?: string | undefined;
 
     [key: string]: any;
 }
@@ -2538,14 +2646,14 @@ export class UpdateTradeDto implements IUpdateTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    manuallyEnteredResult?: UpdateValueOfNullableOfResultDto | undefined;
+    manuallyEnteredResult?: UpdateResultValue | undefined;
     profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: UpdateValueOfNullableOfdecimal | undefined;
     takeProfit?: UpdateValueOfNullableOfdecimal | undefined;
     exitPrice?: UpdateValueOfNullableOfdecimal | undefined;
-    notes?: UpdateValueOfstring | undefined;
+    notes?: UpdateStringValue | undefined;
 
     [key: string]: any;
 
@@ -2569,14 +2677,14 @@ export class UpdateTradeDto implements IUpdateTradeDto {
             this.opened = _data["opened"] ? new Date(_data["opened"].toString()) : undefined as any;
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : undefined as any;
             this.size = _data["size"];
-            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateValueOfNullableOfResultDto.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
+            this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateResultValue.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
             this.profitLoss = _data["profitLoss"];
             this.currencyId = _data["currencyId"];
             this.entryPrice = _data["entryPrice"];
             this.stopLoss = _data["stopLoss"] ? UpdateValueOfNullableOfdecimal.fromJS(_data["stopLoss"]) : undefined as any;
             this.takeProfit = _data["takeProfit"] ? UpdateValueOfNullableOfdecimal.fromJS(_data["takeProfit"]) : undefined as any;
             this.exitPrice = _data["exitPrice"] ? UpdateValueOfNullableOfdecimal.fromJS(_data["exitPrice"]) : undefined as any;
-            this.notes = _data["notes"] ? UpdateValueOfstring.fromJS(_data["notes"]) : undefined as any;
+            this.notes = _data["notes"] ? UpdateStringValue.fromJS(_data["notes"]) : undefined as any;
         }
     }
 
@@ -2616,21 +2724,21 @@ export interface IUpdateTradeDto {
     opened?: Date | undefined;
     closed?: Date | undefined;
     size?: number | undefined;
-    manuallyEnteredResult?: UpdateValueOfNullableOfResultDto | undefined;
+    manuallyEnteredResult?: UpdateResultValue | undefined;
     profitLoss?: number | undefined;
     currencyId?: string | undefined;
     entryPrice?: number | undefined;
     stopLoss?: UpdateValueOfNullableOfdecimal | undefined;
     takeProfit?: UpdateValueOfNullableOfdecimal | undefined;
     exitPrice?: UpdateValueOfNullableOfdecimal | undefined;
-    notes?: UpdateValueOfstring | undefined;
+    notes?: UpdateStringValue | undefined;
 
     [key: string]: any;
 }
 
 export class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
     culture?: string | undefined;
-    isoLanguageCode?: UpdateValueOfstring | undefined;
+    isoLanguageCode?: UpdateStringValue | undefined;
     timeZone?: string | undefined;
 
     [key: string]: any;
@@ -2651,7 +2759,7 @@ export class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
                     this[property] = _data[property];
             }
             this.culture = _data["culture"];
-            this.isoLanguageCode = _data["isoLanguageCode"] ? UpdateValueOfstring.fromJS(_data["isoLanguageCode"]) : undefined as any;
+            this.isoLanguageCode = _data["isoLanguageCode"] ? UpdateStringValue.fromJS(_data["isoLanguageCode"]) : undefined as any;
             this.timeZone = _data["timeZone"];
         }
     }
@@ -2678,7 +2786,7 @@ export class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
 
 export interface IUpdateUserSettingsDto {
     culture?: string | undefined;
-    isoLanguageCode?: UpdateValueOfstring | undefined;
+    isoLanguageCode?: UpdateStringValue | undefined;
     timeZone?: string | undefined;
 
     [key: string]: any;
@@ -2728,102 +2836,6 @@ export class UpdateValueOfNullableOfdecimal implements IUpdateValueOfNullableOfd
 
 export interface IUpdateValueOfNullableOfdecimal {
     value?: number | undefined;
-
-    [key: string]: any;
-}
-
-export class UpdateValueOfNullableOfResultDto implements IUpdateValueOfNullableOfResultDto {
-    value?: number | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IUpdateValueOfNullableOfResultDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): UpdateValueOfNullableOfResultDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateValueOfNullableOfResultDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["value"] = this.value;
-        return data;
-    }
-}
-
-export interface IUpdateValueOfNullableOfResultDto {
-    value?: number | undefined;
-
-    [key: string]: any;
-}
-
-export class UpdateValueOfstring implements IUpdateValueOfstring {
-    value?: string | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IUpdateValueOfstring) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): UpdateValueOfstring {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateValueOfstring();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["value"] = this.value;
-        return data;
-    }
-}
-
-export interface IUpdateValueOfstring {
-    value?: string | undefined;
 
     [key: string]: any;
 }
@@ -2945,6 +2957,11 @@ export interface IWarningsDto {
     warnings: string[];
 
     [key: string]: any;
+}
+
+export enum ReferenceDtoType {
+    TradingView = "TradingView",
+    Other = "Other",
 }
 
 export class SimpleTradingClientResponse<TResult> {

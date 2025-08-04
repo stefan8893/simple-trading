@@ -56,7 +56,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
-            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss}
+            ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}
         });
 
         // assert
@@ -84,7 +84,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         Task<WarningsDto> Act()
         {
             return client.UpdateTradeAsync(trade.Id,
-                new UpdateTradeDto {ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss}});
+                new UpdateTradeDto {ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}});
         }
 
         // assert
@@ -116,7 +116,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
-            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = null}
+            ManuallyEnteredResult = new UpdateResultValue {Value = null}
         });
 
         // assert

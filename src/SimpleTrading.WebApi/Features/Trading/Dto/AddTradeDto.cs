@@ -22,7 +22,7 @@ public record AddTradeDto
     /// <example>5000</example>
     public decimal? Size { get; set; }
 
-    public UpdateValue<ResultDto?>? ManuallyEnteredResult { get; set; }
+    public UpdateResultValue? ManuallyEnteredResult { get; set; }
 
     /// <example>125</example>
     public decimal? ProfitLoss { get; set; }

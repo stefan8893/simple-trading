@@ -9,7 +9,7 @@ public record UpdateReferenceDto
 {
     public ReferenceTypeDto? Type { get; set; }
     public string? Link { get; set; }
-    public UpdateValue<string?>? Notes { get; set; }
+    public UpdateStringValue? Notes { get; set; }
 }
 
 [UsedImplicitly]

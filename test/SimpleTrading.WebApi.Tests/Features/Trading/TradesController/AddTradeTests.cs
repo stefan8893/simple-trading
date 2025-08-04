@@ -21,7 +21,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
-            return client.AddTradeAsync();
+            return client.AddTradeAsync(new AddTradeDto());
         }
 
         // assert
@@ -109,7 +109,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Opened = _utcNow,
             Closed = _utcNow,
             ProfitLoss = 0,
-            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = null},
+            ManuallyEnteredResult = new UpdateResultValue {Value = null},
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
@@ -144,7 +144,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Opened = _utcNow,
             Closed = _utcNow,
             ProfitLoss = 0,
-            ManuallyEnteredResult = new ResultDtoNullableUpdateValue {Value = ResultDto.Loss},
+            ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss},
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08

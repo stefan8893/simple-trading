@@ -7,7 +7,7 @@ namespace SimpleTrading.WebApi.Features.UserSettings.Dto;
 public class UpdateUserSettingsDto
 {
     public string? Culture { get; set; }
-    public UpdateValue<string?>? IsoLanguageCode { get; set; }
+    public UpdateStringValue? IsoLanguageCode { get; set; }
     public string? TimeZone { get; set; }    
     
 }

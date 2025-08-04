@@ -2410,7 +2410,7 @@ namespace SimpleTrading.Client
     {
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Type { get; set; }
+        public NullableOfReferenceTypeDto? Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Link { get; set; }
@@ -2452,7 +2452,7 @@ namespace SimpleTrading.Client
         public double? Size { get; set; }
 
         [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UpdateValueOfNullableOfResultDto ManuallyEnteredResult { get; set; }
+        public UpdateResultValue ManuallyEnteredResult { get; set; }
 
         [Newtonsoft.Json.JsonProperty("profitLoss", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? ProfitLoss { get; set; }
@@ -2580,7 +2580,7 @@ namespace SimpleTrading.Client
         public System.DateTimeOffset? Closed { get; set; }
 
         [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UpdateValueOfNullableOfResultDto ManuallyEnteredResult { get; set; }
+        public UpdateResultValue ManuallyEnteredResult { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -2682,6 +2682,36 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum NullableOfReferenceTypeDto
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"TradingView")]
+        TradingView = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Other")]
+        Other = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum NullableOfResultDto
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Win")]
+        Win = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Mediocre")]
+        Mediocre = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"BreakEven")]
+        BreakEven = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Loss")]
+        Loss = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PageDtoOfTradeDto
     {
 
@@ -2753,7 +2783,7 @@ namespace SimpleTrading.Client
         public System.Guid Id { get; set; }
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Always)]
-        public int Type { get; set; }
+        public ReferenceDtoType Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -2834,7 +2864,7 @@ namespace SimpleTrading.Client
         public double? ProfitLoss { get; set; }
 
         [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Result { get; set; }
+        public NullableOfResultDto? Result { get; set; }
 
         [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Performance { get; set; }
@@ -2895,7 +2925,7 @@ namespace SimpleTrading.Client
         public System.Guid TradeId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.AllowNull)]
-        public int? Result { get; set; }
+        public NullableOfResultDto? Result { get; set; }
 
         [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.AllowNull)]
         public int? Performance { get; set; }
@@ -2920,13 +2950,49 @@ namespace SimpleTrading.Client
     {
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Type { get; set; }
+        public NullableOfReferenceTypeDto? Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Link { get; set; }
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UpdateValueOfstring Notes { get; set; }
+        public UpdateStringValue Notes { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateResultValue
+    {
+
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public NullableOfResultDto? Value { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateStringValue
+    {
+
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Value { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -2959,7 +3025,7 @@ namespace SimpleTrading.Client
         public double? Size { get; set; }
 
         [Newtonsoft.Json.JsonProperty("manuallyEnteredResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UpdateValueOfNullableOfResultDto ManuallyEnteredResult { get; set; }
+        public UpdateResultValue ManuallyEnteredResult { get; set; }
 
         [Newtonsoft.Json.JsonProperty("profitLoss", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? ProfitLoss { get; set; }
@@ -2980,7 +3046,7 @@ namespace SimpleTrading.Client
         public UpdateValueOfNullableOfdecimal ExitPrice { get; set; }
 
         [Newtonsoft.Json.JsonProperty("notes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UpdateValueOfstring Notes { get; set; }
+        public UpdateStringValue Notes { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -3001,7 +3067,7 @@ namespace SimpleTrading.Client
         public string Culture { get; set; }
 
         [Newtonsoft.Json.JsonProperty("isoLanguageCode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UpdateValueOfstring IsoLanguageCode { get; set; }
+        public UpdateStringValue IsoLanguageCode { get; set; }
 
         [Newtonsoft.Json.JsonProperty("timeZone", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string TimeZone { get; set; }
@@ -3023,42 +3089,6 @@ namespace SimpleTrading.Client
 
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Value { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateValueOfNullableOfResultDto
-    {
-
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Value { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateValueOfstring
-    {
-
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Value { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -3117,6 +3147,18 @@ namespace SimpleTrading.Client
             get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum ReferenceDtoType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"TradingView")]
+        TradingView = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Other")]
+        Other = 1,
 
     }
 
