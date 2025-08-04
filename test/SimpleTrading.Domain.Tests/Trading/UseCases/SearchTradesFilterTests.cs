@@ -25,7 +25,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Profiles.Add(profile);
         DbContext.Trades.AddRange(trades);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -59,7 +59,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -190,7 +190,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -226,7 +226,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -262,7 +262,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -296,7 +296,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -330,7 +330,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -372,7 +372,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Profiles.Add(profile);
         DbContext.Trades.AddRange(trades);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -595,7 +595,7 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -625,7 +625,7 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -656,7 +656,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -687,7 +687,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -718,7 +718,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -755,7 +755,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -792,7 +792,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(tradeWithProfitLoss, tradeWithoutProfitLoss);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -823,7 +823,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -863,7 +863,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -904,7 +904,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -943,7 +943,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1009,7 +1009,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1049,7 +1049,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1089,7 +1089,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1128,7 +1128,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1174,7 +1174,7 @@ public class SearchTradesFilterTests : DomainTests
             .ToList();
 
         DbContext.Trades.AddRange(tradesWithoutResult.Concat(tradesWithResult));
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1220,7 +1220,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(tradesWithoutResult.Concat(tradesWithResult));
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1268,7 +1268,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(closedTrades.Concat(notClosedTrades));
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1314,7 +1314,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(notClosedTrades.Concat(closedTrades));
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
@@ -1357,7 +1357,7 @@ public class SearchTradesFilterTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         List<FilterModel> filter =
         [

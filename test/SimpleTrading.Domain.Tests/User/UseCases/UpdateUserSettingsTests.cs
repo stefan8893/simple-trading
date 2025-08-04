@@ -20,7 +20,7 @@ public class UpdateUserSettingsTests : DomainTests
             .GetUserSettings();
 
         userSettings.Language = "en";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new UpdateUserSettingsRequestModel(null, null, null);
 
@@ -45,7 +45,7 @@ public class UpdateUserSettingsTests : DomainTests
         userSettings.Culture = "de-AT";
         userSettings.Language = "en";
         userSettings.TimeZone = "America/Los_Angeles";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new UpdateUserSettingsRequestModel("de-AT", "de", "Europe/Vienna");
 
@@ -70,7 +70,7 @@ public class UpdateUserSettingsTests : DomainTests
             .GetUserSettings();
 
         userSettings.Language = "en";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new UpdateUserSettingsRequestModel(null, "de", null);
 

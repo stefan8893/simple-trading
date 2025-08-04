@@ -38,10 +38,10 @@ public class DeleteReferencesTests(TestingWebApplicationFactory<Program> factory
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         DbContext.AddRange(trade, reference1, reference2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        await client.DeleteReferenceAsync(trade.Id, reference1.Id);
+        await client.DeleteReferenceAsync(trade.Id, reference1.Id, TestContext.Current.CancellationToken);
 
         // assert
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);

@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.TestInfrastructure;
 using SimpleTrading.WebApi.Modules;
-using Xunit;
 
-namespace SimpleTrading.TestInfrastructure;
+namespace SimpleTrading.Domain.Tests;
 
 public abstract class DomainTests
     : TestBase, IAsyncLifetime
@@ -21,14 +21,14 @@ public abstract class DomainTests
 
     protected ILifetimeScope ServiceLocator => _lifetimeScope!;
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await DbContext.Database.EnsureDeletedAsync();
         _lifetimeScope?.Dispose();
         _container?.Dispose();
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         var containerBuilder = new ContainerBuilder();
         PrepareContainer(containerBuilder);

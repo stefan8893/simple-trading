@@ -32,7 +32,7 @@ public class RestoreCalculatedResultTests(
             new RestoreCalculatedResultResponseModel(tradeId, ResultModel.Loss, 55, []));
 
         // act
-        var result = await client.RestoreCalculatedResultAsync(tradeId);
+        var result = await client.RestoreCalculatedResultAsync(tradeId, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(NullableOfResultDto.Loss, result.Result);

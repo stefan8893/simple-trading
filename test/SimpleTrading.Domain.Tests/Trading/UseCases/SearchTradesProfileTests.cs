@@ -25,7 +25,7 @@ public class SearchTradesProfileTests : DomainTests
 
         DbContext.Profiles.Add(profile);
         DbContext.Trades.AddRange(trades);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response =
@@ -56,7 +56,7 @@ public class SearchTradesProfileTests : DomainTests
         DbContext.Profiles.AddRange(profileA, profileB);
         DbContext.Trades.AddRange(tradesA);
         DbContext.Trades.AddRange(tradesB);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response =

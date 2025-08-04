@@ -20,13 +20,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             Size = 5000
         }).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             Size = 50_000
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -51,13 +51,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -77,7 +77,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -111,13 +111,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             ManuallyEnteredResult = new UpdateResultValue {Value = null}
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -141,13 +141,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             ManuallyEnteredResult = null
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -186,7 +186,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement

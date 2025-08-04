@@ -70,7 +70,7 @@ public class CloseTradeTests : DomainTests
         // arrange
         var trade = (TestData.Trade.Default with { Opened = _utcNow }).Build();
         DbContext.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel =
             new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
@@ -99,7 +99,7 @@ public class CloseTradeTests : DomainTests
             Opened = _utcNow
         }).Build();
         DbContext.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel =
             new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)

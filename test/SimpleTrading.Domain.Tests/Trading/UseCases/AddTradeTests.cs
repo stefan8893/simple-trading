@@ -174,7 +174,7 @@ public class AddTradeTests : DomainTests
         var currency = TestData.Currency.Default.Build();
 
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -278,7 +278,7 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         DbContext.AddRange(asset, profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var currency = TestData.Currency.Default.Build();
 
@@ -305,7 +305,7 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var profile = TestData.Profile.Default.Build();
 
@@ -332,7 +332,7 @@ public class AddTradeTests : DomainTests
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
         DbContext.AddRange(currency, profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var asset = TestData.Asset.Default.Build();
 
@@ -360,7 +360,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -385,7 +385,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -411,7 +411,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -440,7 +440,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -471,7 +471,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -511,7 +511,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
@@ -540,7 +540,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var opened = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
         var closed = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
@@ -574,7 +574,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var opened = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
 
@@ -605,7 +605,7 @@ public class AddTradeTests : DomainTests
         var profile = TestData.Profile.Default.Build();
         var asset = TestData.Asset.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var now = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
 

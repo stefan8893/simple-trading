@@ -18,7 +18,7 @@ public class GetCurrenciesTests : DomainTests
         var currency2 = TestData.Currency.Default.Build();
 
         DbContext.AddRange(currency1, currency2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new GetCurrenciesRequestModel(null));

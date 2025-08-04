@@ -28,7 +28,7 @@ public class GetTradeTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
@@ -42,7 +42,7 @@ public class GetTradeTests : DomainTests
         var currency = TestData.Currency.Default with {IsoCode = "EUR", Name = "Euro"};
         var trade = (TestData.Trade.Default with {CurrencyOrId = currency}).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 
@@ -56,7 +56,7 @@ public class GetTradeTests : DomainTests
         var asset = TestData.Asset.Default with {Symbol = "NDQ", Name = "US 100"};
         var trade = (TestData.Trade.Default with {AssetOrId = asset}).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
 

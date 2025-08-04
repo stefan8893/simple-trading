@@ -17,14 +17,14 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         DbContext.AddRange(trade, reference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
             Type = NullableOfReferenceTypeDto.TradingView,
             Link = "https://www.tradingview.com/x/RRJnEMaI/"
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
@@ -42,7 +42,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         DbContext.AddRange(trade, reference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -72,7 +72,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var reference = TestData.Reference.Default.Build();
 
         DbContext.References.Add(reference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -102,7 +102,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var notExistingReference = Guid.Parse("cab4f9ae-c690-4875-8560-7121e73e1183");
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement

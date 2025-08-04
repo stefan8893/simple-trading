@@ -109,7 +109,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -134,7 +134,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var result = await client.CloseTradeAsync(trade.Id, new CloseTradeDto
@@ -142,7 +142,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
             Closed = new DateTimeOffset(_utcNow),
             ProfitLoss = -50d,
             ExitPrice = 1.05
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(result);
@@ -159,7 +159,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         await client.CloseTradeAsync(trade.Id, new CloseTradeDto
@@ -167,7 +167,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
             Closed = new DateTimeOffset(_utcNow),
             ProfitLoss = -50d,
             ExitPrice = 1.05
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         var tradeAfterClosing = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
@@ -183,7 +183,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var closedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
 
@@ -193,7 +193,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
             Closed = closedInNewYork,
             ProfitLoss = -50d,
             ExitPrice = 1.05
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(result);

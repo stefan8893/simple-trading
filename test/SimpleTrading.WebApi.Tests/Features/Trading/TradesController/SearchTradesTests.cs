@@ -23,12 +23,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         const string searchFilter = "Opened -gt [2024-08-19T11:00Z]";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(result);
@@ -170,12 +170,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         const string searchFilter = "    ProfitLoss   -gt   [500]    ";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(2, result.Count);
@@ -201,12 +201,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var searchFilter = $"Closed -eq {nullLiteral}";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(3, result.Count);
@@ -224,12 +224,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         const string searchFilter = "Closed -ne null";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(0, result.Count);
@@ -247,12 +247,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         const string searchFilter = null!;
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(3, result.Count);
@@ -279,12 +279,12 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         List<string> sorting = ["-Result", null!];
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, sorting, []);
+        var result = await client.SearchTradesAsync(profile.Id, sorting, [], cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(3, result.Count);

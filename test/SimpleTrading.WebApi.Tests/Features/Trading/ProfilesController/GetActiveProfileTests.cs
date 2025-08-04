@@ -16,10 +16,10 @@ public class GetActiveProfileTests(TestingWebApplicationFactory<Program> factory
         var activeProfile = (TestData.Profile.Default with {IsActive = true}).Build();
 
         DbContext.AddRange(profile1, profile2, activeProfile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var profile = await client.GetActiveProfileAsync();
+        var profile = await client.GetActiveProfileAsync(TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(profile);

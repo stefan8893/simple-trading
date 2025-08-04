@@ -7,11 +7,10 @@ using Microsoft.Extensions.Hosting;
 using SimpleTrading.Client;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.Authentication;
-using SimpleTrading.WebApi;
-using Xunit;
 
-namespace SimpleTrading.TestInfrastructure;
+namespace SimpleTrading.WebApi;
 
 public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
@@ -24,13 +23,13 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
     protected ILifetimeScope ServiceLocator => _lifetimeScope!;
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await DbContext.Database.EnsureDeletedAsync();
         _serviceScope?.Dispose();
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         factory.OverrideServices = OverrideServices;
         _serviceScope = factory.Services.CreateScope();
