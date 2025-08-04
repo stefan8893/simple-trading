@@ -35,7 +35,7 @@ public static class ClientSettings
         GenerateClientInterfaces = true,
         GenerateClientClasses = true,
         GenerateDtoTypes = true,
-        WrapDtoExceptions = true,
         ResponseClass = "SimpleTradingClientResponse",
+        UseAbortSignal = true,
     };
 }

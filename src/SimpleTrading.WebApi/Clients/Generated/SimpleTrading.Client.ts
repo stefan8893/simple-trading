@@ -12,80 +12,80 @@ export interface ISimpleTradingClient {
     /**
      * @return OK
      */
-    getAppInfo( cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<ApiInfo>>;
+    getAppInfo(signal?: AbortSignal): Promise<ApiInfo>;
 
     /**
      * @return OK
      */
-    getUserSettings( cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<UserSettingsDto>>;
+    getUserSettings(signal?: AbortSignal): Promise<UserSettingsDto>;
 
     /**
      * @return No Content
      */
-    updateUserSettings(body: UpdateUserSettingsDto,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<void>>;
+    updateUserSettings(body: UpdateUserSettingsDto, signal?: AbortSignal): Promise<void>;
 
     /**
      * @return OK
      */
-    getUserLocalNow( cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<Date>>;
+    getUserLocalNow(signal?: AbortSignal): Promise<Date>;
 
     /**
      * @return OK
      */
-    getAvailableTimezones( cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<TimeZoneOption[]>>;
+    getAvailableTimezones(signal?: AbortSignal): Promise<TimeZoneOption[]>;
 
     /**
      * @param searchTerm (optional) 
      * @return OK
      */
-    getAssets(searchTerm: string | undefined,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<AssetDto[]>>;
+    getAssets(searchTerm: string | undefined, signal?: AbortSignal): Promise<AssetDto[]>;
 
     /**
      * @param searchTerm (optional) 
      * @return OK
      */
-    getCurrencies(searchTerm: string | undefined,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<CurrencyDto[]>>;
+    getCurrencies(searchTerm: string | undefined, signal?: AbortSignal): Promise<CurrencyDto[]>;
 
     /**
      * @param searchTerm (optional) 
      * @return OK
      */
-    getProfiles(searchTerm: string | undefined,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<ProfileDto[]>>;
+    getProfiles(searchTerm: string | undefined, signal?: AbortSignal): Promise<ProfileDto[]>;
 
     /**
      * @return OK
      */
-    getActiveProfile( cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<ProfileDto>>;
+    getActiveProfile(signal?: AbortSignal): Promise<ProfileDto>;
 
     /**
      * @return OK
      */
-    getReference(tradeId: string, referenceId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<ReferenceDto>>;
+    getReference(tradeId: string, referenceId: string, signal?: AbortSignal): Promise<ReferenceDto>;
 
     /**
      * @return No Content
      */
-    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<void>>;
+    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto, signal?: AbortSignal): Promise<void>;
 
     /**
      * @return No Content
      */
-    deleteReference(tradeId: string, referenceId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<void>>;
+    deleteReference(tradeId: string, referenceId: string, signal?: AbortSignal): Promise<void>;
 
     /**
      * @return OK
      */
-    getReferences(tradeId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<ReferenceDto[]>>;
+    getReferences(tradeId: string, signal?: AbortSignal): Promise<ReferenceDto[]>;
 
     /**
      * @return OK
      */
-    addReference(tradeId: string, body: AddReferenceDto,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<string>>;
+    addReference(tradeId: string, body: AddReferenceDto, signal?: AbortSignal): Promise<string>;
 
     /**
      * @return OK
      */
-    deleteReferences(tradeId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<number>>;
+    deleteReferences(tradeId: string, signal?: AbortSignal): Promise<number>;
 
     /**
      * @param profileId (optional) 
@@ -95,37 +95,37 @@ export interface ISimpleTradingClient {
      * @param pageSize (optional) 
      * @return OK
      */
-    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>>;
+    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined, signal?: AbortSignal): Promise<PageDtoOfTradeDto>;
 
     /**
      * @return OK
      */
-    addTrade(body: AddTradeDto,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<AddTradeResultDto>>;
+    addTrade(body: AddTradeDto, signal?: AbortSignal): Promise<AddTradeResultDto>;
 
     /**
      * @return OK
      */
-    getTrade(tradeId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<TradeDto>>;
+    getTrade(tradeId: string, signal?: AbortSignal): Promise<TradeDto>;
 
     /**
      * @return OK
      */
-    updateTrade(tradeId: string, body: UpdateTradeDto,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<WarningsDto>>;
+    updateTrade(tradeId: string, body: UpdateTradeDto, signal?: AbortSignal): Promise<WarningsDto>;
 
     /**
      * @return No Content
      */
-    deleteTrade(tradeId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<void>>;
+    deleteTrade(tradeId: string, signal?: AbortSignal): Promise<void>;
 
     /**
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<TradeResultDto>>;
+    closeTrade(tradeId: string, body: CloseTradeDto, signal?: AbortSignal): Promise<TradeResultDto>;
 
     /**
      * @return OK
      */
-    restoreCalculatedResult(tradeId: string,  cancelToken?: CancelToken): Promise<SimpleTradingClientResponse<TradeResultDto>>;
+    restoreCalculatedResult(tradeId: string, signal?: AbortSignal): Promise<TradeResultDto>;
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
@@ -141,12 +141,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
     /**
      * @return OK
      */
-    getAppInfo(): Promise<SimpleTradingClientResponse<ApiInfo>> {
+    getAppInfo(signal?: AbortSignal): Promise<ApiInfo> {
         let url_ = this.baseUrl + "/home/info";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -157,7 +158,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAppInfo(response: Response): Promise<SimpleTradingClientResponse<ApiInfo>> {
+    protected processGetAppInfo(response: Response): Promise<ApiInfo> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -165,25 +166,26 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ApiInfo.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<ApiInfo>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<ApiInfo>(null as any);
     }
 
     /**
      * @return OK
      */
-    getUserSettings(): Promise<SimpleTradingClientResponse<UserSettingsDto>> {
+    getUserSettings(signal?: AbortSignal): Promise<UserSettingsDto> {
         let url_ = this.baseUrl + "/usersettings";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -194,7 +196,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetUserSettings(response: Response): Promise<SimpleTradingClientResponse<UserSettingsDto>> {
+    protected processGetUserSettings(response: Response): Promise<UserSettingsDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -202,7 +204,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UserSettingsDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -213,13 +215,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<UserSettingsDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<UserSettingsDto>(null as any);
     }
 
     /**
      * @return No Content
      */
-    updateUserSettings(body: UpdateUserSettingsDto): Promise<SimpleTradingClientResponse<void>> {
+    updateUserSettings(body: UpdateUserSettingsDto, signal?: AbortSignal): Promise<void> {
         let url_ = this.baseUrl + "/usersettings";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -228,6 +230,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             body: content_,
             method: "PATCH",
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -239,12 +242,12 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateUserSettings(response: Response): Promise<SimpleTradingClientResponse<void>> {
+    protected processUpdateUserSettings(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
             return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
+            return null;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -262,18 +265,19 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<void>(null as any);
     }
 
     /**
      * @return OK
      */
-    getUserLocalNow(): Promise<SimpleTradingClientResponse<Date>> {
+    getUserLocalNow(signal?: AbortSignal): Promise<Date> {
         let url_ = this.baseUrl + "/usersettings/local-now";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -284,7 +288,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetUserLocalNow(response: Response): Promise<SimpleTradingClientResponse<Date>> {
+    protected processGetUserLocalNow(response: Response): Promise<Date> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -293,7 +297,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 ? new Date(resultData200.toString()) : null as any;
     
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -304,18 +308,19 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<Date>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<Date>(null as any);
     }
 
     /**
      * @return OK
      */
-    getAvailableTimezones(): Promise<SimpleTradingClientResponse<TimeZoneOption[]>> {
+    getAvailableTimezones(signal?: AbortSignal): Promise<TimeZoneOption[]> {
         let url_ = this.baseUrl + "/usersettings/available-timezones";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -326,7 +331,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAvailableTimezones(response: Response): Promise<SimpleTradingClientResponse<TimeZoneOption[]>> {
+    protected processGetAvailableTimezones(response: Response): Promise<TimeZoneOption[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -341,7 +346,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             else {
                 result200 = null as any;
             }
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -352,14 +357,14 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<TimeZoneOption[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<TimeZoneOption[]>(null as any);
     }
 
     /**
      * @param searchTerm (optional) 
      * @return OK
      */
-    getAssets(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<AssetDto[]>> {
+    getAssets(searchTerm: string | undefined, signal?: AbortSignal): Promise<AssetDto[]> {
         let url_ = this.baseUrl + "/assets?";
         if (searchTerm === null)
             throw new globalThis.Error("The parameter 'searchTerm' cannot be null.");
@@ -369,6 +374,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -379,7 +385,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAssets(response: Response): Promise<SimpleTradingClientResponse<AssetDto[]>> {
+    protected processGetAssets(response: Response): Promise<AssetDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -394,7 +400,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             else {
                 result200 = null as any;
             }
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -412,14 +418,14 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<AssetDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<AssetDto[]>(null as any);
     }
 
     /**
      * @param searchTerm (optional) 
      * @return OK
      */
-    getCurrencies(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<CurrencyDto[]>> {
+    getCurrencies(searchTerm: string | undefined, signal?: AbortSignal): Promise<CurrencyDto[]> {
         let url_ = this.baseUrl + "/currencies?";
         if (searchTerm === null)
             throw new globalThis.Error("The parameter 'searchTerm' cannot be null.");
@@ -429,6 +435,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -439,7 +446,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetCurrencies(response: Response): Promise<SimpleTradingClientResponse<CurrencyDto[]>> {
+    protected processGetCurrencies(response: Response): Promise<CurrencyDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -454,7 +461,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             else {
                 result200 = null as any;
             }
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -472,14 +479,14 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<CurrencyDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<CurrencyDto[]>(null as any);
     }
 
     /**
      * @param searchTerm (optional) 
      * @return OK
      */
-    getProfiles(searchTerm: string | undefined): Promise<SimpleTradingClientResponse<ProfileDto[]>> {
+    getProfiles(searchTerm: string | undefined, signal?: AbortSignal): Promise<ProfileDto[]> {
         let url_ = this.baseUrl + "/profiles?";
         if (searchTerm === null)
             throw new globalThis.Error("The parameter 'searchTerm' cannot be null.");
@@ -489,6 +496,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -499,7 +507,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetProfiles(response: Response): Promise<SimpleTradingClientResponse<ProfileDto[]>> {
+    protected processGetProfiles(response: Response): Promise<ProfileDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -514,7 +522,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             else {
                 result200 = null as any;
             }
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -532,18 +540,19 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<ProfileDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<ProfileDto[]>(null as any);
     }
 
     /**
      * @return OK
      */
-    getActiveProfile(): Promise<SimpleTradingClientResponse<ProfileDto>> {
+    getActiveProfile(signal?: AbortSignal): Promise<ProfileDto> {
         let url_ = this.baseUrl + "/profiles/active";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -554,7 +563,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetActiveProfile(response: Response): Promise<SimpleTradingClientResponse<ProfileDto>> {
+    protected processGetActiveProfile(response: Response): Promise<ProfileDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -562,7 +571,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ProfileDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -573,13 +582,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<ProfileDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<ProfileDto>(null as any);
     }
 
     /**
      * @return OK
      */
-    getReference(tradeId: string, referenceId: string): Promise<SimpleTradingClientResponse<ReferenceDto>> {
+    getReference(tradeId: string, referenceId: string, signal?: AbortSignal): Promise<ReferenceDto> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references/{referenceId}";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -591,6 +600,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -601,7 +611,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetReference(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto>> {
+    protected processGetReference(response: Response): Promise<ReferenceDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -609,7 +619,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ReferenceDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -627,13 +637,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<ReferenceDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<ReferenceDto>(null as any);
     }
 
     /**
      * @return No Content
      */
-    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto): Promise<SimpleTradingClientResponse<void>> {
+    updateReference(tradeId: string, referenceId: string, body: UpdateReferenceDto, signal?: AbortSignal): Promise<void> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references/{referenceId}";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -648,6 +658,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             body: content_,
             method: "PATCH",
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -659,12 +670,12 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateReference(response: Response): Promise<SimpleTradingClientResponse<void>> {
+    protected processUpdateReference(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
             return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
+            return null;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -689,13 +700,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<void>(null as any);
     }
 
     /**
      * @return No Content
      */
-    deleteReference(tradeId: string, referenceId: string): Promise<SimpleTradingClientResponse<void>> {
+    deleteReference(tradeId: string, referenceId: string, signal?: AbortSignal): Promise<void> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references/{referenceId}";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -707,6 +718,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "DELETE",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -717,12 +729,12 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteReference(response: Response): Promise<SimpleTradingClientResponse<void>> {
+    protected processDeleteReference(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
             return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
+            return null;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -740,13 +752,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<void>(null as any);
     }
 
     /**
      * @return OK
      */
-    getReferences(tradeId: string): Promise<SimpleTradingClientResponse<ReferenceDto[]>> {
+    getReferences(tradeId: string, signal?: AbortSignal): Promise<ReferenceDto[]> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -755,6 +767,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -765,7 +778,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetReferences(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto[]>> {
+    protected processGetReferences(response: Response): Promise<ReferenceDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -780,7 +793,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             else {
                 result200 = null as any;
             }
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -798,13 +811,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<ReferenceDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<ReferenceDto[]>(null as any);
     }
 
     /**
      * @return OK
      */
-    addReference(tradeId: string, body: AddReferenceDto): Promise<SimpleTradingClientResponse<string>> {
+    addReference(tradeId: string, body: AddReferenceDto, signal?: AbortSignal): Promise<string> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -816,6 +829,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             body: content_,
             method: "POST",
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -827,7 +841,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddReference(response: Response): Promise<SimpleTradingClientResponse<string>> {
+    protected processAddReference(response: Response): Promise<string> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -836,7 +850,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : null as any;
     
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -868,13 +882,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<string>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<string>(null as any);
     }
 
     /**
      * @return OK
      */
-    deleteReferences(tradeId: string): Promise<SimpleTradingClientResponse<number>> {
+    deleteReferences(tradeId: string, signal?: AbortSignal): Promise<number> {
         let url_ = this.baseUrl + "/trades/{tradeId}/references";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -883,6 +897,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "DELETE",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -893,7 +908,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteReferences(response: Response): Promise<SimpleTradingClientResponse<number>> {
+    protected processDeleteReferences(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -902,7 +917,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : null as any;
     
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -920,7 +935,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<number>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<number>(null as any);
     }
 
     /**
@@ -931,7 +946,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
      * @param pageSize (optional) 
      * @return OK
      */
-    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>> {
+    searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined, signal?: AbortSignal): Promise<PageDtoOfTradeDto> {
         let url_ = this.baseUrl + "/trades?";
         if (profileId === null)
             throw new globalThis.Error("The parameter 'profileId' cannot be null.");
@@ -957,6 +972,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -967,7 +983,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processSearchTrades(response: Response): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>> {
+    protected processSearchTrades(response: Response): Promise<PageDtoOfTradeDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -975,7 +991,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PageDtoOfTradeDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -993,13 +1009,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<PageDtoOfTradeDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<PageDtoOfTradeDto>(null as any);
     }
 
     /**
      * @return OK
      */
-    addTrade(body: AddTradeDto): Promise<SimpleTradingClientResponse<AddTradeResultDto>> {
+    addTrade(body: AddTradeDto, signal?: AbortSignal): Promise<AddTradeResultDto> {
         let url_ = this.baseUrl + "/trades";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1008,6 +1024,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             body: content_,
             method: "POST",
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -1019,7 +1036,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddTrade(response: Response): Promise<SimpleTradingClientResponse<AddTradeResultDto>> {
+    protected processAddTrade(response: Response): Promise<AddTradeResultDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1027,7 +1044,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = AddTradeResultDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -1059,13 +1076,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<AddTradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<AddTradeResultDto>(null as any);
     }
 
     /**
      * @return OK
      */
-    getTrade(tradeId: string): Promise<SimpleTradingClientResponse<TradeDto>> {
+    getTrade(tradeId: string, signal?: AbortSignal): Promise<TradeDto> {
         let url_ = this.baseUrl + "/trades/{tradeId}";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -1074,6 +1091,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -1084,7 +1102,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetTrade(response: Response): Promise<SimpleTradingClientResponse<TradeDto>> {
+    protected processGetTrade(response: Response): Promise<TradeDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1092,7 +1110,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TradeDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -1117,13 +1135,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<TradeDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<TradeDto>(null as any);
     }
 
     /**
      * @return OK
      */
-    updateTrade(tradeId: string, body: UpdateTradeDto): Promise<SimpleTradingClientResponse<WarningsDto>> {
+    updateTrade(tradeId: string, body: UpdateTradeDto, signal?: AbortSignal): Promise<WarningsDto> {
         let url_ = this.baseUrl + "/trades/{tradeId}";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -1135,6 +1153,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             body: content_,
             method: "PATCH",
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -1146,7 +1165,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateTrade(response: Response): Promise<SimpleTradingClientResponse<WarningsDto>> {
+    protected processUpdateTrade(response: Response): Promise<WarningsDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1154,7 +1173,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = WarningsDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -1186,13 +1205,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<WarningsDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<WarningsDto>(null as any);
     }
 
     /**
      * @return No Content
      */
-    deleteTrade(tradeId: string): Promise<SimpleTradingClientResponse<void>> {
+    deleteTrade(tradeId: string, signal?: AbortSignal): Promise<void> {
         let url_ = this.baseUrl + "/trades/{tradeId}";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -1201,6 +1220,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "DELETE",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -1211,12 +1231,12 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteTrade(response: Response): Promise<SimpleTradingClientResponse<void>> {
+    protected processDeleteTrade(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
             return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
+            return null;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -1227,13 +1247,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<void>(null as any);
     }
 
     /**
      * @return OK
      */
-    closeTrade(tradeId: string, body: CloseTradeDto): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+    closeTrade(tradeId: string, body: CloseTradeDto, signal?: AbortSignal): Promise<TradeResultDto> {
         let url_ = this.baseUrl + "/trades/{tradeId}/close";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -1245,6 +1265,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         let options_: RequestInit = {
             body: content_,
             method: "PUT",
+            signal,
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -1256,7 +1277,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processCloseTrade(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+    protected processCloseTrade(response: Response): Promise<TradeResultDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1264,7 +1285,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TradeResultDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -1296,13 +1317,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<TradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<TradeResultDto>(null as any);
     }
 
     /**
      * @return OK
      */
-    restoreCalculatedResult(tradeId: string): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+    restoreCalculatedResult(tradeId: string, signal?: AbortSignal): Promise<TradeResultDto> {
         let url_ = this.baseUrl + "/trades/{tradeId}/restore-calculated-result";
         if (tradeId === undefined || tradeId === null)
             throw new globalThis.Error("The parameter 'tradeId' must be defined.");
@@ -1311,6 +1332,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 
         let options_: RequestInit = {
             method: "PUT",
+            signal,
             headers: {
                 "Accept": "application/json"
             }
@@ -1321,7 +1343,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processRestoreCalculatedResult(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+    protected processRestoreCalculatedResult(response: Response): Promise<TradeResultDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1329,7 +1351,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = TradeResultDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
+            return result200;
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
@@ -1354,7 +1376,7 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SimpleTradingClientResponse<TradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+        return Promise.resolve<TradeResultDto>(null as any);
     }
 }
 
@@ -2962,19 +2984,6 @@ export interface IWarningsDto {
     warnings: string[];
 
     [key: string]: any;
-}
-
-export class SimpleTradingClientResponse<TResult> {
-    status: number;
-    headers: { [key: string]: any; };
-    result: TResult;
-
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
-    {
-        this.status = status;
-        this.headers = headers;
-        this.result = result;
-    }
 }
 
 export class SimpleTradingClientException extends Error {

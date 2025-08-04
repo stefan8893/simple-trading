@@ -13,6 +13,7 @@ Pop-Location
 
 Push-Location Npm/simple-trading-client
 
+npm install
 npm run build
 
 Push-Location .\dist
@@ -22,3 +23,8 @@ npm publish --access public
 
 Pop-Location
 Pop-Location
+
+if ($LastExitCode -ne 0)
+{
+    Exit $LastExitCode
+}
