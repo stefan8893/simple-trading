@@ -2783,7 +2783,7 @@ namespace SimpleTrading.Client
         public System.Guid Id { get; set; }
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Always)]
-        public ReferenceDtoType Type { get; set; }
+        public ReferenceTypeDto Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -2800,6 +2800,18 @@ namespace SimpleTrading.Client
             get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum ReferenceTypeDto
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"TradingView")]
+        TradingView = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Other")]
+        Other = 1,
 
     }
 
@@ -3147,18 +3159,6 @@ namespace SimpleTrading.Client
             get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum ReferenceDtoType
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"TradingView")]
-        TradingView = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"Other")]
-        Other = 1,
 
     }
 

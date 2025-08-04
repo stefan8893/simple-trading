@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
             {
                 document.Info = new OpenApiInfo
                 {
-                    Title = "Simple Trading - Web Api",
+                    Title = "SimpleTrading - Api",
                     Version = "v1",
                     Description = "Api for the simple trading application."
                 };
@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
                 return Task.CompletedTask;
             });
 
-            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+            options.AddDocumentTransformer<OAuth2SecuritySchemeTransformer>();
         });
 
         return services;

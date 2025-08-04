@@ -2151,7 +2151,7 @@ export interface IProfileDto {
 
 export class ReferenceDto implements IReferenceDto {
     id!: string;
-    type!: ReferenceDtoType;
+    type!: ReferenceTypeDto;
     link!: string;
     notes?: string | undefined;
 
@@ -2202,11 +2202,16 @@ export class ReferenceDto implements IReferenceDto {
 
 export interface IReferenceDto {
     id: string;
-    type: ReferenceDtoType;
+    type: ReferenceTypeDto;
     link: string;
     notes?: string | undefined;
 
     [key: string]: any;
+}
+
+export enum ReferenceTypeDto {
+    TradingView = "TradingView",
+    Other = "Other",
 }
 
 export class TimeZoneOption implements ITimeZoneOption {
@@ -2957,11 +2962,6 @@ export interface IWarningsDto {
     warnings: string[];
 
     [key: string]: any;
-}
-
-export enum ReferenceDtoType {
-    TradingView = "TradingView",
-    Other = "Other",
 }
 
 export class SimpleTradingClientResponse<TResult> {

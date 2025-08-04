@@ -5,7 +5,6 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
-using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.UserSettings.UserSettingsController;
 
