@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
-using SimpleTrading.WebApi.Configuration;
+﻿using Microsoft.OpenApi.Models;
 
 namespace SimpleTrading.WebApi.OpenApi;
 
@@ -23,6 +21,7 @@ public static class ServiceCollectionExtensions
             });
 
             options.AddDocumentTransformer<OAuth2SecuritySchemeTransformer>();
+            options.AddDocumentTransformer<BaseUrlTransformer>();
         });
 
         return services;
