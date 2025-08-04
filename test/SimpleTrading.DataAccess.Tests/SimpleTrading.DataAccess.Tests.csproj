@@ -8,14 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="xunit.v3" Version="3.0.0" />
-        <PackageReference Include="coverlet.msbuild" Version="6.0.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="6.0.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
     </ItemGroup>
 
     <ItemGroup>

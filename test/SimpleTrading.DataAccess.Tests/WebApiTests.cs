@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleTrading.Client;
-using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.Authentication;
+using SimpleTrading.WebApi;
 
-namespace SimpleTrading.WebApi;
+namespace SimpleTrading.DataAccess.Tests;
 
 public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     : TestBase, IClassFixture<TestingWebApplicationFactory<Program>>, IAsyncLifetime
