@@ -64,7 +64,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
-        return new SimpleTradingClient(client.BaseAddress?.AbsolutePath, client);
+        return new SimpleTradingClient(client);
     }
 
     protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity

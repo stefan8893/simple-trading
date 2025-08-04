@@ -20,6 +20,7 @@ public static class ClientSettings
         GenerateClientInterfaces = true,
         GenerateDtoTypes = true,
         InjectHttpClient = true,
+        UseBaseUrl = false,
         WrapResponses = false,
         ResponseClass = "SimpleTradingClientResponse",
         WrapDtoExceptions = true
