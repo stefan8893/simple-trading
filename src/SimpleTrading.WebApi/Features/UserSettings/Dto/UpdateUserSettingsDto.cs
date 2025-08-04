@@ -8,6 +8,5 @@ public class UpdateUserSettingsDto
 {
     public string? Culture { get; set; }
     public UpdateStringValue? IsoLanguageCode { get; set; }
-    public string? TimeZone { get; set; }    
-    
+    public string? TimeZone { get; set; }
 }

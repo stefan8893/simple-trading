@@ -2,7 +2,6 @@ using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features;
 

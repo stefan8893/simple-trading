@@ -34,10 +34,8 @@ builder.Services
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(o =>
-        {
-            o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience");
-        },
+    .AddMicrosoftIdentityWebApi(
+        o => { o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience"); },
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 
 const string clientAppCorsPolicy = "ClientAppCorsPolicy";

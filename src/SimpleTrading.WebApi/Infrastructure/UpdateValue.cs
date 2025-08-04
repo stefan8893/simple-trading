@@ -10,4 +10,4 @@ public record UpdateValue<T>(T? Value = default);
 public record UpdateResultValue : UpdateValue<ResultDto?>;
 
 [UsedImplicitly]
-public record UpdateStringValue: UpdateValue<string?>;
+public record UpdateStringValue : UpdateValue<string?>;

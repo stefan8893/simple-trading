@@ -35,7 +35,7 @@ public class ProfilesController : ControllerBase
     public async Task<ActionResult> GetActiveProfile([FromServices] IGetActiveProfile getActiveProfile)
     {
         var activeProfile = await getActiveProfile.Execute();
-        
+
         return Ok(ProfileDto.From(activeProfile));
     }
 }

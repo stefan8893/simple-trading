@@ -5,6 +5,7 @@
 //----------------------
 
 /* eslint-disable */
+
 // ReSharper disable InconsistentNaming
 
 export interface ISimpleTradingClient {
@@ -35,19 +36,19 @@ export interface ISimpleTradingClient {
     getAvailableTimezones(signal?: AbortSignal): Promise<SimpleTradingClientResponse<TimeZoneOption[]>>;
 
     /**
-     * @param searchTerm (optional) 
+     * @param searchTerm (optional)
      * @return OK
      */
     getAssets(searchTerm: string | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<AssetDto[]>>;
 
     /**
-     * @param searchTerm (optional) 
+     * @param searchTerm (optional)
      * @return OK
      */
     getCurrencies(searchTerm: string | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<CurrencyDto[]>>;
 
     /**
-     * @param searchTerm (optional) 
+     * @param searchTerm (optional)
      * @return OK
      */
     getProfiles(searchTerm: string | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<ProfileDto[]>>;
@@ -88,11 +89,11 @@ export interface ISimpleTradingClient {
     deleteReferences(tradeId: string, signal?: AbortSignal): Promise<SimpleTradingClientResponse<number>>;
 
     /**
-     * @param profileId (optional) 
-     * @param sort (optional) 
-     * @param filter (optional) 
-     * @param page (optional) 
-     * @param pageSize (optional) 
+     * @param profileId (optional)
+     * @param sort (optional)
+     * @param filter (optional)
+     * @param page (optional)
+     * @param pageSize (optional)
      * @return OK
      */
     searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>>;
@@ -129,9 +130,9 @@ export interface ISimpleTradingClient {
 }
 
 export class SimpleTradingClient implements ISimpleTradingClient {
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
@@ -158,24 +159,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAppInfo(response: Response): Promise<SimpleTradingClientResponse<ApiInfo>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiInfo.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<ApiInfo>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -194,28 +177,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetUserSettings(_response);
         });
-    }
-
-    protected processGetUserSettings(response: Response): Promise<SimpleTradingClientResponse<UserSettingsDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserSettingsDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<UserSettingsDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -242,32 +203,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateUserSettings(response: Response): Promise<SimpleTradingClientResponse<void>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -286,29 +221,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetUserLocalNow(_response);
         });
-    }
-
-    protected processGetUserLocalNow(response: Response): Promise<SimpleTradingClientResponse<Date>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? new Date(resultData200.toString()) : null as any;
-    
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<Date>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -331,37 +243,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAvailableTimezones(response: Response): Promise<SimpleTradingClientResponse<TimeZoneOption[]>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(TimeZoneOption.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<TimeZoneOption[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param searchTerm (optional) 
+     * @param searchTerm (optional)
      * @return OK
      */
     getAssets(searchTerm: string | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<AssetDto[]>> {
@@ -385,44 +268,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetAssets(response: Response): Promise<SimpleTradingClientResponse<AssetDto[]>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(AssetDto.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<AssetDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param searchTerm (optional) 
+     * @param searchTerm (optional)
      * @return OK
      */
     getCurrencies(searchTerm: string | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<CurrencyDto[]>> {
@@ -446,44 +293,8 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetCurrencies(response: Response): Promise<SimpleTradingClientResponse<CurrencyDto[]>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CurrencyDto.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<CurrencyDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param searchTerm (optional) 
+     * @param searchTerm (optional)
      * @return OK
      */
     getProfiles(searchTerm: string | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<ProfileDto[]>> {
@@ -507,42 +318,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processGetProfiles(response: Response): Promise<SimpleTradingClientResponse<ProfileDto[]>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(ProfileDto.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<ProfileDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -561,28 +336,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetActiveProfile(_response);
         });
-    }
-
-    protected processGetActiveProfile(response: Response): Promise<SimpleTradingClientResponse<ProfileDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ProfileDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<ProfileDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -609,35 +362,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetReference(_response);
         });
-    }
-
-    protected processGetReference(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ReferenceDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<ReferenceDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -670,39 +394,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateReference(response: Response): Promise<SimpleTradingClientResponse<void>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return No Content
      */
@@ -729,32 +420,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteReference(response: Response): Promise<SimpleTradingClientResponse<void>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -776,42 +441,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetReferences(_response);
         });
-    }
-
-    protected processGetReferences(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto[]>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(ReferenceDto.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<ReferenceDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -841,50 +470,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddReference(response: Response): Promise<SimpleTradingClientResponse<string>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : null as any;
-    
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<string>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -908,42 +493,12 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processDeleteReferences(response: Response): Promise<SimpleTradingClientResponse<number>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : null as any;
-    
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<number>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
-     * @param profileId (optional) 
-     * @param sort (optional) 
-     * @param filter (optional) 
-     * @param page (optional) 
-     * @param pageSize (optional) 
+     * @param profileId (optional)
+     * @param sort (optional)
+     * @param filter (optional)
+     * @param page (optional)
+     * @param pageSize (optional)
      * @return OK
      */
     searchTrades(profileId: string | undefined, sort: string[] | undefined, filter: string[] | undefined, page: number | undefined, pageSize: number | undefined, signal?: AbortSignal): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>> {
@@ -955,11 +510,15 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         if (sort === null)
             throw new globalThis.Error("The parameter 'sort' cannot be null.");
         else if (sort !== undefined)
-            sort && sort.forEach(item => { url_ += "Sort=" + encodeURIComponent("" + item) + "&"; });
+            sort && sort.forEach(item => {
+                url_ += "Sort=" + encodeURIComponent("" + item) + "&";
+            });
         if (filter === null)
             throw new globalThis.Error("The parameter 'filter' cannot be null.");
         else if (filter !== undefined)
-            filter && filter.forEach(item => { url_ += "Filter=" + encodeURIComponent("" + item) + "&"; });
+            filter && filter.forEach(item => {
+                url_ += "Filter=" + encodeURIComponent("" + item) + "&";
+            });
         if (page === null)
             throw new globalThis.Error("The parameter 'page' cannot be null.");
         else if (page !== undefined)
@@ -981,35 +540,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processSearchTrades(_response);
         });
-    }
-
-    protected processSearchTrades(response: Response): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageDtoOfTradeDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<PageDtoOfTradeDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -1036,49 +566,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processAddTrade(response: Response): Promise<SimpleTradingClientResponse<AddTradeResultDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AddTradeResultDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<AddTradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -1100,42 +587,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTrade(_response);
         });
-    }
-
-    protected processGetTrade(response: Response): Promise<SimpleTradingClientResponse<TradeDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<TradeDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -1165,49 +616,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processUpdateTrade(response: Response): Promise<SimpleTradingClientResponse<WarningsDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = WarningsDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<WarningsDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return No Content
      */
@@ -1229,25 +637,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processDeleteTrade(_response);
         });
-    }
-
-    protected processDeleteTrade(response: Response): Promise<SimpleTradingClientResponse<void>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return new SimpleTradingClientResponse(status, _headers, null as any);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
     }
 
     /**
@@ -1277,49 +666,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processCloseTrade(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeResultDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = FieldErrorResponse.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<SimpleTradingClientResponse<TradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
-    }
-
     /**
      * @return OK
      */
@@ -1343,37 +689,757 @@ export class SimpleTradingClient implements ISimpleTradingClient {
         });
     }
 
-    protected processRestoreCalculatedResult(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+    protected processGetAppInfo(response: Response): Promise<SimpleTradingClientResponse<ApiInfo>> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
         if (status === 200) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TradeResultDto.fromJS(resultData200);
-            return new SimpleTradingClientResponse(status, _headers, result200);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("Not Found", status, _responseText, _headers, result404);
-            });
-        } else if (status === 422) {
-            return response.text().then((_responseText) => {
-            let result422: any = null;
-            let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result422 = ErrorResponse.fromJS(resultData422);
-            return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ApiInfo.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<ApiInfo>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetUserSettings(response: Response): Promise<SimpleTradingClientResponse<UserSettingsDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = UserSettingsDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<UserSettingsDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processUpdateUserSettings(response: Response): Promise<SimpleTradingClientResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+                return new SimpleTradingClientResponse(status, _headers, null as any);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetUserLocalNow(response: Response): Promise<SimpleTradingClientResponse<Date>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 ? new Date(resultData200.toString()) : null as any;
+
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<Date>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetAvailableTimezones(response: Response): Promise<SimpleTradingClientResponse<TimeZoneOption[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(TimeZoneOption.fromJS(item));
+                } else {
+                    result200 = null as any;
+                }
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<TimeZoneOption[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetAssets(response: Response): Promise<SimpleTradingClientResponse<AssetDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(AssetDto.fromJS(item));
+                } else {
+                    result200 = null as any;
+                }
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<AssetDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetCurrencies(response: Response): Promise<SimpleTradingClientResponse<CurrencyDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(CurrencyDto.fromJS(item));
+                } else {
+                    result200 = null as any;
+                }
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<CurrencyDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetProfiles(response: Response): Promise<SimpleTradingClientResponse<ProfileDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(ProfileDto.fromJS(item));
+                } else {
+                    result200 = null as any;
+                }
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<ProfileDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetActiveProfile(response: Response): Promise<SimpleTradingClientResponse<ProfileDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ProfileDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<ProfileDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetReference(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ReferenceDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<ReferenceDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processUpdateReference(response: Response): Promise<SimpleTradingClientResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+                return new SimpleTradingClientResponse(status, _headers, null as any);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processDeleteReference(response: Response): Promise<SimpleTradingClientResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+                return new SimpleTradingClientResponse(status, _headers, null as any);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetReferences(response: Response): Promise<SimpleTradingClientResponse<ReferenceDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(ReferenceDto.fromJS(item));
+                } else {
+                    result200 = null as any;
+                }
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<ReferenceDto[]>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processAddReference(response: Response): Promise<SimpleTradingClientResponse<string>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : null as any;
+
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<string>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processDeleteReferences(response: Response): Promise<SimpleTradingClientResponse<number>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : null as any;
+
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<number>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processSearchTrades(response: Response): Promise<SimpleTradingClientResponse<PageDtoOfTradeDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = PageDtoOfTradeDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<PageDtoOfTradeDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processAddTrade(response: Response): Promise<SimpleTradingClientResponse<AddTradeResultDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = AddTradeResultDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<AddTradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processGetTrade(response: Response): Promise<SimpleTradingClientResponse<TradeDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TradeDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<TradeDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processUpdateTrade(response: Response): Promise<SimpleTradingClientResponse<WarningsDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = WarningsDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<WarningsDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processDeleteTrade(response: Response): Promise<SimpleTradingClientResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+                return new SimpleTradingClientResponse(status, _headers, null as any);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<void>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processCloseTrade(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TradeResultDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = FieldErrorResponse.fromJS(resultData400);
+                return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SimpleTradingClientResponse<TradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
+    }
+
+    protected processRestoreCalculatedResult(response: Response): Promise<SimpleTradingClientResponse<TradeResultDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        }
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TradeResultDto.fromJS(resultData200);
+                return new SimpleTradingClientResponse(status, _headers, result200);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+                return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+                let result404: any = null;
+                let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result404 = ErrorResponse.fromJS(resultData404);
+                return throwException("Not Found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = ErrorResponse.fromJS(resultData422);
+                return throwException("Unprocessable Entity", status, _responseText, _headers, result422);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
         return Promise.resolve<SimpleTradingClientResponse<TradeResultDto>>(new SimpleTradingClientResponse(status, _headers, null as any));
@@ -1396,6 +1462,13 @@ export class AddReferenceDto implements IAddReferenceDto {
         }
     }
 
+    static fromJS(data: any): AddReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1406,13 +1479,6 @@ export class AddReferenceDto implements IAddReferenceDto {
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
-    }
-
-    static fromJS(data: any): AddReferenceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddReferenceDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1464,6 +1530,13 @@ export class AddTradeDto implements IAddTradeDto {
         }
     }
 
+    static fromJS(data: any): AddTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1490,13 +1563,6 @@ export class AddTradeDto implements IAddTradeDto {
                     this.references!.push(AddReferenceDto.fromJS(item));
             }
         }
-    }
-
-    static fromJS(data: any): AddTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1566,6 +1632,13 @@ export class AddTradeResultDto implements IAddTradeResultDto {
         }
     }
 
+    static fromJS(data: any): AddTradeResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddTradeResultDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1579,13 +1652,6 @@ export class AddTradeResultDto implements IAddTradeResultDto {
                     this.warnings!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): AddTradeResultDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddTradeResultDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1627,6 +1693,13 @@ export class ApiInfo implements IApiInfo {
         }
     }
 
+    static fromJS(data: any): ApiInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiInfo();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1637,13 +1710,6 @@ export class ApiInfo implements IApiInfo {
             this.version = _data["version"];
             this.environment = _data["environment"];
         }
-    }
-
-    static fromJS(data: any): ApiInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiInfo();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1683,6 +1749,13 @@ export class AssetDto implements IAssetDto {
         }
     }
 
+    static fromJS(data: any): AssetDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssetDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1693,13 +1766,6 @@ export class AssetDto implements IAssetDto {
             this.symbol = _data["symbol"];
             this.name = _data["name"];
         }
-    }
-
-    static fromJS(data: any): AssetDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AssetDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1740,6 +1806,13 @@ export class CloseTradeDto implements ICloseTradeDto {
         }
     }
 
+    static fromJS(data: any): CloseTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CloseTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1751,13 +1824,6 @@ export class CloseTradeDto implements ICloseTradeDto {
             this.closed = _data["closed"] ? new Date(_data["closed"].toString()) : undefined as any;
             this.manuallyEnteredResult = _data["manuallyEnteredResult"] ? UpdateResultValue.fromJS(_data["manuallyEnteredResult"]) : undefined as any;
         }
-    }
-
-    static fromJS(data: any): CloseTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CloseTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1799,6 +1865,13 @@ export class CurrencyDto implements ICurrencyDto {
         }
     }
 
+    static fromJS(data: any): CurrencyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrencyDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1809,13 +1882,6 @@ export class CurrencyDto implements ICurrencyDto {
             this.isoCode = _data["isoCode"];
             this.name = _data["name"];
         }
-    }
-
-    static fromJS(data: any): CurrencyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CurrencyDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1856,6 +1922,13 @@ export class ErrorResponse implements IErrorResponse {
         }
     }
 
+    static fromJS(data: any): ErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1868,13 +1941,6 @@ export class ErrorResponse implements IErrorResponse {
                     this.messages!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): ErrorResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorResponse();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1916,6 +1982,13 @@ export class FieldError implements IFieldError {
         }
     }
 
+    static fromJS(data: any): FieldError {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldError();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1929,13 +2002,6 @@ export class FieldError implements IFieldError {
                     this.messages!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): FieldError {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldError();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -1978,6 +2044,13 @@ export class FieldErrorResponse implements IFieldErrorResponse {
         }
     }
 
+    static fromJS(data: any): FieldErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldErrorResponse();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -1990,13 +2063,6 @@ export class FieldErrorResponse implements IFieldErrorResponse {
                     this.errors!.push(FieldError.fromJS(item));
             }
         }
-    }
-
-    static fromJS(data: any): FieldErrorResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldErrorResponse();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2046,6 +2112,13 @@ export class PageDtoOfTradeDto implements IPageDtoOfTradeDto {
         }
     }
 
+    static fromJS(data: any): PageDtoOfTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageDtoOfTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2063,13 +2136,6 @@ export class PageDtoOfTradeDto implements IPageDtoOfTradeDto {
             this.page = _data["page"];
             this.pageSize = _data["pageSize"];
         }
-    }
-
-    static fromJS(data: any): PageDtoOfTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PageDtoOfTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2120,6 +2186,13 @@ export class ProfileDto implements IProfileDto {
         }
     }
 
+    static fromJS(data: any): ProfileDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProfileDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2131,13 +2204,6 @@ export class ProfileDto implements IProfileDto {
             this.description = _data["description"];
             this.isActive = _data["isActive"];
         }
-    }
-
-    static fromJS(data: any): ProfileDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProfileDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2180,6 +2246,13 @@ export class ReferenceDto implements IReferenceDto {
         }
     }
 
+    static fromJS(data: any): ReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2191,13 +2264,6 @@ export class ReferenceDto implements IReferenceDto {
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
-    }
-
-    static fromJS(data: any): ReferenceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ReferenceDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2241,6 +2307,13 @@ export class TimeZoneOption implements ITimeZoneOption {
         }
     }
 
+    static fromJS(data: any): TimeZoneOption {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeZoneOption();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2251,13 +2324,6 @@ export class TimeZoneOption implements ITimeZoneOption {
             this.timeZone = _data["timeZone"];
             this.offset = _data["offset"];
         }
-    }
-
-    static fromJS(data: any): TimeZoneOption {
-        data = typeof data === 'object' ? data : {};
-        let result = new TimeZoneOption();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2320,6 +2386,13 @@ export class TradeDto implements ITradeDto {
         }
     }
 
+    static fromJS(data: any): TradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2357,13 +2430,6 @@ export class TradeDto implements ITradeDto {
                     this.warnings!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): TradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2453,6 +2519,13 @@ export class TradeResultDto implements ITradeResultDto {
         }
     }
 
+    static fromJS(data: any): TradeResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TradeResultDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2468,13 +2541,6 @@ export class TradeResultDto implements ITradeResultDto {
                     this.warnings!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): TradeResultDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TradeResultDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2520,6 +2586,13 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
         }
     }
 
+    static fromJS(data: any): UpdateReferenceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateReferenceDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2530,13 +2603,6 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
             this.link = _data["link"];
             this.notes = _data["notes"] ? UpdateStringValue.fromJS(_data["notes"]) : undefined as any;
         }
-    }
-
-    static fromJS(data: any): UpdateReferenceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateReferenceDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2574,6 +2640,13 @@ export class UpdateResultValue implements IUpdateResultValue {
         }
     }
 
+    static fromJS(data: any): UpdateResultValue {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateResultValue();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2582,13 +2655,6 @@ export class UpdateResultValue implements IUpdateResultValue {
             }
             this.value = _data["value"];
         }
-    }
-
-    static fromJS(data: any): UpdateResultValue {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateResultValue();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2622,6 +2688,13 @@ export class UpdateStringValue implements IUpdateStringValue {
         }
     }
 
+    static fromJS(data: any): UpdateStringValue {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateStringValue();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2630,13 +2703,6 @@ export class UpdateStringValue implements IUpdateStringValue {
             }
             this.value = _data["value"];
         }
-    }
-
-    static fromJS(data: any): UpdateStringValue {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateStringValue();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2682,6 +2748,13 @@ export class UpdateTradeDto implements IUpdateTradeDto {
         }
     }
 
+    static fromJS(data: any): UpdateTradeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTradeDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2702,13 +2775,6 @@ export class UpdateTradeDto implements IUpdateTradeDto {
             this.exitPrice = _data["exitPrice"] ? UpdateValueOfNullableOfdecimal.fromJS(_data["exitPrice"]) : undefined as any;
             this.notes = _data["notes"] ? UpdateStringValue.fromJS(_data["notes"]) : undefined as any;
         }
-    }
-
-    static fromJS(data: any): UpdateTradeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateTradeDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2768,6 +2834,13 @@ export class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
         }
     }
 
+    static fromJS(data: any): UpdateUserSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateUserSettingsDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2778,13 +2851,6 @@ export class UpdateUserSettingsDto implements IUpdateUserSettingsDto {
             this.isoLanguageCode = _data["isoLanguageCode"] ? UpdateStringValue.fromJS(_data["isoLanguageCode"]) : undefined as any;
             this.timeZone = _data["timeZone"];
         }
-    }
-
-    static fromJS(data: any): UpdateUserSettingsDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateUserSettingsDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2822,6 +2888,13 @@ export class UpdateValueOfNullableOfdecimal implements IUpdateValueOfNullableOfd
         }
     }
 
+    static fromJS(data: any): UpdateValueOfNullableOfdecimal {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateValueOfNullableOfdecimal();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2830,13 +2903,6 @@ export class UpdateValueOfNullableOfdecimal implements IUpdateValueOfNullableOfd
             }
             this.value = _data["value"];
         }
-    }
-
-    static fromJS(data: any): UpdateValueOfNullableOfdecimal {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateValueOfNullableOfdecimal();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2873,6 +2939,13 @@ export class UserSettingsDto implements IUserSettingsDto {
         }
     }
 
+    static fromJS(data: any): UserSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSettingsDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2884,13 +2957,6 @@ export class UserSettingsDto implements IUserSettingsDto {
             this.timeZone = _data["timeZone"];
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : undefined as any;
         }
-    }
-
-    static fromJS(data: any): UserSettingsDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserSettingsDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2933,6 +2999,13 @@ export class WarningsDto implements IWarningsDto {
         }
     }
 
+    static fromJS(data: any): WarningsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new WarningsDto();
+        result.init(data);
+        return result;
+    }
+
     init(_data?: any) {
         if (_data) {
             for (var property in _data) {
@@ -2945,13 +3018,6 @@ export class WarningsDto implements IWarningsDto {
                     this.warnings!.push(item);
             }
         }
-    }
-
-    static fromJS(data: any): WarningsDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new WarningsDto();
-        result.init(data);
-        return result;
     }
 
     toJSON(data?: any) {
@@ -2980,8 +3046,7 @@ export class SimpleTradingClientResponse<TResult> {
     headers: { [key: string]: any; };
     result: TResult;
 
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
-    {
+    constructor(status: number, headers: { [key: string]: any; }, result: TResult) {
         this.status = status;
         this.headers = headers;
         this.result = result;
@@ -2994,6 +3059,7 @@ export class SimpleTradingClientException extends Error {
     response: string;
     headers: { [key: string]: any; };
     result: any;
+    protected isSimpleTradingClientException = true;
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -3005,14 +3071,14 @@ export class SimpleTradingClientException extends Error {
         this.result = result;
     }
 
-    protected isSimpleTradingClientException = true;
-
     static isSimpleTradingClientException(obj: any): obj is SimpleTradingClientException {
         return obj.isSimpleTradingClientException === true;
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: {
+    [key: string]: any;
+}, result?: any): any {
     if (result !== null && result !== undefined)
         throw result;
     else
