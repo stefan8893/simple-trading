@@ -1,4 +1,5 @@
-﻿using NSwag.CodeGeneration.CSharp;
+﻿using NJsonSchema.CodeGeneration.TypeScript;
+using NSwag.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.TypeScript;
 
 namespace SimpleTrading.WebApi.Clients;
@@ -38,5 +39,9 @@ public static class ClientSettings
         GenerateDtoTypes = true,
         ResponseClass = "SimpleTradingClientResponse",
         UseAbortSignal = true,
+        TypeScriptGeneratorSettings =
+        {
+            EnumStyle = TypeScriptEnumStyle.StringLiteral
+        }
     };
 }

@@ -2020,17 +2020,9 @@ export interface IFieldErrorResponse {
     [key: string]: any;
 }
 
-export enum NullableOfReferenceTypeDto {
-    TradingView = "TradingView",
-    Other = "Other",
-}
+export type NullableOfReferenceTypeDto = "TradingView" | "Other";
 
-export enum NullableOfResultDto {
-    Win = "Win",
-    Mediocre = "Mediocre",
-    BreakEven = "BreakEven",
-    Loss = "Loss",
-}
+export type NullableOfResultDto = "Win" | "Mediocre" | "BreakEven" | "Loss";
 
 export class PageDtoOfTradeDto implements IPageDtoOfTradeDto {
     data!: TradeDto[];
@@ -2231,10 +2223,7 @@ export interface IReferenceDto {
     [key: string]: any;
 }
 
-export enum ReferenceTypeDto {
-    TradingView = "TradingView",
-    Other = "Other",
-}
+export type ReferenceTypeDto = "TradingView" | "Other";
 
 export class TimeZoneOption implements ITimeZoneOption {
     windowsId!: string;

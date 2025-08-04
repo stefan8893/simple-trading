@@ -5,14 +5,14 @@
 // </auto-generated>
 //----------------------
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SimpleTradingClientException = exports.SimpleTradingClientResponse = exports.WarningsDto = exports.UserSettingsDto = exports.UpdateValueOfNullableOfdecimal = exports.UpdateUserSettingsDto = exports.UpdateTradeDto = exports.UpdateStringValue = exports.UpdateResultValue = exports.UpdateReferenceDto = exports.TradeResultDto = exports.TradeDto = exports.TimeZoneOption = exports.ReferenceTypeDto = exports.ReferenceDto = exports.ProfileDto = exports.PageDtoOfTradeDto = exports.NullableOfResultDto = exports.NullableOfReferenceTypeDto = exports.FieldErrorResponse = exports.FieldError = exports.ErrorResponse = exports.CurrencyDto = exports.CloseTradeDto = exports.AssetDto = exports.ApiInfo = exports.AddTradeResultDto = exports.AddTradeDto = exports.AddReferenceDto = exports.SimpleTradingClient = void 0;
+exports.SimpleTradingClientException = exports.SimpleTradingClientResponse = exports.WarningsDto = exports.UserSettingsDto = exports.UpdateValueOfNullableOfdecimal = exports.UpdateUserSettingsDto = exports.UpdateTradeDto = exports.UpdateStringValue = exports.UpdateResultValue = exports.UpdateReferenceDto = exports.TradeResultDto = exports.TradeDto = exports.TimeZoneOption = exports.ReferenceDto = exports.ProfileDto = exports.PageDtoOfTradeDto = exports.FieldErrorResponse = exports.FieldError = exports.ErrorResponse = exports.CurrencyDto = exports.CloseTradeDto = exports.AssetDto = exports.ApiInfo = exports.AddTradeResultDto = exports.AddTradeDto = exports.AddReferenceDto = exports.SimpleTradingClient = void 0;
 class SimpleTradingClient {
     http;
     baseUrl;
     jsonParseReviver = undefined;
     constructor(baseUrl, http) {
         this.http = http ? http : window;
-        this.baseUrl = baseUrl ?? "";
+        this.baseUrl = baseUrl ?? "https://simple-trading-web-api.azurewebsites.net/";
     }
     /**
      * @return OK
@@ -1811,18 +1811,6 @@ class FieldErrorResponse {
     }
 }
 exports.FieldErrorResponse = FieldErrorResponse;
-var NullableOfReferenceTypeDto;
-(function (NullableOfReferenceTypeDto) {
-    NullableOfReferenceTypeDto["TradingView"] = "TradingView";
-    NullableOfReferenceTypeDto["Other"] = "Other";
-})(NullableOfReferenceTypeDto || (exports.NullableOfReferenceTypeDto = NullableOfReferenceTypeDto = {}));
-var NullableOfResultDto;
-(function (NullableOfResultDto) {
-    NullableOfResultDto["Win"] = "Win";
-    NullableOfResultDto["Mediocre"] = "Mediocre";
-    NullableOfResultDto["BreakEven"] = "BreakEven";
-    NullableOfResultDto["Loss"] = "Loss";
-})(NullableOfResultDto || (exports.NullableOfResultDto = NullableOfResultDto = {}));
 class PageDtoOfTradeDto {
     data;
     count;
@@ -1975,11 +1963,6 @@ class ReferenceDto {
     }
 }
 exports.ReferenceDto = ReferenceDto;
-var ReferenceTypeDto;
-(function (ReferenceTypeDto) {
-    ReferenceTypeDto["TradingView"] = "TradingView";
-    ReferenceTypeDto["Other"] = "Other";
-})(ReferenceTypeDto || (exports.ReferenceTypeDto = ReferenceTypeDto = {}));
 class TimeZoneOption {
     windowsId;
     timeZone;

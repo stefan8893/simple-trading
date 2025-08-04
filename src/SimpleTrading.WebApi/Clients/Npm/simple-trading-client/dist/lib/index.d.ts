@@ -396,16 +396,8 @@ export interface IFieldErrorResponse {
     errors: FieldError[];
     [key: string]: any;
 }
-export declare enum NullableOfReferenceTypeDto {
-    TradingView = "TradingView",
-    Other = "Other"
-}
-export declare enum NullableOfResultDto {
-    Win = "Win",
-    Mediocre = "Mediocre",
-    BreakEven = "BreakEven",
-    Loss = "Loss"
-}
+export type NullableOfReferenceTypeDto = "TradingView" | "Other";
+export type NullableOfResultDto = "Win" | "Mediocre" | "BreakEven" | "Loss";
 export declare class PageDtoOfTradeDto implements IPageDtoOfTradeDto {
     data: TradeDto[];
     count: number;
@@ -464,10 +456,7 @@ export interface IReferenceDto {
     notes?: string | undefined;
     [key: string]: any;
 }
-export declare enum ReferenceTypeDto {
-    TradingView = "TradingView",
-    Other = "Other"
-}
+export type ReferenceTypeDto = "TradingView" | "Other";
 export declare class TimeZoneOption implements ITimeZoneOption {
     windowsId: string;
     timeZone: string;
