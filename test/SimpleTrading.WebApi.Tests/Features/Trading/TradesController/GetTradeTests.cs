@@ -35,10 +35,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var returnedTrade = await client.GetTradeAsync(trade.Id);
+        var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(trade.Id, returnedTrade.Id);
@@ -61,10 +61,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         userSettings.TimeZone = "America/New_York";
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var returnedTrade = await client.GetTradeAsync(trade.Id);
+        var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
         // assert
         var expectedOpenedDate = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
@@ -96,10 +96,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             .Build();
 
         DbContext.AddRange(trade, exampleReference, tradingViewReference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var returnedTrade = await client.GetTradeAsync(trade.Id);
+        var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(2, returnedTrade.References.Count);

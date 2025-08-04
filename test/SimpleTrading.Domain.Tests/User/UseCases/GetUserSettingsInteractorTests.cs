@@ -15,7 +15,7 @@ public class GetUserSettingsTests : DomainTests
     {
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var userSettingsModel = await Interactor.Execute();
 
@@ -34,7 +34,7 @@ public class GetUserSettingsTests : DomainTests
             .GetUserSettings();
 
         userSettings.Language = null;
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var userSettingsModel = await Interactor.Execute();
@@ -56,7 +56,7 @@ public class GetUserSettingsTests : DomainTests
 
         userSettings.Culture = "en-US";
         userSettings.Language = "de";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var userSettingsModel = await Interactor.Execute();

@@ -15,10 +15,10 @@ public class GetProfilesTests(TestingWebApplicationFactory<Program> factory) : W
         var profile2 = TestData.Profile.Default.Build();
 
         DbContext.AddRange(profile1, profile2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var profiles = await client.GetProfilesAsync();
+        var profiles = await client.GetProfilesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(profiles);

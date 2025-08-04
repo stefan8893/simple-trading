@@ -16,14 +16,14 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
 
         var trade = TestData.Trade.Default.Build();
         DbContext.AddRange(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var idOfAddedReference = await client.AddReferenceAsync(trade.Id, new AddReferenceDto
         {
             Type = NullableOfReferenceTypeDto.Other,
             Link = "https://example.org"
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         var newlyAddedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == idOfAddedReference);
@@ -38,7 +38,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
 
         var trade = TestData.Trade.Default.Build();
         DbContext.AddRange(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement

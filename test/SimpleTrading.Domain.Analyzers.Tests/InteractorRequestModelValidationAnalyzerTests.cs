@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime;
 using FluentValidation;
 using JetBrains.Annotations;
@@ -9,6 +10,8 @@ using OneOf;
 
 namespace SimpleTrading.Domain.Analyzers.Tests;
 
+[SuppressMessage("Usage",
+    "xUnit1051:Calls to methods which accept CancellationToken should use TestContext.Current.CancellationToken")]
 public class InteractorRequestModelValidationAnalyzerTests
 {
     private readonly Project _testProject = CreateProject("SimpleTrading.Domain.Analyzer.Tests");
@@ -22,23 +25,25 @@ public class InteractorRequestModelValidationAnalyzerTests
     }
 
     [Fact]
-    public async Task An_interactor_that_has_a_request_model_with_a_validator_must_have_a_bad_input_case_in_its_response_model()
+    public async Task
+        An_interactor_that_has_a_request_model_with_a_validator_must_have_a_bad_input_case_in_its_response_model()
     {
         // arrange
         var files = new Dictionary<string, string>
         {
             ["IInteractor.cs"] = TestConstants.InteractorSource,
-            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.ValidatorExistsForRequestModelFile)
+            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.ValidatorExistsForRequestModelFile,
+                TestContext.Current.CancellationToken)
         };
 
         var project = AddDocumentsToTestProject(files);
-        var compilation = await project.GetCompilationAsync();
+        var compilation = await project.GetCompilationAsync(TestContext.Current.CancellationToken);
         Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
             .WithAnalyzers([new InteractorRequestModelValidationAnalyzer()])
-            .GetAnalyzerDiagnosticsAsync();
+            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
 
         // assert
         var missingBadInputCaseError = Assert.Single(diagnostics);
@@ -51,23 +56,25 @@ public class InteractorRequestModelValidationAnalyzerTests
     }
 
     [Fact]
-    public async Task An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_that_is_not_of_type_OneOf_results_in_an_error()
+    public async Task
+        An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_that_is_not_of_type_OneOf_results_in_an_error()
     {
         // arrange
         var files = new Dictionary<string, string>
         {
             ["IInteractor.cs"] = TestConstants.InteractorSource,
-            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.ResponseModelTypeIsNotOneOfFile)
+            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.ResponseModelTypeIsNotOneOfFile,
+                TestContext.Current.CancellationToken)
         };
 
         var project = AddDocumentsToTestProject(files);
-        var compilation = await project.GetCompilationAsync();
+        var compilation = await project.GetCompilationAsync(TestContext.Current.CancellationToken);
         Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
             .WithAnalyzers([new InteractorRequestModelValidationAnalyzer()])
-            .GetAnalyzerDiagnosticsAsync();
+            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
 
         // assert
         var responseTypeMustBeOneOfError = Assert.Single(diagnostics);
@@ -80,23 +87,25 @@ public class InteractorRequestModelValidationAnalyzerTests
     }
 
     [Fact]
-    public async Task An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_with_a_bad_input_case_does_not_result_in_an_error()
+    public async Task
+        An_interactor_that_has_a_request_model_with_a_validator_and_a_response_model_with_a_bad_input_case_does_not_result_in_an_error()
     {
         // arrange
         var files = new Dictionary<string, string>
         {
             ["IInteractor.cs"] = TestConstants.InteractorSource,
-            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.ValidatorAndBadInputCaseExistsFile)
+            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.ValidatorAndBadInputCaseExistsFile,
+                TestContext.Current.CancellationToken)
         };
 
         var project = AddDocumentsToTestProject(files);
-        var compilation = await project.GetCompilationAsync();
+        var compilation = await project.GetCompilationAsync(TestContext.Current.CancellationToken);
         Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
             .WithAnalyzers([new InteractorRequestModelValidationAnalyzer()])
-            .GetAnalyzerDiagnosticsAsync();
+            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
 
         // assert
         Assert.Empty(diagnostics);
@@ -109,17 +118,19 @@ public class InteractorRequestModelValidationAnalyzerTests
         var files = new Dictionary<string, string>
         {
             ["IInteractor.cs"] = TestConstants.InteractorSource,
-            ["Test.cs"] = await File.ReadAllTextAsync(TestConstants.TestSourceFiles.InteractorWithMissingInteractorSuffixFile)
+            ["Test.cs"] = await File.ReadAllTextAsync(
+                TestConstants.TestSourceFiles.InteractorWithMissingInteractorSuffixFile,
+                TestContext.Current.CancellationToken)
         };
 
         var project = AddDocumentsToTestProject(files);
-        var compilation = await project.GetCompilationAsync();
+        var compilation = await project.GetCompilationAsync(TestContext.Current.CancellationToken);
         Assert.NotNull(compilation);
 
         // act
         var diagnostics = await compilation
             .WithAnalyzers([new InteractorRequestModelValidationAnalyzer()])
-            .GetAnalyzerDiagnosticsAsync();
+            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
 
         // assert
         var missingInteractorSuffixError = Assert.Single(diagnostics);

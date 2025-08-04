@@ -15,10 +15,10 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
         var currency2 = TestData.Currency.Default.Build();
 
         DbContext.AddRange(currency1, currency2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var currencies = await client.GetCurrenciesAsync();
+        var currencies = await client.GetCurrenciesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(currencies);

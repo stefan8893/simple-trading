@@ -54,7 +54,7 @@ public class UpdateTradeTests : DomainTests
         }).Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -186,7 +186,7 @@ public class UpdateTradeTests : DomainTests
         var newAsset = TestData.Asset.Default.Build();
 
         DbContext.AddRange(trade, newAsset);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -213,7 +213,7 @@ public class UpdateTradeTests : DomainTests
         var newProfile = TestData.Profile.Default.Build();
 
         DbContext.AddRange(trade, newProfile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -240,7 +240,7 @@ public class UpdateTradeTests : DomainTests
         var newCurrency = TestData.Currency.Default.Build();
 
         DbContext.AddRange(trade, newCurrency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -267,7 +267,7 @@ public class UpdateTradeTests : DomainTests
         _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -291,7 +291,7 @@ public class UpdateTradeTests : DomainTests
         _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -316,7 +316,7 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -341,7 +341,7 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -368,7 +368,7 @@ public class UpdateTradeTests : DomainTests
         const decimal newProfitLoss = 100m;
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -394,7 +394,7 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -428,7 +428,7 @@ public class UpdateTradeTests : DomainTests
         _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -466,7 +466,7 @@ public class UpdateTradeTests : DomainTests
             ).Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -501,7 +501,7 @@ public class UpdateTradeTests : DomainTests
             Result = ResultModel.Win
         }).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.True(trade.IsClosed);
         
@@ -531,7 +531,7 @@ public class UpdateTradeTests : DomainTests
         // arrange
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.False(trade.IsClosed);
 
@@ -556,7 +556,7 @@ public class UpdateTradeTests : DomainTests
         // arrange
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.False(trade.IsClosed);
 
@@ -586,7 +586,7 @@ public class UpdateTradeTests : DomainTests
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.True(trade.IsClosed);
 

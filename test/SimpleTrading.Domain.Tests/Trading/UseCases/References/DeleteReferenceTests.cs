@@ -20,7 +20,7 @@ public class DeleteReferenceTests : DomainTests
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
 
         DbContext.AddRange(trade, reference1, reference2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new DeleteReferenceRequestModel(trade.Id, reference1.Id));

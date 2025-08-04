@@ -19,7 +19,7 @@ public class GetCurrenciesTests : DomainTests
         var profile2 = TestData.Profile.Default.Build();
 
         DbContext.AddRange(profile1, profile2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new GetProfilesRequestModel(null));

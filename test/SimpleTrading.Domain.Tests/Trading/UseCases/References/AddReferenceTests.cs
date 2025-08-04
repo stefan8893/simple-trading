@@ -50,7 +50,7 @@ public class AddReferenceTests : DomainTests
 
         DbContext.Trades.Add(trade);
         DbContext.References.AddRange(references);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
@@ -71,7 +71,7 @@ public class AddReferenceTests : DomainTests
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");

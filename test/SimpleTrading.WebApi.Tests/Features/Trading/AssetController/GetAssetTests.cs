@@ -15,10 +15,10 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
         var asset2 = TestData.Asset.Default.Build();
 
         DbContext.AddRange(asset1, asset2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var assets = await client.GetAssetsAsync();
+        var assets = await client.GetAssetsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(assets);

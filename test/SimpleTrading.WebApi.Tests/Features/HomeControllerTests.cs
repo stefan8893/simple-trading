@@ -9,7 +9,7 @@ public class HomeControllerTests(TestingWebApplicationFactory<Program> factory) 
     {
         var client = await CreateClient(false);
 
-        var response = await client.GetAppInfoAsync();
+        var response = await client.GetAppInfoAsync(TestContext.Current.CancellationToken);
 
         Assert.NotNull(response);
         Assert.NotNull(response.Name);

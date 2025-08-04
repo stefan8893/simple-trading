@@ -12,7 +12,7 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        await client.DeleteTradeAsync(notExistingTradeId);
+        await client.DeleteTradeAsync(notExistingTradeId, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -23,10 +23,10 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        await client.DeleteTradeAsync(trade.Id);
+        await client.DeleteTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
         // assert
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);

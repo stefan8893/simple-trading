@@ -39,7 +39,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.AddTradeAsync(new AddTradeDto
@@ -50,7 +50,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -70,7 +70,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.AddTradeAsync(new AddTradeDto
@@ -82,7 +82,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
@@ -99,7 +99,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.AddTradeAsync(new AddTradeDto
@@ -113,7 +113,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -134,7 +134,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await client.AddTradeAsync(new AddTradeDto
@@ -148,7 +148,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -169,7 +169,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -204,7 +204,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -237,7 +237,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -276,7 +276,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -314,7 +314,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var opened = DateTimeOffset.Parse("2024-08-05T12:00:00Z");
 
@@ -327,7 +327,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -348,7 +348,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
         DbContext.AddRange(asset, profile, currency);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var openedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
 
@@ -361,7 +361,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);

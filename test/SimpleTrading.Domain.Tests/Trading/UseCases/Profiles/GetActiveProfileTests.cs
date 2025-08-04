@@ -19,7 +19,7 @@ public class GetActiveProfileTests : DomainTests
         var activeProfile = (TestData.Profile.Default with {IsActive = true}).Build();
 
         DbContext.AddRange(profile1, profile2, activeProfile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute();
@@ -38,7 +38,7 @@ public class GetActiveProfileTests : DomainTests
         var profile2 = TestData.Profile.Default.Build();
 
         DbContext.AddRange(profile1, profile2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute();

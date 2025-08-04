@@ -35,10 +35,10 @@ jobs:
           Auth__SimpleTradingWebApi__ClientId: ${{ secrets.AUTH_CLIENT_ID }}
           Auth__SimpleTradingWebApi__Audience: ${{ secrets.AUTH_AUDIENCE }}
         run: |
-          dotnet test `
-          -property:Configuration=Release `
-          -property:CollectCoverage=true `
-          -property:CoverletOutputFormat='cobertura'
+          dotnet test -c Release -- `
+            --coverage `
+            --coverage-output-format cobertura `
+            --coverage-output ../../../../coverage.cobertura.xml
 
       - name: Generate Coverage Report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.8

@@ -27,10 +27,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
         userSettings.Language = "de";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var userSettingsDto = await client.GetUserSettingsAsync();
+        var userSettingsDto = await client.GetUserSettingsAsync(TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal("en-US", userSettingsDto.Culture);
@@ -51,10 +51,10 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Vienna";
         userSettings.Language = "de";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var userSettingsDto = await client.GetUserSettingsAsync();
+        var userSettingsDto = await client.GetUserSettingsAsync(TestContext.Current.CancellationToken);
 
         // assert
         var nowInLocalTime = _utcNow.ToLocal(userSettings.TimeZone).DateTime;
@@ -70,7 +70,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Berlin";
         userSettings.Language = "de";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         await client.UpdateUserSettingsAsync(new UpdateUserSettingsDto
@@ -81,7 +81,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
                 Value = "en"
             },
             TimeZone = "Europe/Vienna"
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         var updatedUserSettings =
@@ -101,7 +101,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
         userSettings.Culture = "en-US";
         userSettings.TimeZone = "Europe/Berlin";
         userSettings.Language = "de";
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         await client.UpdateUserSettingsAsync(new UpdateUserSettingsDto
@@ -110,7 +110,7 @@ public class UserSettingsControllerTests(TestingWebApplicationFactory<Program> f
             {
                 Value = "en"
             }
-        });
+        }, TestContext.Current.CancellationToken);
 
         // assert
         var updatedUserSettings =

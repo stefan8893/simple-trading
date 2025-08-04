@@ -23,7 +23,7 @@ public class UpdateReferenceTests : DomainTests
         }).Build();
 
         DbContext.AddRange(trade, reference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateReferenceRequestModel = new UpdateReferenceRequestModel
         {
@@ -55,7 +55,7 @@ public class UpdateReferenceTests : DomainTests
         }).Build();
 
         DbContext.AddRange(reference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateReferenceRequestModel = new UpdateReferenceRequestModel
         {
@@ -80,7 +80,7 @@ public class UpdateReferenceTests : DomainTests
         var notExistingReferenceId = Guid.Parse("7ddbfd72-4e97-499d-9fff-7f1615eae562");
 
         DbContext.AddRange(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateReferenceRequestModel = new UpdateReferenceRequestModel
         {

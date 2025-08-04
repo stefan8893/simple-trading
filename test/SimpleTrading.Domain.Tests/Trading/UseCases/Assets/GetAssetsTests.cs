@@ -18,7 +18,7 @@ public class GetAssetsTests : DomainTests
         var asset2 = TestData.Asset.Default.Build();
 
         DbContext.AddRange(asset1, asset2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new GetAssetsRequestModel(null));

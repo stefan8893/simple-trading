@@ -39,10 +39,10 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         DbContext.AddRange(trade, reference1, reference2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var countOfDeletedReferences = await client.DeleteReferencesAsync(trade.Id);
+        var countOfDeletedReferences = await client.DeleteReferencesAsync(trade.Id, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(2, countOfDeletedReferences);

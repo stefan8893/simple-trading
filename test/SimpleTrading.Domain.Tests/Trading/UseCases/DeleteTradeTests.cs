@@ -29,7 +29,7 @@ public class DeleteTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new DeleteTradeRequestModel(trade.Id));

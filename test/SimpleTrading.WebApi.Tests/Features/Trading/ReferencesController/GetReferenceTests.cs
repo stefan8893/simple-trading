@@ -38,7 +38,7 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
 
         DbContext.AddRange(trade, reference);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var notExistingReferenceId = Guid.Parse("c8856d60-c650-4ae7-99b0-af87771c1186");
 
@@ -65,10 +65,10 @@ public class GetReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         DbContext.AddRange(trade, reference1, reference2);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var response = await client.GetReferenceAsync(trade.Id, reference2.Id);
+        var response = await client.GetReferenceAsync(trade.Id, reference2.Id, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);

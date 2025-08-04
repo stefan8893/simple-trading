@@ -24,7 +24,7 @@ public class SearchTradesPagingTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
@@ -51,7 +51,7 @@ public class SearchTradesPagingTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
@@ -78,7 +78,7 @@ public class SearchTradesPagingTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
@@ -105,7 +105,7 @@ public class SearchTradesPagingTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
@@ -132,7 +132,7 @@ public class SearchTradesPagingTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
@@ -159,7 +159,7 @@ public class SearchTradesPagingTests : DomainTests
 
         DbContext.Trades.AddRange(trades);
         DbContext.Profiles.Add(profile);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
         var response = await Interactor.Execute(new SearchTradesRequestModel

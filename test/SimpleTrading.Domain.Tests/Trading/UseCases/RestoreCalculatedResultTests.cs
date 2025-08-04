@@ -34,7 +34,7 @@ public class RestoreCalculatedResultTests : DomainTests
         }).Build();
 
         DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(Result.Mediocre, tradeWithCalculatedMediocreResult.Result!.Name);
         Assert.Equal((short)83, tradeWithCalculatedMediocreResult.Result.Performance);
@@ -93,7 +93,7 @@ public class RestoreCalculatedResultTests : DomainTests
         });
 
         DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(Result.Loss, tradeWithCalculatedMediocreResult.Result!.Name);
 
