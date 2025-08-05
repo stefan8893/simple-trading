@@ -97,7 +97,7 @@ public class UpdateUserSettingsTests : DomainTests
         var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
         var error = Assert.Single(badInput.ValidationResult.Errors);
         Assert.Equal("IsoLanguageCode", error.PropertyName);
-        Assert.Equal("'deu' is not supported. Only 'de, en'.", error.ErrorMessage);
+        Assert.Equal("'DEU' is not supported. Only 'DE, EN'.", error.ErrorMessage);
     }
 
     [Fact]

@@ -20,15 +20,18 @@ public class UpdateUserSettingsRequestModelValidator : AbstractValidator<UpdateU
             .WithMessage(x =>
                 string.Format(SimpleTradingStrings.CultureNotSupported,
                     x.Culture,
-                    string.Join(", ", Constants.SupportedCultures.Select(c => c.Name).Order(StringComparer.InvariantCultureIgnoreCase))))
+                    string.Join(", ",
+                        Constants.SupportedCultures.Select(c => c.Name)
+                            .Order(StringComparer.InvariantCultureIgnoreCase))))
             .When(x => x.Culture is not null);
 
         RuleFor(x => x.IsoLanguageCode.AsT0)
             .Must(x => Constants.SupportedLanguages.Contains(x!))
             .WithMessage(x =>
                 string.Format(SimpleTradingStrings.LanguageNotSupported,
-                    x.IsoLanguageCode.AsT0,
-                    string.Join(", ", Constants.SupportedLanguages.Order(StringComparer.InvariantCultureIgnoreCase))))
+                    x.IsoLanguageCode.AsT0!.ToUpper(),
+                    string.Join(", ", Constants.SupportedLanguages.Order(StringComparer.InvariantCultureIgnoreCase))
+                        .ToUpper()))
             .OverridePropertyName(x => x.IsoLanguageCode)
             .When(x => x.IsoLanguageCode is {IsT0: true, AsT0: not null});
 
