@@ -57,19 +57,18 @@ public class RestoreCalculatedResultTests(
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        var singleError = Assert.Single(exception.Result.Messages);
-        Assert.Equal("Trade nicht gefunden.", singleError);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
-    public async Task A_business_error_results_in_an_unprocessable_entity_response()
+    public async Task A_conflict_results_in_a_conflict_response()
     {
         // arrange
         var client = await CreateClient();
         var tradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
-        restoreCalculatedResultInteractorStub.ResponseModel = new BusinessError(tradeId, "Something went badly wrong.");
+        restoreCalculatedResultInteractorStub.ResponseModel = new Conflict(tradeId, "Something went badly wrong.");
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -79,9 +78,8 @@ public class RestoreCalculatedResultTests(
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
-        var singleError = Assert.Single(exception.Result.Messages);
-        Assert.Equal("Something went badly wrong.", singleError);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
+        Assert.Equal("Something went badly wrong.", exception.Result.Detail);
     }
 }

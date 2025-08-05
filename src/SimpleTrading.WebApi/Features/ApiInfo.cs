@@ -1,3 +1,3 @@
 ﻿namespace SimpleTrading.WebApi.Features;
 
-public record ApiInfo(string Name, string Version, string Environment);
+public record ApiInfo(string Name, string Version, string Environment, string Docs);

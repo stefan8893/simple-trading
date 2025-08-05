@@ -12,4 +12,4 @@ public record NotFound(Guid ResourceId, string? ResourceType = null);
 
 public record NotFound<TEntity>(Guid ResourceId) : NotFound(ResourceId, typeof(TEntity).Name);
 
-public record BusinessError(Guid ResourceId, string Details);
+public record Conflict(Guid ResourceId, string Details);

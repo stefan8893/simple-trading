@@ -2,6 +2,7 @@
 using Autofac;
 using FluentValidation;
 using SimpleTrading.WebApi.Clients;
+using SimpleTrading.WebApi.Infrastructure;
 using Module = Autofac.Module;
 
 namespace SimpleTrading.WebApi.Modules;
@@ -11,6 +12,7 @@ public class WebApiModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         AddClientGenerator(builder);
+        AddSimpleProblemDetails(builder);
 
         var webApiAssembly = typeof(Program).Assembly;
         AddValidators(builder, webApiAssembly);
@@ -21,6 +23,13 @@ public class WebApiModule : Module
         builder.RegisterType<ClientGenerator>()
             .AsSelf()
             .SingleInstance();
+    }
+
+    private static void AddSimpleProblemDetails(ContainerBuilder builder)
+    {
+        builder.RegisterType<SimpleProblemDetails>()
+            .AsSelf()
+            .InstancePerLifetimeScope();
     }
 
     private static void AddValidators(ContainerBuilder builder, Assembly webApiAssembly)

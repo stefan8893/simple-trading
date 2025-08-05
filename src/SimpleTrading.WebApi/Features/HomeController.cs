@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace SimpleTrading.WebApi.Features;
 
 [ApiController]
-[Route("[controller]")]
+[Route("")]
 [Produces(MediaTypeNames.Application.Json)]
-public class HomeController(IHostEnvironment hostEnvironment) : ControllerBase
+public class HomeController(IHostEnvironment hostEnvironment, IConfiguration configuration) : ControllerBase
 {
     private static readonly Lazy<string> AssemblyVersion =
         new(() =>
@@ -20,17 +20,21 @@ public class HomeController(IHostEnvironment hostEnvironment) : ControllerBase
                    assembly.GetName().Version?.ToString() ??
                    "N/A";
         });
-
+    
     private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? "N/A";
 
     [AllowAnonymous]
-    [HttpGet("info", Name = nameof(GetAppInfo))]
+    [HttpGet("", Name = nameof(GetAppInfo))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<ApiInfo> GetAppInfo()
     {
+        var baseUrl = configuration.GetValue<string>("BaseUrl") ?? "";
+        var docs = $"{baseUrl.Trim('/')}/docs";
+        
         var apiInfo = new ApiInfo(AssemblyName,
             AssemblyVersion.Value,
-            hostEnvironment.EnvironmentName);
+            hostEnvironment.EnvironmentName,
+            docs);
 
         return Ok(apiInfo);
     }

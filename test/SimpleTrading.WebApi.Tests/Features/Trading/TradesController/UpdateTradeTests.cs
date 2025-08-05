@@ -88,11 +88,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);
-        Assert.Equal("manuallyEnteredResult", singleError.Identifier);
-        var singleMessage = Assert.Single(singleError.Messages);
+        Assert.Equal("manuallyEnteredResult", singleError.Key);
+        var singleMessage = Assert.Single(singleError.Value);
         Assert.Equal("'Ergebnis' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.",
             singleMessage);
     }
@@ -174,8 +174,9 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
@@ -197,11 +198,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);
-        Assert.Equal("closed", singleError.Identifier);
-        var singleMessage = Assert.Single(singleError.Messages);
+        Assert.Equal("closed", singleError.Key);
+        var singleMessage = Assert.Single(singleError.Value);
         Assert.Equal("'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.",
             singleMessage);
     }

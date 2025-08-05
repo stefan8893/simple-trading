@@ -8,7 +8,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 
 using CloseTradeResponse =
     OneOf<Completed<CloseTradeResponseModel>, BadInput, NotFound,
-        BusinessError>;
+        Conflict>;
 
 [UsedImplicitly]
 public class CloseTradeInteractor(

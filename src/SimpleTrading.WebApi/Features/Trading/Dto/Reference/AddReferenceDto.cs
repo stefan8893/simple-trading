@@ -22,6 +22,8 @@ public class AddReferenceDtoValidator : AbstractValidator<AddReferenceDto>
 
         RuleFor(x => x.Link)
             .NotNull()
+            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
+            .WithMessage(SimpleTradingStrings.InvalidLink)
             .WithName(SimpleTradingStrings.Link);
     }
 }

@@ -59,7 +59,7 @@ public class AddReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var businessError = Assert.IsType<BusinessError>(response.Value);
+        var businessError = Assert.IsType<Conflict>(response.Value);
         Assert.Equal(trade.Id, businessError.ResourceId);
         Assert.Equal("You can't add more than 50 references per trade.", businessError.Details);
     }

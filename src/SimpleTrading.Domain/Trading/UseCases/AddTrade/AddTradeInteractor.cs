@@ -11,7 +11,7 @@ using AddTradeResponse =
     OneOf<Completed<AddTradeResponseModel>,
         BadInput,
         NotFound,
-        BusinessError>;
+        Conflict>;
 
 [UsedImplicitly]
 public class AddTradeInteractor(
@@ -44,7 +44,7 @@ public class AddTradeInteractor(
 
         var potentiallyClosedTrade = TryCloseTrade(trade, model);
 
-        if (potentiallyClosedTrade.Value is BusinessError businessError)
+        if (potentiallyClosedTrade.Value is Conflict businessError)
             return businessError;
 
         tradeRepository.Add(trade);
@@ -99,7 +99,7 @@ public class AddTradeInteractor(
         return newTrade;
     }
 
-    private OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError> TryCloseTrade(
+    private OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict> TryCloseTrade(
         Trade trade,
         AddTradeRequestModel model)
     {
@@ -107,10 +107,10 @@ public class AddTradeInteractor(
         {
             {ProfitLoss: not null, Closed: not null} => Map(Close()),
             {ProfitLoss: null, Closed: null} => new NothingToClose(trade),
-            _ => BusinessError(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndProfitLoss)
+            _ => Conflict(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndProfitLoss)
         };
 
-        OneOf<Completed<CloseTradeResult>, BusinessError> Close()
+        OneOf<Completed<CloseTradeResult>, Conflict> Close()
         {
             return trade.Close(new CloseTradeConfiguration(
                 model.Closed!.Value.UtcDateTime,
@@ -122,11 +122,11 @@ public class AddTradeInteractor(
             });
         }
 
-        OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError> Map(
-            OneOf<Completed<CloseTradeResult>, BusinessError> closeTradeResult)
+        OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict> Map(
+            OneOf<Completed<CloseTradeResult>, Conflict> closeTradeResult)
         {
             return closeTradeResult
-                .Match<OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError>>(
+                .Match<OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict>>(
                     x => x,
                     x => x);
         }

@@ -1,8 +1,7 @@
-﻿using System.Text;
+﻿using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.AspNetCore.Localization;
 using SimpleTrading.Domain;
-using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.WebApi.Infrastructure;
 
@@ -23,10 +22,32 @@ public static class WebApplicationExtensions
 
             if (context.Response is {StatusCode: 404, HasStarted: false})
             {
-                context.Response.ContentType = "application/json; charset=utf-8";
-                var jsonResponse = JsonSerializer.Serialize(new ErrorResponse
-                    {Messages = [SimpleTradingStrings.NotFound]});
-                await context.Response.WriteAsync(jsonResponse, Encoding.UTF8);
+                var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
+
+                var notFoundProblemDetails = simpleProblemDetails.CreateNotFoundDetails();
+                context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
+                var jsonResponse = JsonSerializer.Serialize(notFoundProblemDetails);
+
+                await context.Response.WriteAsync(jsonResponse);
+            }
+        });
+    }
+
+    public static IApplicationBuilder Use401ResponseBodyProblemDetailsMiddleware(this WebApplication app)
+    {
+        return app.Use(async (context, next) =>
+        {
+            await next();
+
+            if (context.Response is {StatusCode: StatusCodes.Status401Unauthorized, HasStarted: false})
+            {
+                var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
+
+                var problemDetails = simpleProblemDetails.CreateUnauthenticatedDetails();
+                context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
+                var jsonResponse = JsonSerializer.Serialize(problemDetails);
+
+                await context.Response.WriteAsync(jsonResponse);
             }
         });
     }

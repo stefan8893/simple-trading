@@ -7,7 +7,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.AddReference;
 
-using AddReferenceResponse = OneOf<Completed<Guid>, BadInput, NotFound, BusinessError>;
+using AddReferenceResponse = OneOf<Completed<Guid>, BadInput, NotFound, Conflict>;
 
 [UsedImplicitly]
 public class AddReferenceInteractor(
@@ -24,7 +24,7 @@ public class AddReferenceInteractor(
             return NotFound<Trade>(model.TradeId);
 
         if (trade.References.Count >= MaxReferencesPerTrade)
-            return BusinessError(trade.Id,
+            return Conflict(trade.Id,
                 string.Format(SimpleTradingStrings.MoreThanXReferencesNotAllowed, MaxReferencesPerTrade));
 
         return await AddReference(trade, model);

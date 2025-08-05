@@ -8,9 +8,9 @@ namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController.TestDoubl
 [UsedImplicitly]
 public class RestoreCalculatedResultInteractorStub : IRestoreCalculatedResult
 {
-    public OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>? ResponseModel { get; set; }
+    public OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, Conflict>? ResponseModel { get; set; }
 
-    public Task<OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>> Execute(
+    public Task<OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, Conflict>> Execute(
         RestoreCalculatedResultRequestModel model)
     {
         return Task.FromResult(ResponseModel ??

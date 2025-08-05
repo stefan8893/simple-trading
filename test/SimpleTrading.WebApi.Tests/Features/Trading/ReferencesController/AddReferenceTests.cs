@@ -52,11 +52,11 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("link", error.Identifier);
-        Assert.Equal("Ungültiger Link.", Assert.Single(error.Messages));
+        Assert.Equal("link", error.Key);
+        Assert.Equal("Ungültiger Link.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -78,8 +78,8 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
     }
 }

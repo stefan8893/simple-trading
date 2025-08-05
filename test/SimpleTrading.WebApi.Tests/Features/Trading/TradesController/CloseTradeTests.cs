@@ -47,9 +47,9 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        var singleError = Assert.Single(exception.Result.Messages);
+        var singleError = exception.Result.Detail;
         Assert.Equal("Trade nicht gefunden.", singleError);
     }
 
@@ -70,11 +70,11 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("profitLoss", error.Identifier);
-        Assert.Equal("'Gewinn/Verlust' darf kein Nullwert sein.", Assert.Single(error.Messages));
+        Assert.Equal("profitLoss", error.Key);
+        Assert.Equal("'Gewinn/Verlust' darf kein Nullwert sein.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -94,15 +94,15 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("closed", error.Identifier);
-        Assert.Equal("'Abgeschlossen' darf kein Nullwert sein.", Assert.Single(error.Messages));
+        Assert.Equal("closed", error.Key);
+        Assert.Equal("'Abgeschlossen' darf kein Nullwert sein.", Assert.Single(error.Value));
     }
 
     [Fact]
-    public async Task Unprocessable_entity_response_if_closed_date_is_before_opened_date()
+    public async Task Returns_conflict_when_closed_date_is_before_opened_date()
     {
         // arrange
         var client = await CreateClient();
@@ -120,10 +120,9 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
-        var singleError = Assert.Single(exception.Result.Messages);
-        Assert.Equal("'Abgeschlossen' muss nach 'Eröffnet' liegen.", singleError);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
+        Assert.Equal("'Abgeschlossen' muss nach 'Eröffnet' liegen.", exception.Result.Detail);
     }
 
     [Fact]

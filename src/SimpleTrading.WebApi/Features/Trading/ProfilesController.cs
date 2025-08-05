@@ -2,21 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetActiveProfile;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
-using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading;
 
-[ApiController]
 [Route("[controller]")]
-[Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public class ProfilesController : ControllerBase
+public class ProfilesController : SimpleControllerBase
 {
     [HttpGet(Name = nameof(GetProfiles))]
     [ProducesResponseType<IEnumerable<ProfileDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> GetProfiles(
         [FromServices] IGetProfiles getProfiles,
         [FromQuery] string? searchTerm)
@@ -26,7 +23,7 @@ public class ProfilesController : ControllerBase
 
         return result.Match(
             profiles => Ok(profiles.Select(ProfileDto.From)),
-            badInput => badInput.ToActionResult()
+            UnprocessableEntityResult
         );
     }
 

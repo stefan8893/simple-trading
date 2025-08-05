@@ -55,11 +55,11 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("type", error.Identifier);
-        Assert.Equal("'Referenztyp' hat einen Wertebereich, der '50' nicht enthält.", Assert.Single(error.Messages));
+        Assert.Equal("type", error.Key);
+        Assert.Equal("'Referenztyp' hat einen Wertebereich, der '50' nicht enthält.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -87,9 +87,9 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
@@ -116,8 +116,8 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Referenz nicht gefunden.", Assert.Single(exception.Result.Messages));
+        Assert.Equal("Referenz nicht gefunden.", exception.Result.Detail);
     }
 }

@@ -28,7 +28,7 @@ public record AddTradeDto
 [UsedImplicitly]
 public class AddTradeDtoValidator : AbstractValidator<AddTradeDto>
 {
-    public AddTradeDtoValidator()
+    public AddTradeDtoValidator(AddReferenceDtoValidator addReferenceDtoValidator)
     {
         RuleFor(x => x.AssetId)
             .NotNull()
@@ -53,5 +53,8 @@ public class AddTradeDtoValidator : AbstractValidator<AddTradeDto>
         RuleFor(x => x.EntryPrice)
             .NotNull()
             .WithName(SimpleTradingStrings.EntryPrice);
+        
+        RuleForEach(x => x.References)
+            .SetValidator(addReferenceDtoValidator);
     }
 }

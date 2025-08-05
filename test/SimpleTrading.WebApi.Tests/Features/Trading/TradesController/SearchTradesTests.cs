@@ -53,11 +53,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("filter[0]", error.Identifier);
-        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
+        Assert.Equal("filter[0]", error.Key);
+        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -76,11 +76,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("filter[0]", error.Identifier);
-        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
+        Assert.Equal("filter[0]", error.Key);
+        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -97,15 +97,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("profileId", error.Identifier);
-        Assert.Equal("'Profil' darf nicht leer sein.", Assert.Single(error.Messages));
+        Assert.Equal("profileId", error.Key);
+        Assert.Equal("'Profil' darf nicht leer sein.", Assert.Single(error.Value));
     }
 
     [Fact]
-    public async Task ProfitLoss_filter_with_date_time_as_comparison_value_returns_a_bad_request()
+    public async Task ProfitLoss_filter_with_date_time_as_comparison_value_returns_unprocessable_entity()
     {
         // arrange
         var client = await CreateClient();
@@ -120,11 +120,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("filter[0].ComparisonValue", error.Identifier);
-        Assert.Equal("'2024-08-19T11:00Z' ist nicht zulässig.", Assert.Single(error.Messages));
+        Assert.Equal("filter[0].ComparisonValue", error.Key);
+        Assert.Equal("'2024-08-19T11:00Z' ist nicht zulässig.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -143,11 +143,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("filter[0]", error.Identifier);
-        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Messages));
+        Assert.Equal("filter[0]", error.Key);
+        Assert.Equal("Ungültiges Filterformat.", Assert.Single(error.Value));
     }
 
     [Fact]

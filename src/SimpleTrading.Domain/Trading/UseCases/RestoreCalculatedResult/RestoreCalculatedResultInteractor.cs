@@ -7,7 +7,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 namespace SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 
 using RestoreCalculatedResultResponse =
-    OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, BusinessError>;
+    OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, Conflict>;
 
 [UsedImplicitly]
 public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository, UtcNow utcNow, UowCommit uowCommit)

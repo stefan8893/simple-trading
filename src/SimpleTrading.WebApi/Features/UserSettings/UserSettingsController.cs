@@ -7,7 +7,6 @@ using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
 using SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
-using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.UserSettings.Dto;
 using SimpleTrading.WebApi.Infrastructure;
 
@@ -17,7 +16,7 @@ namespace SimpleTrading.WebApi.Features.UserSettings;
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public class UserSettingsController : ControllerBase
+public class UserSettingsController : SimpleControllerBase
 {
     [HttpGet(Name = nameof(GetUserSettings))]
     [ProducesResponseType<UserSettingsDto>(StatusCodes.Status200OK)]
@@ -58,7 +57,7 @@ public class UserSettingsController : ControllerBase
 
     [HttpPatch(Name = nameof(UpdateUserSettings))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> UpdateUserSettings(
         [FromServices] IUpdateUserSettings updateUserSettings,
         [FromBody] UpdateUserSettingsDto updateUserSettingsDto)
@@ -72,6 +71,6 @@ public class UserSettingsController : ControllerBase
 
         return result.Match(
             completed => NoContent(),
-            badInput => badInput.ToActionResult());
+            UnprocessableEntityResult);
     }
 }

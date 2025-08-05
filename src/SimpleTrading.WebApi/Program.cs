@@ -30,12 +30,25 @@ builder.Services
         o.ModelValidatorProviders.Clear();
         o.Filters.Add<ValidationFilter>();
     })
-    .ConfigureApiBehaviorOptions(o => o.SuppressMapClientErrors = true)
+    .ConfigureApiBehaviorOptions(o =>
+    {
+        o.SuppressMapClientErrors = true;
+    })
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
-        o => { o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience"); },
+        o =>
+        {
+            o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience");
+            o.Events = new JwtBearerEvents
+            {
+                OnChallenge = async ctx =>
+                {
+                    await Task.Yield();
+                }
+            };
+        },
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 
 const string clientAppCorsPolicy = "ClientAppCorsPolicy";
@@ -64,6 +77,8 @@ var clientAppEntraIdConfig = builder.Configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocumentation();
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 app.MapOpenApi();
@@ -73,12 +88,16 @@ app.UseHttpsRedirection();
 app.UseRequestLocalization();
 
 app.UseCors(clientAppCorsPolicy);
+
 app.UseAuthentication();
+app.Use401ResponseBodyProblemDetailsMiddleware();
 app.UseAuthorization();
 app.UseNotFoundMiddleware();
 
 app.MapControllers()
     .RequireAuthorization();
+
+
 
 var rootCommand = AppRootCommand.Create(app);
 rootCommand.AddCommand(CreateDatabaseCommand.Create(app));

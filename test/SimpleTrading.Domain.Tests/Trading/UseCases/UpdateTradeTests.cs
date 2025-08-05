@@ -279,7 +279,7 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var businessError = Assert.IsType<BusinessError>(response.Value);
+        var businessError = Assert.IsType<Conflict>(response.Value);
         Assert.Equal("'Closed' must be after 'Opened'.", businessError.Details);
     }
 

@@ -22,8 +22,8 @@ public abstract class InteractorBase
         return new NotFound<TEntity>(resourceId);
     }
 
-    protected static BusinessError BusinessError(Guid resourceId, string reason)
+    protected static Conflict Conflict(Guid resourceId, string reason)
     {
-        return new BusinessError(resourceId, reason);
+        return new Conflict(resourceId, reason);
     }
 }

@@ -8,22 +8,19 @@ using SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReference;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 using SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
-using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading;
 
-[ApiController]
 [Route("trades/{tradeId:guid}/[controller]")]
-[Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public class ReferencesController : ControllerBase
+public class ReferencesController : SimpleControllerBase
 {
     [HttpGet("{referenceId:guid}", Name = nameof(GetReference))]
     [ProducesResponseType<ReferenceDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetReference(
         [FromServices] IGetReference getReference,
         [FromRoute] Guid tradeId,
@@ -33,13 +30,13 @@ public class ReferencesController : ControllerBase
 
         return result.Match(
             referenceModel => Ok(ReferenceDto.From(referenceModel)),
-            notFound => notFound.ToActionResult()
+            NotFoundResult
         );
     }
 
     [HttpGet(Name = nameof(GetReferences))]
     [ProducesResponseType<IEnumerable<ReferenceDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetReferences(
         [FromServices] IGetReferences getReferences,
         [FromRoute] Guid tradeId)
@@ -48,15 +45,15 @@ public class ReferencesController : ControllerBase
 
         return result.Match(
             references => Ok(references.Select(ReferenceDto.From)),
-            notFound => notFound.ToActionResult()
+            NotFoundResult
         );
     }
 
     [HttpPost(Name = nameof(AddReference))]
     [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
-    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> AddReference(
         [FromServices] IAddReference addReference,
         [FromRoute] Guid tradeId,
@@ -70,16 +67,17 @@ public class ReferencesController : ControllerBase
 
         return result.Match(
             completed => Ok(completed.Data),
-            badInput => badInput.ToActionResult(),
-            notFound => notFound.ToActionResult(),
-            businessError => businessError.ToActionResult()
+            UnprocessableEntityResult,
+            NotFoundResult,
+            ConflictResult
         );
     }
 
     [HttpPatch("{referenceId:guid}", Name = nameof(UpdateReference))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateReference(
         [FromServices] IUpdateReference updateReference,
         [FromRoute] Guid tradeId,
@@ -91,14 +89,14 @@ public class ReferencesController : ControllerBase
 
         return result.Match(
             completed => NoContent(),
-            badInput => badInput.ToActionResult(),
-            notFound => notFound.ToActionResult()
+            UnprocessableEntityResult,
+            NotFoundResult
         );
     }
 
     [HttpDelete("{referenceId:guid}", Name = nameof(DeleteReference))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteReference(
         [FromServices] IDeleteReference deleteReference,
         [FromRoute] Guid tradeId,
@@ -108,13 +106,13 @@ public class ReferencesController : ControllerBase
 
         return result.Match(
             completed => NoContent(),
-            notFound => notFound.ToActionResult()
+            NotFoundResult
         );
     }
 
     [HttpDelete(Name = nameof(DeleteReferences))]
     [ProducesResponseType<ushort>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ErrorResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteReferences(
         [FromServices] IDeleteReferences deleteReferences,
         [FromRoute] Guid tradeId)
@@ -123,7 +121,7 @@ public class ReferencesController : ControllerBase
 
         return result.Match(
             completed => Ok(completed.Data),
-            notFound => notFound.ToActionResult()
+            NotFoundResult
         );
     }
 

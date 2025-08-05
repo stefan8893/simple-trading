@@ -18,6 +18,12 @@ public class ReferenceRequestModelValidator : AbstractValidator<ReferenceRequest
         RuleFor(x => x.Link)
             .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
             .WithMessage(SimpleTradingStrings.InvalidLink);
+        
+        RuleFor(x => x.Link)
+            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out var parsed) &&
+                         parsed.Host.EndsWith("tradingview.com", StringComparison.OrdinalIgnoreCase))
+            .WithMessage(SimpleTradingStrings.NotTradingViewLink)
+            .When(x => x.Type == ReferenceType.TradingView);
 
         RuleFor(x => x.Notes)
             .MaximumLength(4000)

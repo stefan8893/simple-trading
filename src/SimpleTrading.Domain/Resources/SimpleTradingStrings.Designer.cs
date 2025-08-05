@@ -69,6 +69,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentifizierung erforderlich.
+        /// </summary>
+        public static string AuthenticationRequired {
+            get {
+                return ResourceManager.GetString("AuthenticationRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kostendeckend.
         /// </summary>
         public static string BreakEven {
@@ -137,6 +146,15 @@ namespace SimpleTrading.Domain.Resources {
         public static string ComparisonValue {
             get {
                 return ResourceManager.GetString("ComparisonValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Konflikt.
+        /// </summary>
+        public static string Conflict {
+            get {
+                return ResourceManager.GetString("Conflict", resourceCulture);
             }
         }
         
@@ -303,11 +321,29 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kein TradingView Link..
+        /// </summary>
+        public static string NotTradingViewLink {
+            get {
+                return ResourceManager.GetString("NotTradingViewLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Null ist hier nicht erlaubt..
         /// </summary>
         public static string NullNotAllowed {
             get {
                 return ResourceManager.GetString("NullNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Es sind ein oder mehrere Validierungsfehler aufgetreten..
+        /// </summary>
+        public static string OneOrMoreValidationErrors {
+            get {
+                return ResourceManager.GetString("OneOrMoreValidationErrors", resourceCulture);
             }
         }
         

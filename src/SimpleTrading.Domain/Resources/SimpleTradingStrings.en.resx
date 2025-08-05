@@ -288,4 +288,16 @@
     <data name="ProfitLoss" xml:space="preserve">
         <value>Profit/Loss</value>
     </data>
+    <data name="OneOrMoreValidationErrors" xml:space="preserve">
+        <value>One or more validation errors occurred.</value>
+    </data>
+    <data name="Conflict" xml:space="preserve">
+        <value>Conflict</value>
+    </data>
+    <data name="AuthenticationRequired" xml:space="preserve">
+        <value>Authentication Required</value>
+    </data>
+    <data name="NotTradingViewLink" xml:space="preserve">
+        <value>Not a TradingView Link.</value>
+    </data>
 </root>

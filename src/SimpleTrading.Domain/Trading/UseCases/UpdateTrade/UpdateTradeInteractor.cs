@@ -11,7 +11,7 @@ using UpdateTradeResponse =
     OneOf<Completed<UpdateTradeResponseModel>,
         BadInput,
         NotFound,
-        BusinessError>;
+        Conflict>;
 
 [UsedImplicitly]
 public class UpdateTradeInteractor(
@@ -37,13 +37,13 @@ public class UpdateTradeInteractor(
             return updateEntitiesResult.AsT1;
 
         var updatePropertiesResult = UpdateTradeProperties(trade, model);
-        if (updatePropertiesResult.Value is BusinessError propertiesBusinessError)
+        if (updatePropertiesResult.Value is Conflict propertiesBusinessError)
             return propertiesBusinessError;
 
         var hasChanges = UpdatePositionPrices(trade, model);
         var closeTradeResult = CloseTrade(trade, model, hasChanges);
 
-        if (closeTradeResult.Value is BusinessError closeTradeBusinessError)
+        if (closeTradeResult.Value is Conflict closeTradeBusinessError)
             return closeTradeBusinessError;
 
         await uowCommit();
@@ -94,14 +94,14 @@ public class UpdateTradeInteractor(
         return Completed();
     }
 
-    private static OneOf<Completed, BusinessError> UpdateTradeProperties(Trade trade, UpdateTradeRequestModel model)
+    private static OneOf<Completed, Conflict> UpdateTradeProperties(Trade trade, UpdateTradeRequestModel model)
     {
         var updateOpenedDate = model.Opened.HasValue && model.Opened.Value.UtcDateTime != trade.Opened;
         var isClosedBeforeOpened = updateOpenedDate && trade.Closed.HasValue &&
                                    trade.Closed.Value < model.Opened!.Value.UtcDateTime;
 
         if (isClosedBeforeOpened)
-            return BusinessError(trade.Id, SimpleTradingStrings.ClosedBeforeOpened);
+            return Conflict(trade.Id, SimpleTradingStrings.ClosedBeforeOpened);
 
         if (updateOpenedDate)
             trade.Opened = model.Opened!.Value.UtcDateTime;
@@ -141,7 +141,7 @@ public class UpdateTradeInteractor(
         return true;
     }
 
-    private OneOf<Completed<CloseTradeResult>, NothingToClose, BusinessError> CloseTrade(Trade trade,
+    private OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict> CloseTrade(Trade trade,
         UpdateTradeRequestModel model,
         bool positionPricesHaveChanged)
     {
@@ -172,7 +172,7 @@ public class UpdateTradeInteractor(
         return trade.Close(closeTradeConfiguration)
             .Match<OneOf<Completed<CloseTradeResult>,
                 NothingToClose,
-                BusinessError>>(
+                Conflict>>(
                 completed => completed,
                 businessError => businessError);
     }

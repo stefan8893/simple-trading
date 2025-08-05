@@ -1,12 +1,14 @@
-﻿using FluentValidation;
+﻿using System.Net.Mime;
+using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SimpleTrading.WebApi.Extensions;
+using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Filter;
 
 [UsedImplicitly]
-public class ValidationFilter(IServiceProvider serviceProvider) : IAsyncActionFilter
+public class ValidationFilter(IServiceProvider serviceProvider, SimpleProblemDetails simpleProblemDetails) : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
@@ -28,7 +30,12 @@ public class ValidationFilter(IServiceProvider serviceProvider) : IAsyncActionFi
             if (validationResult.IsValid)
                 continue;
 
-            context.Result = validationResult.ToActionResult();
+            var problemDetails = simpleProblemDetails.CreateBadRequestDetails(validationResult);
+            var result = new BadRequestObjectResult(problemDetails);
+            result.ContentTypes.Add(MediaTypeNames.Application.ProblemJson);
+
+            context.Result = result;
+            context.HttpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
             return;
         }
 

@@ -22,9 +22,9 @@ public class GetReferencesTests(TestingWebApplicationFactory<Program> factory) :
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Trade nicht gefunden.", Assert.Single(exception.Result.Messages));
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]

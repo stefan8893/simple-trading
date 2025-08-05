@@ -1,21 +1,17 @@
-﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
-using SimpleTrading.WebApi.Extensions;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading;
 
-[ApiController]
 [Route("[controller]")]
-[Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public class CurrenciesController : ControllerBase
+public class CurrenciesController : SimpleControllerBase
 {
     [HttpGet(Name = nameof(GetCurrencies))]
     [ProducesResponseType<IEnumerable<CurrencyDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<FieldErrorResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> GetCurrencies(
         [FromServices] IGetCurrencies getCurrencies,
         [FromQuery] string? searchTerm)
@@ -25,7 +21,7 @@ public class CurrenciesController : ControllerBase
 
         return result.Match(
             currencies => Ok(currencies.Select(CurrencyDto.From)),
-            badInput => badInput.ToActionResult()
+            UnprocessableEntityResult
         );
     }
 }

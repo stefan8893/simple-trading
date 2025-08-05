@@ -46,26 +46,26 @@ public class Trade : IEntity
             .ToImmutableList();
     }
 
-    internal OneOf<Completed<CloseTradeResult>, BusinessError> RestoreCalculatedResult(UtcNow utcNow)
+    internal OneOf<Completed<CloseTradeResult>, Conflict> RestoreCalculatedResult(UtcNow utcNow)
     {
         if (!IsClosed)
-            return new BusinessError(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
+            return new Conflict(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
 
         Result = null;
         return Close(new CloseTradeConfiguration(Closed!.Value, ProfitLoss!.Value, utcNow));
     }
 
-    internal OneOf<Completed<CloseTradeResult>, BusinessError> Close(CloseTradeConfiguration configuration)
+    internal OneOf<Completed<CloseTradeResult>, Conflict> Close(CloseTradeConfiguration configuration)
     {
         if (configuration.Closed < Opened)
-            return new BusinessError(Id, SimpleTradingStrings.ClosedBeforeOpened);
+            return new Conflict(Id, SimpleTradingStrings.ClosedBeforeOpened);
 
         var utcNow = configuration.UtcNow();
         var closedDateUpperBound =
             (Opened > utcNow ? Opened : utcNow).AddDays(Constants.OpenedDateMaxDaysInTheFutureBoundary);
 
         if (configuration.Closed > closedDateUpperBound)
-            return new BusinessError(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
+            return new Conflict(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
 
         return new Completed<CloseTradeResult>(CloseTrade(configuration));
     }

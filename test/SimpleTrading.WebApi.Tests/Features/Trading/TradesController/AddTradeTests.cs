@@ -187,11 +187,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("size", error.Identifier);
-        Assert.Equal("'Handelsvolumen' darf kein Nullwert sein.", Assert.Single(error.Messages));
+        Assert.Equal("size", error.Key);
+        Assert.Equal("'Handelsvolumen' darf kein Nullwert sein.", Assert.Single(error.Value));
     }
 
     [Fact]
@@ -222,9 +222,9 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Asset nicht gefunden.", Assert.Single(exception.Result.Messages));
+        Assert.Equal("Asset nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
@@ -258,12 +258,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("profitLoss", error.Identifier);
+        Assert.Equal("profitLoss", error.Key);
         Assert.Equal("'Gewinn/Verlust' darf nicht leer sein, wenn 'Abgeschlossen' angegeben ist.",
-            Assert.Single(error.Messages));
+            Assert.Single(error.Value));
     }
 
     [Fact]
@@ -296,12 +296,12 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<FieldErrorResponse>>(Act);
-        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("closed", error.Identifier);
+        Assert.Equal("closed", error.Key);
         Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Gewinn/Verlust' angegeben ist.",
-            Assert.Single(error.Messages));
+            Assert.Single(error.Value));
     }
 
     [Fact]
@@ -370,5 +370,48 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var expectedOpenedDate = DateTime.Parse("2024-08-05T16:00:00");
         Assert.NotEqual(DateTimeKind.Local, expectedOpenedDate.Kind);
         Assert.Equal(expectedOpenedDate, newlyAddedTrade.Opened);
+    }
+   
+    [Fact]
+    public async Task A_trade_reference_with_an_invalid_links_returns_a_bad_request()
+    {
+        // arrange
+        var client = await CreateClient();
+
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        // act
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<AddTradeResultDto> Act()
+        {
+            return client.AddTradeAsync(new AddTradeDto
+            {
+                AssetId = asset.Id,
+                ProfileId = profile.Id,
+                Opened = _utcNow,
+                Closed = null,
+                Size = 5000,
+                ProfitLoss = 50,
+                CurrencyId = currency.Id,
+                EntryPrice = 1.08,
+                References = [new AddReferenceDto
+                {
+                    Type = NullableOfReferenceTypeDto.Other,
+                    Link = "bad url"
+                }]
+            });
+        }
+
+        // assert
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("references[0].Link", error.Key);
+        Assert.Equal("Ungültiger Link.",
+            Assert.Single(error.Value));
     }
 }

@@ -23,8 +23,9 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             return client.GetTradeAsync(notExistingTradeId);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ErrorResponse>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
