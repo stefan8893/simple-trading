@@ -339,7 +339,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Es sind ein oder mehrere Validierungsfehler aufgetreten..
+        ///   Looks up a localized string similar to Ein oder mehrere Validierungsfehler sind aufgetreten..
         /// </summary>
         public static string OneOrMoreValidationErrors {
             get {

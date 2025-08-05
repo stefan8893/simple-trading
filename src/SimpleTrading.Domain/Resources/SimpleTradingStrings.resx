@@ -289,7 +289,7 @@
         <value>Gewinn/Verlust</value>
     </data>
     <data name="OneOrMoreValidationErrors" xml:space="preserve">
-        <value>Es sind ein oder mehrere Validierungsfehler aufgetreten.</value>
+        <value>Ein oder mehrere Validierungsfehler sind aufgetreten.</value>
     </data>
     <data name="Conflict" xml:space="preserve">
         <value>Konflikt</value>
