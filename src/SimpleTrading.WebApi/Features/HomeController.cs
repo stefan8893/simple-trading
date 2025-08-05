@@ -1,14 +1,12 @@
-using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features;
 
-[ApiController]
 [Route("")]
-[Produces(MediaTypeNames.Application.Json)]
-public class HomeController(IHostEnvironment hostEnvironment, IConfiguration configuration) : ControllerBase
+public class HomeController(IHostEnvironment hostEnvironment, IConfiguration configuration) : SimpleControllerBase
 {
     private static readonly Lazy<string> AssemblyVersion =
         new(() =>
