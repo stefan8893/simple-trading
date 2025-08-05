@@ -38,12 +38,4 @@ public class HomeController(IHostEnvironment hostEnvironment, IConfiguration con
 
         return Ok(apiInfo);
     }
-
-    [AllowAnonymous]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    [HttpGet("exception-test", Name = nameof(ExceptionTest))]
-    public ActionResult<string> ExceptionTest()
-    {
-        throw new InvalidOperationException("Test exception");
-    }
 }
