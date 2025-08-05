@@ -8,11 +8,11 @@ using SimpleTrading.WebApi;
 
 namespace SimpleTrading.DataAccess.Tests.Repositories;
 
-public class UserSettingsRepositoriesTests(TestingWebApplicationFactory<Program> factory) : WebApiTests(factory)
+public class UserSettingsRepositoriesTests: RepositoryTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-09-17T12:00:00").ToUtcKind();
 
-    protected override void OverrideServices(HostBuilderContext ctx, ContainerBuilder builder)
+    protected override void OverrideServices(ContainerBuilder builder)
     {
         builder.Register<UtcNow>(_ => () => _utcNow);
     }

@@ -31,12 +31,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference
-                Include="..\SimpleTrading.DataAccess.Postgres\SimpleTrading.DataAccess.Postgres.csproj"/>
-        <ProjectReference
-                Include="..\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj"/>
-        <ProjectReference
-                Include="..\SimpleTrading.DataAccess.SqlServer\SimpleTrading.DataAccess.SqlServer.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.DataAccess.Postgres\SimpleTrading.DataAccess.Postgres.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.DataAccess.Sqlite\SimpleTrading.DataAccess.Sqlite.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.DataAccess.SqlServer\SimpleTrading.DataAccess.SqlServer.csproj"/>
         <ProjectReference Include="..\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
     </ItemGroup>
 
@@ -58,24 +55,18 @@
             <GeneratedApiDescriptionPath>$(BaseIntermediateOutputPath)$(ApiDescriptionFileName).json</GeneratedApiDescriptionPath>
         </PropertyGroup>
 
-        <Message Importance="High" Text="Checking if '$(GeneratedApiDescriptionPath)' exists..."/>
-
-        <ItemGroup Condition="Exists('$(GeneratedApiDescriptionPath)')">
-            <GeneratedApiDescription Include="$(GeneratedApiDescriptionPath)"/>
-        </ItemGroup>
-
         <Copy
-                Condition="@(GeneratedApiDescription->Count()) != 0"
-                SourceFiles="@(GeneratedApiDescription)"
+                Condition="Exists('$(GeneratedApiDescriptionPath)')"
+                SourceFiles="$(GeneratedApiDescription)"
                 DestinationFolder="$(OutputPath)"
                 SkipUnchangedFiles="true"/>
 
-        <Message Condition="@(GeneratedApiDescription->Count()) != 0"
+        <Message Condition="Exists('$(GeneratedApiDescriptionPath)')"
                  Importance="High"
-                 Text="Copying api description to $(OutputPath)."/>
+                 Text="Copying API description $(GeneratedApiDescriptionPath) to $(OutputPath)."/>
 
-        <Message Condition="@(GeneratedApiDescription->Count()) == 0"
+        <Message Condition="!Exists('$(GeneratedApiDescriptionPath)')"
                  Importance="High"
-                 Text="No Api Description found."/>
+                 Text="No API description found."/>
     </Target>
 </Project>
