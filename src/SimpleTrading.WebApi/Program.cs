@@ -97,8 +97,6 @@ app.UseNotFoundMiddleware();
 app.MapControllers()
     .RequireAuthorization();
 
-
-
 var rootCommand = AppRootCommand.Create(app);
 rootCommand.AddCommand(CreateDatabaseCommand.Create(app));
 rootCommand.AddCommand(SeedDatabaseCommand.Create(app));
