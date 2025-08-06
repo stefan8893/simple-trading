@@ -47,7 +47,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .OverridePropertyName(x => x.Opened)
             .WithName(SimpleTradingStrings.Opened);
 
-        RuleFor(x => (DateTimeOffset?) x.Opened)
+        RuleFor(x => new OpenedDateTime(x.Opened))
             .SetValidator(openedLessThanOneDayInTheFutureValidator);
 
         RuleFor(x => x.Size)

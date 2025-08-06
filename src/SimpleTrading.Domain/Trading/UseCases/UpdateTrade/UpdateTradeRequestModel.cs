@@ -54,7 +54,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .WithName(SimpleTradingStrings.Opened)
             .When(x => x.Opened.HasValue);
 
-        RuleFor(x => x.Opened)
+        RuleFor(x => new OpenedDateTime(x.Opened))
             .SetValidator(openedLessThanOneDayInTheFutureValidator);
 
         RuleFor(x => x.Closed)
