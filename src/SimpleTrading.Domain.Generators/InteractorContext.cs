@@ -48,7 +48,7 @@ public class InteractorContext
         var addValidationResultCase = HasValidators && !IsResponseModelOneOfWithValidationResultCase;
         return addValidationResultCase
             ? AddValidationResultCaseToResponseModel()
-            : ResponseModel.ToDisplayString();
+            : ResponseModel.GetDisplayName();
     }
 
     private string AddValidationResultCaseToResponseModel()
@@ -60,11 +60,11 @@ public class InteractorContext
 
     private string ConvertResponseModelToOneOfWithValidationResultCase()
     {
-        return $"OneOf.OneOf<{ResponseModel.ToDisplayString()}, {ValidationResult.ToDisplayString()}>";
+        return $"OneOf<{ResponseModel.GetDisplayName()}, {ValidationResult.GetDisplayName()}>";
     }
 
     private string AddValidationResultCaseToExistingOneOfResponseModel()
     {
-        return $"{ResponseModel.ToDisplayString().TrimEnd('>')}, {ValidationResult.ToDisplayString()}>";
+        return $"{ResponseModel.GetDisplayName().TrimEnd('>')}, {ValidationResult.GetDisplayName()}>";
     }
 }
