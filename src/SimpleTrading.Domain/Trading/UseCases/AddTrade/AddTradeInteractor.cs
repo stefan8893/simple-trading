@@ -9,7 +9,6 @@ namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
 using AddTradeResponse =
     OneOf<Completed<AddTradeResponseModel>,
-        BadInput,
         NotFound,
         Conflict>;
 

@@ -7,7 +7,7 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.AddReference;
 
-using AddReferenceResponse = OneOf<Completed<Guid>, BadInput, NotFound, Conflict>;
+using AddReferenceResponse = OneOf<Completed<Guid>, NotFound, Conflict>;
 
 [UsedImplicitly]
 public class AddReferenceInteractor(

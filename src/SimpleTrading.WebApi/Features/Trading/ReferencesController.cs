@@ -67,9 +67,9 @@ public class ReferencesController : SimpleControllerBase
 
         return result.Match(
             completed => Ok(completed.Data),
-            UnprocessableEntityResult,
             NotFoundResult,
-            ConflictResult
+            ConflictResult,
+            UnprocessableEntityResult
         );
     }
 

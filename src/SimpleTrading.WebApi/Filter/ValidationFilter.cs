@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using FluentValidation;
+using FluentValidation.Results;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,7 +9,8 @@ using SimpleTrading.WebApi.Infrastructure;
 namespace SimpleTrading.WebApi.Filter;
 
 [UsedImplicitly]
-public class ValidationFilter(IServiceProvider serviceProvider, SimpleProblemDetails simpleProblemDetails) : IAsyncActionFilter
+public class ValidationFilter(IServiceProvider serviceProvider, SimpleProblemDetails simpleProblemDetails)
+    : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
@@ -20,33 +22,47 @@ public class ValidationFilter(IServiceProvider serviceProvider, SimpleProblemDet
             if (argumentValue is null)
                 continue;
 
-            var validator = GetValidatorOrDefault(parameter.ParameterType);
-            if (validator is null)
+            var validators = GetValidatorsOrDefault(parameter.ParameterType);
+            if (validators is null)
                 continue;
 
             var validationContext = CreateValidationContext(parameter.ParameterType, argumentValue);
-            var validationResult = await validator.ValidateAsync(validationContext, context.HttpContext.RequestAborted);
 
-            if (validationResult.IsValid)
-                continue;
+            foreach (var validator in validators)
+            {
+                if (validator is null)
+                    continue;
 
-            var problemDetails = simpleProblemDetails.CreateBadRequestDetails(validationResult);
-            var result = new BadRequestObjectResult(problemDetails);
-            result.ContentTypes.Add(MediaTypeNames.Application.ProblemJson);
+                var validationResult =
+                    await validator.ValidateAsync(validationContext, context.HttpContext.RequestAborted);
 
-            context.Result = result;
-            context.HttpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
-            return;
+                if (validationResult.IsValid)
+                    continue;
+
+                CreateBadRequestResponse(context, validationResult);
+                return;
+            }
         }
 
         await next();
     }
 
-    private IValidator? GetValidatorOrDefault(Type type)
+    private void CreateBadRequestResponse(ActionExecutingContext context, ValidationResult validationResult)
+    {
+        var problemDetails = simpleProblemDetails.CreateBadRequestDetails(validationResult);
+        var result = new BadRequestObjectResult(problemDetails);
+        result.ContentTypes.Add(MediaTypeNames.Application.ProblemJson);
+
+        context.Result = result;
+        context.HttpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
+    }
+
+    private IEnumerable<IValidator?>? GetValidatorsOrDefault(Type type)
     {
         var validatorGenericType = typeof(IValidator<>).MakeGenericType(type);
+        var validatorsEnumerable = typeof(IEnumerable<>).MakeGenericType(validatorGenericType);
 
-        return serviceProvider.GetService(validatorGenericType) as IValidator;
+        return serviceProvider.GetService(validatorsEnumerable) as IEnumerable<IValidator>;
     }
 
     private static IValidationContext? CreateValidationContext(Type parameter, object argumentValue)

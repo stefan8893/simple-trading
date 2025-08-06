@@ -1,19 +1,70 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 
 namespace SimpleTrading.Domain.Generators;
 
-public class InteractorContext(
-    INamedTypeSymbol interactor,
-    INamedTypeSymbol closedInteractorInterface,
-    INamedTypeSymbol? requestModel,
-    INamedTypeSymbol responseModel)
+public class InteractorContext
 {
-    public INamedTypeSymbol Interactor { get; } = interactor;
-    public INamedTypeSymbol ClosedInteractorInterface { get; } = closedInteractorInterface;
-    public INamedTypeSymbol? RequestModel { get; } = requestModel;
-    public INamedTypeSymbol ResponseModel { get; } = responseModel;
+    public readonly INamedTypeSymbol ClosedInteractorInterface;
+    public readonly bool HasValidators;
+    public readonly INamedTypeSymbol Interactor;
+    public readonly string InteractorInterfaceName;
+    public readonly string InteractorName;
+    public readonly string InteractorProxyName;
+    public readonly bool IsResponseModelOneOf;
+    public readonly bool IsResponseModelOneOfWithValidationResultCase;
+    public readonly INamedTypeSymbol? RequestModel;
+    public readonly INamedTypeSymbol ResponseModel;
+    public readonly INamedTypeSymbol ValidationResult;
+    public readonly ImmutableArray<INamedTypeSymbol> Validators;
 
-    public string InteractorName => Interactor.Name.Replace("Interactor", "");
-    public string InteractorInterfaceName => $"I{Interactor.Name.Replace("Interactor", "")}";
-    public string InteractorProxyName => $"{Interactor.Name}Proxy";
+    public InteractorContext(INamedTypeSymbol interactor,
+        INamedTypeSymbol closedInteractorInterface,
+        INamedTypeSymbol? requestModel,
+        INamedTypeSymbol responseModel,
+        ImmutableArray<INamedTypeSymbol> validators,
+        INamedTypeSymbol validationResult)
+    {
+        Interactor = interactor;
+        ClosedInteractorInterface = closedInteractorInterface;
+        RequestModel = requestModel;
+        ResponseModel = responseModel;
+        Validators = validators;
+        ValidationResult = validationResult;
+
+        InteractorName = interactor.Name.Replace("Interactor", "");
+        InteractorInterfaceName = $"I{Interactor.Name.Replace("Interactor", "")}";
+        InteractorProxyName = $"{Interactor.Name}Proxy";
+
+        HasValidators = !validators.IsEmpty;
+        IsResponseModelOneOf = responseModel is {IsGenericType: true, Name: "OneOf"};
+        IsResponseModelOneOfWithValidationResultCase = IsResponseModelOneOf &&
+                                                       responseModel.TypeArguments.Any(x =>
+                                                           x.Equals(ValidationResult, SymbolEqualityComparer.Default));
+    }
+
+    public string GetResponseModelTransformed()
+    {
+        var addValidationResultCase = HasValidators && !IsResponseModelOneOfWithValidationResultCase;
+        return addValidationResultCase
+            ? AddValidationResultCaseToResponseModel()
+            : ResponseModel.ToDisplayString();
+    }
+
+    private string AddValidationResultCaseToResponseModel()
+    {
+        return !IsResponseModelOneOf
+            ? ConvertResponseModelToOneOfWithValidationResultCase()
+            : AddValidationResultCaseToExistingOneOfResponseModel();
+    }
+
+    private string ConvertResponseModelToOneOfWithValidationResultCase()
+    {
+        return $"OneOf.OneOf<{ResponseModel.ToDisplayString()}, {ValidationResult.ToDisplayString()}>";
+    }
+
+    private string AddValidationResultCaseToExistingOneOfResponseModel()
+    {
+        return $"{ResponseModel.ToDisplayString().TrimEnd('>')}, {ValidationResult.ToDisplayString()}>";
+    }
 }

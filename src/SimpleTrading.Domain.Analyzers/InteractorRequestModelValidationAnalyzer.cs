@@ -101,21 +101,23 @@ public class InteractorRequestModelValidationAnalyzer : DiagnosticAnalyzer
         IReadOnlyDictionary<string, List<INamedTypeSymbol>> validatorByRequestModelName,
         List<InteractorImplementorContext> interactorImplementors)
     {
-        var interactorsWithRequestModelValidators = interactorImplementors
-            .Where(x => validatorByRequestModelName.ContainsKey(x.RequestModel.Name))
-            .ToList();
+        // var interactorsWithRequestModelValidators = interactorImplementors
+        //     .Where(x => validatorByRequestModelName.ContainsKey(x.RequestModel.Name))
+        //     .ToList();
 
-        var missingBadInputCaseDiagnostics = DetectMissingBadInputCaseDiagnostics(
-            interactorsWithRequestModelValidators);
-
-        var responseModelTypeIsNotOneOfDiagnostics = DetectResponseModelTypeIsNotOneOfDiagnostics(
-            interactorsWithRequestModelValidators);
+        // var missingBadInputCaseDiagnostics = DetectMissingBadInputCaseDiagnostics(
+        //     interactorsWithRequestModelValidators);
+        //
+        // var responseModelTypeIsNotOneOfDiagnostics = DetectResponseModelTypeIsNotOneOfDiagnostics(
+        //     interactorsWithRequestModelValidators);
 
         var missingInteractorSuffixDiagnostics = DetectMissingInteractorSuffixDiagnostics(interactorImplementors);
 
-        return missingBadInputCaseDiagnostics
-            .Concat(responseModelTypeIsNotOneOfDiagnostics)
-            .Concat(missingInteractorSuffixDiagnostics);
+        // return missingBadInputCaseDiagnostics
+        //     .Concat(responseModelTypeIsNotOneOfDiagnostics)
+        //     .Concat(missingInteractorSuffixDiagnostics);
+
+        return missingInteractorSuffixDiagnostics;
     }
 
     private static IEnumerable<Diagnostic> DetectResponseModelTypeIsNotOneOfDiagnostics(

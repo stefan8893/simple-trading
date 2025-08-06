@@ -21,20 +21,22 @@ public class SearchQueryValidator : AbstractValidator<SearchQueryDto>
         RuleFor(x => x.ProfileId)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Profile);
-
-        RuleForEach(x => x.Filter)
-            .SetValidator(propertyFilterValidator);
     }
 }
 
 [UsedImplicitly]
-public class PropertyFilterValidator : AbstractValidator<string>
+public class PropertyFilterValidator : AbstractValidator<SearchQueryDto>
 {
     public PropertyFilterValidator()
     {
-        RuleFor(x => x)
-            .Matches(TradesController.PropertyFilterSyntaxRegex().ToString())
-            .WithMessage(SimpleTradingStrings.InvalidFilterFormat)
-            .When(x => !string.IsNullOrWhiteSpace(x));
+        RuleForEach(x => x.Filter)
+            .ChildRules(filter =>
+            {
+                filter.RuleFor(x => x)
+                    .Matches(TradesController.PropertyFilterSyntaxRegex().ToString())
+                    .WithMessage(SimpleTradingStrings.InvalidFilterFormat)
+                    .When(x => !string.IsNullOrWhiteSpace(x));
+            })
+            .When(x => x.Filter is not null);
     }
 }

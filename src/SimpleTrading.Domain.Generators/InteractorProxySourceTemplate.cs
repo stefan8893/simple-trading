@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace SimpleTrading.Domain.Generators;
 
 public class InteractorProxySourceTemplate(InteractorContext context)
@@ -6,8 +8,15 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     [
         "System",
         "System.Threading.Tasks",
-        "SimpleTrading.Domain.Infrastructure"
+        "SimpleTrading.Domain.Infrastructure",
+        "Microsoft.Extensions.Logging"
     ];
+
+    private readonly string _loggerType = $"ILogger<{context.InteractorProxyName}>";
+
+    private readonly string _requestModelFullQualifiedTypeName = context.RequestModel is null
+        ? string.Empty
+        : context.RequestModel.ToDisplayString();
 
     private IEnumerable<string> Namespaces =>
     [
@@ -18,20 +27,21 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     private IEnumerable<string> UsingStatements => Namespaces
         .Distinct()
         .Where(x => !string.IsNullOrWhiteSpace(x))
-        .Select(static x => $"using {x};");
+        .Select(x => $"using {x};");
 
-    private string RequestModelFullQualifiedTypeName => context.RequestModel is null
+    private string RequestModelParameter => string.IsNullOrWhiteSpace(_requestModelFullQualifiedTypeName)
         ? string.Empty
-        : context.RequestModel.ToDisplayString();
+        : $"{_requestModelFullQualifiedTypeName} requestModel";
 
-    private string RequestModelParameter => string.IsNullOrWhiteSpace(RequestModelFullQualifiedTypeName)
-        ? string.Empty
-        : $"{RequestModelFullQualifiedTypeName} requestModel";
-
-    public string GenerateConcreteProxy()
+    public string GenerateProxy()
     {
-        var validatorsType = $"IEnumerable<IValidator<{RequestModelFullQualifiedTypeName}>>";
+        var validatorsType = $"IEnumerable<IValidator<{_requestModelFullQualifiedTypeName}>>";
         var requestModelParameter = RequestModelParameter;
+
+        var responseModelTransformed = context.GetResponseModelTransformed();
+        var isResponseModelTransformed = !responseModelTransformed.Equals(context.ResponseModel.ToDisplayString());
+
+        var interactorInvocation = GetInteractorInvocation(responseModelTransformed, isResponseModelTransformed);
 
         // lang=C#
         return $$"""
@@ -50,39 +60,74 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                  /// </summary>
                  public interface {{context.InteractorInterfaceName}}
                  {
-                     Task<{{context.ResponseModel.ToDisplayString()}}> Execute({{OnContainsRequestModel(requestModelParameter)}});
+                     Task<{{responseModelTransformed}}> Execute({{OnContainsRequestModel(requestModelParameter)}});
                  }
 
                  public sealed class {{context.InteractorProxyName}} : {{context.InteractorInterfaceName}}
                  {
+                     private readonly {{_loggerType}} _logger;
                      private readonly {{context.ClosedInteractorInterface.ToDisplayString()}}  _interactor;
                      {{OnValidation($"private readonly {validatorsType} _validators;")}}
                      
                      public {{context.InteractorProxyName}}(
+                              {{_loggerType}} logger,
                               {{context.ClosedInteractorInterface.ToDisplayString()}} interactor{{OnValidation(",")}}
                               {{OnValidation($"{validatorsType} validators")}})
                      {
+                         _logger = logger;
                          _interactor = interactor;
                          {{OnValidation("_validators = validators;")}}
                      }
-  
-                     public async Task<{{context.ResponseModel.ToDisplayString()}}> Execute({{OnContainsRequestModel(requestModelParameter)}}) 
+
+                     public async Task<{{responseModelTransformed}}> Execute({{OnContainsRequestModel(requestModelParameter)}}) 
                      {
+                         _logger.LogInformation("Executing {proxy}", "{{context.InteractorProxyName}}");
+
                         {{OnValidation(
                             // lang=C#
-                            """
-                             foreach(var validator in _validators) 
-                                    {
-                                        var validationResult = await validator.ValidateAsync(requestModel);
-                                        if (!validationResult.IsValid)
-                                            return new BadInput(validationResult);
-                                    }
-                            """)}}
-                 
-                         return await {{OnContainsRequestModel("_interactor.Execute(requestModel);", "_interactor.Execute();")}}
+                            $$"""
+                               foreach(var validator in _validators) 
+                                      {
+                                          _logger.LogInformation("Validate {interactorName} with {validator}", "{{context.RequestModel?.Name}}", validator.GetType().Name);
+                                          var validationResult = await validator.ValidateAsync(requestModel);
+                                          if (!validationResult.IsValid)
+                                              return new {{context.ValidationResult.ToDisplayString()}}(validationResult);
+                                      }
+                              """)}}
+
+                         {{interactorInvocation}}
                      }
                  }
                  """;
+    }
+
+    private string GetInteractorInvocation(string responseModelTransformed, bool isResponseModelTransformed)
+    {
+        var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel)", "_interactor.Execute()");
+        
+        var easyInteractorInvocation = $"return await {interactorCall};";
+
+        var interactorInvocationWithOneOfTransformation =
+            $"return {responseModelTransformed}.FromT0(await {interactorCall});";
+
+        var count = context.ResponseModel.TypeArguments.Length;
+        var matchFunctions = string.Join(", ",
+            Enumerable.Range(0, count).Select(x => Identity(x, responseModelTransformed)));
+
+        var transformedInteractorInvocation =
+            // lang=C#
+            $"""
+             var result =  await _interactor.Execute(requestModel);
+                     return  result.Match<{responseModelTransformed}>({matchFunctions});
+             """;
+
+        var interactorInvocation = context.IsResponseModelOneOf && isResponseModelTransformed
+            ? transformedInteractorInvocation
+            : context is {IsResponseModelOneOf: false, RequestModel: not null}
+                ? interactorInvocationWithOneOfTransformation
+                : easyInteractorInvocation;
+
+        return interactorInvocation;
     }
 
     private string OnContainsRequestModel(string onRequestModelExists, string otherwise = "")
@@ -92,10 +137,11 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
     private string OnValidation(string onValidation, string otherwise = "")
     {
-        var validateRequestModel = context.RequestModel is not null &&
-                                   context.ResponseModel.IsGenericType &&
-                                   context.ResponseModel.TypeArguments.Any(x => x.Name == "BadInput");
+        return !context.Validators.IsEmpty ? onValidation : otherwise;
+    }
 
-        return validateRequestModel ? onValidation : otherwise;
+    private static string Identity(int index, string responseModel)
+    {
+        return $"x => {responseModel}.FromT{index}(x)";
     }
 }

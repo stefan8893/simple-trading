@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
@@ -74,9 +73,9 @@ public partial class TradesController : SimpleControllerBase
 
         return result.Match(
             completed => Ok(AddTradeResultDto.From(completed.Data)),
-            UnprocessableEntityResult,
             NotFoundResult,
-            ConflictResult
+            ConflictResult,
+            UnprocessableEntityResult
         );
     }
 
