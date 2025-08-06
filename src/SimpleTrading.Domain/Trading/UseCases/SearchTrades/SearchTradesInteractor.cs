@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using JetBrains.Annotations;
-using OneOf;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.DataAccess;
 using SimpleTrading.Domain.Infrastructure.Extensions;
@@ -18,11 +17,11 @@ public class SearchTradesInteractor(
     IUserSettingsRepository userSettingsRepository,
     IEnumerable<IFilterPredicate<Trade>> filterPredicates,
     IReadOnlyDictionary<string, Func<Order, ISort<Trade>>> sorterByName)
-    : InteractorBase, IInteractor<SearchTradesRequestModel, OneOf<PagedList<TradeResponseModel>, BadInput>>
+    : InteractorBase, IInteractor<SearchTradesRequestModel, PagedList<TradeResponseModel>>
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
 
-    public async Task<OneOf<PagedList<TradeResponseModel>, BadInput>> Execute(SearchTradesRequestModel model)
+    public async Task<PagedList<TradeResponseModel>> Execute(SearchTradesRequestModel model)
     {
         var sortingConfig = model.Sort
             .DefaultIfEmpty(new SortModel(nameof(Trade.Opened), false))

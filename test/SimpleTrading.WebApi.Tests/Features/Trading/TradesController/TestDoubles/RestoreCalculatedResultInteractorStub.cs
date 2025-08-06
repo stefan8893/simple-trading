@@ -11,7 +11,7 @@ public class RestoreCalculatedResultInteractorStub : IRestoreCalculatedResult
     public OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, Conflict>? ResponseModel { get; set; }
 
     public Task<OneOf<Completed<RestoreCalculatedResultResponseModel>, NotFound, Conflict>> Execute(
-        RestoreCalculatedResultRequestModel model)
+        Guid tradeId)
     {
         return Task.FromResult(ResponseModel ??
                                throw new InvalidOperationException("Response model has not been initialized."));

@@ -5,7 +5,7 @@ using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
 
-using UpdateReferenceResponse = OneOf<Completed, BadInput, NotFound>;
+using UpdateReferenceResponse = OneOf<Completed, NotFound>;
 
 [UsedImplicitly]
 public class UpdateReferenceInteractor(

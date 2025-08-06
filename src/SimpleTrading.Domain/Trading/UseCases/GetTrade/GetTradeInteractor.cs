@@ -9,13 +9,13 @@ namespace SimpleTrading.Domain.Trading.UseCases.GetTrade;
 
 [UsedImplicitly]
 public class GetTradeInteractor(ITradeRepository tradeRepository, IUserSettingsRepository userSettingsRepository)
-    : InteractorBase, IInteractor<GetTradeRequestModel, OneOf<TradeResponseModel, NotFound>>
+    : InteractorBase, IInteractor<Guid, OneOf<TradeResponseModel, NotFound>>
 {
-    public async Task<OneOf<TradeResponseModel, NotFound>> Execute(GetTradeRequestModel model)
+    public async Task<OneOf<TradeResponseModel, NotFound>> Execute(Guid tradeId)
     {
-        var trade = await tradeRepository.Find(model.TradeId);
+        var trade = await tradeRepository.Find(tradeId);
         if (trade is null)
-            return NotFound<Trade>(model.TradeId);
+            return NotFound<Trade>(tradeId);
 
         var userSettings = await userSettingsRepository.GetUserSettings();
 

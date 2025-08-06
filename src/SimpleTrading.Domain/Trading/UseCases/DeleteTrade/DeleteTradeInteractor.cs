@@ -7,13 +7,13 @@ namespace SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 
 [UsedImplicitly]
 public class DeleteTradeInteractor(ITradeRepository tradeRepository, UowCommit uowCommit)
-    : InteractorBase, IInteractor<DeleteTradeRequestModel, OneOf<Completed, NotFound>>
+    : InteractorBase, IInteractor<Guid, OneOf<Completed, NotFound>>
 {
-    public async Task<OneOf<Completed, NotFound>> Execute(DeleteTradeRequestModel model)
+    public async Task<OneOf<Completed, NotFound>> Execute(Guid tradeId)
     {
-        var trade = await tradeRepository.Find(model.TradeId);
+        var trade = await tradeRepository.Find(tradeId);
         if (trade is null)
-            return NotFound<Trade>(model.TradeId);
+            return NotFound<Trade>(tradeId);
 
         tradeRepository.Remove(trade);
         await uowCommit();

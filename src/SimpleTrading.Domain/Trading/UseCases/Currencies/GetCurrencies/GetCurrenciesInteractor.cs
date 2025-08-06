@@ -5,14 +5,13 @@ using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 
-using GetCurrenciesResponse = OneOf<IReadOnlyList<GetCurrenciesResponseModel>, BadInput>;
 
 [UsedImplicitly]
 public class GetCurrenciesInteractor(
     ICurrencyRepository currencyRepository)
-    : InteractorBase, IInteractor<GetCurrenciesRequestModel, GetCurrenciesResponse>
+    : InteractorBase, IInteractor<GetCurrenciesRequestModel, IReadOnlyList<GetCurrenciesResponseModel>>
 {
-    public async Task<GetCurrenciesResponse> Execute(
+    public async Task<IReadOnlyList<GetCurrenciesResponseModel>> Execute(
         GetCurrenciesRequestModel model)
     {
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);

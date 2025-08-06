@@ -17,7 +17,7 @@ public class GetTradeTests : DomainTests
     {
         var notExistingTradeId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
 
-        var response = await Interactor.Execute(new GetTradeRequestModel(notExistingTradeId));
+        var response = await Interactor.Execute(notExistingTradeId);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
@@ -30,7 +30,7 @@ public class GetTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(trade.Id);
 
         var result = Assert.IsType<TradeResponseModel>(response.Value);
         Assert.Equal(trade.Id, result.Id);
@@ -44,7 +44,7 @@ public class GetTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(trade.Id);
 
         var result = Assert.IsType<TradeResponseModel>(response.Value);
         Assert.Equal(currency.IsoCode, result.Currency);
@@ -58,7 +58,7 @@ public class GetTradeTests : DomainTests
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute(new GetTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(trade.Id);
 
         var result = Assert.IsType<TradeResponseModel>(response.Value);
         Assert.Equal(asset.Symbol, result.Asset);

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 
 namespace SimpleTrading.Domain.Generators;
 
@@ -112,7 +111,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
         var count = context.ResponseModel.TypeArguments.Length;
         var matchFunctions = string.Join(", ",
-            Enumerable.Range(0, count).Select(x => Identity(x, responseModelTransformed)));
+            Enumerable.Range(0, count).Select(x => FromOneOf(x, responseModelTransformed)));
 
         var transformedInteractorInvocation =
             // lang=C#
@@ -140,7 +139,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         return !context.Validators.IsEmpty ? onValidation : otherwise;
     }
 
-    private static string Identity(int index, string responseModel)
+    private static string FromOneOf(int index, string responseModel)
     {
         return $"x => {responseModel}.FromT{index}(x)";
     }

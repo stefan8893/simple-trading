@@ -9,7 +9,6 @@ namespace SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 
 using UpdateTradeResponse =
     OneOf<Completed<UpdateTradeResponseModel>,
-        BadInput,
         NotFound,
         Conflict>;
 

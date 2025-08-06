@@ -40,8 +40,7 @@ public class RestoreCalculatedResultTests : DomainTests
         Assert.Equal((short)83, tradeWithCalculatedMediocreResult.Result.Performance);
 
         // act
-        var requestModel = new RestoreCalculatedResultRequestModel(tradeWithCalculatedMediocreResult.Id);
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(tradeWithCalculatedMediocreResult.Id);
 
         // assert
         var responseModel = Assert.IsType<Completed<RestoreCalculatedResultResponseModel>>(response.Value);
@@ -58,8 +57,7 @@ public class RestoreCalculatedResultTests : DomainTests
         var notExistingTradeId = Guid.Parse("e4240058-fef0-4a15-bbf7-f5d8796a8187");
 
         // act
-        var requestModel = new RestoreCalculatedResultRequestModel(notExistingTradeId);
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(notExistingTradeId);
 
         // assert
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
@@ -98,8 +96,7 @@ public class RestoreCalculatedResultTests : DomainTests
         Assert.Equal(Result.Loss, tradeWithCalculatedMediocreResult.Result!.Name);
 
         // act
-        var requestModel = new RestoreCalculatedResultRequestModel(tradeWithCalculatedMediocreResult.Id);
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(tradeWithCalculatedMediocreResult.Id);
 
         // assert
         var responseModel = Assert.IsType<Completed<RestoreCalculatedResultResponseModel>>(response.Value);

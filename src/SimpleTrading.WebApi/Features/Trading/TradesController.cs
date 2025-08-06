@@ -50,7 +50,7 @@ public partial class TradesController : SimpleControllerBase
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetTrade([FromServices] IGetTrade getTrade, [FromRoute] Guid tradeId)
     {
-        var result = await getTrade.Execute(new GetTradeRequestModel(tradeId));
+        var result = await getTrade.Execute(tradeId);
 
         return result.Match(
             tradeModel => Ok(TradeDto.From(tradeModel)),
@@ -96,9 +96,9 @@ public partial class TradesController : SimpleControllerBase
         return result
             .Match(
                 completed => Ok(new WarningsDto(completed.Data.Warnings)),
-                UnprocessableEntityResult,
                 NotFoundResult,
-                ConflictResult);
+                ConflictResult,
+                UnprocessableEntityResult);
     }
 
     [HttpPut("{tradeId:guid}/close", Name = nameof(CloseTrade))]
@@ -127,9 +127,9 @@ public partial class TradesController : SimpleControllerBase
 
         return result.Match(
             completed => Ok(TradeResultDto.From(completed.Data)),
-            UnprocessableEntityResult,
             NotFoundResult,
-            ConflictResult
+            ConflictResult,
+            UnprocessableEntityResult
         );
     }
 
@@ -141,7 +141,7 @@ public partial class TradesController : SimpleControllerBase
         [FromServices] IRestoreCalculatedResult restoreCalculatedResult,
         [FromRoute] Guid tradeId)
     {
-        var result = await restoreCalculatedResult.Execute(new RestoreCalculatedResultRequestModel(tradeId));
+        var result = await restoreCalculatedResult.Execute(tradeId);
 
         return result.Match(
             completed => Ok(TradeResultDto.From(completed.Data)),
@@ -155,7 +155,7 @@ public partial class TradesController : SimpleControllerBase
         [FromServices] IDeleteTrade deleteTrade,
         [FromRoute] Guid tradeId)
     {
-        await deleteTrade.Execute(new DeleteTradeRequestModel(tradeId));
+        await deleteTrade.Execute(tradeId);
 
         return NoContent();
     }

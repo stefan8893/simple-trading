@@ -89,8 +89,8 @@ public class ReferencesController : SimpleControllerBase
 
         return result.Match(
             completed => NoContent(),
-            UnprocessableEntityResult,
-            NotFoundResult
+            NotFoundResult,
+            UnprocessableEntityResult
         );
     }
 

@@ -16,7 +16,7 @@ public class DeleteTradeTests : DomainTests
     {
         var notExistingTradeId = Guid.Parse("a47e07af-e0ae-49d0-8e1f-d0748f989c80");
 
-        var response = await Interactor.Execute(new DeleteTradeRequestModel(notExistingTradeId));
+        var response = await Interactor.Execute(notExistingTradeId);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
@@ -32,7 +32,7 @@ public class DeleteTradeTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var response = await Interactor.Execute(new DeleteTradeRequestModel(trade.Id));
+        var response = await Interactor.Execute(trade.Id);
 
         // assert
         Assert.IsType<Completed>(response.Value);

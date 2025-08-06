@@ -6,13 +6,12 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
-using GetProfilesResponse = OneOf<IReadOnlyList<ProfileResponseModel>, BadInput>;
 
 [UsedImplicitly]
 public class GetProfilesInteractor(IProfileRepository profileRepository)
-    : InteractorBase, IInteractor<GetProfilesRequestModel, GetProfilesResponse>
+    : InteractorBase, IInteractor<GetProfilesRequestModel, IReadOnlyList<ProfileResponseModel>>
 {
-    public async Task<GetProfilesResponse> Execute(GetProfilesRequestModel model)
+    public async Task<IReadOnlyList<ProfileResponseModel>> Execute(GetProfilesRequestModel model)
     {
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 
