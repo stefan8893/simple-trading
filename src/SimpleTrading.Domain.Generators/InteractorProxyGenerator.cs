@@ -21,12 +21,14 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         GenerateProxyInfrastructure(context, combinedValueProvider);
     }
 
-    private static IncrementalValuesProvider<INamedTypeSymbol> FindAllInteractors(IncrementalGeneratorInitializationContext context)
+    private static IncrementalValuesProvider<INamedTypeSymbol> FindAllInteractors(
+        IncrementalGeneratorInitializationContext context)
     {
         return context
             .SyntaxProvider
             .CreateSyntaxProvider(
-                static (s, _) => s is ClassDeclarationSyntax {BaseList: not null},
+                static (s, _) => s is ClassDeclarationSyntax {BaseList: not null} cds &&
+                                 cds.BaseList.Types.Any(x => x.ToString().Contains("IInteractor")),
                 static (ctx, _) => ctx.SemanticModel.GetDeclaredSymbol(ctx.Node) as INamedTypeSymbol
             )
             .Where(static x => x is not null && !x.IsAbstract)
@@ -34,11 +36,13 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             .Select(static (symbol, _) => symbol!);
     }
 
-    private static IncrementalValuesProvider<INamedTypeSymbol> FindAllValidators(IncrementalGeneratorInitializationContext context)
+    private static IncrementalValuesProvider<INamedTypeSymbol> FindAllValidators(
+        IncrementalGeneratorInitializationContext context)
     {
         return context.SyntaxProvider
             .CreateSyntaxProvider(
-                static (node, _) => node is ClassDeclarationSyntax {BaseList: not null},
+                static (node, _) => node is ClassDeclarationSyntax {BaseList: not null} cds &&
+                                    cds.BaseList.Types.Any(x => x.ToString().Contains("AbstractValidator")),
                 static (ctx, _) => ctx.SemanticModel.GetDeclaredSymbol(ctx.Node) as INamedTypeSymbol)
             .Where(static x => x is not null && !x.IsAbstract)
             .Where(static x => IsValidator(x!))
