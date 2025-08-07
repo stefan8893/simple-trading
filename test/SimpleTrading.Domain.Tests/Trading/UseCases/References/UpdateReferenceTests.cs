@@ -3,7 +3,6 @@ using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
@@ -190,7 +189,7 @@ public class UpdateReferenceTests : DomainTests
         // assert
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(badInput.Errors);
-        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", 
+        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
     }

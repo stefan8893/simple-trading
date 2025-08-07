@@ -2,7 +2,6 @@
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;

@@ -5,7 +5,6 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -77,7 +76,7 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
-        
+
         var trade = Assert.Single(pagedTrades);
         Assert.Equal(expected, trade.Opened);
     }
@@ -280,7 +279,7 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var expected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
-        
+
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(expected, singleTrade.Opened);
     }
@@ -348,7 +347,7 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
-        
+
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => firstExpected == item.Opened);
@@ -389,7 +388,7 @@ public class SearchTradesFilterTests : DomainTests
 
         // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
-        
+
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(1000m, singleTrade.ProfitLoss);
     }
@@ -1107,7 +1106,7 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
-        Assert.Equal(ResultModel.Mediocre,  singleTrade.Result);
+        Assert.Equal(ResultModel.Mediocre, singleTrade.Result);
     }
 
     [Fact]
@@ -1243,7 +1242,7 @@ public class SearchTradesFilterTests : DomainTests
         Assert.Contains(pagedTrades, item => tradesWithResult[2].Id == item.Id);
         Assert.Contains(pagedTrades, item => tradesWithResult[3].Id == item.Id);
     }
-    
+
     [Fact]
     public async Task Closed_equal_to_null_returns_all_trades_without_closed_date()
     {
@@ -1391,8 +1390,8 @@ public class SearchTradesFilterTests : DomainTests
         // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
-        Assert.Equal(ResultModel.BreakEven,  singleTrade.Result);
-        Assert.Equal(100m,  singleTrade.ProfitLoss);
-        Assert.Equal(10_000m,  singleTrade.Size);
+        Assert.Equal(ResultModel.BreakEven, singleTrade.Result);
+        Assert.Equal(100m, singleTrade.ProfitLoss);
+        Assert.Equal(10_000m, singleTrade.Size);
     }
 }

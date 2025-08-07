@@ -160,7 +160,7 @@ public class PositionPricesTests
 
         Assert.NotNull(result);
         Assert.Equal(Result.Win, result.Name);
-        Assert.Equal((short)100, result.Performance);
+        Assert.Equal((short) 100, result.Performance);
     }
 
     [Fact]

@@ -18,7 +18,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var initialOpenedDate = DateTime.Parse("2024-08-19T10:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(x => TestData.Trade.Default with { ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x) })
+            .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -28,7 +28,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "Opened -gt [2024-08-19T11:00Z]";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
+        var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(result);
@@ -175,7 +176,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "    ProfitLoss   -gt   [500]    ";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(2, result.Count);
@@ -195,7 +197,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
-            .Select(_ => TestData.Trade.Default with { ProfileOrId = profile })
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build())
             .ToList();
 
@@ -206,7 +208,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var searchFilter = $"Closed -eq {nullLiteral}";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(3, result.Count);
@@ -219,7 +222,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
-            .Select(_ => TestData.Trade.Default with { ProfileOrId = profile })
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -229,7 +232,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = "Closed -ne null";
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(0, result.Count);
@@ -242,7 +246,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
-            .Select(_ => TestData.Trade.Default with { ProfileOrId = profile })
+            .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build());
 
         DbContext.Trades.AddRange(trades);
@@ -252,7 +256,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         const string searchFilter = null!;
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter], cancellationToken: TestContext.Current.CancellationToken);
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(3, result.Count);
@@ -284,7 +289,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         List<string> sorting = ["-Result", null!];
 
         // act
-        var result = await client.SearchTradesAsync(profile.Id, sorting, [], cancellationToken: TestContext.Current.CancellationToken);
+        var result = await client.SearchTradesAsync(profile.Id, sorting, [],
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(3, result.Count);

@@ -6,7 +6,6 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -33,7 +32,7 @@ public class CloseTradeTests : DomainTests
             0m
         )
         {
-            ManuallyEnteredResult = (ResultModel)50,
+            ManuallyEnteredResult = (ResultModel) 50,
             ExitPrice = 1.05m
         };
 
@@ -69,7 +68,7 @@ public class CloseTradeTests : DomainTests
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
         // arrange
-        var trade = (TestData.Trade.Default with { Opened = _utcNow }).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -96,7 +95,7 @@ public class CloseTradeTests : DomainTests
         // arrange
         var trade = (TestData.Trade.Default with
         {
-            PositionPrices = new TestData.PositionPrices { EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m },
+            PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m},
             Opened = _utcNow
         }).Build();
         DbContext.Add(trade);
@@ -104,14 +103,14 @@ public class CloseTradeTests : DomainTests
 
         var requestModel =
             new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
-            { ExitPrice = 1.2m };
+                {ExitPrice = 1.2m};
 
         // act
         var response = await Interactor.Execute(requestModel);
 
         // assert
         var responseModel = Assert.IsType<Completed<CloseTradeResponseModel>>(response.Value);
-        Assert.Equal((short)50, responseModel.Data.Performance);
+        Assert.Equal((short) 50, responseModel.Data.Performance);
         Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
 
         var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);

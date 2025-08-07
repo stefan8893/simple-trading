@@ -3,7 +3,6 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
@@ -40,7 +39,7 @@ public class GetReferencesTests : DomainTests
             .Execute(new GetReferencesRequestModel(trade.Id));
 
         // assert
-        var references = Assert.IsType<IReadOnlyList<ReferenceResponseModel>>(response.Value, exactMatch: false);
+        var references = Assert.IsType<IReadOnlyList<ReferenceResponseModel>>(response.Value, false);
         Assert.Equal(2, references.Count);
         Assert.Contains(references, x => x.Id == reference1.Id);
         Assert.Contains(references, x => x.Id == reference2.Id);

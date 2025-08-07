@@ -42,7 +42,8 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // act
-        var countOfDeletedReferences = await client.DeleteReferencesAsync(trade.Id, TestContext.Current.CancellationToken);
+        var countOfDeletedReferences =
+            await client.DeleteReferencesAsync(trade.Id, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(2, countOfDeletedReferences);

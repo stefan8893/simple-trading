@@ -21,7 +21,10 @@ public class DateTimeExtensionsTests
         var utc = DateTime.Parse("2024-08-03T18:00:00").ToUtcKind();
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        void Act() => utc.ToLocal("FooBar");
+        void Act()
+        {
+            utc.ToLocal("FooBar");
+        }
 
         Assert.Throws<TimeZoneNotFoundException>(Act);
     }

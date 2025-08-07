@@ -1,8 +1,6 @@
 ﻿using Autofac;
 using FluentValidation.Results;
-using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.Currencies;
@@ -25,7 +23,7 @@ public class GetCurrenciesTests : DomainTests
         var response = await Interactor.Execute(new GetCurrenciesRequestModel(null));
 
         // assert
-        var currencies = Assert.IsType<IReadOnlyList<GetCurrenciesResponseModel>>(response.Value, exactMatch: false);
+        var currencies = Assert.IsType<IReadOnlyList<GetCurrenciesResponseModel>>(response.Value, false);
         Assert.Equal(2, currencies.Count);
     }
 
@@ -38,7 +36,7 @@ public class GetCurrenciesTests : DomainTests
 
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(badInput.Errors);
-        Assert.Equal("The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.", 
+        Assert.Equal("The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.",
             error.ErrorMessage);
         Assert.Equal("SearchTerm", error.PropertyName);
     }

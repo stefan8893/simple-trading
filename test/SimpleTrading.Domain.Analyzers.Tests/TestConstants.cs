@@ -4,8 +4,6 @@ namespace SimpleTrading.Domain.Analyzers.Tests;
 
 public static class TestConstants
 {
-    private static readonly string CurrentDirectory = Environment.CurrentDirectory;
-
     public const string InteractorSource = """
                                            namespace SimpleTrading.Domain.Infrastructure;
 
@@ -19,12 +17,14 @@ public static class TestConstants
                                                Task<TResponseModel> Execute(TRequestModel model);
                                            }
                                            """;
-    
+
+    private static readonly string CurrentDirectory = Environment.CurrentDirectory;
+
 
     public static class TestSourceFiles
     {
         private static readonly string TestSourceFilesDir = Path.Combine(CurrentDirectory, nameof(TestSourceFiles));
-        
+
         public static readonly string ValidatorAndBadInputCaseExistsFile =
             Path.Combine(TestSourceFilesDir, $"{nameof(ValidatorAndBadInputCaseExists)}.cs");
 
@@ -33,7 +33,7 @@ public static class TestConstants
 
         public static readonly string ResponseModelTypeIsNotOneOfFile =
             Path.Combine(TestSourceFilesDir, $"{nameof(ResponseModelTypeIsNotOneOf)}.cs");
-        
+
         public static readonly string InteractorWithMissingInteractorSuffixFile =
             Path.Combine(TestSourceFilesDir, $"{nameof(InteractorWithMissingInteractorSuffix)}.cs");
     }

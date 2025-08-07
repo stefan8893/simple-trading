@@ -4,7 +4,6 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -37,7 +36,7 @@ public class RestoreCalculatedResultTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(Result.Mediocre, tradeWithCalculatedMediocreResult.Result!.Name);
-        Assert.Equal((short)83, tradeWithCalculatedMediocreResult.Result.Performance);
+        Assert.Equal((short) 83, tradeWithCalculatedMediocreResult.Result.Performance);
 
         // act
         var response = await Interactor.Execute(tradeWithCalculatedMediocreResult.Id);
@@ -47,7 +46,7 @@ public class RestoreCalculatedResultTests : DomainTests
         Assert.Empty(responseModel.Data.Warnings);
         Assert.NotNull(responseModel.Data.Result);
         Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
-        Assert.Equal((short)83, responseModel.Data.Performance);
+        Assert.Equal((short) 83, responseModel.Data.Performance);
     }
 
     [Fact]
@@ -103,6 +102,6 @@ public class RestoreCalculatedResultTests : DomainTests
         Assert.Empty(responseModel.Data.Warnings);
         Assert.NotNull(responseModel.Data.Result);
         Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
-        Assert.Equal((short)83, responseModel.Data.Performance);
+        Assert.Equal((short) 83, responseModel.Data.Performance);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetActiveProfile;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.Profiles;
@@ -29,7 +28,7 @@ public class GetActiveProfileTests : DomainTests
         Assert.Equal(activeProfile.Id, response.Id);
         Assert.True(response.IsActive);
     }
-    
+
     [Fact]
     public async Task Returns_any_profile_if_there_is_no_active_profile()
     {
@@ -52,10 +51,13 @@ public class GetActiveProfileTests : DomainTests
     public async Task An_exception_is_thrown_when_there_is_no_profile()
     {
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task<ProfileResponseModel> Act() => Interactor.Execute();
+        Task<ProfileResponseModel> Act()
+        {
+            return Interactor.Execute();
+        }
 
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(Act);
-        
+
         Assert.Equal("Sequence contains no elements", exception.Message);
     }
 }

@@ -31,7 +31,8 @@ public class ValidatorAndBadInputCaseExists
 
     [UsedImplicitly]
     public class
-        GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, ValidationResult, NotFound>>
+        GetFoobarInteractor : IInteractor<GetFoobarRequestModel,
+        OneOf<GetFoobarResponseModel, ValidationResult, NotFound>>
     {
         public Task<OneOf<GetFoobarResponseModel, ValidationResult, NotFound>> Execute(GetFoobarRequestModel model)
         {

@@ -1,14 +1,11 @@
 ﻿using Autofac;
-using Microsoft.Extensions.Hosting;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
-using SimpleTrading.TestInfrastructure;
-using SimpleTrading.WebApi;
 
 namespace SimpleTrading.DataAccess.Tests.Repositories;
 
-public class UserSettingsRepositoriesTests: RepositoryTests
+public class UserSettingsRepositoriesTests : RepositoryTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-09-17T12:00:00").ToUtcKind();
 

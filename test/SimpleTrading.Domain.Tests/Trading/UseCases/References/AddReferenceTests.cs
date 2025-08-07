@@ -3,7 +3,6 @@ using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.AddReference;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
@@ -17,7 +16,7 @@ public class AddReferenceTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
         var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, (ReferenceType)50, "https://example.org", "some notes");
+            new AddReferenceRequestModel(trade.Id, (ReferenceType) 50, "https://example.org", "some notes");
 
         var response = await Interactor.Execute(referenceRequestModel);
 

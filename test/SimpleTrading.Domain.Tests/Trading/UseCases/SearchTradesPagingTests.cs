@@ -4,7 +4,6 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -31,7 +30,7 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, 
+            Page = 1,
             PageSize = 5
         });
 
@@ -58,7 +57,7 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, 
+            Page = 1,
             PageSize = 5
         });
 
@@ -85,7 +84,7 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, 
+            Page = 1,
             PageSize = 5
         });
 
@@ -112,7 +111,7 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 2, 
+            Page = 2,
             PageSize = 5
         });
 
@@ -139,7 +138,7 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 1, 
+            Page = 1,
             PageSize = 5
         });
 
@@ -166,7 +165,7 @@ public class SearchTradesPagingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
-            Page = 4, 
+            Page = 4,
             PageSize = 5
         });
 

@@ -64,7 +64,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         var businessError = Assert.IsType<Conflict>(response.Value);
-            
+
         Assert.Equal(trade.Id, businessError.ResourceId);
         Assert.Equal("'Closed' must not be greater than one day in the future.", businessError.Details);
     }
@@ -145,7 +145,7 @@ public class CloseTradeTests : TestBase
 
         // assert
         Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        
+
         Assert.True(trade.IsClosed);
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
@@ -458,7 +458,7 @@ public class CloseTradeTests : TestBase
         // assert
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
-        Assert.Equal((short)-50, trade.Result?.Performance);
+        Assert.Equal((short) -50, trade.Result?.Performance);
     }
 
     [Fact]
@@ -479,7 +479,7 @@ public class CloseTradeTests : TestBase
         // assert
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
-        Assert.Equal((short)-150, trade.Result?.Performance);
+        Assert.Equal((short) -150, trade.Result?.Performance);
     }
 
     [Fact]
@@ -500,7 +500,7 @@ public class CloseTradeTests : TestBase
         // assert
         Assert.Equal(Result.Mediocre, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
-        Assert.Equal((short)25, trade.Result?.Performance);
+        Assert.Equal((short) 25, trade.Result?.Performance);
     }
 
     [Fact]
@@ -521,7 +521,7 @@ public class CloseTradeTests : TestBase
         // assert
         Assert.Equal(Result.Mediocre, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
-        Assert.Equal((short)99, trade.Result?.Performance);
+        Assert.Equal((short) 99, trade.Result?.Performance);
     }
 
     [Fact]
@@ -542,7 +542,7 @@ public class CloseTradeTests : TestBase
         // assert
         Assert.Equal(Result.Win, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
-        Assert.Equal((short)100, trade.Result?.Performance);
+        Assert.Equal((short) 100, trade.Result?.Performance);
     }
 
     [Fact]
@@ -563,11 +563,12 @@ public class CloseTradeTests : TestBase
         // assert
         Assert.Equal(Result.Win, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
-        Assert.Equal((short)120, trade.Result?.Performance);
+        Assert.Equal((short) 120, trade.Result?.Performance);
     }
 
     [Fact]
-    public void A_loss_result_calculated_by_position_prices_and_a_positive_profitLosss_is_acceptable_but_returns_warnings()
+    public void
+        A_loss_result_calculated_by_position_prices_and_a_positive_profitLosss_is_acceptable_but_returns_warnings()
     {
         // arrange
         var trade = (TestData.Trade.Default with
@@ -586,7 +587,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("You have entered a profit, but your long position indicates a loss.", singleWarning);
     }
@@ -610,10 +611,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.", singleWarning);
-        
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.",
+            singleWarning);
+
         Assert.True(trade.IsClosed);
         Assert.Equal(Result.Loss, trade.Result?.Name);
     }
@@ -638,10 +640,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("You have entered a profit, but your short position indicates a loss.", singleWarning);
-        
+
         Assert.Null(trade.Result);
     }
 
@@ -665,10 +667,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("You have entered a profit, but your long position indicates a loss.", singleWarning);
-        
+
         Assert.Null(trade.Result);
     }
 
@@ -681,7 +683,7 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        Assert.Equal((short)0, trade.Result?.Performance);
+        Assert.Equal((short) 0, trade.Result?.Performance);
     }
 
     [Fact]
@@ -706,9 +708,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         //assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.",
+            singleWarning);
     }
 
     [Fact]
@@ -731,10 +734,11 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var warnings =  Assert.IsType<Completed<CloseTradeResult>>(response.Value).Data.Warnings.ToList();
+        var warnings = Assert.IsType<Completed<CloseTradeResult>>(response.Value).Data.Warnings.ToList();
         Assert.Equal(2, warnings.Count);
         Assert.Contains("Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.", warnings);
-        Assert.Contains("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.", warnings);
+        Assert.Contains("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.",
+            warnings);
     }
 
     [Fact]
@@ -759,9 +763,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Break-Even'.",
+            singleWarning);
     }
 
     [Fact]
@@ -786,9 +791,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.",
+            singleWarning);
     }
 
     [Fact]
@@ -813,9 +819,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Win', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Win', but based on your Profit/Loss it is 'Break-Even'.",
+            singleWarning);
     }
 
     [Fact]
@@ -840,9 +847,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var result =  Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
-        Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.", singleWarning);
+        Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.",
+            singleWarning);
     }
 
     [Fact]
@@ -888,7 +896,8 @@ public class CloseTradeTests : TestBase
         _ = trade.Close(closeTradeDto);
 
         // assert
-        Assert.Equal(Result.BreakEven, trade.Result?.Name);;
+        Assert.Equal(Result.BreakEven, trade.Result?.Name);
+        ;
     }
 
     private DateTime UtcNowStub()

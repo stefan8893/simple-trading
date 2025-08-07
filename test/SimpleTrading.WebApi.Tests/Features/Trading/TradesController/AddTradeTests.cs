@@ -371,7 +371,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         Assert.NotEqual(DateTimeKind.Local, expectedOpenedDate.Kind);
         Assert.Equal(expectedOpenedDate, newlyAddedTrade.Opened);
     }
-   
+
     [Fact]
     public async Task A_trade_reference_with_an_invalid_links_returns_a_bad_request()
     {
@@ -398,11 +398,14 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 ProfitLoss = 50,
                 CurrencyId = currency.Id,
                 EntryPrice = 1.08,
-                References = [new AddReferenceDto
-                {
-                    Type = NullableOfReferenceTypeDto.Other,
-                    Link = "bad url"
-                }]
+                References =
+                [
+                    new AddReferenceDto
+                    {
+                        Type = NullableOfReferenceTypeDto.Other,
+                        Link = "bad url"
+                    }
+                ]
             });
         }
 

@@ -8,18 +8,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="xunit.v3" Version="3.0.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
-        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
+        <PackageReference Include="xunit.v3" Version="3.0.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0"/>
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit" />
+        <Using Include="Xunit"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj" />
-        <ProjectReference Include="..\..\src\SimpleTrading.Domain\SimpleTrading.Domain.csproj" />
+        <ProjectReference Include="..\..\src\SimpleTrading.Domain.Analyzers\SimpleTrading.Domain.Analyzers.csproj"/>
+        <ProjectReference Include="..\..\src\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -33,25 +33,25 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
         <Compile Update="TestCases\InteractorWithMissingInteractorSuffix.cs">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
         <Compile Update="TestSourceFiles\InteractorWithMissingInteractorSuffix.cs">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
         <Compile Update="TestSourceFiles\ResponseModelTypeIsNotOneOf.cs">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
         <Compile Update="TestSourceFiles\ValidatorAndBadInputCaseExists.cs">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
         <Compile Update="TestSourceFiles\ValidatorExistsForRequestModel.cs">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
     </ItemGroup>
 
 
     <ItemGroup>
-        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.GetUserSettings;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.User.UseCases;

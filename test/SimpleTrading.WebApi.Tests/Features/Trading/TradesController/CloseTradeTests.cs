@@ -116,7 +116,8 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(trade.Id,
-                new CloseTradeDto {Closed = new DateTimeOffset(_utcNow).AddDays(-1), ProfitLoss = -50d, ExitPrice = 1.05});
+                new CloseTradeDto
+                    {Closed = new DateTimeOffset(_utcNow).AddDays(-1), ProfitLoss = -50d, ExitPrice = 1.05});
         }
 
         // assert

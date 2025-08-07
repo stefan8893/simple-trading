@@ -10,11 +10,11 @@ public class ResultTests : TestBase
     {
         const string notSupportedName = "NotThatBad";
 
-        var exception = Assert.Throws<ArgumentException>(
-            () => new Result(notSupportedName, ResultSource.ManuallyEntered));
-            
+        var exception =
+            Assert.Throws<ArgumentException>(() => new Result(notSupportedName, ResultSource.ManuallyEntered));
+
         Assert.Equal(
-            "Invalid result name. It must be one of 'Loss, BreakEven, Mediocre, Win'", 
+            "Invalid result name. It must be one of 'Loss, BreakEven, Mediocre, Win'",
             exception.Message);
     }
 

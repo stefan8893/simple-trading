@@ -4,7 +4,6 @@ using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
-using SimpleTrading.TestInfrastructure;
 
 namespace SimpleTrading.Domain.Tests.User.UseCases;
 

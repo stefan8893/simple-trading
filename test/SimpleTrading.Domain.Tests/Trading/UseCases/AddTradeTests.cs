@@ -6,7 +6,6 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -127,7 +126,7 @@ public class AddTradeTests : DomainTests
             Size = 5000,
             EntryPrice = 1.05m,
             CurrencyId = TestData.Currency.Default.Build().Id,
-            ManuallyEnteredResult = (ResultModel)50
+            ManuallyEnteredResult = (ResultModel) 50
         };
 
         var response = await Interactor.Execute(requestModel);
@@ -268,7 +267,7 @@ public class AddTradeTests : DomainTests
 
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(badInput.Errors);
-        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", 
+        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
     }
@@ -295,7 +294,7 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = Assert.IsType<NotFound>(response.Value, exactMatch: false);
+        var notFound = Assert.IsType<NotFound>(response.Value, false);
         Assert.Equal(currency.Id, notFound.ResourceId);
         Assert.Equal(nameof(Currency), notFound.ResourceType);
     }
@@ -322,7 +321,7 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = Assert.IsType<NotFound>(response.Value, exactMatch: false);
+        var notFound = Assert.IsType<NotFound>(response.Value, false);
         Assert.Equal(profile.Id, notFound.ResourceId);
         Assert.Equal(nameof(Profile), notFound.ResourceType);
     }
@@ -349,7 +348,7 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = Assert.IsType<NotFound>(response.Value, exactMatch: false);
+        var notFound = Assert.IsType<NotFound>(response.Value, false);
         Assert.Equal(asset.Id, notFound.ResourceId);
         Assert.Equal(nameof(Asset), notFound.ResourceType);
     }
@@ -378,7 +377,7 @@ public class AddTradeTests : DomainTests
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         Assert.NotNull(await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId));
     }
-    
+
     [Fact]
     public async Task A_trade_is_not_saved_when_executing_a_dry_run()
     {
@@ -495,7 +494,7 @@ public class AddTradeTests : DomainTests
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var errors = badInput.Errors;
         Assert.Equal(4, errors.Count);
-        Assert.Contains(errors, x => 
+        Assert.Contains(errors, x =>
             x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry Price' must be greater than '0'.");
         Assert.Contains(errors, x =>
             x.PropertyName == "StopLoss" && x.ErrorMessage == "'Stop Loss' must be greater than '0'.");
@@ -569,7 +568,8 @@ public class AddTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_profitLoss_and_no_closed_date()
+    public async Task
+        Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_profitLoss_and_no_closed_date()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -594,7 +594,7 @@ public class AddTradeTests : DomainTests
 
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(badInput.Errors);
-        Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.", 
+        Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.",
             error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }

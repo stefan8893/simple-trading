@@ -8,21 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="xunit.v3" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
+        <PackageReference Include="xunit.v3" Version="3.0.0"/>
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit" />
+        <Using Include="Xunit"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\SimpleTrading.DataAccess\SimpleTrading.DataAccess.csproj" />
-        <ProjectReference Include="..\SimpleTrading.TestInfrastructure\SimpleTrading.TestInfrastructure.csproj" />
+        <ProjectReference Include="..\..\src\SimpleTrading.DataAccess\SimpleTrading.DataAccess.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.TestInfrastructure\SimpleTrading.TestInfrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 
 

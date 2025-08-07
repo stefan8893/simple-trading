@@ -6,7 +6,6 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
-using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -153,7 +152,7 @@ public class UpdateTradeTests : DomainTests
 
         // act
         var response = await Interactor.Execute(updateTradeRequestModel);
-        
+
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Exit Price' must be greater than '0'.", error.ErrorMessage);
@@ -382,7 +381,7 @@ public class UpdateTradeTests : DomainTests
 
         // assert
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
-        
+
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.NotNull(updatedTrade);
         Assert.Equal(newProfitLoss, updatedTrade.ProfitLoss);
@@ -409,9 +408,9 @@ public class UpdateTradeTests : DomainTests
         // assert
         var badInput = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(badInput.Errors);
-        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", error.ErrorMessage);
+        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
+            error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
-
     }
 
     [Fact]
@@ -445,7 +444,7 @@ public class UpdateTradeTests : DomainTests
 
         // assert
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
-        
+
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.NotNull(updatedTrade);
         Assert.Equal(newPositionPrices, updatedTrade.PositionPrices);
@@ -484,10 +483,10 @@ public class UpdateTradeTests : DomainTests
 
         // assert
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
-        
+
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.NotNull(updatedTrade?.Result);
-        Assert.Equal((short)85, updatedTrade.Result.Performance);
+        Assert.Equal((short) 85, updatedTrade.Result.Performance);
     }
 
     [Fact]
@@ -505,7 +504,7 @@ public class UpdateTradeTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.True(trade.IsClosed);
-        
+
         _ = await Interactor.Execute(new UpdateTradeRequestModel
             {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win});
 
@@ -518,12 +517,12 @@ public class UpdateTradeTests : DomainTests
 
         // assert
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
-        
+
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        
+
         Assert.NotNull(updatedTrade?.Result);
         Assert.Equal(Result.Mediocre, updatedTrade.Result.Name);
-        Assert.Equal(ResultSource.ManuallyEntered,  updatedTrade.Result.Source);
+        Assert.Equal(ResultSource.ManuallyEntered, updatedTrade.Result.Source);
     }
 
     [Fact]
@@ -548,7 +547,6 @@ public class UpdateTradeTests : DomainTests
         var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
-
     }
 
     [Fact]
