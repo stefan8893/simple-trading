@@ -5,6 +5,9 @@ public static class InfrastructureSource
     public const string InteractorInterface =
         // lang=C#
         $$"""
+        using System;
+        using System.Threading.Tasks;
+        
         namespace SimpleTrading.Domain.Infrastructure;
 
         public interface IInteractor<TResponseModel>
