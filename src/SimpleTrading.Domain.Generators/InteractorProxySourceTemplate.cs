@@ -44,7 +44,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         var requestModelParameter = RequestModelParameter;
 
         var responseModelTransformed = context.GetResponseModelTransformed();
-        var isResponseModelTransformed = !responseModelTransformed.Equals(context.ResponseModel.GetDisplayName());
+        var isResponseModelTransformed = !responseModelTransformed.Equals(context.ResponseModel.GetDisplayName(), StringComparison.Ordinal);
 
         var interactorInvocation = GetInteractorInvocation(responseModelTransformed, isResponseModelTransformed);
 
@@ -126,7 +126,10 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                      return  result.Match<{responseModelTransformed}>({matchFunctions});
              """;
 
-        var interactorInvocation = context.IsResponseModelOneOf && isResponseModelTransformed
+        if (!isResponseModelTransformed)
+            return easyInteractorInvocation;
+
+        var interactorInvocation = context.IsResponseModelOneOf
             ? transformedInteractorInvocation
             : context is {IsResponseModelOneOf: false, RequestModel: not null}
                 ? interactorInvocationWithOneOfTransformation

@@ -51,10 +51,7 @@ public class XunitV3Verifier : IVerifier
 
     public void LanguageIsSupported(string language)
     {
-        if (language != LanguageNames.CSharp)
-        {
-            Assert.Fail($"The language is not supported: {language}.");
-        }
+        if (language != LanguageNames.CSharp) Assert.Fail($"The language is not supported: {language}.");
     }
 
     public void NotEmpty<T>(string collectionName, IEnumerable<T> collection)
@@ -71,21 +68,21 @@ public class XunitV3Verifier : IVerifier
         if (equalityComparer is null)
         {
             Assert.Equal(expected, actual);
-        }
-        else
-        {
-            var expectedList = expected.ToList();
-            var actualList = actual.ToList();
 
-            if (expectedList.Count != actualList.Count)
+            return;
+        }
+
+        var expectedList = expected.ToList();
+        var actualList = actual.ToList();
+
+        if (expectedList.Count != actualList.Count)
+            Assert.Fail(message ??
+                        $"Sequences have different lengths: expected {expectedList.Count}, actual {actualList.Count}");
+
+        for (var i = 0; i < expectedList.Count; i++)
+            if (!equalityComparer.Equals(expectedList[i], actualList[i]))
                 Assert.Fail(message ??
-                            $"Sequences have different lengths: expected {expectedList.Count}, actual {actualList.Count}");
-
-            for (var i = 0; i < expectedList.Count; i++)
-                if (!equalityComparer.Equals(expectedList[i], actualList[i]))
-                    Assert.Fail(message ??
-                                $"Sequences differ at index {i}: expected {expectedList[i]}, actual {actualList[i]}");
-        }
+                            $"Sequences differ at index {i}: expected {expectedList[i]}, actual {actualList[i]}");
     }
 
     public IVerifier PushContext(string context1)
