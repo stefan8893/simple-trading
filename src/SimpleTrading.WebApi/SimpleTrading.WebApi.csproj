@@ -6,7 +6,6 @@
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <ApiDescriptionFileName>simple-trading-api-description</ApiDescriptionFileName>
         <OpenApiGenerateDocumentsOptions>--file-name $(ApiDescriptionFileName)</OpenApiGenerateDocumentsOptions>
-        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
