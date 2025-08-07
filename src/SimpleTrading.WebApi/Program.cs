@@ -30,18 +30,12 @@ builder.Services
         o.ModelValidatorProviders.Clear();
         o.Filters.Add<ValidationFilter>();
     })
-    .ConfigureApiBehaviorOptions(o =>
-    {
-        o.SuppressMapClientErrors = true;
-    })
+    .ConfigureApiBehaviorOptions(o => { o.SuppressMapClientErrors = true; })
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
-        o =>
-        {
-            o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience");
-        },
+        o => { o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience"); },
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 
 const string clientAppCorsPolicy = "ClientAppCorsPolicy";

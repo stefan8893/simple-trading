@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
@@ -18,6 +19,7 @@ public class CloseTradeRequestModel(
     public decimal? ExitPrice { get; init; }
 }
 
+[UsedImplicitly]
 public class CloseTradeRequestModelValidator : AbstractValidator<CloseTradeRequestModel>
 {
     public CloseTradeRequestModelValidator()

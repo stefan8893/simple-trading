@@ -53,7 +53,7 @@ public class AddTradeDtoValidator : AbstractValidator<AddTradeDto>
         RuleFor(x => x.EntryPrice)
             .NotNull()
             .WithName(SimpleTradingStrings.EntryPrice);
-        
+
         RuleForEach(x => x.References)
             .SetValidator(addReferenceDtoValidator);
     }

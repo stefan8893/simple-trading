@@ -18,7 +18,7 @@ public class HomeController(IHostEnvironment hostEnvironment, IConfiguration con
                    assembly.GetName().Version?.ToString() ??
                    "N/A";
         });
-    
+
     private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? "N/A";
 
     [AllowAnonymous]
@@ -28,7 +28,7 @@ public class HomeController(IHostEnvironment hostEnvironment, IConfiguration con
     {
         var baseUrl = configuration.GetValue<string>("BaseUrl") ?? "";
         var docs = $"{baseUrl.Trim('/')}/docs";
-        
+
         var apiInfo = new ApiInfo(AssemblyName,
             AssemblyVersion.Value,
             hostEnvironment.EnvironmentName,

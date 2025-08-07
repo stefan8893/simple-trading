@@ -9,7 +9,7 @@ public static class EndpointRouteBuilderExtensions
     public static IEndpointRouteBuilder UseScalarUi(this IEndpointRouteBuilder app,
         ClientAppEntraIdConfig clientAppEntraIdConfig)
     {
-        app.MapScalarApiReference("docs",options =>
+        app.MapScalarApiReference("docs", options =>
         {
             options
                 .AddPreferredSecuritySchemes(JwtBearerDefaults.AuthenticationScheme)
