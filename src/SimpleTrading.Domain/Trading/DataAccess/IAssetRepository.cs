@@ -1,5 +1,4 @@
-﻿using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Infrastructure.DataAccess;
+﻿using SimpleTrading.Domain.Infrastructure.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.DataAccess;
 

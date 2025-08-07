@@ -6,6 +6,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     [
         "System",
         "System.Threading.Tasks",
+        "System.Collections.Generic",
         "SimpleTrading.Domain.Infrastructure",
         "Microsoft.Extensions.Logging",
         "OneOf"
@@ -19,13 +20,13 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
     private IEnumerable<string> Namespaces =>
     [
-        .. DefaultNamespaces,
+        ..DefaultNamespaces,
         OnValidation("FluentValidation"),
+        OnValidation("FluentValidation.Results"),
         context.ResponseModel.ContainingNamespace.ToDisplayString(),
         ..context.ResponseModel.GetAllNamespaces(),
         ..context.ClosedInteractorInterface.GetAllNamespaces(),
         ..context.RequestModel is not null ? context.RequestModel.GetAllNamespaces() : [],
-        ..context.ValidationResult.GetAllNamespaces()
     ];
 
     private IEnumerable<string> UsingStatements => Namespaces
@@ -95,7 +96,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                                           _logger.LogInformation("Validate {interactorName} with {validator}", "{{context.RequestModel?.Name}}", validator.GetType().Name);
                                           var validationResult = await validator.ValidateAsync(requestModel);
                                           if (!validationResult.IsValid)
-                                              return new {{context.ValidationResult.GetDisplayName()}}(validationResult);
+                                              return validationResult;
                                       }
                               """)}}
 

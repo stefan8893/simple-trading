@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using JetBrains.Annotations;
 using OneOf;
 using SimpleTrading.Domain.Infrastructure;
@@ -30,9 +31,9 @@ public class ValidatorAndBadInputCaseExists
 
     [UsedImplicitly]
     public class
-        GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, BadInput, NotFound>>
+        GetFoobarInteractor : IInteractor<GetFoobarRequestModel, OneOf<GetFoobarResponseModel, ValidationResult, NotFound>>
     {
-        public Task<OneOf<GetFoobarResponseModel, BadInput, NotFound>> Execute(GetFoobarRequestModel model)
+        public Task<OneOf<GetFoobarResponseModel, ValidationResult, NotFound>> Execute(GetFoobarRequestModel model)
         {
             throw new NotImplementedException();
         }

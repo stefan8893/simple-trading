@@ -13,7 +13,7 @@ public static class StringExtensions
             .Trim()
             .Equals("null", StringComparison.OrdinalIgnoreCase);
     }
-    
+
     public static string FirstCharToLower(this string s)
     {
         if (string.IsNullOrEmpty(s) || char.IsLower(s[0]))

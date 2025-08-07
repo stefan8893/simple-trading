@@ -18,7 +18,7 @@ public class ReferenceRequestModelValidator : AbstractValidator<ReferenceRequest
         RuleFor(x => x.Link)
             .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
             .WithMessage(SimpleTradingStrings.InvalidLink);
-        
+
         RuleFor(x => x.Link)
             .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out var parsed) &&
                          parsed.Host.EndsWith("tradingview.com", StringComparison.OrdinalIgnoreCase))

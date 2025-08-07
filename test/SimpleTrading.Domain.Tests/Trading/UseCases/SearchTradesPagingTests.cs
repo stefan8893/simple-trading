@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
@@ -185,8 +186,8 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 0
         });
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("PageSize", error.PropertyName);
         Assert.Equal("'Page Size' must be greater than or equal to '1'.", error.ErrorMessage);
     }
@@ -201,8 +202,8 @@ public class SearchTradesPagingTests : DomainTests
             Page = 0
         });
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("Page", error.PropertyName);
         Assert.Equal("'Page' must be greater than or equal to '1'.", error.ErrorMessage);
     }

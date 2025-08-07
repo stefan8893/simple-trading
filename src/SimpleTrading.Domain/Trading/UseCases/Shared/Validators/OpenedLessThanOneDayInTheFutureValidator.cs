@@ -22,7 +22,8 @@ public class OpenedLessThanOneDayInTheFutureValidator : AbstractValidator<Opened
                 var upperBoundLocal = upperBound.ToLocal(userSettings.TimeZone).DateTime;
 
                 if (openedDateTime?.Opened?.UtcDateTime > upperBound)
-                    ctx.AddFailure(nameof(Trade.Opened), string.Format(SimpleTradingStrings.LessThanOrEqualValidatorMessage,
+                    ctx.AddFailure(nameof(Trade.Opened), string.Format(
+                        SimpleTradingStrings.LessThanOrEqualValidatorMessage,
                         SimpleTradingStrings.Opened, upperBoundLocal.ToString("g")));
             })
             ;

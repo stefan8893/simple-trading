@@ -1,5 +1,6 @@
 using System.Globalization;
 using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -36,8 +37,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Asset' must not be empty.", error.ErrorMessage);
         Assert.Equal("AssetId", error.PropertyName);
     }
@@ -57,8 +58,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Profile' must not be empty.", error.ErrorMessage);
         Assert.Equal("ProfileId", error.PropertyName);
     }
@@ -78,8 +79,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Currency' must not be empty.", error.ErrorMessage);
         Assert.Equal("CurrencyId", error.PropertyName);
     }
@@ -103,8 +104,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("Size", error.PropertyName);
     }
@@ -131,8 +132,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
@@ -158,8 +159,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("Opened", error.PropertyName);
     }
@@ -188,8 +189,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Opened' must be less than or equal to '06.08.2024 16:00'.", error.ErrorMessage);
         Assert.Equal("Opened", error.PropertyName);
     }
@@ -212,8 +213,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("Invalid link.", error.ErrorMessage);
         Assert.Equal("References[0].Link", error.PropertyName);
     }
@@ -243,8 +244,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("References[0].Notes", error.PropertyName);
     }
@@ -265,8 +266,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.", 
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
@@ -491,8 +492,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var errors = badInput.ValidationResult.Errors;
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var errors = badInput.Errors;
         Assert.Equal(4, errors.Count);
         Assert.Contains(errors, x => 
             x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry Price' must be greater than '0'.");
@@ -527,8 +528,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Profit/Loss' must not be empty, if 'Closed' is specified.", error.ErrorMessage);
         Assert.Equal("ProfitLoss", error.PropertyName);
     }
@@ -591,8 +592,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.", 
             error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);

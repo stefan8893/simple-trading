@@ -4,7 +4,7 @@ namespace SimpleTrading.Domain.Generators;
 
 public static class NamedTypeSymbolExtensions
 {
-    public static string GetDisplayName(this INamedTypeSymbol symbol)
+    public static string GetDisplayName(this INamedTypeSymbol namedTypeSymbol)
     {
         var displayFormat = new SymbolDisplayFormat(
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
@@ -12,7 +12,7 @@ public static class NamedTypeSymbolExtensions
             miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
         );
 
-        return symbol.ToDisplayString(displayFormat);
+        return namedTypeSymbol.ToDisplayString(displayFormat);
     }
     
     public static IEnumerable<string> GetAllNamespaces(this INamedTypeSymbol namedTypeSymbol)

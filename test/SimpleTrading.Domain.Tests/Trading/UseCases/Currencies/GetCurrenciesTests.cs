@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 using SimpleTrading.TestInfrastructure;
@@ -35,8 +36,8 @@ public class GetCurrenciesTests : DomainTests
 
         var response = await Interactor.Execute(new GetCurrenciesRequestModel(tooLongSearchTerm));
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.", 
             error.ErrorMessage);
         Assert.Equal("SearchTerm", error.PropertyName);

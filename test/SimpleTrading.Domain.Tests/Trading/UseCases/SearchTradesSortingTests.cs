@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
@@ -25,8 +26,8 @@ public class SearchTradesSortingTests : DomainTests
             Sort = [sorting]
         });
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("The sorting based on 'Foobar' does not work.", error.ErrorMessage);
         Assert.Equal("Sort[0].Property", error.PropertyName);
     }
@@ -173,8 +174,8 @@ public class SearchTradesSortingTests : DomainTests
         });
 
         // assert
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("The sorting based on '   ProfitLoss ' does not work.", error.ErrorMessage);
         Assert.Equal("Sort[0].Property", error.PropertyName);
     }

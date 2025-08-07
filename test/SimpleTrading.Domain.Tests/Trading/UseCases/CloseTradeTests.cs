@@ -1,5 +1,6 @@
 using System.Globalization;
 using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
@@ -40,8 +41,8 @@ public class CloseTradeTests : DomainTests
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
@@ -83,8 +84,8 @@ public class CloseTradeTests : DomainTests
         var response = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("ExitPrice", error.PropertyName);
         Assert.Equal("'Exit Price' must be greater than '0'.", error.ErrorMessage);
     }

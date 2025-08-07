@@ -1,15 +1,8 @@
-﻿
-using FluentValidation.Results;
-
-namespace SimpleTrading.Domain.Infrastructure;
-
+﻿namespace SimpleTrading.Domain.Infrastructure;
 
 public record Completed;
 
 public record Completed<TData>(TData Data);
-
-[InteractorProxyValidationResult]
-public record BadInput(ValidationResult ValidationResult);
 
 public record NotFound(Guid ResourceId, string? ResourceType = null);
 

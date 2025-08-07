@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using OneOf;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User.DataAccess;
 
@@ -12,16 +11,16 @@ public class UpdateUserSettingsInteractor(IUserSettingsRepository userSettingsRe
     public async Task<Completed> Execute(UpdateUserSettingsRequestModel requestModel)
     {
         var userSettings = await userSettingsRepository.GetUserSettings();
-        
-        if(requestModel.Culture is not null)
+
+        if (requestModel.Culture is not null)
             userSettings.Culture = requestModel.Culture;
-        
-        if(requestModel.IsoLanguageCode.IsT0)
+
+        if (requestModel.IsoLanguageCode.IsT0)
             userSettings.Language = requestModel.IsoLanguageCode.AsT0;
-        
-        if(requestModel.Timezone is not null)
+
+        if (requestModel.Timezone is not null)
             userSettings.TimeZone = requestModel.Timezone;
-        
+
         await uowCommit();
 
         return Completed();

@@ -28,7 +28,7 @@ public class SearchTradesInteractor(
             .Select(x => sorterByName[x.Property](x.Ascending ? Order.Ascending : Order.Descending));
 
         var filter = model.Filter
-            .Select(x => new { Model = x, Filter = filterPredicates.Single(p => p.Match(x.PropertyName, x.Operator)) })
+            .Select(x => new {Model = x, Filter = filterPredicates.Single(p => p.Match(x.PropertyName, x.Operator))})
             .Select(x => x.Filter.GetPredicate(x.Model.ComparisonValue, x.Model.IsLiteral))
             .Aggregate(Id, Add);
 

@@ -15,17 +15,9 @@ public class InteractorProxyGenerator : IIncrementalGenerator
 
         var interactors = CollectInteractors(context);
         var validators = CollectValidators(context);
-        var validationResult = CollectValidationResult(context);
 
         var combinedValueProvider = interactors
-            .Combine(validators)
-            .Combine(validationResult)
-            .Select((triple, _) =>
-            {
-                var (pair, validationResultCollected) = triple;
-                var (interactorsCollected, validatorsCollected) = pair;
-                return (interactorsCollected, validatorsCollected, validationResultCollected);
-            });
+            .Combine(validators);
 
         GenerateProxyInfrastructure(context, combinedValueProvider);
     }
@@ -33,23 +25,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
     private static void AddInfrastructureSourceCode(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(ctx
-            => ctx.AddSource("InteractorProxyValidationResult.g.cs",
-                InfrastructureSource.ValidationResultMarkerAttribute));
-
-        context.RegisterPostInitializationOutput(ctx
             => ctx.AddSource("IInteractor.cs", InfrastructureSource.InteractorInterface));
-    }
-
-    private static IncrementalValueProvider<ImmutableArray<INamedTypeSymbol>> CollectValidationResult(
-        IncrementalGeneratorInitializationContext context)
-    {
-        return context
-            .SyntaxProvider
-            .ForAttributeWithMetadataName(
-                "SimpleTrading.Domain.Infrastructure.InteractorProxyValidationResultAttribute",
-                static (node, _) => node is ClassDeclarationSyntax or RecordDeclarationSyntax,
-                static (ctx, _) => (INamedTypeSymbol) ctx.TargetSymbol)
-            .Collect();
     }
 
     private static IncrementalValueProvider<ImmutableArray<INamedTypeSymbol>> CollectValidators(
@@ -82,30 +58,14 @@ public class InteractorProxyGenerator : IIncrementalGenerator
 
     private static void GenerateProxyInfrastructure(IncrementalGeneratorInitializationContext context,
         IncrementalValueProvider<(ImmutableArray<INamedTypeSymbol> Interactors, ImmutableArray<INamedTypeSymbol>
-            Validators, ImmutableArray<INamedTypeSymbol> ValidationResult)> combined)
+            Validators)> combined)
     {
         context.RegisterSourceOutput(combined, static (ctx, combined) =>
         {
             var (interactors,
-                validators,
-                validationResult) = combined;
+                validators) = combined;
 
-            if (validationResult.IsEmpty)
-                // TODO: Report Diagnostic -> No validation result type provided (e.g., BadInput)
-                return;
-
-            if (validationResult.Length > 1)
-                // TODO: Report Diagnostic -> Multiple validation result types provided (e.g. BadInput and ValidationFailed)
-                return;
-
-            // TODO: verify validation result has a constructor that takes a FluentValidation.ValidationResult
-            // if (...)
-            // {
-            //     // TODO: Report Diagnostic -> InteractorProxyValidationResult needs a constructor that takes a FluentValidation.ValidationResult
-            //     return;
-            // }
-
-            var interactorContexts = CombineToInteractorContexts(interactors, validators, validationResult[0]);
+            var interactorContexts = CombineToInteractorContexts(interactors, validators);
 
             foreach (var interactorCtx in interactorContexts)
                 GenerateProxy(interactorCtx, ctx);
@@ -121,8 +81,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
     }
 
     private static ImmutableArray<InteractorContext> CombineToInteractorContexts(
-        ImmutableArray<INamedTypeSymbol> interactors, ImmutableArray<INamedTypeSymbol> validators,
-        INamedTypeSymbol validationResult)
+        ImmutableArray<INamedTypeSymbol> interactors, ImmutableArray<INamedTypeSymbol> validators)
     {
         var validatorsByValidatedType = validators
             .Where(x => x.BaseType!.TypeArguments.Length == 1)
@@ -136,14 +95,13 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         return
         [
             ..interactors
-                .Select(x => GatherInteractorContext(x, validatorsByValidatedType, validationResult))
+                .Select(x => GatherInteractorContext(x, validatorsByValidatedType))
                 .SelectMany(x => x is not null ? [x] : Array.Empty<InteractorContext>())
         ];
     }
 
     private static InteractorContext? GatherInteractorContext(INamedTypeSymbol concreteInteractor,
-        ImmutableDictionary<ISymbol, ImmutableArray<INamedTypeSymbol>> validatorsByValidatedType,
-        INamedTypeSymbol validationResult)
+        ImmutableDictionary<ISymbol, ImmutableArray<INamedTypeSymbol>> validatorsByValidatedType)
     {
         var closedInteractorInterface = concreteInteractor
             .AllInterfaces
@@ -171,8 +129,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             closedInteractorInterface,
             requestModel,
             responseModel,
-            validators,
-            validationResult);
+            validators);
     }
 
     private static bool IsValidator(INamedTypeSymbol candidate)

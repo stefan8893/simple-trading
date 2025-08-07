@@ -5,7 +5,6 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 
-
 [UsedImplicitly]
 public class GetProfilesInteractor(IProfileRepository profileRepository)
     : InteractorBase, IInteractor<GetProfilesRequestModel, IReadOnlyList<ProfileResponseModel>>

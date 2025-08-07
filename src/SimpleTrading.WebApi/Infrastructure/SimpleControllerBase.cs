@@ -15,9 +15,9 @@ public class SimpleControllerBase : ControllerBase
             .RequestServices
             .GetRequiredService<SimpleProblemDetails>();
 
-    protected ActionResult UnprocessableEntityResult(BadInput badInput)
+    protected ActionResult UnprocessableEntityResult(ValidationResult validationResult)
     {
-        var details = SimpleProblemDetails.CreateUnprocessableEntityDetails(badInput);
+        var details = SimpleProblemDetails.CreateUnprocessableEntityDetails(validationResult);
         var result = new UnprocessableEntityObjectResult(details);
         result.ContentTypes.Add(MediaTypeNames.Application.ProblemJson);
 

@@ -21,14 +21,14 @@ public class SimpleProblemDetails(IHttpContextAccessor httpContextAccessor)
         };
     }
 
-    public ValidationProblemDetails CreateUnprocessableEntityDetails(BadInput badInput)
+    public ValidationProblemDetails CreateUnprocessableEntityDetails(ValidationResult validationResult)
     {
         return new ValidationProblemDetails
         {
             Type = "https://datatracker.ietf.org/doc/html/rfc4918#section-11.2",
             Title = SimpleTradingStrings.OneOrMoreValidationErrors,
             Status = StatusCodes.Status422UnprocessableEntity,
-            Errors = ToErrors(badInput.ValidationResult),
+            Errors = ToErrors(validationResult),
             Instance = Resource
         };
     }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.AddReference;
@@ -20,8 +21,8 @@ public class AddReferenceTests : DomainTests
 
         var response = await Interactor.Execute(referenceRequestModel);
 
-        var badInput = Assert.IsType<BadInput>(response.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
     }
 

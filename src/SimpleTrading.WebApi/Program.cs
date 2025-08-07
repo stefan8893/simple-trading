@@ -41,13 +41,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         o =>
         {
             o.Audience = builder.Configuration.GetValue<string>("Auth:SimpleTradingWebApi:Audience");
-            o.Events = new JwtBearerEvents
-            {
-                OnChallenge = async ctx =>
-                {
-                    await Task.Yield();
-                }
-            };
         },
         options => builder.Configuration.Bind("Auth:SimpleTradingWebApi", options));
 

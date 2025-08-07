@@ -15,22 +15,19 @@ public class InteractorContext
     public readonly bool IsResponseModelOneOfWithValidationResultCase;
     public readonly INamedTypeSymbol? RequestModel;
     public readonly INamedTypeSymbol ResponseModel;
-    public readonly INamedTypeSymbol ValidationResult;
     public readonly ImmutableArray<INamedTypeSymbol> Validators;
 
     public InteractorContext(INamedTypeSymbol interactor,
         INamedTypeSymbol closedInteractorInterface,
         INamedTypeSymbol? requestModel,
         INamedTypeSymbol responseModel,
-        ImmutableArray<INamedTypeSymbol> validators,
-        INamedTypeSymbol validationResult)
+        ImmutableArray<INamedTypeSymbol> validators)
     {
         Interactor = interactor;
         ClosedInteractorInterface = closedInteractorInterface;
         RequestModel = requestModel;
         ResponseModel = responseModel;
         Validators = validators;
-        ValidationResult = validationResult;
 
         InteractorName = interactor.Name.Replace("Interactor", "");
         InteractorInterfaceName = $"I{Interactor.Name.Replace("Interactor", "")}";
@@ -40,7 +37,8 @@ public class InteractorContext
         IsResponseModelOneOf = responseModel is {IsGenericType: true, Name: "OneOf"};
         IsResponseModelOneOfWithValidationResultCase = IsResponseModelOneOf &&
                                                        responseModel.TypeArguments.Any(x =>
-                                                           x.Equals(ValidationResult, SymbolEqualityComparer.Default));
+                                                           x.MetadataName ==
+                                                           "FluentValidation.Results.ValidationResult");
     }
 
     public string GetResponseModelTransformed()
@@ -60,11 +58,11 @@ public class InteractorContext
 
     private string ConvertResponseModelToOneOfWithValidationResultCase()
     {
-        return $"OneOf<{ResponseModel.GetDisplayName()}, {ValidationResult.GetDisplayName()}>";
+        return $"OneOf<{ResponseModel.GetDisplayName()}, ValidationResult>";
     }
 
     private string AddValidationResultCaseToExistingOneOfResponseModel()
     {
-        return $"{ResponseModel.GetDisplayName().TrimEnd('>')}, {ValidationResult.GetDisplayName()}>";
+        return $"{ResponseModel.GetDisplayName().TrimEnd('>')}, ValidationResult>";
     }
 }

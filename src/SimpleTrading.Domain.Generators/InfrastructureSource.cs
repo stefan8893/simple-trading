@@ -2,24 +2,10 @@
 
 public static class InfrastructureSource
 {
-    public const string Namespace = "SimpleTrading.Domain.Infrastructure";
-    
-    public const string ValidationResultMarkerAttribute =
-        // lang=C#
-        $$"""
-        namespace {{Namespace}};
-
-        [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-        public sealed class InteractorProxyValidationResultAttribute : Attribute
-        {
-            public InteractorProxyValidationResultAttribute() {}
-        }
-        """;
-
     public const string InteractorInterface =
         // lang=C#
         $$"""
-        namespace {{Namespace}};
+        namespace SimpleTrading.Domain.Infrastructure;
 
         public interface IInteractor<TResponseModel>
         {

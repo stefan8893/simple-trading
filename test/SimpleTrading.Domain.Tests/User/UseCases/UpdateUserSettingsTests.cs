@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.User;
 using SimpleTrading.Domain.User.DataAccess;
@@ -94,8 +95,8 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(userSettingsModel.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("IsoLanguageCode", error.PropertyName);
         Assert.Equal("'DEU' is not supported. Only 'DE, EN'.", error.ErrorMessage);
     }
@@ -111,8 +112,8 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(userSettingsModel.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("Culture", error.PropertyName);
         Assert.Equal("'de-CH' is not supported. Only 'de-AT, en-US'.", error.ErrorMessage);
     }
@@ -128,8 +129,8 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<BadInput>(userSettingsModel.Value);
-        var error = Assert.Single(badInput.ValidationResult.Errors);
+        var badInput = Assert.IsType<ValidationResult>(userSettingsModel.Value);
+        var error = Assert.Single(badInput.Errors);
         Assert.Equal("Timezone", error.PropertyName);
         Assert.Equal("'Europe/Bregenz' is invalid.", error.ErrorMessage);
     }

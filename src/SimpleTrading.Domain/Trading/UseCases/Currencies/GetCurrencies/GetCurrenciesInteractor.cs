@@ -1,10 +1,8 @@
 ﻿using JetBrains.Annotations;
-using OneOf;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading.DataAccess;
 
 namespace SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
-
 
 [UsedImplicitly]
 public class GetCurrenciesInteractor(
