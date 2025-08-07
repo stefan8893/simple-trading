@@ -162,7 +162,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
     private static bool ImplementsInteractor(INamedTypeSymbol candidate)
     {
         return candidate
-            .AllInterfaces
+            .Interfaces
             .Any(static i => IsInteractorInterface(i));
     }
 
