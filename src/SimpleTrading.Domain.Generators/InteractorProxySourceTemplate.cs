@@ -26,7 +26,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         context.ResponseModel.ContainingNamespace.ToDisplayString(),
         ..context.ResponseModel.GetAllNamespaces(),
         ..context.ClosedInteractorInterface.GetAllNamespaces(),
-        ..context.RequestModel is not null ? context.RequestModel.GetAllNamespaces() : [],
+        ..context.RequestModel is not null ? context.RequestModel.GetAllNamespaces() : []
     ];
 
     private IEnumerable<string> UsingStatements => Namespaces
@@ -43,10 +43,8 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         var validatorsType = $"IEnumerable<IValidator<{_requestModelDisplayName}>>";
         var requestModelParameter = RequestModelParameter;
 
-        var responseModelTransformed = context.GetResponseModelTransformed();
-        var isResponseModelTransformed = !responseModelTransformed.Equals(context.ResponseModel.GetDisplayName(), StringComparison.Ordinal);
-
-        var interactorInvocation = GetInteractorInvocation(responseModelTransformed, isResponseModelTransformed);
+        var (isTransformed, responseModel) = context.GetResponseModelTransformed();
+        var interactorInvocation = GetInteractorInvocation(responseModel, isTransformed);
 
         // lang=C#
         return $$"""
@@ -65,7 +63,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                  /// </summary>
                  public interface {{context.InteractorInterfaceName}}
                  {
-                     Task<{{responseModelTransformed}}> Execute({{OnContainsRequestModel(requestModelParameter)}});
+                     Task<{{responseModel}}> Execute({{OnContainsRequestModel(requestModelParameter)}});
                  }
 
                  public sealed class {{context.InteractorProxyName}} : {{context.InteractorInterfaceName}}
@@ -84,7 +82,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                          {{OnValidation("_validators = validators;")}}
                      }
 
-                     public async Task<{{responseModelTransformed}}> Execute({{OnContainsRequestModel(requestModelParameter)}}) 
+                     public async Task<{{responseModel}}> Execute({{OnContainsRequestModel(requestModelParameter)}}) 
                      {
                          _logger.LogInformation("Executing {proxy}", "{{context.InteractorProxyName}}");
 
@@ -112,30 +110,27 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
         var easyInteractorInvocation = $"return await {interactorCall};";
 
-        var interactorInvocationWithOneOfTransformation =
+        var interactorInvocationWithFromT0 =
             $"return {responseModelTransformed}.FromT0(await {interactorCall});";
 
         var count = context.ResponseModel.TypeArguments.Length;
         var matchFunctions = string.Join(",\n\r",
-            Enumerable.Range(0, count).Select(x => FromOneOf(x, responseModelTransformed)));
+            Enumerable.Range(0, count).Select(x => $"x => {responseModelTransformed}.FromT{x}(x)"));
 
-        var transformedInteractorInvocation =
+        var interactorInvocationWithMatch =
             // lang=C#
             $"""
              var result =  await _interactor.Execute(requestModel);
                      return  result.Match<{responseModelTransformed}>({matchFunctions});
              """;
 
-        if (!isResponseModelTransformed)
-            return easyInteractorInvocation;
+        var originalResponseModel = context.ResponseModel;
 
-        var interactorInvocation = context.IsResponseModelOneOf
-            ? transformedInteractorInvocation
-            : context is {IsResponseModelOneOf: false, RequestModel: not null}
-                ? interactorInvocationWithOneOfTransformation
-                : easyInteractorInvocation;
-
-        return interactorInvocation;
+        return !isResponseModelTransformed
+            ? easyInteractorInvocation
+            : originalResponseModel.TypeArguments.Length > 0 
+                ? interactorInvocationWithMatch
+                : interactorInvocationWithFromT0;
     }
 
     private string OnContainsRequestModel(string onRequestModelExists, string otherwise = "")
@@ -146,10 +141,5 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     private string OnValidation(string onValidation, string otherwise = "")
     {
         return !context.Validators.IsEmpty ? onValidation : otherwise;
-    }
-
-    private static string FromOneOf(int index, string responseModel)
-    {
-        return $"x => {responseModel}.FromT{index}(x)";
     }
 }

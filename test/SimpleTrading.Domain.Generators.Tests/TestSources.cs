@@ -10,9 +10,9 @@ public static class TestSources
         """
         using SimpleTrading.Domain.Infrastructure;
         using System.Threading.Tasks;
-        
+
         namespace SimpleTrading.Domain.Generators.Tests;
-        
+
         public class GetFoobarRequestModel
         {
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 
 namespace SimpleTrading.Domain.Generators;
@@ -37,16 +38,17 @@ public class InteractorContext
         IsResponseModelOneOf = responseModel is {IsGenericType: true, Name: "OneOf"};
         IsResponseModelOneOfWithValidationResultCase = IsResponseModelOneOf &&
                                                        responseModel.TypeArguments.Any(x =>
-                                                           x.MetadataName ==
-                                                           "FluentValidation.Results.ValidationResult");
+                                                           x.ToDisplayString()
+                                                               .Equals("FluentValidation.Results.ValidationResult",
+                                                                   StringComparison.Ordinal));
     }
 
-    public string GetResponseModelTransformed()
+    public (bool isTransformed, string responseModel) GetResponseModelTransformed()
     {
         var addValidationResultCase = HasValidators && !IsResponseModelOneOfWithValidationResultCase;
         return addValidationResultCase
-            ? AddValidationResultCaseToResponseModel()
-            : ResponseModel.GetDisplayName();
+            ? (true, AddValidationResultCaseToResponseModel())
+            : (false, ResponseModel.GetDisplayName());
     }
 
     private string AddValidationResultCaseToResponseModel()

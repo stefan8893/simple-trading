@@ -32,19 +32,20 @@ public class InteractorWithPrimitiveRequestAndResponseModelTests
         IReturnsJustAString proxy =
             new ReturnsJustAStringInteractorProxy(NullLogger<ReturnsJustAStringInteractorProxy>.Instance,
                 new ReturnsJustAStringInteractor());
-        
+
         var result = await proxy.Execute();
 
         Assert.Equal(ReturnsJustAStringInteractor.Response, result);
     }
-    
+
     [Fact]
     public async Task Interactor_with_string_request_and_string_response_model_is_invoked_by_the_proxy()
     {
         ITakesAStringAndReturnsAString proxy =
-            new TakesAStringAndReturnsAStringInteractorProxy(NullLogger<TakesAStringAndReturnsAStringInteractorProxy>.Instance,
+            new TakesAStringAndReturnsAStringInteractorProxy(
+                NullLogger<TakesAStringAndReturnsAStringInteractorProxy>.Instance,
                 new TakesAStringAndReturnsAStringInteractor());
-        
+
         var result = await proxy.Execute("It Works!");
 
         Assert.Equal("It Works!", result);
