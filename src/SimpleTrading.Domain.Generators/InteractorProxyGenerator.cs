@@ -110,7 +110,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             .GroupBy(v => v.BaseType!.TypeArguments[0], SymbolEqualityComparer.Default)
             .ToImmutableDictionary(
                 key => key.Key!,
-                value => value.Select(v => v).ToImmutableArray(),
+                value => value.ToImmutableArray(),
                 SymbolEqualityComparer.Default);
 
         return GatherInteractorContext(interactor, validatorsByValidatedType);
