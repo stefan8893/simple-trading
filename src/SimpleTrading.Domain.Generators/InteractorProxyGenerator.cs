@@ -13,36 +13,15 @@ public class InteractorProxyGenerator : IIncrementalGenerator
     {
         AddInfrastructureSourceCode(context);
 
-        var interactors = CollectInteractors(context);
-        var validators = CollectValidators(context);
+        var interactors = FindAllInteractors(context);
+        var validators = FindAllValidators(context);
 
-        var combinedValueProvider = interactors
-            .Combine(validators);
+        var combinedValueProvider = interactors.Combine(validators.Collect());
 
         GenerateProxyInfrastructure(context, combinedValueProvider);
     }
 
-    private static void AddInfrastructureSourceCode(IncrementalGeneratorInitializationContext context)
-    {
-        context.RegisterPostInitializationOutput(ctx
-            => ctx.AddSource("IInteractor.cs", InfrastructureSource.InteractorInterface));
-    }
-
-    private static IncrementalValueProvider<ImmutableArray<INamedTypeSymbol>> CollectValidators(
-        IncrementalGeneratorInitializationContext context)
-    {
-        return context.SyntaxProvider
-            .CreateSyntaxProvider(
-                static (node, _) => node is ClassDeclarationSyntax {BaseList: not null},
-                static (ctx, _) => ctx.SemanticModel.GetDeclaredSymbol(ctx.Node) as INamedTypeSymbol)
-            .Where(static x => x is not null && !x.IsAbstract)
-            .Where(static x => IsValidator(x!))
-            .Select(static (symbol, _) => symbol!)
-            .Collect();
-    }
-
-    private static IncrementalValueProvider<ImmutableArray<INamedTypeSymbol>> CollectInteractors(
-        IncrementalGeneratorInitializationContext context)
+    private static IncrementalValuesProvider<INamedTypeSymbol> FindAllInteractors(IncrementalGeneratorInitializationContext context)
     {
         return context
             .SyntaxProvider
@@ -52,30 +31,43 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             )
             .Where(static x => x is not null && !x.IsAbstract)
             .Where(static x => ImplementsInteractor(x!))
-            .Select(static (symbol, _) => symbol!)
-            .Collect();
+            .Select(static (symbol, _) => symbol!);
+    }
+
+    private static IncrementalValuesProvider<INamedTypeSymbol> FindAllValidators(IncrementalGeneratorInitializationContext context)
+    {
+        return context.SyntaxProvider
+            .CreateSyntaxProvider(
+                static (node, _) => node is ClassDeclarationSyntax {BaseList: not null},
+                static (ctx, _) => ctx.SemanticModel.GetDeclaredSymbol(ctx.Node) as INamedTypeSymbol)
+            .Where(static x => x is not null && !x.IsAbstract)
+            .Where(static x => IsValidator(x!))
+            .Select(static (symbol, _) => symbol!);
+    }
+
+    private static void AddInfrastructureSourceCode(IncrementalGeneratorInitializationContext context)
+    {
+        context.RegisterPostInitializationOutput(ctx
+            => ctx.AddSource("IInteractor.cs", InfrastructureSource.InteractorInterface));
     }
 
     private static void GenerateProxyInfrastructure(IncrementalGeneratorInitializationContext context,
-        IncrementalValueProvider<(ImmutableArray<INamedTypeSymbol> Interactors, ImmutableArray<INamedTypeSymbol>
+        IncrementalValuesProvider<(INamedTypeSymbol Interactors, ImmutableArray<INamedTypeSymbol>
             Validators)> combined)
     {
         context.RegisterSourceOutput(combined, static (ctx, combined) =>
         {
-            var (interactors,
-                validators) = combined;
+            var (interactor, validators) = combined;
 
-            var interactorContexts = CombineToInteractorContexts(interactors, validators);
+            var interactorContext = CombineToInteractorContexts(interactor, validators);
+            if (interactorContext is null)
+                return;
 
-            foreach (var interactorCtx in interactorContexts)
-            {
-                var diagnostics = AnalyzeInteractor(interactorCtx);
-
-                if (diagnostics.Any())
-                    Report(diagnostics, ctx);
-                else
-                    GenerateProxy(interactorCtx, ctx);
-            }
+            var diagnostics = AnalyzeInteractor(interactorContext);
+            if (diagnostics.Any())
+                Report(diagnostics, ctx);
+            else
+                GenerateProxy(interactorContext, ctx);
         });
     }
 
@@ -106,24 +98,18 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             SourceText.From(interactorProxySourceTemplate.GenerateProxy(), Encoding.UTF8));
     }
 
-    private static ImmutableArray<InteractorContext> CombineToInteractorContexts(
-        ImmutableArray<INamedTypeSymbol> interactors, ImmutableArray<INamedTypeSymbol> validators)
+    private static InteractorContext? CombineToInteractorContexts(
+        INamedTypeSymbol interactor, ImmutableArray<INamedTypeSymbol> validators)
     {
         var validatorsByValidatedType = validators
             .Where(x => x.BaseType!.TypeArguments.Length == 1)
             .GroupBy(v => v.BaseType!.TypeArguments[0], SymbolEqualityComparer.Default)
-            .Where(x => x.Key is not null)
             .ToImmutableDictionary(
                 key => key.Key!,
                 value => value.Select(v => v).ToImmutableArray(),
                 SymbolEqualityComparer.Default);
 
-        return
-        [
-            ..interactors
-                .Select(x => GatherInteractorContext(x, validatorsByValidatedType))
-                .SelectMany(x => x is not null ? [x] : Array.Empty<InteractorContext>())
-        ];
+        return GatherInteractorContext(interactor, validatorsByValidatedType);
     }
 
     private static InteractorContext? GatherInteractorContext(INamedTypeSymbol concreteInteractor,
