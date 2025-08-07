@@ -68,8 +68,34 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             var interactorContexts = CombineToInteractorContexts(interactors, validators);
 
             foreach (var interactorCtx in interactorContexts)
-                GenerateProxy(interactorCtx, ctx);
+            {
+                var diagnostics = AnalyzeInteractor(interactorCtx);
+
+                if (diagnostics.Any())
+                    Report(diagnostics, ctx);
+                else
+                    GenerateProxy(interactorCtx, ctx);
+            }
         });
+    }
+
+    private static void Report(IImmutableList<Diagnostic> diagnostics, SourceProductionContext ctx)
+    {
+        foreach (var diagnostic in diagnostics)
+            ctx.ReportDiagnostic(diagnostic);
+    }
+
+    private static IImmutableList<Diagnostic> AnalyzeInteractor(InteractorContext interactorCtx)
+    {
+        if (interactorCtx.Interactor.Name.EndsWith("Interactor"))
+            return ImmutableList<Diagnostic>.Empty;
+
+        var missingSuffix = Diagnostic.Create(
+            Rules.MissingInteractorSuffix,
+            interactorCtx.Interactor.Locations.First(),
+            interactorCtx.Interactor.Name);
+
+        return [missingSuffix];
     }
 
     private static void GenerateProxy(InteractorContext interactorContext, SourceProductionContext ctx)
