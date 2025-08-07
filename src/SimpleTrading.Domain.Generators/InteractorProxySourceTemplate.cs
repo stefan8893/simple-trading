@@ -124,11 +124,9 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                      return  result.Match<{responseModelTransformed}>({matchFunctions});
              """;
 
-        var originalResponseModel = context.ResponseModel;
-
         return !isResponseModelTransformed
             ? easyInteractorInvocation
-            : originalResponseModel.TypeArguments.Length > 0 
+            : context.IsResponseModelOneOf
                 ? interactorInvocationWithMatch
                 : interactorInvocationWithFromT0;
     }
