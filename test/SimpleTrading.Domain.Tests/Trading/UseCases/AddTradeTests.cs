@@ -686,4 +686,38 @@ public class AddTradeTests : DomainTests
         Assert.Equal(Result.Loss, newlyAddedTrade.Result.Name);
         Assert.Equal(ResultSource.ManuallyEntered, newlyAddedTrade.Result.Source);
     }
+    
+    [Fact]
+    public async Task Opened_must_be_before_closed_date()
+    {
+        var currency = TestData.Currency.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var asset = TestData.Asset.Default.Build();
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var opened = DateTimeOffset.Parse("2024-08-05T14:00:00+02:00");
+        var closed = DateTimeOffset.Parse("2024-08-05T13:00:00+02:00");
+
+        var requestModel = new AddTradeRequestModel
+        {
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
+            Opened = opened,
+            Closed = closed,
+            Size = 5000,
+            ProfitLoss = 50,
+            EntryPrice = 1.05m,
+            ExitPrice = 1.15m,
+            CurrencyId = currency.Id
+        };
+
+        var response = await Interactor.Execute(requestModel);
+
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
+        Assert.Equal("'Closed' must be greater than or equal to '05.08.2024 14:00:00'.",
+            error.ErrorMessage);
+        Assert.Equal("Closed", error.PropertyName);
+    }
 }

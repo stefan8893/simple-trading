@@ -89,6 +89,21 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
                 SimpleTradingStrings.ProfitLoss))
             .When(x => x.ProfitLoss.HasValue);
 
+        RuleFor(x => x.Closed!.Value.UtcDateTime)
+            .GreaterThanOrEqualTo(x => x.Opened.UtcDateTime)
+            .WithName(SimpleTradingStrings.Closed)
+            .OverridePropertyName(x => x.Closed)
+            .Configure(configuration =>
+            {
+                configuration.MessageBuilder = context =>
+                {
+                    context.MessageFormatter.AppendArgument("ComparisonValue",
+                        context.InstanceToValidate.Opened.LocalDateTime);
+                    return context.GetDefaultMessage();
+                };
+            })
+            .When(x => x.Closed.HasValue);
+
         RuleFor(x => x.EntryPrice)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.EntryPrice);
