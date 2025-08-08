@@ -12,12 +12,12 @@ public abstract class InteractorBase
         return new Completed<T>(data);
     }
 
-    protected static NotFound NotFound(Guid resourceId, string? resourceName = null)
+    protected static NotFound NotFound(Guid resourceId, string resourceName)
     {
         return new NotFound(resourceId, resourceName);
     }
 
-    protected static NotFound NotFound<TEntity>(Guid resourceId)
+    protected static NotFound NotFound<TEntity>(Guid resourceId) where TEntity : IEntity
     {
         return new NotFound<TEntity>(resourceId);
     }

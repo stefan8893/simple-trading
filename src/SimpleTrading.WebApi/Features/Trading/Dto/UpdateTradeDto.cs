@@ -1,4 +1,4 @@
-﻿using SimpleTrading.WebApi.Infrastructure;
+﻿using SimpleTrading.WebApi.Features.Dto;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 

@@ -23,14 +23,13 @@ builder.Host.ConfigureContainer<ContainerBuilder>((ctx, b) =>
     b.RegisterModule<DataAccessModule>();
 });
 
-builder.Services.AddSerilog(lc => lc.ReadFrom.Configuration(builder.Configuration));
+builder.Services.AddSerilog(logger => logger.ReadFrom.Configuration(builder.Configuration));
 builder.Services
     .AddControllers(o =>
     {
         o.ModelValidatorProviders.Clear();
         o.Filters.Add<ValidationFilter>();
     })
-    .ConfigureApiBehaviorOptions(o => { o.SuppressMapClientErrors = true; })
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

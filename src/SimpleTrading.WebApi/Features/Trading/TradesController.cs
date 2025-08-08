@@ -66,9 +66,10 @@ public partial class TradesController : SimpleControllerBase
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> AddTrade(
         [FromServices] IAddTrade addTrade,
-        [FromBody] AddTradeDto addTradeDto)
+        [FromBody] AddTradeDto addTradeDto,
+        [FromQuery] bool? dryRun = false)
     {
-        var addTradeRequestModel = MapToRequestModel(addTradeDto);
+        var addTradeRequestModel = MapToRequestModel(addTradeDto, dryRun);
         var result = await addTrade.Execute(addTradeRequestModel);
 
         return result.Match(
@@ -223,11 +224,11 @@ public partial class TradesController : SimpleControllerBase
                 : throw new Exception($"Invalid literal '{literal.Value}'.");
     }
 
-    private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto)
+    private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto, bool? dryRun)
     {
         return new AddTradeRequestModel
         {
-            DryRun = dto.DryRun ?? false,
+            DryRun = dryRun ?? false,
             AssetId = dto.AssetId!.Value,
             ProfileId = dto.ProfileId!.Value,
             Opened = dto.Opened!.Value,

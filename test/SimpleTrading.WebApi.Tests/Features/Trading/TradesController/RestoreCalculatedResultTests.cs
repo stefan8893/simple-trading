@@ -46,20 +46,21 @@ public class RestoreCalculatedResultTests(
     {
         // arrange
         var client = await CreateClient();
-        var tradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
-        restoreCalculatedResultInteractorStub.ResponseModel = new NotFound<Trade>(tradeId);
+        var notExistingTradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
+        restoreCalculatedResultInteractorStub.ResponseModel = new NotFound<Trade>(notExistingTradeId);
 
         // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<TradeResultDto> Act()
         {
-            return client.RestoreCalculatedResultAsync(tradeId);
+            return client.RestoreCalculatedResultAsync(notExistingTradeId);
         }
 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
+        Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]

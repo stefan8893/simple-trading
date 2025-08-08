@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.WebApi.Features.Dto;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
-using SimpleTrading.WebApi.Infrastructure;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public record AddTradeDto
 {
-    public bool? DryRun { get; set; }
     public Guid? AssetId { get; set; }
     public Guid? ProfileId { get; set; }
     public DateTimeOffset? Opened { get; set; }

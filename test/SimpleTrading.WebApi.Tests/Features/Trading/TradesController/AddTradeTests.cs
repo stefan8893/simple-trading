@@ -25,7 +25,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
 
@@ -50,7 +50,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        }, TestContext.Current.CancellationToken);
+        }, false, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -75,14 +75,13 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
-            DryRun = true,
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = _utcNow,
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        }, TestContext.Current.CancellationToken);
+        }, true, TestContext.Current.CancellationToken);
 
         // assert
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
@@ -113,7 +112,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        }, TestContext.Current.CancellationToken);
+        }, false, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -148,7 +147,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        }, TestContext.Current.CancellationToken);
+        }, false, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -224,7 +223,8 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Asset nicht gefunden.", exception.Result.Detail);
+        Assert.Equal("Asset nicht gefunden.", exception.Result.Title);
+        Assert.Equal($"Asset mit der ID '{notExistingAssetId}' nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
@@ -327,7 +327,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        }, TestContext.Current.CancellationToken);
+        }, false, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);
@@ -361,7 +361,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
-        }, TestContext.Current.CancellationToken);
+        }, false, TestContext.Current.CancellationToken);
 
         // assert
         Assert.NotNull(response);

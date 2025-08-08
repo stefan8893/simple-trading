@@ -44,9 +44,9 @@ public static class WebApplicationExtensions
                 var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
 
                 var problemDetails = simpleProblemDetails.CreateUnauthenticatedDetails();
-                context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
                 var jsonResponse = JsonSerializer.Serialize(problemDetails);
 
+                context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
                 await context.Response.WriteAsync(jsonResponse);
             }
         });

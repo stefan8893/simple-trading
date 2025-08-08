@@ -27,7 +27,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
 
@@ -49,8 +49,9 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        var singleError = exception.Result.Detail;
-        Assert.Equal("Trade nicht gefunden.", singleError);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
+        Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
+        
     }
 
     [Fact]

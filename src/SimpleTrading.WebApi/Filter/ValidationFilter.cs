@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
@@ -51,10 +50,7 @@ public class ValidationFilter(IServiceProvider serviceProvider, SimpleProblemDet
     {
         var problemDetails = simpleProblemDetails.CreateBadRequestDetails(validationResult);
         var result = new BadRequestObjectResult(problemDetails);
-        result.ContentTypes.Add(MediaTypeNames.Application.ProblemJson);
-
         context.Result = result;
-        context.HttpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
     }
 
     private IEnumerable<IValidator?>? GetValidatorsOrDefault(Type type)

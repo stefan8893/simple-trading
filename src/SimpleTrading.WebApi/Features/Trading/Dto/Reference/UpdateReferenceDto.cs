@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
 using SimpleTrading.Domain.Resources;
-using SimpleTrading.WebApi.Infrastructure;
+using SimpleTrading.WebApi.Features.Dto;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 

@@ -300,4 +300,7 @@
     <data name="NotTradingViewLink" xml:space="preserve">
         <value>Not a TradingView Link.</value>
     </data>
+    <data name="NotFoundNamedWithId" xml:space="preserve">
+        <value>{0} with ID '{1}' could not be found.</value>
+    </data>
 </root>

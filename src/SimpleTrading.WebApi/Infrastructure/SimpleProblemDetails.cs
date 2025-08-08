@@ -47,16 +47,23 @@ public class SimpleProblemDetails(IHttpContextAccessor httpContextAccessor)
 
     public ProblemDetails CreateNotFoundDetails(NotFound? notFound = null)
     {
-        var notFoundMessage = notFound?.ResourceType is null
+        var localizedResourceName = notFound is not null
+            ? SimpleTradingStrings.ResourceManager.GetString(notFound.ResourceType)
+            : null;
+    
+        var title = localizedResourceName is null
             ? SimpleTradingStrings.NotFound
-            : string.Format(SimpleTradingStrings.NotFoundNamed,
-                SimpleTradingStrings.ResourceManager.GetString(notFound.ResourceType));
+            : string.Format(SimpleTradingStrings.NotFoundNamed, localizedResourceName);
+
+        var detail = notFound is null
+            ? SimpleTradingStrings.NotFound
+            : string.Format(SimpleTradingStrings.NotFoundNamedWithId, localizedResourceName, notFound.ResourceId);
 
         return new ProblemDetails
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-            Title = SimpleTradingStrings.NotFound,
-            Detail = notFoundMessage,
+            Title = title,
+            Detail = detail,
             Status = StatusCodes.Status404NotFound,
             Instance = Resource
         };

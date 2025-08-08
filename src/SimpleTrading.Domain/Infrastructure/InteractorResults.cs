@@ -4,7 +4,7 @@ public record Completed;
 
 public record Completed<TData>(TData Data);
 
-public record NotFound(Guid ResourceId, string? ResourceType = null);
+public record NotFound(Guid ResourceId, string ResourceType);
 
 public record NotFound<TEntity>(Guid ResourceId) : NotFound(ResourceId, typeof(TEntity).Name);
 

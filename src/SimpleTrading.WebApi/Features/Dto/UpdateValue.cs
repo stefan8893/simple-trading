@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using SimpleTrading.WebApi.Features.Trading.Dto;
 
-namespace SimpleTrading.WebApi.Infrastructure;
+namespace SimpleTrading.WebApi.Features.Dto;
 
 [UsedImplicitly]
 public record UpdateValue<T>(T? Value = default);

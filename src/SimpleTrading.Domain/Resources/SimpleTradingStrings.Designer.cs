@@ -321,6 +321,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} mit der ID &apos;{1}&apos; nicht gefunden..
+        /// </summary>
+        public static string NotFoundNamedWithId {
+            get {
+                return ResourceManager.GetString("NotFoundNamedWithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kein TradingView Link..
         /// </summary>
         public static string NotTradingViewLink {

@@ -89,7 +89,8 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
+        Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
     }
 
     [Fact]
@@ -118,6 +119,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Referenz nicht gefunden.", exception.Result.Detail);
+        Assert.Equal("Referenz nicht gefunden.", exception.Result.Title);
+        Assert.Equal($"Referenz mit der ID '{notExistingReference}' nicht gefunden.", exception.Result.Detail);
     }
 }

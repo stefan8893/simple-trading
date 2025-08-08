@@ -80,6 +80,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Trade nicht gefunden.", exception.Result.Detail);
+        Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
+        Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
     }
 }
