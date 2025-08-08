@@ -44,10 +44,11 @@ public class AddTradeInteractor(
 
         return potentiallyClosedTrade.Match<AddTradeResponse>(
             x => Completed(new AddTradeResponseModel(x.Data.TradeId,
+                model.DryRun,
                 x.Data.Result?.ToResultModel(),
                 x.Data.Result?.Performance,
                 x.Data.Warnings)),
-            x => Completed(AddTradeResponseModel.From(x.Trade, [])),
+            x => Completed(AddTradeResponseModel.From(x.Trade, [], model.DryRun)),
             x => x);
     }
 

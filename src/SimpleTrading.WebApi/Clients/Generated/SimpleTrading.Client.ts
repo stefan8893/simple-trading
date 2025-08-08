@@ -1641,6 +1641,9 @@ export interface IAddTradeDto {
 export class AddTradeResultDto implements IAddTradeResultDto {
     tradeId!: string;
     warnings!: string[];
+    dryRun!: boolean;
+    result!: NullableOfResultDto | undefined;
+    performance!: number | undefined;
 
     [key: string]: any;
 
@@ -1668,6 +1671,9 @@ export class AddTradeResultDto implements IAddTradeResultDto {
                 for (let item of _data["warnings"])
                     this.warnings!.push(item);
             }
+            this.dryRun = _data["dryRun"];
+            this.result = _data["result"];
+            this.performance = _data["performance"];
         }
     }
 
@@ -1690,6 +1696,9 @@ export class AddTradeResultDto implements IAddTradeResultDto {
             for (let item of this.warnings)
                 data["warnings"].push(item);
         }
+        data["dryRun"] = this.dryRun;
+        data["result"] = this.result;
+        data["performance"] = this.performance;
         return data;
     }
 }
@@ -1697,6 +1706,9 @@ export class AddTradeResultDto implements IAddTradeResultDto {
 export interface IAddTradeResultDto {
     tradeId: string;
     warnings: string[];
+    dryRun: boolean;
+    result: NullableOfResultDto | undefined;
+    performance: number | undefined;
 
     [key: string]: any;
 }

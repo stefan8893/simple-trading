@@ -28,7 +28,7 @@ public static class CreateDatabaseCommand
         return CreateDbCommand;
     }
 
-    private static async Task CreateDatabase(InvocationContext ctx, IHost app)
+    private static async Task CreateDatabase(InvocationContext ctx, WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

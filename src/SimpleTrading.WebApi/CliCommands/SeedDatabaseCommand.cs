@@ -15,7 +15,7 @@ public static class SeedDatabaseCommand
         return SeedDataCommand;
     }
 
-    private static async Task SeedData(IHost app)
+    private static async Task SeedData(WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

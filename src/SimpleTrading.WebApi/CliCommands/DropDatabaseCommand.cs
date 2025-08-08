@@ -22,7 +22,7 @@ public static class DropDatabaseCommand
         return DropDbCommand;
     }
 
-    private static async Task DropDatabase(InvocationContext ctx, IHost app)
+    private static async Task DropDatabase(InvocationContext ctx, WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

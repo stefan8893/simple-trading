@@ -2608,6 +2608,15 @@ namespace SimpleTrading.Client
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.ICollection<string> Warnings { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
+        [Newtonsoft.Json.JsonProperty("dryRun", Required = Newtonsoft.Json.Required.Always)]
+        public bool DryRun { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.AllowNull)]
+        public NullableOfResultDto? Result { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.AllowNull)]
+        public int? Performance { get; set; }
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
         [Newtonsoft.Json.JsonExtensionData]
