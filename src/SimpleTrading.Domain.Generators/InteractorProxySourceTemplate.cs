@@ -26,7 +26,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         context.ResponseModel.ContainingNamespace.ToDisplayString(),
         ..context.ResponseModel.GetAllNamespaces(),
         ..context.ClosedInteractorInterface.GetAllNamespaces(),
-        ..context.RequestModel is not null ? context.RequestModel.GetAllNamespaces() : []
+        ..context.RequestModel?.GetAllNamespaces() ?? []
     ];
 
     private IEnumerable<string> UsingStatements => Namespaces

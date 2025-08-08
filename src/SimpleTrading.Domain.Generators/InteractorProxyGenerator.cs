@@ -16,9 +16,9 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         var interactors = FindAllInteractors(context);
         var validators = FindAllValidators(context);
 
-        var combinedValueProvider = interactors.Combine(validators.Collect());
+        var combinedValuesProvider = interactors.Combine(validators.Collect());
 
-        GenerateProxyInfrastructure(context, combinedValueProvider);
+        GenerateProxyInfrastructure(context, combinedValuesProvider);
     }
 
     private static IncrementalValuesProvider<INamedTypeSymbol> FindAllInteractors(
@@ -120,7 +120,7 @@ public class InteractorProxyGenerator : IIncrementalGenerator
         ImmutableDictionary<ISymbol, ImmutableArray<INamedTypeSymbol>> validatorsByValidatedType)
     {
         var closedInteractorInterface = concreteInteractor
-            .AllInterfaces
+            .Interfaces
             .FirstOrDefault(static x => IsInteractorInterface(x));
 
         if (closedInteractorInterface is null)
@@ -175,6 +175,6 @@ public class InteractorProxyGenerator : IIncrementalGenerator
             Arity: 1 or 2
         } && candidate
             .ContainingNamespace
-            .ToDisplayString().Equals("SimpleTrading.Domain.Infrastructure", StringComparison.OrdinalIgnoreCase);
+            .ToDisplayString().Equals("SimpleTrading.Domain.Infrastructure", StringComparison.Ordinal);
     }
 }
