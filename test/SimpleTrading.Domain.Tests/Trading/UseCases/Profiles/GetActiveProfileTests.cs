@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetActiveProfile;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -17,6 +18,7 @@ public class GetActiveProfileTests : DomainTests
         var profile2 = TestData.Profile.Default.Build();
         var activeProfile = (TestData.Profile.Default with {IsActive = true}).Build();
 
+        await DbContext.Profiles.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(profile1, profile2, activeProfile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -36,6 +38,7 @@ public class GetActiveProfileTests : DomainTests
         var profile1 = TestData.Profile.Default.Build();
         var profile2 = TestData.Profile.Default.Build();
 
+        await DbContext.Profiles.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(profile1, profile2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -50,6 +53,9 @@ public class GetActiveProfileTests : DomainTests
     [Fact]
     public async Task An_exception_is_thrown_when_there_is_no_profile()
     {
+        await DbContext.Profiles.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<ProfileResponseModel> Act()
         {

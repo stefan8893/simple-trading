@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
@@ -38,6 +39,8 @@ public class GetTradeTests : DomainTests
     [Fact]
     public async Task The_Currency_property_must_contain_the_currency_s_iso_code()
     {
+        await DbContext.Currencies.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
+        
         var currency = TestData.Currency.Default with {IsoCode = "EUR", Name = "Euro"};
         var trade = (TestData.Trade.Default with {CurrencyOrId = currency}).Build();
         DbContext.Trades.Add(trade);

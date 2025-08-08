@@ -1,4 +1,5 @@
-﻿using SimpleTrading.TestInfrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.CurrenciesController;
@@ -14,6 +15,7 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
         var currency1 = TestData.Currency.Default.Build();
         var currency2 = TestData.Currency.Default.Build();
 
+        await DbContext.Currencies.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(currency1, currency2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

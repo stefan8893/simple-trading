@@ -41,7 +41,7 @@ public abstract class DomainTests
         await DbContext.Database.MigrateAsync();
 
         var dbMasterData = _lifetimeScope.Resolve<DbMasterData>();
-        await dbMasterData.PopulateUserSettings();
+        await dbMasterData.Seed();
     }
 
     private static void PrepareContainer(ContainerBuilder builder)

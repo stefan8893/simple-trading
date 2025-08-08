@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -17,6 +18,7 @@ public class GetCurrenciesTests : DomainTests
         var profile1 = TestData.Profile.Default.Build();
         var profile2 = TestData.Profile.Default.Build();
 
+        await DbContext.Profiles.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(profile1, profile2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

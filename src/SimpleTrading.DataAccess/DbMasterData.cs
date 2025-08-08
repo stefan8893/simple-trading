@@ -9,7 +9,7 @@ public class DbMasterData(TradingDbContext dbContext)
 {
     private static readonly DateTime InitialCreationDateTime = DateTime.Parse("2024-08-03T08:00:00").ToUtcKind();
 
-    public async Task Populate()
+    public async Task Seed()
     {
         var profiles = CreateProfiles();
         dbContext.Profiles.AddRange(profiles);
@@ -20,12 +20,12 @@ public class DbMasterData(TradingDbContext dbContext)
         var currencies = CreateCurrencies();
         dbContext.Currencies.AddRange(currencies);
 
-        await PopulateUserSettings();
+        await CreateUserSettings();
 
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task PopulateUserSettings()
+    private async Task CreateUserSettings()
     {
         var userSettings = new UserSettings
         {

@@ -1,4 +1,5 @@
-﻿using SimpleTrading.TestInfrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.AssetController;
@@ -14,6 +15,7 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
         var asset1 = TestData.Asset.Default.Build();
         var asset2 = TestData.Asset.Default.Build();
 
+        await DbContext.Assets.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(asset1, asset2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

@@ -39,7 +39,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         await DbContext.Database.MigrateAsync();
 
         var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
-        await dbMasterData.PopulateUserSettings();
+        await dbMasterData.Seed();
     }
 
     /// <summary>

@@ -22,7 +22,7 @@ public static class SeedDatabaseCommand
 
         logger.LogInformation("Seed Data into database ...");
 
-        await scope.ServiceProvider.GetRequiredService<DbMasterData>().Populate();
+        await scope.ServiceProvider.GetRequiredService<DbMasterData>().Seed();
 
         logger.LogInformation("Database successfully populated with master data");
     }

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -16,6 +17,7 @@ public class GetAssetsTests : DomainTests
         var asset1 = TestData.Asset.Default.Build();
         var asset2 = TestData.Asset.Default.Build();
 
+        await DbContext.Assets.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(asset1, asset2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

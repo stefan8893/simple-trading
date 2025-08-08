@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using SimpleTrading.Domain.Trading.UseCases.Currencies.GetCurrencies;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
@@ -16,6 +17,7 @@ public class GetCurrenciesTests : DomainTests
         var currency1 = TestData.Currency.Default.Build();
         var currency2 = TestData.Currency.Default.Build();
 
+        await DbContext.Currencies.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(currency1, currency2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

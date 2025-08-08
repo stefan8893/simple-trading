@@ -1,4 +1,5 @@
-﻿using SimpleTrading.TestInfrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.ProfilesController;
@@ -15,6 +16,7 @@ public class GetActiveProfileTests(TestingWebApplicationFactory<Program> factory
         var profile2 = TestData.Profile.Default.Build();
         var activeProfile = (TestData.Profile.Default with {IsActive = true}).Build();
 
+        await DbContext.Profiles.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         DbContext.AddRange(profile1, profile2, activeProfile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
