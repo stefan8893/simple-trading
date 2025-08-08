@@ -14,7 +14,7 @@ public class SimpleProblemDetails(IHttpContextAccessor httpContextAccessor)
     {
         return new ProblemDetails
         {
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+            Type = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1",
             Title = SimpleTradingStrings.AuthenticationRequired,
             Status = StatusCodes.Status401Unauthorized,
             Instance = Resource
@@ -37,7 +37,7 @@ public class SimpleProblemDetails(IHttpContextAccessor httpContextAccessor)
     {
         return new ValidationProblemDetails
         {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
             Title = SimpleTradingStrings.OneOrMoreValidationErrors,
             Status = StatusCodes.Status400BadRequest,
             Errors = ToErrors(validationResult),
@@ -61,7 +61,7 @@ public class SimpleProblemDetails(IHttpContextAccessor httpContextAccessor)
 
         return new ProblemDetails
         {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4",
             Title = title,
             Detail = detail,
             Status = StatusCodes.Status404NotFound,
