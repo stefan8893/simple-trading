@@ -30,9 +30,9 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var businessError = Assert.IsType<Conflict>(response.Value);
-        Assert.Equal(trade.Id, businessError.ResourceId);
-        Assert.Equal("'Closed' must be after 'Opened'.", businessError.Details);
+        var conflict = Assert.IsType<Conflict>(response.Value);
+        Assert.Equal(trade.Id, conflict.ResourceId);
+        Assert.Equal("'Closed' must be after 'Opened'.", conflict.Details);
     }
 
     [Fact]
@@ -63,10 +63,10 @@ public class CloseTradeTests : TestBase
         var response = trade.Close(closeTradeDto);
 
         // assert
-        var businessError = Assert.IsType<Conflict>(response.Value);
+        var conflict = Assert.IsType<Conflict>(response.Value);
 
-        Assert.Equal(trade.Id, businessError.ResourceId);
-        Assert.Equal("'Closed' must not be greater than one day in the future.", businessError.Details);
+        Assert.Equal(trade.Id, conflict.ResourceId);
+        Assert.Equal("'Closed' must not be greater than one day in the future.", conflict.Details);
     }
 
     [Fact]

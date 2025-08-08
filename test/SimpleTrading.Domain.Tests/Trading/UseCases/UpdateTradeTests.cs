@@ -36,8 +36,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Trade Size' must be greater than '0'.", error.ErrorMessage);
         Assert.Equal("Size", error.PropertyName);
     }
@@ -66,8 +66,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Result' has a range of values which does not include '50'.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
@@ -88,8 +88,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Entry Price' must be greater than '0'.", error.ErrorMessage);
         Assert.Equal("EntryPrice", error.PropertyName);
     }
@@ -110,8 +110,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Stop Loss' must be greater than '0'.", error.ErrorMessage);
         Assert.Equal("StopLoss", error.PropertyName);
     }
@@ -132,8 +132,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Take Profit' must be greater than '0'.", error.ErrorMessage);
         Assert.Equal("TakeProfit", error.PropertyName);
     }
@@ -153,8 +153,8 @@ public class UpdateTradeTests : DomainTests
         // act
         var response = await Interactor.Execute(updateTradeRequestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Exit Price' must be greater than '0'.", error.ErrorMessage);
         Assert.Equal("ExitPrice", error.PropertyName);
     }
@@ -279,8 +279,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var businessError = Assert.IsType<Conflict>(response.Value);
-        Assert.Equal("'Closed' must be after 'Opened'.", businessError.Details);
+        var conflict = Assert.IsType<Conflict>(response.Value);
+        Assert.Equal("'Closed' must be after 'Opened'.", conflict.Details);
     }
 
     [Fact]
@@ -303,8 +303,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Opened' must be less than or equal to '15.08.2024 14:00'.", error.ErrorMessage);
         Assert.Equal("Opened", error.PropertyName);
     }
@@ -328,8 +328,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Closed' can only be updated, if the trade has already been closed.", error.ErrorMessage);
         Assert.Equal("Closed", error.PropertyName);
     }
@@ -353,8 +353,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Profit/Loss' can only be updated, if the trade has already been closed.", error.ErrorMessage);
         Assert.Equal("ProfitLoss", error.PropertyName);
     }
@@ -406,8 +406,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
@@ -543,8 +543,8 @@ public class UpdateTradeTests : DomainTests
         });
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
@@ -568,8 +568,8 @@ public class UpdateTradeTests : DomainTests
         var response = await Interactor.Execute(updateTradeRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }

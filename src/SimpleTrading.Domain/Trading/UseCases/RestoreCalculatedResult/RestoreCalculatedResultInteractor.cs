@@ -31,6 +31,6 @@ public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository,
                     completed.Data.Result?.ToResultModel(),
                     completed.Data.Result?.Performance,
                     completed.Data.Warnings)),
-                businessError => businessError);
+                conflict => conflict);
     }
 }

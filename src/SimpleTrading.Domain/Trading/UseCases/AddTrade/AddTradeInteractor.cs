@@ -21,17 +21,9 @@ public class AddTradeInteractor(
 {
     public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
-        var asset = await tradeRepository.FindAsset(model.AssetId);
-        if (asset is null)
-            return NotFound<Asset>(model.AssetId);
-
-        var profile = await tradeRepository.FindProfile(model.ProfileId);
-        if (profile is null)
-            return NotFound<Profile>(model.ProfileId);
-
-        var currency = await tradeRepository.FindCurrency(model.CurrencyId);
-        if (currency is null)
-            return NotFound<Currency>(model.CurrencyId);
+        var asset = await tradeRepository.GetAsset(model.AssetId);
+        var profile = await tradeRepository.GetProfile(model.ProfileId);
+        var currency = await tradeRepository.GetCurrency(model.CurrencyId);
 
         return await AddTrade(model, asset, profile, currency);
     }
@@ -43,8 +35,8 @@ public class AddTradeInteractor(
 
         var potentiallyClosedTrade = TryCloseTrade(trade, model);
 
-        if (potentiallyClosedTrade.Value is Conflict businessError)
-            return businessError;
+        if (potentiallyClosedTrade.Value is Conflict conflict)
+            return conflict;
 
         tradeRepository.Add(trade);
         if (!model.DryRun)

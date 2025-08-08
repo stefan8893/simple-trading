@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Resources;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.Shared.Validators;
 
@@ -31,16 +32,23 @@ public record AddTradeRequestModel
 public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestModel>
 {
     public AddTradeRequestModelValidator(
+        ITradeRepository tradeRepository,
         OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator,
         ReferenceRequestModelValidator referenceRequestModelValidator)
     {
         RuleFor(x => x.AssetId)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
-            .WithName(SimpleTradingStrings.Asset);
+            .WithName(SimpleTradingStrings.Asset)
+            .MustAsync(async (x, _) => await tradeRepository.FindAsset(x) is not null)
+            .WithMessage(x => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Asset));
 
         RuleFor(x => x.ProfileId)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
-            .WithName(SimpleTradingStrings.Profile);
+            .WithName(SimpleTradingStrings.Profile)
+            .MustAsync(async (x, _) => await tradeRepository.FindProfile(x) is not null)
+            .WithMessage(x => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Profile));
 
         RuleFor(x => x.Opened.DateTime)
             .GreaterThanOrEqualTo(Constants.MinDate)
@@ -101,8 +109,11 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .When(x => x.ExitPrice.HasValue);
 
         RuleFor(x => x.CurrencyId)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
-            .WithName(SimpleTradingStrings.Currency);
+            .WithName(SimpleTradingStrings.Currency)
+            .MustAsync(async (x, _) => await tradeRepository.FindCurrency(x) is not null)
+            .WithMessage(_ => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Currency));
 
         RuleFor(x => x.Notes)
             .MaximumLength(4000)

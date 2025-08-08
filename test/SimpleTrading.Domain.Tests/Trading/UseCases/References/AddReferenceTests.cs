@@ -20,8 +20,8 @@ public class AddReferenceTests : DomainTests
 
         var response = await Interactor.Execute(referenceRequestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
     }
 
@@ -39,12 +39,12 @@ public class AddReferenceTests : DomainTests
     }
 
     [Fact]
-    public async Task You_cant_add_more_than_50_reference_to_a_trade()
+    public async Task You_cant_add_more_than_5_reference_to_a_trade()
     {
         // arrange
         var trade = TestData.Trade.Default.Build();
         var references = Enumerable
-            .Range(0, 50)
+            .Range(0, 5)
             .Select(_ => (TestData.Reference.Default with {TradeOrId = trade}).Build())
             .ToList();
 
@@ -59,9 +59,9 @@ public class AddReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var businessError = Assert.IsType<Conflict>(response.Value);
-        Assert.Equal(trade.Id, businessError.ResourceId);
-        Assert.Equal("You can't add more than 50 references per trade.", businessError.Details);
+        var conflict = Assert.IsType<Conflict>(response.Value);
+        Assert.Equal(trade.Id, conflict.ResourceId);
+        Assert.Equal("You can't add more than 5 references per trade.", conflict.Details);
     }
 
     [Fact]

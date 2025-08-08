@@ -24,20 +24,26 @@ public class AddTradeTests : DomainTests
     [Fact]
     public async Task Asset_id_must_not_be_empty()
     {
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        
         var requestModel = new AddTradeRequestModel
         {
             AssetId = Guid.Empty,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id
+            CurrencyId = currency.Id
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Asset' must not be empty.", error.ErrorMessage);
         Assert.Equal("AssetId", error.PropertyName);
     }
@@ -45,20 +51,26 @@ public class AddTradeTests : DomainTests
     [Fact]
     public async Task Profile_id_must_not_be_empty()
     {
+        var asset = TestData.Asset.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
+            AssetId = asset.Id,
             ProfileId = Guid.Empty,
             Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id
+            CurrencyId = currency.Id
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Profile' must not be empty.", error.ErrorMessage);
         Assert.Equal("ProfileId", error.PropertyName);
     }
@@ -66,10 +78,16 @@ public class AddTradeTests : DomainTests
     [Fact]
     public async Task Currency_id_must_not_be_empty()
     {
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        
+        DbContext.AddRange(asset, profile);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
@@ -78,8 +96,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Currency' must not be empty.", error.ErrorMessage);
         Assert.Equal("CurrencyId", error.PropertyName);
     }
@@ -90,21 +108,27 @@ public class AddTradeTests : DomainTests
     public async Task Size_must_be_above_zero(string culture, string errorMessage)
     {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Size = 0,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id
+            CurrencyId = currency.Id
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("Size", error.PropertyName);
     }
@@ -115,24 +139,30 @@ public class AddTradeTests : DomainTests
     public async Task Result_must_be_in_enum_range(string culture, string errorMessage)
     {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Closed = new DateTimeOffset(_utcNow),
             ProfitLoss = 500,
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id,
+            CurrencyId = currency.Id,
             ManuallyEnteredResult = (ResultModel) 50
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
@@ -143,23 +173,29 @@ public class AddTradeTests : DomainTests
     public async Task Opened_must_not_be_before_min_date(string culture, string errorMessage)
     {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var longTimeAgo = new DateTimeOffset(DateTime.Parse("1998-08-05T12:00:00").ToUtcKind());
 
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = longTimeAgo,
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id
+            CurrencyId = currency.Id
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("Opened", error.PropertyName);
     }
@@ -188,8 +224,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Opened' must be less than or equal to '06.08.2024 16:00'.", error.ErrorMessage);
         Assert.Equal("Opened", error.PropertyName);
     }
@@ -197,23 +233,29 @@ public class AddTradeTests : DomainTests
     [Fact]
     public async Task Reference_link_must_be_a_valid_uri()
     {
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        
         var reference = new ReferenceRequestModel(ReferenceType.Other, "foobar");
-
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id,
+            CurrencyId = currency.Id,
             References = [reference]
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Invalid link.", error.ErrorMessage);
         Assert.Equal("References[0].Link", error.PropertyName);
     }
@@ -225,6 +267,12 @@ public class AddTradeTests : DomainTests
     public async Task Reference_notes_with_more_than_4000_chars_are_not_allowed(string culture, string errorMessage)
     {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var reference = new ReferenceRequestModel(ReferenceType.Other,
             "https://example.org",
@@ -232,19 +280,19 @@ public class AddTradeTests : DomainTests
 
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id,
+            CurrencyId = currency.Id,
             References = [reference]
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal(errorMessage, error.ErrorMessage);
         Assert.Equal("References[0].Notes", error.PropertyName);
     }
@@ -252,21 +300,28 @@ public class AddTradeTests : DomainTests
     [Fact]
     public async Task Notes_with_more_than_4000_chars_are_not_allowed()
     {
+        var asset = TestData.Asset.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        
+        DbContext.AddRange(asset, profile, currency);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        
         var requestModel = new AddTradeRequestModel
         {
-            AssetId = TestData.Asset.Default.Build().Id,
-            ProfileId = TestData.Profile.Default.Build().Id,
+            AssetId = asset.Id,
+            ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
             Size = 5000,
             EntryPrice = 1.05m,
-            CurrencyId = TestData.Currency.Default.Build().Id,
+            CurrencyId = currency.Id,
             Notes = new string('a', 4001)
         };
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
@@ -294,9 +349,9 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = Assert.IsType<NotFound>(response.Value, false);
-        Assert.Equal(currency.Id, notFound.ResourceId);
-        Assert.Equal(nameof(Currency), notFound.ResourceType);
+        var notFound = Assert.IsType<ValidationResult>(response.Value, false);
+        var singleError = Assert.Single(notFound.Errors);
+        Assert.Equal("Currency not found.", singleError.ErrorMessage);
     }
 
     [Fact]
@@ -321,9 +376,9 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = Assert.IsType<NotFound>(response.Value, false);
-        Assert.Equal(profile.Id, notFound.ResourceId);
-        Assert.Equal(nameof(Profile), notFound.ResourceType);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value, false);
+        var singleError = Assert.Single(validationResult.Errors);
+        Assert.Equal("Profile not found.", singleError.ErrorMessage);
     }
 
     [Fact]
@@ -348,9 +403,9 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var notFound = Assert.IsType<NotFound>(response.Value, false);
-        Assert.Equal(asset.Id, notFound.ResourceId);
-        Assert.Equal(nameof(Asset), notFound.ResourceType);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value, false);
+        var singleError = Assert.Single(validationResult.Errors);
+        Assert.Equal("Asset not found.", singleError.ErrorMessage);
     }
 
     [Fact]
@@ -491,8 +546,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var errors = badInput.Errors;
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var errors = validationResult.Errors;
         Assert.Equal(4, errors.Count);
         Assert.Contains(errors, x =>
             x.PropertyName == "EntryPrice" && x.ErrorMessage == "'Entry Price' must be greater than '0'.");
@@ -527,8 +582,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Profit/Loss' must not be empty, if 'Closed' is specified.", error.ErrorMessage);
         Assert.Equal("ProfitLoss", error.PropertyName);
     }
@@ -592,8 +647,8 @@ public class AddTradeTests : DomainTests
 
         var response = await Interactor.Execute(requestModel);
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.",
             error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);

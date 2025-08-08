@@ -8,6 +8,11 @@ public interface ITradeRepository : IRepository<Trade>
     void RemoveReferences(IEnumerable<Reference> references);
 
     Task<Asset?> FindAsset(Guid assetId);
+    Task<Asset> GetAsset(Guid assetId);
+    
     Task<Profile?> FindProfile(Guid profileId);
+    Task<Profile> GetProfile(Guid profileId);
+    
     Task<Currency?> FindCurrency(Guid currencyId);
+    Task<Currency> GetCurrency(Guid currencyId);
 }

@@ -53,7 +53,7 @@ public class UpdateTradeInteractor(
                     completed.Data.Result?.Performance,
                     completed.Data.Warnings)),
                 nothingToClose => Completed(UpdateTradeResponseModel.From(nothingToClose.Trade, [])),
-                businessError => businessError);
+                conflict => conflict);
     }
 
     private async Task<OneOf<Completed, NotFound>> UpdateEntities(Trade trade,
@@ -173,7 +173,7 @@ public class UpdateTradeInteractor(
                 NothingToClose,
                 Conflict>>(
                 completed => completed,
-                businessError => businessError);
+                conflict => conflict);
     }
 
     private record NothingToClose(Trade Trade);

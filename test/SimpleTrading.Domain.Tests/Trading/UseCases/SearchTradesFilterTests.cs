@@ -99,8 +99,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Null is not allowed here.", error.ErrorMessage);
     }
 
@@ -122,8 +122,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'2024-08-19T17:00:' is not valid.", error.ErrorMessage);
         Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
@@ -147,8 +147,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The operator 'grt' is not supported.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
@@ -172,8 +172,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Openend' cannot be used as a filter.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
@@ -411,8 +411,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Comparison value' must not be empty.", error.ErrorMessage);
         Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
@@ -435,8 +435,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Operator' must not be empty.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
@@ -459,8 +459,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
@@ -483,8 +483,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Foobar' cannot be used as a filter.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
@@ -507,8 +507,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The operator 'gr' is not supported.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
@@ -531,8 +531,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
@@ -555,8 +555,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'profitLoss ' cannot be used as a filter.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
@@ -579,8 +579,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The operator ' gt' is not supported.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
@@ -838,8 +838,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'NotThatBad' is not valid.", error.ErrorMessage);
         Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
@@ -984,8 +984,8 @@ public class SearchTradesFilterTests : DomainTests
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Null is not allowed here.", error.ErrorMessage);
         Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }

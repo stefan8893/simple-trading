@@ -94,8 +94,8 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(userSettingsModel.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(userSettingsModel.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("IsoLanguageCode", error.PropertyName);
         Assert.Equal("'DEU' is not supported. Only 'DE, EN'.", error.ErrorMessage);
     }
@@ -111,8 +111,8 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(userSettingsModel.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(userSettingsModel.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Culture", error.PropertyName);
         Assert.Equal("'de-CH' is not supported. Only 'de-AT, en-US'.", error.ErrorMessage);
     }
@@ -128,8 +128,8 @@ public class UpdateUserSettingsTests : DomainTests
         var userSettingsModel = await Interactor.Execute(requestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(userSettingsModel.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(userSettingsModel.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Timezone", error.PropertyName);
         Assert.Equal("'Europe/Bregenz' is invalid.", error.ErrorMessage);
     }

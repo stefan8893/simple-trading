@@ -15,7 +15,7 @@ public class AddReferenceInteractor(
     UowCommit uowCommit,
     UtcNow utcNow) : InteractorBase, IInteractor<AddReferenceRequestModel, AddReferenceResponse>
 {
-    private const ushort MaxReferencesPerTrade = 50;
+    private const ushort MaxReferencesPerTrade = 5;
 
     public async Task<AddReferenceResponse> Execute(AddReferenceRequestModel model)
     {

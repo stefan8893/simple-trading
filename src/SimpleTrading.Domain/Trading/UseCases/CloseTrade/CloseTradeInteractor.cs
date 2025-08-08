@@ -42,7 +42,7 @@ public class CloseTradeInteractor(
 
         return result.Match<CloseTradeResponse>(
             completed => Completed(Map(completed.Data)),
-            businessError => businessError
+            conflict => conflict
         );
 
         CloseTradeResponseModel Map(CloseTradeResult closeTradeResult)

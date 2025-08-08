@@ -25,8 +25,8 @@ public class SearchTradesSortingTests : DomainTests
             Sort = [sorting]
         });
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The sorting based on 'Foobar' does not work.", error.ErrorMessage);
         Assert.Equal("Sort[0].Property", error.PropertyName);
     }
@@ -173,8 +173,8 @@ public class SearchTradesSortingTests : DomainTests
         });
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The sorting based on '   ProfitLoss ' does not work.", error.ErrorMessage);
         Assert.Equal("Sort[0].Property", error.PropertyName);
     }

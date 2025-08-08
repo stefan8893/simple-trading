@@ -34,8 +34,8 @@ public class GetAssetsTests : DomainTests
 
         var response = await Interactor.Execute(new GetAssetsRequestModel(tooLongSearchTerm));
 
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The length of 'Search Term' must be 50 characters or fewer. You entered 51 characters.",
             error.ErrorMessage);
         Assert.Equal("SearchTerm", error.PropertyName);

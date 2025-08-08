@@ -123,8 +123,8 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
         Assert.Equal("Type", error.PropertyName);
     }
@@ -155,8 +155,8 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Invalid link.", error.ErrorMessage);
         Assert.Equal("Link", error.PropertyName);
     }
@@ -187,8 +187,8 @@ public class UpdateReferenceTests : DomainTests
         var response = await Interactor.Execute(referenceRequestModel);
 
         // assert
-        var badInput = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(badInput.Errors);
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);

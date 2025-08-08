@@ -221,10 +221,11 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         }
 
         // assert
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
-        Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
-        Assert.Equal("Asset nicht gefunden.", exception.Result.Title);
-        Assert.Equal($"Asset mit der ID '{notExistingAssetId}' nicht gefunden.", exception.Result.Detail);
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
+        var (identifier, errors) = Assert.Single(exception.Result.Errors);
+        Assert.Equal("assetId", identifier);
+        Assert.Equal("Asset nicht gefunden.", Assert.Single(errors));
     }
 
     [Fact]
