@@ -15,8 +15,8 @@ Write-Host "`n"
 
 $exitCodes = @();
 foreach ($project in $testProjects) {
-    Write-Host "Running tests for $project"
-    dotnet run --project $project -- `
+    Write-Host "Running tests for $project in the $Configuration Configuration"
+    dotnet run --project $project -c $Configuration -- `
         --coverage `
         --coverage-output-format cobertura `
         --coverage-output ../../../../coverage.cobertura.xml
@@ -30,7 +30,7 @@ Pop-Location
 
 foreach ($exitCode in $exitCodes) {
     if ($exitCode -ne 0) {
-        Exit $LastExitCode
+        Exit $exitCode
     }
 }
 
