@@ -696,8 +696,8 @@ public class AddTradeTests : DomainTests
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var opened = DateTimeOffset.Parse("2024-08-05T14:00:00+02:00");
-        var closed = DateTimeOffset.Parse("2024-08-05T13:00:00+02:00");
+        var opened = DateTimeOffset.Parse("2024-08-05T14:00:00");
+        var closed = DateTimeOffset.Parse("2024-08-05T13:00:00");
 
         var requestModel = new AddTradeRequestModel
         {
