@@ -15,6 +15,9 @@ using UpdateTradeResponse =
 [UsedImplicitly]
 public class UpdateTradeInteractor(
     ITradeRepository tradeRepository,
+    IAssetRepository assetRepository,
+    IProfileRepository profileRepository,
+    ICurrencyRepository currencyRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
     : InteractorBase, IInteractor<UpdateTradeRequestModel, UpdateTradeResponse>
@@ -61,7 +64,7 @@ public class UpdateTradeInteractor(
     {
         if (model.AssetId.HasValue && model.AssetId.Value != trade.AssetId)
         {
-            var newAsset = await tradeRepository.FindAsset(model.AssetId.Value);
+            var newAsset = await assetRepository.Find(model.AssetId.Value);
             if (newAsset is null)
                 return NotFound<Asset>(model.AssetId.Value);
 
@@ -71,7 +74,7 @@ public class UpdateTradeInteractor(
 
         if (model.ProfileId.HasValue && model.ProfileId.Value != trade.ProfileId)
         {
-            var newProfile = await tradeRepository.FindProfile(model.ProfileId.Value);
+            var newProfile = await profileRepository.Find(model.ProfileId.Value);
             if (newProfile is null)
                 return NotFound<Profile>(model.ProfileId.Value);
 
@@ -82,7 +85,7 @@ public class UpdateTradeInteractor(
         // ReSharper disable once InvertIf
         if (model.CurrencyId.HasValue && model.CurrencyId.Value != trade.CurrencyId)
         {
-            var newCurrency = await tradeRepository.FindCurrency(model.CurrencyId.Value);
+            var newCurrency = await currencyRepository.Find(model.CurrencyId.Value);
             if (newCurrency is null)
                 return NotFound<Currency>(model.CurrencyId.Value);
 

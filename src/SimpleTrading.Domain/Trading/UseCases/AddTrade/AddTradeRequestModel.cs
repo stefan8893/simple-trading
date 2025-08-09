@@ -33,6 +33,9 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
 {
     public AddTradeRequestModelValidator(
         ITradeRepository tradeRepository,
+        IAssetRepository assetRepository,
+        IProfileRepository profileRepository,
+        ICurrencyRepository currencyRepository,
         OpenedLessThanOneDayInTheFutureValidator openedLessThanOneDayInTheFutureValidator,
         ReferenceRequestModelValidator referenceRequestModelValidator)
     {
@@ -40,14 +43,14 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Asset)
-            .MustAsync(async (x, _) => await tradeRepository.FindAsset(x) is not null)
+            .MustAsync(async (x, _) => await assetRepository.Find(x) is not null)
             .WithMessage(x => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Asset));
 
         RuleFor(x => x.ProfileId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Profile)
-            .MustAsync(async (x, _) => await tradeRepository.FindProfile(x) is not null)
+            .MustAsync(async (x, _) => await profileRepository.Find(x) is not null)
             .WithMessage(x => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Profile));
 
         RuleFor(x => x.Opened.DateTime)
@@ -127,7 +130,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Currency)
-            .MustAsync(async (x, _) => await tradeRepository.FindCurrency(x) is not null)
+            .MustAsync(async (x, _) => await currencyRepository.Find(x) is not null)
             .WithMessage(_ => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Currency));
 
         RuleFor(x => x.Notes)

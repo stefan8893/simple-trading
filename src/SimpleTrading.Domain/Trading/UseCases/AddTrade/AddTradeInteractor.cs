@@ -15,15 +15,18 @@ using AddTradeResponse =
 [UsedImplicitly]
 public class AddTradeInteractor(
     ITradeRepository tradeRepository,
+    IAssetRepository assetRepository,
+    IProfileRepository profileRepository,
+    ICurrencyRepository currencyRepository,
     UowCommit uowCommit,
     UtcNow utcNow)
     : InteractorBase, IInteractor<AddTradeRequestModel, AddTradeResponse>
 {
     public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
     {
-        var asset = await tradeRepository.GetAsset(model.AssetId);
-        var profile = await tradeRepository.GetProfile(model.ProfileId);
-        var currency = await tradeRepository.GetCurrency(model.CurrencyId);
+        var asset = await assetRepository.Get(model.AssetId);
+        var profile = await profileRepository.Get(model.ProfileId);
+        var currency = await currencyRepository.Get(model.CurrencyId);
 
         return await AddTrade(model, asset, profile, currency);
     }
