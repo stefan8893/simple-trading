@@ -49,8 +49,8 @@ public abstract class RepositoryTests
         builder.RegisterModule<DomainModule>();
         builder.RegisterModule<DataAccessModule>();
 
-        builder.RegisterGeneric(typeof(NullLogger<>))
-            .As(typeof(ILogger<>))
+        builder.RegisterType<NullLoggerFactory>()
+            .As<ILoggerFactory>()
             .SingleInstance();
     }
 
@@ -62,9 +62,9 @@ public abstract class RepositoryTests
     {
     }
 
-    protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity
+    protected Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity
     {
-        return await DbContext.Set<T>()
+        return DbContext.Set<T>()
             .AsNoTracking()
             .SingleOrDefaultAsync(predicate);
     }

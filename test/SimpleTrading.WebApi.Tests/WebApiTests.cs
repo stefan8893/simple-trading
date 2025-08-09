@@ -17,7 +17,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 {
     private TradingDbContext? _dbContext;
     private ILifetimeScope? _lifetimeScope;
-    private IServiceScope? _serviceScope;
+    private AsyncServiceScope? _serviceScope;
 
     protected TradingDbContext DbContext => _dbContext!;
 
@@ -26,19 +26,21 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     public async ValueTask DisposeAsync()
     {
         await DbContext.Database.EnsureDeletedAsync();
-        _serviceScope?.Dispose();
+
+        if (_serviceScope.HasValue)
+            await _serviceScope.Value.DisposeAsync();
     }
 
     public async ValueTask InitializeAsync()
     {
         factory.OverrideServices = OverrideServices;
-        _serviceScope = factory.Services.CreateScope();
-        _lifetimeScope = _serviceScope.ServiceProvider.GetRequiredService<ILifetimeScope>();
-        _dbContext = _serviceScope.ServiceProvider.GetRequiredService<TradingDbContext>();
+        _serviceScope = factory.Services.CreateAsyncScope();
+        _lifetimeScope = _serviceScope.Value.ServiceProvider.GetRequiredService<ILifetimeScope>();
+        _dbContext = _serviceScope.Value.ServiceProvider.GetRequiredService<TradingDbContext>();
 
         await DbContext.Database.MigrateAsync();
 
-        var dbMasterData = _serviceScope.ServiceProvider.GetRequiredService<DbMasterData>();
+        var dbMasterData = _serviceScope.Value.ServiceProvider.GetRequiredService<DbMasterData>();
         await dbMasterData.Seed();
     }
 
@@ -66,9 +68,9 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         return new SimpleTradingClient(client);
     }
 
-    protected async Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity
+    protected Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity
     {
-        return await DbContext.Set<T>()
+        return DbContext.Set<T>()
             .AsNoTracking()
             .SingleOrDefaultAsync(predicate);
     }
