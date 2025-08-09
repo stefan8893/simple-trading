@@ -24,7 +24,7 @@ public static class DropDatabaseCommand
 
     private static async Task DropDatabase(InvocationContext ctx, WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        await using var scope = app.Services.CreateAsyncScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
         var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
         var forceDeletion = ctx.ParseResult.GetValueForOption(ForceOption);

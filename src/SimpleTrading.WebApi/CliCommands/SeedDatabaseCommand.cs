@@ -17,12 +17,13 @@ public static class SeedDatabaseCommand
 
     private static async Task SeedData(WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        await using var scope = app.Services.CreateAsyncScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        var dbMasterData = scope.ServiceProvider.GetRequiredService<DbMasterData>();
 
         logger.LogInformation("Seed Data into database ...");
 
-        await scope.ServiceProvider.GetRequiredService<DbMasterData>().Seed();
+        await dbMasterData.Seed();
 
         logger.LogInformation("Database successfully populated with master data");
     }

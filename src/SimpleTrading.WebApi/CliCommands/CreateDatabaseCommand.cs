@@ -30,7 +30,7 @@ public static class CreateDatabaseCommand
 
     private static async Task CreateDatabase(InvocationContext ctx, WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        await using var scope = app.Services.CreateAsyncScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
         var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
         var dropExisting = ctx.ParseResult.GetValueForOption(DropExistingOption);
