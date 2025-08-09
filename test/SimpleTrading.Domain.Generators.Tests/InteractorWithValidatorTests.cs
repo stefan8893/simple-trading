@@ -8,7 +8,8 @@ namespace SimpleTrading.Domain.Generators.Tests;
 
 public class SomeValidatorRequestModel
 {
-};
+    public string? FooBar { get; set; } = string.Empty;
+}
 
 public class SomeValidatorResponseModel
 {
@@ -18,7 +19,7 @@ public class SomeRequestModelValidator : AbstractValidator<SomeValidatorRequestM
 {
     public SomeRequestModelValidator()
     {
-        RuleFor(x => x).NotNull();
+        RuleFor(x => x.FooBar).NotNull();
     }
 }
 
@@ -75,5 +76,24 @@ public class InteractorWithValidatorTests
 
         // assert
         Assert.IsType<OneOf<SomeValidatorResponseModel, ValidationResult>>(result);
+    }
+
+    [Fact]
+    public async Task Validation_is_performed_when_a_validator_exists()
+    {
+        // arrange
+        var validator = new SomeRequestModelValidator();
+
+        IWithValidator proxy = new WithValidatorInteractorProxy(NullLogger<WithValidatorInteractorProxy>.Instance,
+            new WithValidatorInteractor(), [validator]);
+
+        // act
+        var result = await proxy.Execute(new SomeValidatorRequestModel {FooBar = null});
+
+        // assert
+        var validationResult = Assert.IsType<ValidationResult>(result.Value);
+        var singleError = Assert.Single(validationResult.Errors);
+        Assert.Equal("FooBar", singleError.PropertyName);
+        Assert.Equal("'Foo Bar' must not be empty.", singleError.ErrorMessage);
     }
 }
