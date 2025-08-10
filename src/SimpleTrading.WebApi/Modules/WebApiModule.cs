@@ -36,7 +36,6 @@ public class WebApiModule : Module
     {
         builder.RegisterAssemblyTypes(webApiAssembly)
             .AsClosedTypesOf(typeof(IValidator<>))
-            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
     }
 }

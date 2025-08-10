@@ -47,12 +47,10 @@ public class DataAccessModule : Module
     {
         builder.RegisterAssemblyTypes(assemblyOfInterest)
             .AsClosedTypesOf(typeof(IFilterPredicate<>))
-            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(assemblyOfInterest)
             .AsClosedTypesOf(typeof(IValueParser<>))
-            .AsImplementedInterfaces()
             .SingleInstance();
     }
 

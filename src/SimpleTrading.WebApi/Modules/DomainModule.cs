@@ -34,12 +34,10 @@ public class DomainModule : Module
     {
         builder.RegisterAssemblyTypes(domainAssembly)
             .AsClosedTypesOf(typeof(IInteractor<,>))
-            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(domainAssembly)
             .AsClosedTypesOf(typeof(IInteractor<>))
-            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
         builder.RegisterGenericDecorator(typeof(InteractorLoggingDecorator<,>), typeof(IInteractor<,>));
@@ -58,7 +56,6 @@ public class DomainModule : Module
     {
         builder.RegisterAssemblyTypes(domainAssembly)
             .AsClosedTypesOf(typeof(IValidator<>))
-            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
     }
 }
