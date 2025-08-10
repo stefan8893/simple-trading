@@ -39,14 +39,14 @@ public class UpdateTradeInteractor(
             return updateEntitiesResult.AsT1;
 
         var updatePropertiesResult = UpdateTradeProperties(trade, model);
-        if (updatePropertiesResult.Value is Conflict propertiesBusinessError)
-            return propertiesBusinessError;
+        if (updatePropertiesResult.Value is Conflict updatePropertiesConflict)
+            return updatePropertiesConflict;
 
         var hasChanges = UpdatePositionPrices(trade, model);
         var closeTradeResult = CloseTrade(trade, model, hasChanges);
 
-        if (closeTradeResult.Value is Conflict closeTradeBusinessError)
-            return closeTradeBusinessError;
+        if (closeTradeResult.Value is Conflict closeTradeConflict)
+            return closeTradeConflict;
 
         await uowCommit();
         return closeTradeResult
