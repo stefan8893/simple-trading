@@ -41,7 +41,6 @@ public class AddReferenceTests : DomainTests
     [Fact]
     public async Task You_cant_add_more_than_5_reference_to_a_trade()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var references = Enumerable
             .Range(0, 5)
@@ -55,10 +54,8 @@ public class AddReferenceTests : DomainTests
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
 
-        // act
         var response = await Interactor.Execute(referenceRequestModel);
 
-        // assert
         var conflict = Assert.IsType<Conflict>(response.Value);
         Assert.Equal(trade.Id, conflict.ResourceId);
         Assert.Equal("You can't add more than 5 references per trade.", conflict.Details);
@@ -67,7 +64,6 @@ public class AddReferenceTests : DomainTests
     [Fact]
     public async Task A_reference_gets_successfully_added()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
@@ -76,10 +72,8 @@ public class AddReferenceTests : DomainTests
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
 
-        // act
         var response = await Interactor.Execute(referenceRequestModel);
 
-        // assert
         var result = Assert.IsType<Completed<Guid>>(response.Value);
         var referenceId = result.Data;
         var tradeWithAddedReference = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);

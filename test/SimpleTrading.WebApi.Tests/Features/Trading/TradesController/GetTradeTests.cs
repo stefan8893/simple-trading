@@ -32,24 +32,20 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task An_existing_trade_gets_returned()
     {
-        // arrange
         var client = await CreateClient();
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(trade.Id, returnedTrade.Id);
     }
 
     [Fact]
     public async Task A_trades_opened_date_gets_converted_to_the_users_timezone()
     {
-        // arrange
         var client = await CreateClient();
         var trade = (TestData.Trade.Default with
             {
@@ -65,10 +61,8 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
-        // assert
         var expectedOpenedDate = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
         Assert.Equal(expectedOpenedDate, returnedTrade.Opened);
     }
@@ -76,7 +70,6 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task References_must_be_included_in_the_response()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
@@ -100,10 +93,8 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(trade, exampleReference, tradingViewReference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(2, returnedTrade.References.Count);
         Assert.Contains(returnedTrade.References, x => x.Id == exampleReference.Id);
         Assert.Contains(returnedTrade.References, x => x.Id == tradingViewReference.Id);

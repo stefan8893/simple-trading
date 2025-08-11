@@ -9,7 +9,6 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
     [Fact]
     public async Task Existing_currencies_will_be_returned()
     {
-        // arrange
         var client = await CreateClient();
 
         var currency1 = TestData.Currency.Default.Build();
@@ -19,10 +18,8 @@ public class GetCurrenciesTests(TestingWebApplicationFactory<Program> factory) :
         DbContext.AddRange(currency1, currency2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var currencies = await client.GetCurrenciesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(currencies);
         Assert.Equal(2, currencies.Count);
         Assert.Contains(currencies, x => x.Id == currency1.Id);

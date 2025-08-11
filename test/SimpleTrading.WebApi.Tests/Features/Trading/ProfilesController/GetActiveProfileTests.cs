@@ -9,7 +9,6 @@ public class GetActiveProfileTests(TestingWebApplicationFactory<Program> factory
     [Fact]
     public async Task Active_profile_gets_returned()
     {
-        // arrange
         var client = await CreateClient();
 
         var profile1 = TestData.Profile.Default.Build();
@@ -20,10 +19,8 @@ public class GetActiveProfileTests(TestingWebApplicationFactory<Program> factory
         DbContext.AddRange(profile1, profile2, activeProfile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var profile = await client.GetActiveProfileAsync(TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(profile);
         Assert.Equal(activeProfile.Id, profile.Id);
         Assert.True(profile.IsActive);

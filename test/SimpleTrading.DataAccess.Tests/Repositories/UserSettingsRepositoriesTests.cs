@@ -17,17 +17,14 @@ public class UserSettingsRepositoriesTests : RepositoryTests
     [Fact]
     public async Task LastModified_gets_automatically_updated_if_entity_was_modified()
     {
-        // arrange
         var uowCommit = ServiceLocator.Resolve<UowCommit>();
         var userSettingsRepository = ServiceLocator.Resolve<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
         Assert.NotEqual(_utcNow, userSettings.LastModified);
 
-        // act
         userSettings.TimeZone = "America/New_York";
         await uowCommit();
 
-        // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();
         Assert.Equal(_utcNow, updatedUserSettings.LastModified);
     }
@@ -35,15 +32,12 @@ public class UserSettingsRepositoriesTests : RepositoryTests
     [Fact]
     public async Task LastModified_will_not_be_refreshed_automatically_if_entity_was_just_read()
     {
-        // arrange
         var userSettingsRepository = ServiceLocator.Resolve<IUserSettingsRepository>();
         var userSettings = await userSettingsRepository.GetUserSettings();
         var initialUpdatedDate = userSettings.LastModified;
 
-        // act
         _ = userSettings.TimeZone;
 
-        // assert
         var updatedUserSettings = await userSettingsRepository.GetUserSettings();
         Assert.Equal(initialUpdatedDate, updatedUserSettings.LastModified);
     }

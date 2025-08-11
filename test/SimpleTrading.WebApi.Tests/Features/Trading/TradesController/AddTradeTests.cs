@@ -14,17 +14,14 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_request_without_an_access_token_is_not_authorized()
     {
-        // arrange
         var client = await CreateClient(false);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
             return client.AddTradeAsync(new AddTradeDto());
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
@@ -32,7 +29,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_trade_can_be_successfully_added()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -41,7 +37,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
@@ -52,7 +47,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             EntryPrice = 1.08
         }, false, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         Assert.Empty(response.Warnings);
         Assert.NotNull(response);
@@ -63,7 +57,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_trade_is_not_saved_when_executing_a_dry_run()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -72,7 +65,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
@@ -83,7 +75,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             EntryPrice = 1.08
         }, true, TestContext.Current.CancellationToken);
 
-        // assert
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
         Assert.Null(newlyAddedTrade);
     }
@@ -91,7 +82,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_closed_trade_with_an_overriden_null_result_will_be_added()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -100,7 +90,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
@@ -114,7 +103,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             EntryPrice = 1.08
         }, false, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         Assert.Empty(response.Warnings);
         Assert.NotNull(response);
@@ -126,7 +114,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_closed_trade_with_an_overriden_result_will_be_added()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -135,7 +122,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
@@ -149,7 +135,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             EntryPrice = 1.08
         }, false, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
@@ -161,7 +146,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task TradeSize_must_not_be_null()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -170,7 +154,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
@@ -185,7 +168,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -196,7 +178,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_trade_cant_be_added_if_the_asset_is_missing()
     {
-        // arrange
         var client = await CreateClient();
 
         var notExistingAssetId = Guid.Parse("a622d632-a7ef-42fe-adfa-fcb917e65926");
@@ -205,7 +186,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
@@ -220,7 +200,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var (identifier, errors) = Assert.Single(exception.Result.Errors);
@@ -231,7 +210,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_closed_trade_cant_be_added_if_the_profitLoss_is_missing()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -240,7 +218,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
@@ -258,7 +235,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -270,7 +246,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_closed_trade_cant_be_added_if_the_closed_date_is_missing()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -279,7 +254,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
@@ -296,7 +270,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -308,7 +281,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_trade_with_opened_date_in_utc_will_be_stored_like_that_there_is_no_implicit_conversion()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -319,7 +291,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         var opened = DateTimeOffset.Parse("2024-08-05T12:00:00Z");
 
-        // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
@@ -330,7 +301,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             EntryPrice = 1.08
         }, false, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
         Assert.NotNull(newlyAddedTrade);
@@ -342,7 +312,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_trade_with_opened_date_in_local_time_will_be_stored_as_utc_there_is_no_implicit_conversion()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -353,7 +322,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
 
         var openedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");
 
-        // act
         var response = await client.AddTradeAsync(new AddTradeDto
         {
             AssetId = asset.Id,
@@ -364,7 +332,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             EntryPrice = 1.08
         }, false, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == response.TradeId);
         Assert.NotNull(newlyAddedTrade);
@@ -376,7 +343,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task A_trade_reference_with_an_invalid_links_returns_a_bad_request()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset = TestData.Asset.Default.Build();
@@ -385,7 +351,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<AddTradeResultDto> Act()
         {
@@ -410,7 +375,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);

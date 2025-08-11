@@ -18,17 +18,14 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task A_trade_can_be_successfully_deleted()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         await client.DeleteTradeAsync(trade.Id, TestContext.Current.CancellationToken);
 
-        // assert
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.Null(storedTrade);
     }

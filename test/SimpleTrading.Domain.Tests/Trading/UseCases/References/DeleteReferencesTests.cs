@@ -13,7 +13,6 @@ public class DeleteReferencesTests : DomainTests
     [Fact]
     public async Task References_can_be_successfully_deleted()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -21,10 +20,8 @@ public class DeleteReferencesTests : DomainTests
         DbContext.AddRange(trade, reference1, reference2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new DeleteReferencesRequestModel(trade.Id));
 
-        // assert
         var result = Assert.IsType<Completed<ushort>>(response.Value);
         Assert.Equal(2, result.Data);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);

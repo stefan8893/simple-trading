@@ -17,7 +17,6 @@ public class RestoreCalculatedResultTests : DomainTests
     [Fact]
     public async Task A_not_overriden_result_will_not_be_changed()
     {
-        // arrange
         var tradeWithCalculatedMediocreResult = (TestData.Trade.Default with
         {
             Opened = _utcNow,
@@ -38,10 +37,8 @@ public class RestoreCalculatedResultTests : DomainTests
         Assert.Equal(Result.Mediocre, tradeWithCalculatedMediocreResult.Result!.Name);
         Assert.Equal((short) 83, tradeWithCalculatedMediocreResult.Result.Performance);
 
-        // act
         var response = await Interactor.Execute(tradeWithCalculatedMediocreResult.Id);
 
-        // assert
         var responseModel = Assert.IsType<Completed<RestoreCalculatedResultResponseModel>>(response.Value);
         Assert.Empty(responseModel.Data.Warnings);
         Assert.NotNull(responseModel.Data.Result);
@@ -52,13 +49,10 @@ public class RestoreCalculatedResultTests : DomainTests
     [Fact]
     public async Task You_cant_restore_a_result_of_a_not_existing_trade()
     {
-        // arrange
         var notExistingTradeId = Guid.Parse("e4240058-fef0-4a15-bbf7-f5d8796a8187");
 
-        // act
         var response = await Interactor.Execute(notExistingTradeId);
 
-        // assert
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
         Assert.Equal("Trade", notFound.ResourceType);
@@ -67,7 +61,6 @@ public class RestoreCalculatedResultTests : DomainTests
     [Fact]
     public async Task An_overriden_result_gets_successfully_reset()
     {
-        // arrange
         var tradeWithCalculatedMediocreResult = (TestData.Trade.Default with
         {
             Opened = _utcNow,
@@ -94,10 +87,8 @@ public class RestoreCalculatedResultTests : DomainTests
 
         Assert.Equal(Result.Loss, tradeWithCalculatedMediocreResult.Result!.Name);
 
-        // act
         var response = await Interactor.Execute(tradeWithCalculatedMediocreResult.Id);
 
-        // assert
         var responseModel = Assert.IsType<Completed<RestoreCalculatedResultResponseModel>>(response.Value);
         Assert.Empty(responseModel.Data.Warnings);
         Assert.NotNull(responseModel.Data.Result);

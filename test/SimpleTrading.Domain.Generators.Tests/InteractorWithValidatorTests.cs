@@ -47,23 +47,19 @@ public class InteractorWithValidatorTests
     [Fact]
     public async Task Response_model_is_transformed_when_a_validator_exists()
     {
-        // arrange
         var validator = new SomeRequestModelValidator();
 
         IWithValidator proxy = new WithValidatorInteractorProxy(NullLogger<WithValidatorInteractorProxy>.Instance,
             new WithValidatorInteractor(), [validator]);
 
-        // act
         var result = await proxy.Execute(new SomeValidatorRequestModel());
 
-        // assert
         Assert.IsType<OneOf<SomeValidatorResponseModel, ValidationResult>>(result);
     }
 
     [Fact]
     public async Task Response_model_is_not_transformed_when_validation_result_is_included_in_OneOf()
     {
-        // arrange
         var validator = new SomeRequestModelValidator();
 
         IWithValidatorAndValidationResultInResponseModel proxy =
@@ -71,26 +67,21 @@ public class InteractorWithValidatorTests
                 NullLogger<WithValidatorAndValidationResultInResponseModelInteractorProxy>.Instance,
                 new WithValidatorAndValidationResultInResponseModelInteractor(), [validator]);
 
-        // act
         var result = await proxy.Execute(new SomeValidatorRequestModel());
 
-        // assert
         Assert.IsType<OneOf<SomeValidatorResponseModel, ValidationResult>>(result);
     }
 
     [Fact]
     public async Task Validation_is_performed_when_a_validator_exists()
     {
-        // arrange
         var validator = new SomeRequestModelValidator();
 
         IWithValidator proxy = new WithValidatorInteractorProxy(NullLogger<WithValidatorInteractorProxy>.Instance,
             new WithValidatorInteractor(), [validator]);
 
-        // act
         var result = await proxy.Execute(new SomeValidatorRequestModel {FooBar = null});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(result.Value);
         var singleError = Assert.Single(validationResult.Errors);
         Assert.Equal("FooBar", singleError.PropertyName);

@@ -14,7 +14,6 @@ public class UpdateReferenceTests : DomainTests
     [Fact]
     public async Task A_trades_reference_can_be_successfully_updated()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
@@ -32,10 +31,8 @@ public class UpdateReferenceTests : DomainTests
             Notes = null
         };
 
-        // act
         var response = await Interactor.Execute(updateReferenceRequestModel);
 
-        // assert
         Assert.IsType<Completed>(response.Value);
 
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
@@ -47,7 +44,6 @@ public class UpdateReferenceTests : DomainTests
     [Fact]
     public async Task You_cannot_update_references_of_a_non_existing_trade()
     {
-        // arrange
         var notExistingTradeId = Guid.Parse("e5a40443-6a65-4bc1-9141-3ae859c0a665");
         var reference = (TestData.Reference.Default with
         {
@@ -64,10 +60,8 @@ public class UpdateReferenceTests : DomainTests
             Notes = null
         };
 
-        // act
         var response = await Interactor.Execute(updateReferenceRequestModel);
 
-        // assert
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
     }
@@ -75,7 +69,6 @@ public class UpdateReferenceTests : DomainTests
     [Fact]
     public async Task You_cannot_update_references_of_a_non_existing_reference()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var notExistingReferenceId = Guid.Parse("7ddbfd72-4e97-499d-9fff-7f1615eae562");
 
@@ -89,10 +82,8 @@ public class UpdateReferenceTests : DomainTests
             Notes = "updated note"
         };
 
-        // act
         var response = await Interactor.Execute(updateReferenceRequestModel);
 
-        // assert
         var notFound = Assert.IsType<NotFound<Reference>>(response.Value);
         Assert.Equal(notExistingReferenceId, notFound.ResourceId);
     }
@@ -100,7 +91,6 @@ public class UpdateReferenceTests : DomainTests
     [Fact]
     public async Task A_reference_type_out_of_enum_range_is_not_allowed()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
@@ -119,10 +109,8 @@ public class UpdateReferenceTests : DomainTests
                 Type = (ReferenceType) 50
             };
 
-        // act
         var response = await Interactor.Execute(referenceRequestModel);
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
@@ -132,7 +120,6 @@ public class UpdateReferenceTests : DomainTests
     [Fact]
     public async Task A_reference_link_must_be_a_valid_uri()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
@@ -151,10 +138,8 @@ public class UpdateReferenceTests : DomainTests
                 Link = "not-valid-uri"
             };
 
-        // act
         var response = await Interactor.Execute(referenceRequestModel);
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Invalid link.", error.ErrorMessage);
@@ -164,7 +149,6 @@ public class UpdateReferenceTests : DomainTests
     [Fact]
     public async Task Reference_notes_must_not_contain_more_than_4000_chars()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
@@ -183,10 +167,8 @@ public class UpdateReferenceTests : DomainTests
                 Notes = new string('a', 4001)
             };
 
-        // act
         var response = await Interactor.Execute(referenceRequestModel);
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",

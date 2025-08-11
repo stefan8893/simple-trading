@@ -13,7 +13,6 @@ public class GetAssetsTests : DomainTests
     [Fact]
     public async Task Get_assets_without_search_term_returns_all_assets()
     {
-        // arrange
         var asset1 = TestData.Asset.Default.Build();
         var asset2 = TestData.Asset.Default.Build();
 
@@ -21,10 +20,8 @@ public class GetAssetsTests : DomainTests
         DbContext.AddRange(asset1, asset2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new GetAssetsRequestModel(null));
 
-        // assert
         var assets = Assert.IsType<IReadOnlyList<GetAssetsResponseModel>>(response.Value, false);
         Assert.Equal(2, assets.Count);
     }

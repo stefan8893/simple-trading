@@ -9,7 +9,6 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
     [Fact]
     public async Task Existing_assets_will_be_returned()
     {
-        // arrange
         var client = await CreateClient();
 
         var asset1 = TestData.Asset.Default.Build();
@@ -19,10 +18,8 @@ public class GetAssetTests(TestingWebApplicationFactory<Program> factory) : WebA
         DbContext.AddRange(asset1, asset2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var assets = await client.GetAssetsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(assets);
         Assert.Equal(2, assets.Count);
         Assert.Contains(assets, x => x.Id == asset1.Id);

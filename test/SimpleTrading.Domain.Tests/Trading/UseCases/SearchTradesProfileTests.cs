@@ -15,7 +15,6 @@ public class SearchTradesProfileTests : DomainTests
     [Fact]
     public async Task Empty_profile_id_returns_no_trades()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -26,11 +25,9 @@ public class SearchTradesProfileTests : DomainTests
         DbContext.Trades.AddRange(trades);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = Guid.Empty});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Empty(pagedTrades);
     }
@@ -38,7 +35,6 @@ public class SearchTradesProfileTests : DomainTests
     [Fact]
     public async Task Searching_for_trades_depends_always_on_the_profile_to_which_the_trades_belong()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
 
         var profileA = TestData.Profile.Default.Build();
@@ -57,11 +53,9 @@ public class SearchTradesProfileTests : DomainTests
         DbContext.Trades.AddRange(tradesB);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profileA.Id});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
         Assert.All(pagedTrades, t => Assert.Contains(tradesA, a => t.Id == a.Id));

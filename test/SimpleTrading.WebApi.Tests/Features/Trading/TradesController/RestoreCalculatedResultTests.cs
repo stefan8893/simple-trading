@@ -24,17 +24,14 @@ public class RestoreCalculatedResultTests(
     [Fact]
     public async Task A_calculated_result_gets_successfully_restored()
     {
-        // arrange
         var client = await CreateClient();
         var tradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
 
         restoreCalculatedResultInteractorStub.ResponseModel = new Completed<RestoreCalculatedResultResponseModel>(
             new RestoreCalculatedResultResponseModel(tradeId, ResultModel.Loss, 55, []));
 
-        // act
         var result = await client.RestoreCalculatedResultAsync(tradeId, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(NullableOfResultDto.Loss, result.Result);
         Assert.Equal(55, result.Performance);
         Assert.Equal(tradeId, result.TradeId);
@@ -44,19 +41,16 @@ public class RestoreCalculatedResultTests(
     [Fact]
     public async Task Not_found_gets_returned_if_the_trade_does_not_exist()
     {
-        // arrange
         var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
         restoreCalculatedResultInteractorStub.ResponseModel = new NotFound<Trade>(notExistingTradeId);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<TradeResultDto> Act()
         {
             return client.RestoreCalculatedResultAsync(notExistingTradeId);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
@@ -66,19 +60,16 @@ public class RestoreCalculatedResultTests(
     [Fact]
     public async Task A_conflict_results_in_a_conflict_response()
     {
-        // arrange
         var client = await CreateClient();
         var tradeId = Guid.Parse("8614528d-0d7b-4a62-b210-493eca25cf92");
         restoreCalculatedResultInteractorStub.ResponseModel = new Conflict(tradeId, "Something went badly wrong.");
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<TradeResultDto> Act()
         {
             return client.RestoreCalculatedResultAsync(tradeId);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
         Assert.Equal("Something went badly wrong.", exception.Result.Detail);

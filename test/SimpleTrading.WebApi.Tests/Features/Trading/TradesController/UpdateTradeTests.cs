@@ -12,7 +12,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task A_trades_size_can_be_successfully_updated()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = (TestData.Trade.Default with
@@ -22,13 +21,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             Size = 50_000
         }, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         Assert.Empty(response.Warnings);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
@@ -40,7 +37,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task A_trades_result_can_be_successfully_updated_since_the_trade_is_closed()
     {
-        // arrange
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
 
@@ -53,13 +49,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}
         }, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
@@ -72,14 +66,12 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     public async Task
         A_trades_result_cannot_be_successfully_updated_since_profitLoss_and_closed_date_are_missing_and_the_trade_is_not_closed()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<WarningsDto> Act()
         {
@@ -87,7 +79,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new UpdateTradeDto {ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}});
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);
@@ -100,7 +91,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task A_trades_result_can_be_successfully_updated_to_null_since_the_trade_is_closed()
     {
-        // arrange
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
 
@@ -113,13 +103,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             ManuallyEnteredResult = new UpdateResultValue {Value = null}
         }, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
@@ -130,7 +118,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task A_trades_result_will_not_be_updated_if_manually_entered_result_is_specified()
     {
-        // arrange
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
 
@@ -143,13 +130,11 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
             ManuallyEnteredResult = null
         }, TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(response);
         var updatedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
 
@@ -162,18 +147,15 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task An_non_existing_trade_cannot_be_updated()
     {
-        // arrange
         var client = await CreateClient();
         var notExistingTradeId = Guid.Parse("74af4aee-9582-49ab-956a-1fd7d6f8609d");
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<WarningsDto> Act()
         {
             return client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
@@ -183,14 +165,12 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     [Fact]
     public async Task The_closed_date_of_a_non_closed_trade_cannot_be_updated()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<WarningsDto> Act()
         {
@@ -198,7 +178,6 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new UpdateTradeDto {Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")});
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);

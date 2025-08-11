@@ -13,7 +13,6 @@ public class GetActiveProfileTests : DomainTests
     [Fact]
     public async Task Get_active_profile_returns_the_active_profile()
     {
-        // arrange
         var profile1 = TestData.Profile.Default.Build();
         var profile2 = TestData.Profile.Default.Build();
         var activeProfile = (TestData.Profile.Default with {IsActive = true}).Build();
@@ -22,10 +21,8 @@ public class GetActiveProfileTests : DomainTests
         DbContext.AddRange(profile1, profile2, activeProfile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute();
 
-        // assert
         Assert.NotNull(response);
         Assert.Equal(activeProfile.Id, response.Id);
         Assert.True(response.IsActive);
@@ -34,7 +31,6 @@ public class GetActiveProfileTests : DomainTests
     [Fact]
     public async Task Returns_any_profile_if_there_is_no_active_profile()
     {
-        // arrange
         var profile1 = TestData.Profile.Default.Build();
         var profile2 = TestData.Profile.Default.Build();
 
@@ -42,10 +38,8 @@ public class GetActiveProfileTests : DomainTests
         DbContext.AddRange(profile1, profile2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute();
 
-        // assert
         Assert.NotNull(response);
         Assert.False(response.IsActive);
     }

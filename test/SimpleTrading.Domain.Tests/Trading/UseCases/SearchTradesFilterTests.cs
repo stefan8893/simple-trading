@@ -16,7 +16,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_opened_date_with_comparison_value_in_local_time_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -35,11 +34,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -50,7 +47,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_opened_date_with_comparison_value_in_utc_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -69,11 +65,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -84,7 +78,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Closed_greater_than_null_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -94,11 +87,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Null is not allowed here.", error.ErrorMessage);
@@ -107,7 +98,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_opened_date_with_invalid_comparison_value_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -117,11 +107,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'2024-08-19T17:00:' is not valid.", error.ErrorMessage);
@@ -131,7 +119,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_opened_date_with_typo_in_operator_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
 
         var filter = new FilterModel
@@ -142,11 +129,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The operator 'grt' is not supported.", error.ErrorMessage);
@@ -157,7 +142,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_opened_date_with_typo_in_property_name_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -167,11 +151,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Openend' cannot be used as a filter.", error.ErrorMessage);
@@ -181,7 +163,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_or_equal_to_opened_date_with_comparison_value_in_local_time_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -200,11 +181,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
 
@@ -217,7 +196,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_or_equal_to_opened_date_with_comparison_value_in_local_time_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -236,11 +214,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
 
@@ -253,7 +229,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_opened_date_with_comparison_value_in_local_time_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -272,11 +247,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var expected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -287,7 +260,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Equal_to_opened_date_with_comparison_value_in_local_time_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -306,11 +278,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var expected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -321,7 +291,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Not_equal_to_opened_date_with_comparison_value_in_local_time_returns_correct_result()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T14:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -340,11 +309,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
 
@@ -357,7 +324,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_profitLoss_with_uppercase_property_name_returns_correct_result()
     {
-        // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
@@ -382,11 +348,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
         var singleTrade = Assert.Single(pagedTrades);
@@ -396,7 +360,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_profitLoss_with_empty_comparison_value_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -406,11 +369,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Comparison value' must not be empty.", error.ErrorMessage);
@@ -420,7 +381,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_profitLoss_with_empty_operator_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -430,11 +390,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Operator' must not be empty.", error.ErrorMessage);
@@ -444,7 +402,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_profitLoss_with_empty_property_name_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -454,11 +411,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
@@ -468,7 +423,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Unknown_property_names_cannot_be_used_as_a_filter()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -478,11 +432,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Foobar' cannot be used as a filter.", error.ErrorMessage);
@@ -492,7 +444,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task An_unknown_operator_cannot_be_used_in_a_filter()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -502,11 +453,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The operator 'gr' is not supported.", error.ErrorMessage);
@@ -516,7 +465,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task A_null_property_name_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -526,11 +474,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
@@ -540,7 +486,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Property_names_with_whitespaces_will_not_be_trimmed_and_bad_input_gets_returned()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -550,11 +495,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'profitLoss ' cannot be used as a filter.", error.ErrorMessage);
@@ -564,7 +507,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Operators_with_whitespaces_will_not_be_trimmed_and_bad_input_gets_returned()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -574,11 +516,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("The operator ' gt' is not supported.", error.ErrorMessage);
@@ -588,7 +528,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_or_equal_to_size_with_valid_input_returns_correct_result()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
@@ -605,11 +544,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(10_000m, singleTrade.Size);
@@ -618,7 +555,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Uppercase_operator_works_as_well()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
@@ -635,11 +571,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(10_000m, singleTrade.Size);
@@ -648,7 +582,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_or_equal_to_size_with_valid_input_returns_correct_result()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
@@ -666,11 +599,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(5_000m, singleTrade.Size);
@@ -679,7 +610,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Not_equal_to_size_with_valid_input_returns_correct_result()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
@@ -697,11 +627,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(10_000m, singleTrade.Size);
@@ -710,7 +638,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_profitLoss_with_valid_input_returns_correct_result()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, ProfitLoss = 500m * x})
@@ -728,11 +655,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Empty(pagedTrades);
     }
@@ -740,7 +665,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Equal_to_profitLoss_with_valid_input_returns_correct_result()
     {
-        // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 2)
@@ -765,11 +689,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(500m, singleTrade.ProfitLoss);
@@ -778,7 +700,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task ProfitLoss_equal_to_null_returns_trades_without_a_profitLoss()
     {
-        // arrange
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
         var profile = TestData.Profile.Default.Build();
         var tradeWithProfitLoss = (TestData.Trade.Default with
@@ -802,11 +723,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(tradeWithoutProfitLoss.Id, singleTrade.Id);
@@ -815,7 +734,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_result_with_invalid_comparison_value_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Result = (ResultModel) x})
@@ -833,11 +751,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'NotThatBad' is not valid.", error.ErrorMessage);
@@ -847,7 +763,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_result_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -873,11 +788,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => ResultModel.Mediocre == item.Result);
@@ -888,7 +801,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_closed_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -914,11 +826,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
         Assert.DoesNotContain(pagedTrades, item => item.Closed!.Value.UtcDateTime == openedClosed);
@@ -927,7 +837,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_or_equal_to_result_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -953,11 +862,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
@@ -969,7 +876,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Result_greater_than_or_equal_to_null_returns_bad_input()
     {
-        // arrange
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
@@ -979,11 +885,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("Null is not allowed here.", error.ErrorMessage);
@@ -993,7 +897,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_or_equal_to_result_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -1019,11 +922,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
@@ -1033,7 +934,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_to_result_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -1059,11 +959,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => ResultModel.BreakEven == item.Result);
@@ -1073,7 +971,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Equal_to_result_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -1099,11 +996,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(ResultModel.Mediocre, singleTrade.Result);
@@ -1112,7 +1007,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Not_equal_to_result_with_valid_input_returns_correct_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -1138,11 +1032,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = false
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => ResultModel.Loss == item.Result);
@@ -1153,7 +1045,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Equal_to_null_result_returns_all_trades_without_a_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var tradesWithoutResult = Enumerable.Range(0, 2)
@@ -1184,11 +1075,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => tradesWithoutResult[0].Id == item.Id);
@@ -1198,7 +1087,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Result_not_equal_to_null_returns_all_trades_with_a_result()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var tradesWithoutResult = Enumerable.Range(0, 2)
@@ -1230,11 +1118,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => tradesWithResult[0].Id == item.Id);
@@ -1246,7 +1132,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Closed_equal_to_null_returns_all_trades_without_closed_date()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var closedTrades = Enumerable.Range(0, 2)
@@ -1278,11 +1163,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => closedTrades[0].Id == item.Id);
@@ -1292,7 +1175,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Closed_not_equal_to_null_returns_all_trades_with_closed_date()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var notClosedTrades = Enumerable.Range(0, 2)
@@ -1324,11 +1206,9 @@ public class SearchTradesFilterTests : DomainTests
             IsLiteral = true
         };
 
-        // act
         var response =
             await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.Count);
         Assert.Contains(pagedTrades, item => closedTrades[0].Id == item.Id);
@@ -1340,7 +1220,6 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Multiple_filters_applied_working_properly()
     {
-        // arrange
         var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
@@ -1384,10 +1263,8 @@ public class SearchTradesFilterTests : DomainTests
             }
         ];
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter});
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
         Assert.Equal(ResultModel.BreakEven, singleTrade.Result);

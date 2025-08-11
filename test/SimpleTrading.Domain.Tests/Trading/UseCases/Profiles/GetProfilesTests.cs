@@ -14,7 +14,6 @@ public class GetCurrenciesTests : DomainTests
     [Fact]
     public async Task Get_profiles_without_search_term_returns_all_profiles()
     {
-        // arrange
         var profile1 = TestData.Profile.Default.Build();
         var profile2 = TestData.Profile.Default.Build();
 
@@ -22,10 +21,8 @@ public class GetCurrenciesTests : DomainTests
         DbContext.AddRange(profile1, profile2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new GetProfilesRequestModel(null));
 
-        // assert
         var profiles = Assert.IsType<IReadOnlyList<ProfileResponseModel>>(response.Value, false);
         Assert.Equal(2, profiles.Count);
     }

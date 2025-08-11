@@ -11,7 +11,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     [Fact]
     public async Task A_reference_can_be_successfully_updated()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
@@ -19,14 +18,12 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         DbContext.AddRange(trade, reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
             Type = NullableOfReferenceTypeDto.TradingView,
             Link = "https://www.tradingview.com/x/RRJnEMaI/"
         }, TestContext.Current.CancellationToken);
 
-        // assert
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
         Assert.NotNull(updatedReference);
         Assert.Equal(ReferenceType.TradingView, updatedReference.Type);
@@ -36,7 +33,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     [Fact]
     public async Task An_update_with_an_invalid_type_is_a_bad_request()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
@@ -44,7 +40,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         DbContext.AddRange(trade, reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task Act()
         {
@@ -54,7 +49,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -65,7 +59,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     [Fact]
     public async Task References_of_a_non_existing_trade_cannot_be_updated()
     {
-        // arrange
         var client = await CreateClient();
 
         var notExistingTradeId = Guid.Parse("c2e4edf0-8fa9-492b-9f9f-be883c7ad3ed");
@@ -74,7 +67,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         DbContext.References.Add(reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task Act()
         {
@@ -86,7 +78,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
                 });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
@@ -96,7 +87,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
     [Fact]
     public async Task A_non_existing_reference_cannot_be_updated()
     {
-        // arrange
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
@@ -105,7 +95,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task Act()
         {
@@ -116,7 +105,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             });
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Referenz nicht gefunden.", exception.Result.Title);

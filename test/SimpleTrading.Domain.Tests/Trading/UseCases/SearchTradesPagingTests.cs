@@ -15,7 +15,6 @@ public class SearchTradesPagingTests : DomainTests
     [Fact]
     public async Task Paged_result_contains_only_requested_subset()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T02:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 20)
@@ -26,7 +25,6 @@ public class SearchTradesPagingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
@@ -34,7 +32,6 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 5
         });
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(5, pagedTrades.Count);
     }
@@ -42,7 +39,6 @@ public class SearchTradesPagingTests : DomainTests
     [Fact]
     public async Task Paged_result_has_correct_total_count()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T02:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 20)
@@ -53,7 +49,6 @@ public class SearchTradesPagingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
@@ -61,7 +56,6 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 5
         });
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(20, pagedTrades.TotalCount);
     }
@@ -69,7 +63,6 @@ public class SearchTradesPagingTests : DomainTests
     [Fact]
     public async Task Paged_result_has_correct_total_pages_count()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T02:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 20)
@@ -80,7 +73,6 @@ public class SearchTradesPagingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
@@ -88,7 +80,6 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 5
         });
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.TotalPages);
     }
@@ -96,7 +87,6 @@ public class SearchTradesPagingTests : DomainTests
     [Fact]
     public async Task IsFirstPage_is_false_on_second_page()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T02:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 20)
@@ -107,7 +97,6 @@ public class SearchTradesPagingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
@@ -115,7 +104,6 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 5
         });
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.False(pagedTrades.IsFirstPage);
     }
@@ -123,7 +111,6 @@ public class SearchTradesPagingTests : DomainTests
     [Fact]
     public async Task IsFirstPage_is_true_on_first_page()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T02:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 20)
@@ -134,7 +121,6 @@ public class SearchTradesPagingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
@@ -142,7 +128,6 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 5
         });
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.True(pagedTrades.IsFirstPage);
     }
@@ -150,7 +135,6 @@ public class SearchTradesPagingTests : DomainTests
     [Fact]
     public async Task Last_page_is_not_full_if_total_count_is_not_pageSize_times_pages()
     {
-        // arrange
         var initialOpenedDate = DateTime.Parse("2024-08-19T02:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 18)
@@ -161,7 +145,6 @@ public class SearchTradesPagingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id,
@@ -169,7 +152,6 @@ public class SearchTradesPagingTests : DomainTests
             PageSize = 5
         });
 
-        // assert
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
         Assert.True(pagedTrades.IsLastPage);

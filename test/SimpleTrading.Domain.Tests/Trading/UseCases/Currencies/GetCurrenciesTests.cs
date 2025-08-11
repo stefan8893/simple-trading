@@ -13,7 +13,6 @@ public class GetCurrenciesTests : DomainTests
     [Fact]
     public async Task Get_currencies_without_search_term_returns_all_currencies()
     {
-        // arrange
         var currency1 = TestData.Currency.Default.Build();
         var currency2 = TestData.Currency.Default.Build();
 
@@ -21,10 +20,8 @@ public class GetCurrenciesTests : DomainTests
         DbContext.AddRange(currency1, currency2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(new GetCurrenciesRequestModel(null));
 
-        // assert
         var currencies = Assert.IsType<IReadOnlyList<GetCurrenciesResponseModel>>(response.Value, false);
         Assert.Equal(2, currencies.Count);
     }

@@ -24,7 +24,6 @@ public class GetUserSettingsTests : DomainTests
     [Fact]
     public async Task Language_can_be_null()
     {
-        // arrange
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
 
@@ -35,17 +34,14 @@ public class GetUserSettingsTests : DomainTests
         userSettings.Language = null;
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var userSettingsModel = await Interactor.Execute();
 
-        // assert
         Assert.Null(userSettingsModel.Language);
     }
 
     [Fact]
     public async Task Language_is_not_equal_to_culture_language_if_overriden()
     {
-        // arrange
         var profile = (TestData.Profile.Default with {IsActive = true, Name = "TestProfile"}).Build();
         DbContext.Profiles.Add(profile);
 
@@ -57,10 +53,8 @@ public class GetUserSettingsTests : DomainTests
         userSettings.Language = "de";
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var userSettingsModel = await Interactor.Execute();
 
-        // assert
         Assert.Equal("de", userSettingsModel.Language);
     }
 }

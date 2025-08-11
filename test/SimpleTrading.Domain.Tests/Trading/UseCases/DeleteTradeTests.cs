@@ -24,16 +24,13 @@ public class DeleteTradeTests : DomainTests
     [Fact]
     public async Task A_trade_can_be_successfully_deleted()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor.Execute(trade.Id);
 
-        // assert
         Assert.IsType<Completed>(response.Value);
         var storedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
         Assert.Null(storedTrade);

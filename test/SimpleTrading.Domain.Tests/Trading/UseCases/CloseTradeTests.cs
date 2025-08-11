@@ -24,7 +24,6 @@ public class CloseTradeTests : DomainTests
     [Fact]
     public async Task Invalid_Result_input_with_a_different_ui_culture_returns_a_localized_error_message()
     {
-        // arrange
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
 
         var requestModel = new CloseTradeRequestModel(Guid.CreateVersion7(),
@@ -36,10 +35,8 @@ public class CloseTradeTests : DomainTests
             ExitPrice = 1.05m
         };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("'Ergebnis' hat einen Wertebereich, der '50' nicht enthält.", error.ErrorMessage);
@@ -67,7 +64,6 @@ public class CloseTradeTests : DomainTests
     [Fact]
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
-        // arrange
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
         DbContext.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -79,10 +75,8 @@ public class CloseTradeTests : DomainTests
                 ExitPrice = 0m
             };
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
         Assert.Equal("ExitPrice", error.PropertyName);
@@ -92,7 +86,6 @@ public class CloseTradeTests : DomainTests
     [Fact]
     public async Task A_trade_can_be_closed_successfully()
     {
-        // arrange
         var trade = (TestData.Trade.Default with
         {
             PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m},
@@ -105,10 +98,8 @@ public class CloseTradeTests : DomainTests
             new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
                 {ExitPrice = 1.2m};
 
-        // act
         var response = await Interactor.Execute(requestModel);
 
-        // assert
         var responseModel = Assert.IsType<Completed<CloseTradeResponseModel>>(response.Value);
         Assert.Equal((short) 50, responseModel.Data.Performance);
         Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);

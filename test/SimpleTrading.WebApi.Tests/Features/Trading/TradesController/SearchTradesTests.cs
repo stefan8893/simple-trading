@@ -12,7 +12,6 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task Search_for_trades_greater_than_opened_date_returns_correct_trades()
     {
-        // arrange
         var client = await CreateClient();
 
         var initialOpenedDate = DateTime.Parse("2024-08-19T10:00");
@@ -27,11 +26,9 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         const string searchFilter = "Opened -gt [2024-08-19T11:00Z]";
 
-        // act
         var result = await client.SearchTradesAsync(profile.Id, ["opened"], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.NotNull(result);
         Assert.Equal(1, result.Count);
         var trade = Assert.Single(result.Data);
@@ -41,19 +38,16 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task Filter_operator_without_dash_is_not_valid()
     {
-        // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         const string searchFilter = "Opened gt [2024-08-19T11:00Z]";
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -64,19 +58,16 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task Filter_without_property_is_not_valid()
     {
-        // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         const string searchFilter = "-gt [2024-08-19T11:00Z]";
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -87,17 +78,14 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task Trades_always_belong_to_a_profile_therefore_you_cant_search_for_trades_without_a_profile_id()
     {
-        // arrange
         var client = await CreateClient();
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(null, [], []);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -108,19 +96,16 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task ProfitLoss_filter_with_date_time_as_comparison_value_returns_unprocessable_entity()
     {
-        // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         const string searchFilter = "ProfitLoss -gt [2024-08-19T11:00Z]";
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -131,19 +116,16 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task ProfitLoss_filter_with_a_comparison_value_that_does_not_contain_brackets_is_not_valid()
     {
-        // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         const string searchFilter = "ProfitLoss -gt 500";
 
-        // act
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<PageDtoOfTradeDto> Act()
         {
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        // assert
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
@@ -154,7 +136,6 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [Fact]
     public async Task A_filter_can_contain_multiple_whitespaces()
     {
-        // arrange
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
 
@@ -175,11 +156,9 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         const string searchFilter = "    ProfitLoss   -gt   [500]    ";
 
-        // act
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(2, result.Count);
     }
 
@@ -192,7 +171,6 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     [InlineData(" null")]
     public async Task A_filter_with_null_literal_in_different_casing_and_whitespaces_is_totally_fine(string nullLiteral)
     {
-        // arrange
         var client = await CreateClient();
 
         var profile = TestData.Profile.Default.Build();
@@ -207,18 +185,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         var searchFilter = $"Closed -eq {nullLiteral}";
 
-        // act
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(3, result.Count);
     }
 
     [Fact]
     public async Task Filtering_for_trades_that_have_a_closed_date_returns_nothing_when_there_are_no_closed_trades()
     {
-        // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
@@ -231,18 +206,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         const string searchFilter = "Closed -ne null";
 
-        // act
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(0, result.Count);
     }
 
     [Fact]
     public async Task Null_as_filter_is_being_ignored()
     {
-        // arrange
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 3)
@@ -255,18 +227,15 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         const string searchFilter = null!;
 
-        // act
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(3, result.Count);
     }
 
     [Fact]
     public async Task Null_as_sort_is_being_ignored()
     {
-        // arrange
         var client = await CreateClient();
 
         var openedClosedDate = DateTime.Parse("2024-08-19T19:30:00");
@@ -288,11 +257,9 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
 
         List<string> sorting = ["-Result", null!];
 
-        // act
         var result = await client.SearchTradesAsync(profile.Id, sorting, [],
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // assert
         Assert.Equal(3, result.Count);
         Assert.Equal(NullableOfResultDto.Mediocre, result.Data.ElementAt(0).Result!.Value);
         Assert.Equal(NullableOfResultDto.BreakEven, result.Data.ElementAt(1).Result!.Value);

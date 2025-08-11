@@ -26,7 +26,6 @@ public class GetReferencesTests : DomainTests
     [Fact]
     public async Task A_trades_references_will_be_returned()
     {
-        // arrange
         var trade = TestData.Trade.Default.Build();
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
@@ -34,11 +33,9 @@ public class GetReferencesTests : DomainTests
         DbContext.AddRange(trade, reference1, reference2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        // act
         var response = await Interactor
             .Execute(new GetReferencesRequestModel(trade.Id));
 
-        // assert
         var references = Assert.IsType<IReadOnlyList<ReferenceResponseModel>>(response.Value, false);
         Assert.Equal(2, references.Count);
         Assert.Contains(references, x => x.Id == reference1.Id);
