@@ -31,7 +31,7 @@ public class UpdateReferenceTests : DomainTests
             Notes = null
         };
 
-        var response = await Interactor.Execute(updateReferenceRequestModel);
+        var response = await Interactor.Execute(updateReferenceRequestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed>(response.Value);
 
@@ -60,7 +60,7 @@ public class UpdateReferenceTests : DomainTests
             Notes = null
         };
 
-        var response = await Interactor.Execute(updateReferenceRequestModel);
+        var response = await Interactor.Execute(updateReferenceRequestModel, TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
@@ -82,7 +82,7 @@ public class UpdateReferenceTests : DomainTests
             Notes = "updated note"
         };
 
-        var response = await Interactor.Execute(updateReferenceRequestModel);
+        var response = await Interactor.Execute(updateReferenceRequestModel, TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Reference>>(response.Value);
         Assert.Equal(notExistingReferenceId, notFound.ResourceId);
@@ -109,7 +109,7 @@ public class UpdateReferenceTests : DomainTests
                 Type = (ReferenceType) 50
             };
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -138,7 +138,7 @@ public class UpdateReferenceTests : DomainTests
                 Link = "not-valid-uri"
             };
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -167,7 +167,7 @@ public class UpdateReferenceTests : DomainTests
                 Notes = new string('a', 4001)
             };
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);

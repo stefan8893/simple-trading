@@ -8,7 +8,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.Assets.GetAssets;
 public class GetAssetsInteractor(IAssetRepository assetRepository)
     : InteractorBase, IInteractor<GetAssetsRequestModel, IReadOnlyList<GetAssetsResponseModel>>
 {
-    public async Task<IReadOnlyList<GetAssetsResponseModel>> Execute(GetAssetsRequestModel model)
+    public async Task<IReadOnlyList<GetAssetsResponseModel>> Execute(GetAssetsRequestModel model, CancellationToken cancellationToken)
     {
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 

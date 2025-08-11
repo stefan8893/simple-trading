@@ -25,7 +25,7 @@ public class SomeRequestModelValidator : AbstractValidator<SomeValidatorRequestM
 
 public class WithValidatorInteractor : IInteractor<SomeValidatorRequestModel, SomeValidatorResponseModel>
 {
-    public Task<SomeValidatorResponseModel> Execute(SomeValidatorRequestModel model)
+    public Task<SomeValidatorResponseModel> Execute(SomeValidatorRequestModel model, CancellationToken cancellationToken)
     {
         return Task.FromResult(new SomeValidatorResponseModel());
     }
@@ -35,7 +35,7 @@ public class WithValidatorAndValidationResultInResponseModelInteractor : IIntera
     OneOf<SomeValidatorResponseModel, ValidationResult>>
 {
     public async Task<OneOf<SomeValidatorResponseModel, ValidationResult>> Execute(
-        SomeValidatorRequestModel requestModel)
+        SomeValidatorRequestModel requestModel, CancellationToken cancellationToken)
     {
         await Task.Yield();
         return new SomeValidatorResponseModel();
@@ -52,7 +52,7 @@ public class InteractorWithValidatorTests
         IWithValidator proxy = new WithValidatorInteractorProxy(NullLogger<WithValidatorInteractorProxy>.Instance,
             new WithValidatorInteractor(), [validator]);
 
-        var result = await proxy.Execute(new SomeValidatorRequestModel());
+        var result = await proxy.Execute(new SomeValidatorRequestModel(), TestContext.Current.CancellationToken);
 
         Assert.IsType<OneOf<SomeValidatorResponseModel, ValidationResult>>(result);
     }
@@ -67,7 +67,7 @@ public class InteractorWithValidatorTests
                 NullLogger<WithValidatorAndValidationResultInResponseModelInteractorProxy>.Instance,
                 new WithValidatorAndValidationResultInResponseModelInteractor(), [validator]);
 
-        var result = await proxy.Execute(new SomeValidatorRequestModel());
+        var result = await proxy.Execute(new SomeValidatorRequestModel(), TestContext.Current.CancellationToken);
 
         Assert.IsType<OneOf<SomeValidatorResponseModel, ValidationResult>>(result);
     }
@@ -80,7 +80,7 @@ public class InteractorWithValidatorTests
         IWithValidator proxy = new WithValidatorInteractorProxy(NullLogger<WithValidatorInteractorProxy>.Instance,
             new WithValidatorInteractor(), [validator]);
 
-        var result = await proxy.Execute(new SomeValidatorRequestModel {FooBar = null});
+        var result = await proxy.Execute(new SomeValidatorRequestModel {FooBar = null}, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(result.Value);
         var singleError = Assert.Single(validationResult.Errors);

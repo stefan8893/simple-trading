@@ -9,6 +9,7 @@ public static class TestSources
         // lang=C#
         """
         using SimpleTrading.Domain.Infrastructure;
+        using System.Threading;
         using System.Threading.Tasks;
 
         namespace SimpleTrading.Domain.Generators.Tests;
@@ -23,7 +24,7 @@ public static class TestSources
 
         public class GetFoobarInteractorWithoutProperSuffix : IInteractor<GetFoobarRequestModel, GetFoobarResponseModel>
         {
-            public Task<GetFoobarResponseModel> Execute(GetFoobarRequestModel model)
+            public Task<GetFoobarResponseModel> Execute(GetFoobarRequestModel model, CancellationToken cancellationToken)
             {
                 return Task.FromResult(new GetFoobarResponseModel());
             }

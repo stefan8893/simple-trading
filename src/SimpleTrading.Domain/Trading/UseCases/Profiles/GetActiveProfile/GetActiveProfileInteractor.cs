@@ -9,7 +9,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetActiveProfile;
 public class GetActiveProfileInteractor(IProfileRepository profileRepository)
     : IInteractor<ProfileResponseModel>
 {
-    public async Task<ProfileResponseModel> Execute()
+    public async Task<ProfileResponseModel> Execute(CancellationToken cancellationToken)
     {
         var activeProfiles = await profileRepository.Find(x => x.IsActive);
 

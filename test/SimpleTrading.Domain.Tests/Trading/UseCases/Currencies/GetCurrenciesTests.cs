@@ -20,7 +20,7 @@ public class GetCurrenciesTests : DomainTests
         DbContext.AddRange(currency1, currency2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute(new GetCurrenciesRequestModel(null));
+        var response = await Interactor.Execute(new GetCurrenciesRequestModel(null), TestContext.Current.CancellationToken);
 
         var currencies = Assert.IsType<IReadOnlyList<GetCurrenciesResponseModel>>(response.Value, false);
         Assert.Equal(2, currencies.Count);
@@ -31,7 +31,7 @@ public class GetCurrenciesTests : DomainTests
     {
         var tooLongSearchTerm = new string('a', 51);
 
-        var response = await Interactor.Execute(new GetCurrenciesRequestModel(tooLongSearchTerm));
+        var response = await Interactor.Execute(new GetCurrenciesRequestModel(tooLongSearchTerm), TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);

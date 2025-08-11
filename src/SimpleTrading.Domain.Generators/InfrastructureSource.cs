@@ -6,18 +6,19 @@ public static class InfrastructureSource
         // lang=C#
         """
         using System;
+        using System.Threading;
         using System.Threading.Tasks;
         
         namespace SimpleTrading.Domain.Infrastructure;
 
         public interface IInteractor<TResponseModel>
         {
-            Task<TResponseModel> Execute();
+            Task<TResponseModel> Execute(CancellationToken cancellationToken = default);
         }
 
         public interface IInteractor<in TRequestModel, TResponseModel>
         {
-            Task<TResponseModel> Execute(TRequestModel requestModel);
+            Task<TResponseModel> Execute(TRequestModel requestModel, CancellationToken cancellationToken = default);
         }
         """;
 }

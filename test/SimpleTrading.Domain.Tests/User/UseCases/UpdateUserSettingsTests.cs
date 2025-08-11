@@ -23,7 +23,7 @@ public class UpdateUserSettingsTests : DomainTests
 
         var requestModel = new UpdateUserSettingsRequestModel(null, null, null);
 
-        var userSettingsModel = await Interactor.Execute(requestModel);
+        var userSettingsModel = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed>(userSettingsModel.Value);
         var userSettingsUpdated = await DbContextSingleOrDefault<UserSettings>(x => x.Id == userSettings.Id);
@@ -45,7 +45,7 @@ public class UpdateUserSettingsTests : DomainTests
 
         var requestModel = new UpdateUserSettingsRequestModel("de-AT", "de", "Europe/Vienna");
 
-        var userSettingsModel = await Interactor.Execute(requestModel);
+        var userSettingsModel = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed>(userSettingsModel.Value);
         var userSettingsUpdated = await DbContextSingleOrDefault<UserSettings>(x => x.Id == userSettings.Id);
@@ -67,7 +67,7 @@ public class UpdateUserSettingsTests : DomainTests
 
         var requestModel = new UpdateUserSettingsRequestModel(null, "de", null);
 
-        var userSettingsModel = await Interactor.Execute(requestModel);
+        var userSettingsModel = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed>(userSettingsModel.Value);
         var userSettingsUpdated = await DbContextSingleOrDefault<UserSettings>(x => x.Id == userSettings.Id);
@@ -80,7 +80,7 @@ public class UpdateUserSettingsTests : DomainTests
     {
         var requestModel = new UpdateUserSettingsRequestModel(null, "deu", null);
 
-        var userSettingsModel = await Interactor.Execute(requestModel);
+        var userSettingsModel = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(userSettingsModel.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -94,7 +94,7 @@ public class UpdateUserSettingsTests : DomainTests
         const string notSupportedCulture = "de-CH";
         var requestModel = new UpdateUserSettingsRequestModel(notSupportedCulture, null, null);
 
-        var userSettingsModel = await Interactor.Execute(requestModel);
+        var userSettingsModel = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(userSettingsModel.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -108,7 +108,7 @@ public class UpdateUserSettingsTests : DomainTests
         const string notSupportedTimezone = "Europe/Bregenz";
         var requestModel = new UpdateUserSettingsRequestModel(null, null, notSupportedTimezone);
 
-        var userSettingsModel = await Interactor.Execute(requestModel);
+        var userSettingsModel = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(userSettingsModel.Value);
         var error = Assert.Single(validationResult.Errors);

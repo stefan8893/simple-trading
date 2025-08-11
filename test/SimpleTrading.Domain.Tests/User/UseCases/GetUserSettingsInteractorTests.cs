@@ -16,7 +16,7 @@ public class GetUserSettingsTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var userSettingsModel = await Interactor.Execute();
+        var userSettingsModel = await Interactor.Execute(TestContext.Current.CancellationToken);
 
         Assert.NotNull(userSettingsModel);
     }
@@ -34,7 +34,7 @@ public class GetUserSettingsTests : DomainTests
         userSettings.Language = null;
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var userSettingsModel = await Interactor.Execute();
+        var userSettingsModel = await Interactor.Execute(TestContext.Current.CancellationToken);
 
         Assert.Null(userSettingsModel.Language);
     }
@@ -53,7 +53,7 @@ public class GetUserSettingsTests : DomainTests
         userSettings.Language = "de";
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var userSettingsModel = await Interactor.Execute();
+        var userSettingsModel = await Interactor.Execute(TestContext.Current.CancellationToken);
 
         Assert.Equal("de", userSettingsModel.Language);
     }

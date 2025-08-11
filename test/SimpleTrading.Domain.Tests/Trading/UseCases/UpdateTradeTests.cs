@@ -31,7 +31,7 @@ public class UpdateTradeTests : DomainTests
             Size = -5000
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -58,7 +58,7 @@ public class UpdateTradeTests : DomainTests
             ManuallyEnteredResult = (ResultModel?) 50
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -77,7 +77,7 @@ public class UpdateTradeTests : DomainTests
             EntryPrice = -1.2m
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -96,7 +96,7 @@ public class UpdateTradeTests : DomainTests
             StopLoss = -1.2m
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -115,7 +115,7 @@ public class UpdateTradeTests : DomainTests
             TakeProfit = -1.2m
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -134,7 +134,7 @@ public class UpdateTradeTests : DomainTests
             ExitPrice = -1.2m
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -152,7 +152,7 @@ public class UpdateTradeTests : DomainTests
             TradeId = tradeId
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(tradeId, notFound.ResourceId);
@@ -173,7 +173,7 @@ public class UpdateTradeTests : DomainTests
             AssetId = newAsset.Id
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
@@ -197,7 +197,7 @@ public class UpdateTradeTests : DomainTests
             ProfileId = newProfile.Id
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var updatedTradeId = Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value).Data.TradeId;
 
@@ -221,7 +221,7 @@ public class UpdateTradeTests : DomainTests
             CurrencyId = newCurrency.Id
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
@@ -245,7 +245,7 @@ public class UpdateTradeTests : DomainTests
             Closed = new DateTimeOffset(trade.Opened.AddSeconds(-1))
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var conflict = Assert.IsType<Conflict>(response.Value);
         Assert.Equal("'Closed' must be after 'Opened'.", conflict.Details);
@@ -266,7 +266,7 @@ public class UpdateTradeTests : DomainTests
             Opened = new DateTimeOffset(_utcNow.AddDays(1).AddSeconds(1))
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -288,7 +288,7 @@ public class UpdateTradeTests : DomainTests
             Closed = new DateTimeOffset(trade.Opened)
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -310,7 +310,7 @@ public class UpdateTradeTests : DomainTests
             ProfitLoss = 50m
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -334,7 +334,7 @@ public class UpdateTradeTests : DomainTests
             ProfitLoss = newProfitLoss
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
@@ -357,7 +357,7 @@ public class UpdateTradeTests : DomainTests
             Notes = new string('a', 4001)
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -391,7 +391,7 @@ public class UpdateTradeTests : DomainTests
             ExitPrice = newPositionPrices.Exit
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
@@ -427,7 +427,7 @@ public class UpdateTradeTests : DomainTests
             ManuallyEnteredResult = new None()
         };
 
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
@@ -452,13 +452,13 @@ public class UpdateTradeTests : DomainTests
         Assert.True(trade.IsClosed);
 
         _ = await Interactor.Execute(new UpdateTradeRequestModel
-            {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win});
+            {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win}, TestContext.Current.CancellationToken);
 
         var response = await Interactor.Execute(new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
             ManuallyEnteredResult = ResultModel.Mediocre
-        });
+        }, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 
@@ -482,7 +482,7 @@ public class UpdateTradeTests : DomainTests
         {
             TradeId = trade.Id,
             ManuallyEnteredResult = ResultModel.Mediocre
-        });
+        }, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -504,7 +504,7 @@ public class UpdateTradeTests : DomainTests
             TradeId = trade.Id,
             ManuallyEnteredResult = null
         };
-        var response = await Interactor.Execute(updateTradeRequestModel);
+        var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -530,7 +530,7 @@ public class UpdateTradeTests : DomainTests
         {
             TradeId = trade.Id,
             ManuallyEnteredResult = ResultModel.Loss
-        });
+        }, TestContext.Current.CancellationToken);
 
         Assert.IsType<Completed<UpdateTradeResponseModel>>(response.Value);
 

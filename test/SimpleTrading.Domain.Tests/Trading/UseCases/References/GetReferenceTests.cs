@@ -18,7 +18,7 @@ public class GetReferenceTests : DomainTests
         var notExistingReferenceId = Guid.Parse("5fb9a049-a309-4617-981e-49de0e86bc86");
 
         var response = await Interactor
-            .Execute(new GetReferenceRequestModel(notExistingTradeId, notExistingReferenceId));
+            .Execute(new GetReferenceRequestModel(notExistingTradeId, notExistingReferenceId), TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
@@ -35,7 +35,7 @@ public class GetReferenceTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await Interactor
-            .Execute(new GetReferenceRequestModel(trade.Id, reference1.Id));
+            .Execute(new GetReferenceRequestModel(trade.Id, reference1.Id), TestContext.Current.CancellationToken);
 
         var referenceModel = Assert.IsType<ReferenceResponseModel>(response.Value);
         Assert.Equal(reference1.Id, referenceModel.Id);

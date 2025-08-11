@@ -20,7 +20,7 @@ public class DeleteReferencesTests : DomainTests
         DbContext.AddRange(trade, reference1, reference2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute(new DeleteReferencesRequestModel(trade.Id));
+        var response = await Interactor.Execute(new DeleteReferencesRequestModel(trade.Id), TestContext.Current.CancellationToken);
 
         var result = Assert.IsType<Completed<ushort>>(response.Value);
         Assert.Equal(2, result.Data);
@@ -34,7 +34,7 @@ public class DeleteReferencesTests : DomainTests
     {
         var notExistingTradeId = Guid.Parse("f4d1c2c8-28c6-49b7-b6a5-78fd43412008");
 
-        var response = await Interactor.Execute(new DeleteReferencesRequestModel(notExistingTradeId));
+        var response = await Interactor.Execute(new DeleteReferencesRequestModel(notExistingTradeId), TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);

@@ -26,7 +26,7 @@ public class SearchTradesProfileTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = Guid.Empty});
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = Guid.Empty}, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Empty(pagedTrades);
@@ -54,7 +54,7 @@ public class SearchTradesProfileTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profileA.Id});
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profileA.Id}, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);

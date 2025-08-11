@@ -16,7 +16,7 @@ public class CloseTradeInteractor(
     UtcNow utcNow)
     : InteractorBase, IInteractor<CloseTradeRequestModel, CloseTradeResponse>
 {
-    public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model)
+    public async Task<CloseTradeResponse> Execute(CloseTradeRequestModel model, CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

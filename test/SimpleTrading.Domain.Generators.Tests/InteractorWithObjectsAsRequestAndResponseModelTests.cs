@@ -14,7 +14,7 @@ public class SomeResponseModel
 
 public class WithSimpleObjectsInteractor : IInteractor<SomeRequestModel, SomeResponseModel>
 {
-    public Task<SomeResponseModel> Execute(SomeRequestModel model)
+    public Task<SomeResponseModel> Execute(SomeRequestModel model, CancellationToken cancellationToken)
     {
         return Task.FromResult(new SomeResponseModel());
     }
@@ -22,7 +22,7 @@ public class WithSimpleObjectsInteractor : IInteractor<SomeRequestModel, SomeRes
 
 public class WithPrimitiveRequestAndObjectResponseModelInteractor : IInteractor<int, SomeResponseModel>
 {
-    public Task<SomeResponseModel> Execute(int requestModel)
+    public Task<SomeResponseModel> Execute(int requestModel, CancellationToken cancellationToken)
     {
         return Task.FromResult(new SomeResponseModel());
     }
@@ -30,7 +30,7 @@ public class WithPrimitiveRequestAndObjectResponseModelInteractor : IInteractor<
 
 public class WithObjectRequestAndPrimitiveResponseModelInteractor : IInteractor<SomeRequestModel, int>
 {
-    public Task<int> Execute(SomeRequestModel requestModel)
+    public Task<int> Execute(SomeRequestModel requestModel, CancellationToken cancellationToken)
     {
         return Task.FromResult(int.MinValue);
     }
@@ -39,7 +39,7 @@ public class WithObjectRequestAndPrimitiveResponseModelInteractor : IInteractor<
 public class
     WithOneOfResponseModelInteractor : IInteractor<SomeRequestModel, OneOf<SomeRequestModel, List<string>, bool>>
 {
-    public async Task<OneOf<SomeRequestModel, List<string>, bool>> Execute(SomeRequestModel requestModel)
+    public async Task<OneOf<SomeRequestModel, List<string>, bool>> Execute(SomeRequestModel requestModel, CancellationToken cancellationToken)
     {
         await Task.Yield();
         return true;
@@ -55,7 +55,7 @@ public class InteractorWithObjectsAsRequestAndResponseModelTests
             new WithSimpleObjectsInteractorProxy(NullLogger<WithSimpleObjectsInteractorProxy>.Instance,
                 new WithSimpleObjectsInteractor());
 
-        var result = await proxy.Execute(new SomeRequestModel());
+        var result = await proxy.Execute(new SomeRequestModel(), TestContext.Current.CancellationToken);
 
         Assert.IsType<SomeResponseModel>(result);
     }
@@ -68,7 +68,7 @@ public class InteractorWithObjectsAsRequestAndResponseModelTests
                 NullLogger<WithPrimitiveRequestAndObjectResponseModelInteractorProxy>.Instance,
                 new WithPrimitiveRequestAndObjectResponseModelInteractor());
 
-        var result = await proxy.Execute(5);
+        var result = await proxy.Execute(5, TestContext.Current.CancellationToken);
 
         Assert.IsType<SomeResponseModel>(result);
     }
@@ -81,7 +81,7 @@ public class InteractorWithObjectsAsRequestAndResponseModelTests
                 NullLogger<WithObjectRequestAndPrimitiveResponseModelInteractorProxy>.Instance,
                 new WithObjectRequestAndPrimitiveResponseModelInteractor());
 
-        var result = await proxy.Execute(new SomeRequestModel());
+        var result = await proxy.Execute(new SomeRequestModel(), TestContext.Current.CancellationToken);
 
         Assert.IsType<int>(result);
     }
@@ -92,7 +92,7 @@ public class InteractorWithObjectsAsRequestAndResponseModelTests
         IWithOneOfResponseModel proxy = new WithOneOfResponseModelInteractorProxy(
             NullLogger<WithOneOfResponseModelInteractorProxy>.Instance, new WithOneOfResponseModelInteractor());
 
-        var result = await proxy.Execute(new SomeRequestModel());
+        var result = await proxy.Execute(new SomeRequestModel(), TestContext.Current.CancellationToken);
 
         Assert.IsType<OneOf<SomeRequestModel, List<string>, bool>>(result);
         Assert.IsType<bool>(result.Value);

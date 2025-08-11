@@ -13,7 +13,7 @@ using RestoreCalculatedResultResponse =
 public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository, UtcNow utcNow, UowCommit uowCommit)
     : InteractorBase, IInteractor<Guid, RestoreCalculatedResultResponse>
 {
-    public async Task<RestoreCalculatedResultResponse> Execute(Guid tradeId)
+    public async Task<RestoreCalculatedResultResponse> Execute(Guid tradeId, CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(tradeId);
         if (trade is null)

@@ -23,7 +23,7 @@ public class SearchTradesSortingTests : DomainTests
         {
             ProfileId = profile.Id,
             Sort = [sorting]
-        });
+        }, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -58,7 +58,7 @@ public class SearchTradesSortingTests : DomainTests
         {
             ProfileId = profile.Id,
             Sort = [sorting]
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -92,7 +92,7 @@ public class SearchTradesSortingTests : DomainTests
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
             ProfileId = profile.Id
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -129,7 +129,7 @@ public class SearchTradesSortingTests : DomainTests
         {
             ProfileId = profile.Id,
             Sort = [sorting]
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var firstExpected = DateTimeOffset.Parse("2024-08-19T21:00:00+02:00");
@@ -159,7 +159,7 @@ public class SearchTradesSortingTests : DomainTests
         {
             ProfileId = profile.Id,
             Sort = [sorting]
-        });
+        }, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);

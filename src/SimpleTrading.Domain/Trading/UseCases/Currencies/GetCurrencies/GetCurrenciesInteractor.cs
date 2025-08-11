@@ -10,7 +10,7 @@ public class GetCurrenciesInteractor(
     : InteractorBase, IInteractor<GetCurrenciesRequestModel, IReadOnlyList<GetCurrenciesResponseModel>>
 {
     public async Task<IReadOnlyList<GetCurrenciesResponseModel>> Execute(
-        GetCurrenciesRequestModel model)
+        GetCurrenciesRequestModel model, CancellationToken cancellationToken)
     {
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 

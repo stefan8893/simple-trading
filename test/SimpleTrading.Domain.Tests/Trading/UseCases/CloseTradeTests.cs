@@ -35,7 +35,7 @@ public class CloseTradeTests : DomainTests
             ExitPrice = 1.05m
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -54,7 +54,7 @@ public class CloseTradeTests : DomainTests
                 ExitPrice = 1.05m
             };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal("Trade", notFound.ResourceType);
@@ -75,7 +75,7 @@ public class CloseTradeTests : DomainTests
                 ExitPrice = 0m
             };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -98,7 +98,7 @@ public class CloseTradeTests : DomainTests
             new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
                 {ExitPrice = 1.2m};
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var responseModel = Assert.IsType<Completed<CloseTradeResponseModel>>(response.Value);
         Assert.Equal((short) 50, responseModel.Data.Performance);

@@ -12,7 +12,7 @@ using GetReferencesResponse = OneOf<IReadOnlyList<ReferenceResponseModel>, NotFo
 public class GetReferencesInteractor(ITradeRepository tradeRepository) : InteractorBase,
     IInteractor<GetReferencesRequestModel, GetReferencesResponse>
 {
-    public async Task<GetReferencesResponse> Execute(GetReferencesRequestModel model)
+    public async Task<GetReferencesResponse> Execute(GetReferencesRequestModel model, CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

@@ -20,7 +20,7 @@ public class GetAssetsTests : DomainTests
         DbContext.AddRange(asset1, asset2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute(new GetAssetsRequestModel(null));
+        var response = await Interactor.Execute(new GetAssetsRequestModel(null), TestContext.Current.CancellationToken);
 
         var assets = Assert.IsType<IReadOnlyList<GetAssetsResponseModel>>(response.Value, false);
         Assert.Equal(2, assets.Count);
@@ -31,7 +31,7 @@ public class GetAssetsTests : DomainTests
     {
         var tooLongSearchTerm = new string('a', 51);
 
-        var response = await Interactor.Execute(new GetAssetsRequestModel(tooLongSearchTerm));
+        var response = await Interactor.Execute(new GetAssetsRequestModel(tooLongSearchTerm), TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);

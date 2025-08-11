@@ -22,7 +22,7 @@ public class UpdateTradeInteractor(
     UtcNow utcNow)
     : InteractorBase, IInteractor<UpdateTradeRequestModel, UpdateTradeResponse>
 {
-    public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model)
+    public async Task<UpdateTradeResponse> Execute(UpdateTradeRequestModel model, CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

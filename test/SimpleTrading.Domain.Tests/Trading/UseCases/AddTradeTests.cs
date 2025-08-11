@@ -40,7 +40,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -67,7 +67,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -94,7 +94,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = Guid.Empty
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -125,7 +125,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -159,7 +159,7 @@ public class AddTradeTests : DomainTests
             ManuallyEnteredResult = (ResultModel) 50
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -192,7 +192,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -222,7 +222,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -252,7 +252,7 @@ public class AddTradeTests : DomainTests
             References = [reference]
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -289,7 +289,7 @@ public class AddTradeTests : DomainTests
             References = [reference]
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -318,7 +318,7 @@ public class AddTradeTests : DomainTests
             Notes = new string('a', 4001)
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -347,7 +347,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<ValidationResult>(response.Value, false);
         var singleError = Assert.Single(notFound.Errors);
@@ -374,7 +374,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value, false);
         var singleError = Assert.Single(validationResult.Errors);
@@ -401,7 +401,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value, false);
         var singleError = Assert.Single(validationResult.Errors);
@@ -427,7 +427,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         Assert.NotNull(await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId));
@@ -453,7 +453,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         Assert.Null(await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId));
@@ -480,7 +480,7 @@ public class AddTradeTests : DomainTests
                 [new ReferenceRequestModel(ReferenceType.Other, "https://example.org", "some notes")]
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
@@ -511,7 +511,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
@@ -544,7 +544,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var errors = validationResult.Errors;
@@ -580,7 +580,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -613,7 +613,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
@@ -645,7 +645,7 @@ public class AddTradeTests : DomainTests
             ManuallyEnteredResult = ResultModel.Loss
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -678,7 +678,7 @@ public class AddTradeTests : DomainTests
             ManuallyEnteredResult = ResultModel.Loss
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
@@ -712,7 +712,7 @@ public class AddTradeTests : DomainTests
             CurrencyId = currency.Id
         };
 
-        var response = await Interactor.Execute(requestModel);
+        var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);

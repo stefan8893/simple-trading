@@ -17,7 +17,7 @@ public class AddReferenceInteractor(
 {
     private const ushort MaxReferencesPerTrade = 5;
 
-    public async Task<AddReferenceResponse> Execute(AddReferenceRequestModel model)
+    public async Task<AddReferenceResponse> Execute(AddReferenceRequestModel model, CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

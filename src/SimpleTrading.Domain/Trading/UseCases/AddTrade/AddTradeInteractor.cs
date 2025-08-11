@@ -22,7 +22,7 @@ public class AddTradeInteractor(
     UtcNow utcNow)
     : InteractorBase, IInteractor<AddTradeRequestModel, AddTradeResponse>
 {
-    public async Task<AddTradeResponse> Execute(AddTradeRequestModel model)
+    public async Task<AddTradeResponse> Execute(AddTradeRequestModel model, CancellationToken cancellationToken)
     {
         var asset = await assetRepository.Get(model.AssetId);
         var profile = await profileRepository.Get(model.ProfileId);

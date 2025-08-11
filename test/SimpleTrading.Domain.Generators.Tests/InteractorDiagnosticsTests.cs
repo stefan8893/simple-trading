@@ -13,7 +13,7 @@ public class InteractorDiagnosticsTests
             .WithMessage(
                 "GetFoobarInteractorWithoutProperSuffix must end with 'Interactor', since it implements 'IInteractor'")
             .WithArguments("GetFoobarInteractorWithoutProperSuffix")
-            .WithLocation("/0/Test0.cs", 14, 14);
+            .WithLocation("/0/Test0.cs", 15, 14);
 
         var diagnosticsTest = new CSharpSourceGeneratorTest<InteractorProxyGenerator, XunitV3Verifier>
         {

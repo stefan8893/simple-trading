@@ -30,7 +30,7 @@ public class SearchTradesPagingTests : DomainTests
             ProfileId = profile.Id,
             Page = 1,
             PageSize = 5
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(5, pagedTrades.Count);
@@ -54,7 +54,7 @@ public class SearchTradesPagingTests : DomainTests
             ProfileId = profile.Id,
             Page = 1,
             PageSize = 5
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(20, pagedTrades.TotalCount);
@@ -78,7 +78,7 @@ public class SearchTradesPagingTests : DomainTests
             ProfileId = profile.Id,
             Page = 1,
             PageSize = 5
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.TotalPages);
@@ -102,7 +102,7 @@ public class SearchTradesPagingTests : DomainTests
             ProfileId = profile.Id,
             Page = 2,
             PageSize = 5
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.False(pagedTrades.IsFirstPage);
@@ -126,7 +126,7 @@ public class SearchTradesPagingTests : DomainTests
             ProfileId = profile.Id,
             Page = 1,
             PageSize = 5
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.True(pagedTrades.IsFirstPage);
@@ -150,7 +150,7 @@ public class SearchTradesPagingTests : DomainTests
             ProfileId = profile.Id,
             Page = 4,
             PageSize = 5
-        });
+        }, TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
@@ -165,7 +165,7 @@ public class SearchTradesPagingTests : DomainTests
         {
             ProfileId = profile.Id,
             PageSize = 0
-        });
+        }, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -181,7 +181,7 @@ public class SearchTradesPagingTests : DomainTests
         {
             ProfileId = profile.Id,
             Page = 0
-        });
+        }, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);

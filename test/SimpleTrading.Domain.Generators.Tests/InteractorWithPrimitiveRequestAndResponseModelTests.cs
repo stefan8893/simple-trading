@@ -9,7 +9,7 @@ public class ReturnsJustAStringInteractor : IInteractor<string>
 {
     public const string Response = "FooBar";
 
-    public Task<string> Execute()
+    public Task<string> Execute(CancellationToken cancellationToken)
     {
         return Task.FromResult(Response);
     }
@@ -18,7 +18,7 @@ public class ReturnsJustAStringInteractor : IInteractor<string>
 [UsedImplicitly]
 public class TakesAStringAndReturnsAStringInteractor : IInteractor<string, string>
 {
-    public Task<string> Execute(string requestModel)
+    public Task<string> Execute(string requestModel, CancellationToken cancellationToken)
     {
         return Task.FromResult(requestModel);
     }
@@ -33,7 +33,7 @@ public class InteractorWithPrimitiveRequestAndResponseModelTests
             new ReturnsJustAStringInteractorProxy(NullLogger<ReturnsJustAStringInteractorProxy>.Instance,
                 new ReturnsJustAStringInteractor());
 
-        var result = await proxy.Execute();
+        var result = await proxy.Execute(TestContext.Current.CancellationToken);
 
         Assert.Equal(ReturnsJustAStringInteractor.Response, result);
     }
@@ -46,7 +46,7 @@ public class InteractorWithPrimitiveRequestAndResponseModelTests
                 NullLogger<TakesAStringAndReturnsAStringInteractorProxy>.Instance,
                 new TakesAStringAndReturnsAStringInteractor());
 
-        var result = await proxy.Execute("It Works!");
+        var result = await proxy.Execute("It Works!", TestContext.Current.CancellationToken);
 
         Assert.Equal("It Works!", result);
     }

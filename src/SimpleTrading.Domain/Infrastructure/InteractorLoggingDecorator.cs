@@ -10,29 +10,30 @@ public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseMod
     UtcNow utcNow)
 {
     protected async Task<TResponseModel> LogAndRunInteractorExecution(
-        Func<TRequestModel, Task<TResponseModel>> executionFunc,
-        TRequestModel requestModel)
+        Func<TRequestModel, CancellationToken, Task<TResponseModel>> executionFunc,
+        TRequestModel requestModel,
+        CancellationToken cancellationToken)
     {
         logger.LogInformation("Execute {interactorName} at {utcNow:o}", interactorName, utcNow());
 
         if (requestModel is not (null or Unit))
             logger.LogDebug("{interactorName} request model: {@requestModel}", interactorName, requestModel);
 
-        var responseModel = await TryExecution(executionFunc, requestModel);
+        var responseModel = await TryExecution(executionFunc, requestModel, cancellationToken);
         logger.LogInformation("{interactorName} execution finished successfully at {utcNow:o}", interactorName,
             utcNow());
 
         return responseModel;
     }
 
-    private async Task<TResponseModel> TryExecution(Func<TRequestModel, Task<TResponseModel>> executionFunc,
-        TRequestModel requestModel)
+    private async Task<TResponseModel> TryExecution(Func<TRequestModel, CancellationToken, Task<TResponseModel>> executionFunc,
+        TRequestModel requestModel, CancellationToken cancellationToken)
     {
         var stopwatch = new Stopwatch();
         try
         {
             stopwatch.Start();
-            return await executionFunc.Invoke(requestModel);
+            return await executionFunc.Invoke(requestModel, cancellationToken);
         }
         catch (Exception exception)
         {
@@ -61,9 +62,9 @@ public class InteractorLoggingDecorator<TRequestModel, TResponseModel>(
     : InteractorLoggingDecoratorBase<TRequestModel, TResponseModel>(logger, inner.GetType().Name, utcNow),
         IInteractor<TRequestModel, TResponseModel>
 {
-    public Task<TResponseModel> Execute(TRequestModel requestModel)
+    public Task<TResponseModel> Execute(TRequestModel requestModel, CancellationToken cancellationToken)
     {
-        return LogAndRunInteractorExecution(inner.Execute, requestModel);
+        return LogAndRunInteractorExecution(inner.Execute, requestModel, cancellationToken);
     }
 }
 
@@ -75,8 +76,8 @@ public class InteractorLoggingDecorator<TResponseModel>(
     : InteractorLoggingDecoratorBase<Unit, TResponseModel>(logger, inner.GetType().Name, utcNow),
         IInteractor<TResponseModel>
 {
-    public Task<TResponseModel> Execute()
+    public Task<TResponseModel> Execute(CancellationToken cancellationToken)
     {
-        return LogAndRunInteractorExecution(_ => inner.Execute(), Unit.Default);
+        return LogAndRunInteractorExecution((_, ct) => inner.Execute(ct), Unit.Default, cancellationToken);
     }
 }

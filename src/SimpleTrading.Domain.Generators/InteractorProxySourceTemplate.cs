@@ -5,6 +5,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     private static readonly IReadOnlyList<string> DefaultNamespaces =
     [
         "System",
+        "System.Threading",
         "System.Threading.Tasks",
         "System.Collections.Generic",
         "SimpleTrading.Domain.Infrastructure",
@@ -42,6 +43,8 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     {
         var validatorsType = $"IEnumerable<IValidator<{_requestModelDisplayName}>>";
         var requestModelParameter = RequestModelParameter;
+        
+        var executeParameterList = $"{OnContainsRequestModel($"{requestModelParameter},\n\r            ")}CancellationToken cancellationToken = default";
 
         var (isTransformed, responseModel) = context.GetResponseModelTransformed();
         var interactorInvocation = GetInteractorInvocation(responseModel, isTransformed);
@@ -63,7 +66,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                  /// </summary>
                  public interface {{context.InteractorInterfaceName}}
                  {
-                     Task<{{responseModel}}> Execute({{OnContainsRequestModel(requestModelParameter)}});
+                     Task<{{responseModel}}> Execute({{executeParameterList}});
                  }
 
                  public sealed class {{context.InteractorProxyName}} : {{context.InteractorInterfaceName}}
@@ -82,7 +85,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                          {{OnValidation("_validators = validators;")}}
                      }
 
-                     public async Task<{{responseModel}}> Execute({{OnContainsRequestModel(requestModelParameter)}}) 
+                     public async Task<{{responseModel}}> Execute({{executeParameterList}}) 
                      {
                          _logger.LogInformation("Executing {proxy}", "{{context.InteractorProxyName}}");
 
@@ -106,7 +109,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
     private string GetInteractorInvocation(string responseModelTransformed, bool isResponseModelTransformed)
     {
-        var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel)", "_interactor.Execute()");
+        var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel, cancellationToken)", "_interactor.Execute(cancellationToken)");
 
         var easyInteractorInvocation = $"return await {interactorCall};";
 
@@ -115,13 +118,14 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
         var count = context.ResponseModel.TypeArguments.Length;
         var matchFunctions = string.Join(",\n\r",
-            Enumerable.Range(0, count).Select(x => $"x => {responseModelTransformed}.FromT{x}(x)"));
+            Enumerable.Range(0, count).Select(x => $"            x => {responseModelTransformed}.FromT{x}(x)"));
 
         var interactorInvocationWithMatch =
             // lang=C#
             $"""
-             var result =  await _interactor.Execute(requestModel);
-                     return  result.Match<{responseModelTransformed}>({matchFunctions});
+             var result =  await _interactor.Execute(requestModel, cancellationToken);
+                     return  result.Match<{responseModelTransformed}>(
+             {matchFunctions});
              """;
 
         return !isResponseModelTransformed

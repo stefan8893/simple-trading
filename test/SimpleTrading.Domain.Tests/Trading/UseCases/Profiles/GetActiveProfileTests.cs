@@ -21,7 +21,7 @@ public class GetActiveProfileTests : DomainTests
         DbContext.AddRange(profile1, profile2, activeProfile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute();
+        var response = await Interactor.Execute(TestContext.Current.CancellationToken);
 
         Assert.NotNull(response);
         Assert.Equal(activeProfile.Id, response.Id);
@@ -38,7 +38,7 @@ public class GetActiveProfileTests : DomainTests
         DbContext.AddRange(profile1, profile2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var response = await Interactor.Execute();
+        var response = await Interactor.Execute(TestContext.Current.CancellationToken);
 
         Assert.NotNull(response);
         Assert.False(response.IsActive);

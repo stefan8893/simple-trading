@@ -21,7 +21,7 @@ public class SearchTradesInteractor(
 {
     private static readonly Expression<Func<Trade, bool>> Id = x => true;
 
-    public async Task<PagedList<TradeResponseModel>> Execute(SearchTradesRequestModel model)
+    public async Task<PagedList<TradeResponseModel>> Execute(SearchTradesRequestModel model, CancellationToken cancellationToken)
     {
         var sortingConfig = model.Sort
             .DefaultIfEmpty(new SortModel(nameof(Trade.Opened), false))

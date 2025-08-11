@@ -9,7 +9,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.Profiles.GetProfiles;
 public class GetProfilesInteractor(IProfileRepository profileRepository)
     : InteractorBase, IInteractor<GetProfilesRequestModel, IReadOnlyList<ProfileResponseModel>>
 {
-    public async Task<IReadOnlyList<ProfileResponseModel>> Execute(GetProfilesRequestModel model)
+    public async Task<IReadOnlyList<ProfileResponseModel>> Execute(GetProfilesRequestModel model, CancellationToken cancellationToken)
     {
         var useSearchTerm = !string.IsNullOrWhiteSpace(model.SearchTerm);
 

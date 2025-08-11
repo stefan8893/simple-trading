@@ -18,7 +18,7 @@ public class AddReferenceTests : DomainTests
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, (ReferenceType) 50, "https://example.org", "some notes");
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -32,7 +32,7 @@ public class AddReferenceTests : DomainTests
         var referenceRequestModel =
             new AddReferenceRequestModel(notExistingTradeId, ReferenceType.Other, "https://example.org", "some notes");
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var notFound = Assert.IsType<NotFound<Trade>>(response.Value);
         Assert.Equal(notExistingTradeId, notFound.ResourceId);
@@ -54,7 +54,7 @@ public class AddReferenceTests : DomainTests
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var conflict = Assert.IsType<Conflict>(response.Value);
         Assert.Equal(trade.Id, conflict.ResourceId);
@@ -72,7 +72,7 @@ public class AddReferenceTests : DomainTests
         var referenceRequestModel =
             new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
 
-        var response = await Interactor.Execute(referenceRequestModel);
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var result = Assert.IsType<Completed<Guid>>(response.Value);
         var referenceId = result.Data;

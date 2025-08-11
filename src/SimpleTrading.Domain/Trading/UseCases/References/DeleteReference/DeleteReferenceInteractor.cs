@@ -9,7 +9,7 @@ namespace SimpleTrading.Domain.Trading.UseCases.References.DeleteReference;
 public class DeleteReferenceInteractor(ITradeRepository tradeRepository, UowCommit uowCommit)
     : InteractorBase, IInteractor<DeleteReferenceRequestModel, OneOf<Completed, NotFound>>
 {
-    public async Task<OneOf<Completed, NotFound>> Execute(DeleteReferenceRequestModel model)
+    public async Task<OneOf<Completed, NotFound>> Execute(DeleteReferenceRequestModel model, CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)
