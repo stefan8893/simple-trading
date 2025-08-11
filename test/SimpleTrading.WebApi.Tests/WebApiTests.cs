@@ -36,11 +36,11 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
         factory.OverrideServices = OverrideServices;
         _serviceScope = factory.Services.CreateAsyncScope();
         _lifetimeScope = _serviceScope.Value.ServiceProvider.GetRequiredService<ILifetimeScope>();
-        _dbContext = _serviceScope.Value.ServiceProvider.GetRequiredService<TradingDbContext>();
+        _dbContext = _lifetimeScope.Resolve<TradingDbContext>();
 
         await DbContext.Database.MigrateAsync();
 
-        var dbMasterData = _serviceScope.Value.ServiceProvider.GetRequiredService<DbMasterData>();
+        var dbMasterData = _lifetimeScope.Resolve<DbMasterData>();
         await dbMasterData.Seed();
     }
 
