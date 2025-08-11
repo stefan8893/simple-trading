@@ -18,6 +18,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         var tradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(tradeId,
@@ -35,6 +36,7 @@ public class CloseTradeTests(TestingWebApplicationFactory<Program> factory) : We
 
         var notExistingTradeId = Guid.Parse("81e0c3a0-ce71-405d-a6db-a53d4b201c8b");
 
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<TradeResultDto> Act()
         {
             return client.CloseTradeAsync(notExistingTradeId,
