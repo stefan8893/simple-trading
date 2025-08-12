@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace SimpleTrading.Domain.Infrastructure.Extensions;
+﻿namespace SimpleTrading.Domain.Infrastructure.Extensions;
 
 public static class StringExtensions
 {

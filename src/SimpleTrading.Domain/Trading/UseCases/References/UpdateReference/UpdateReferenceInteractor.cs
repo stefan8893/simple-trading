@@ -13,7 +13,8 @@ public class UpdateReferenceInteractor(
     UowCommit uowCommit)
     : InteractorBase, IInteractor<UpdateReferenceRequestModel, UpdateReferenceResponse>
 {
-    public async Task<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model, CancellationToken cancellationToken)
+    public async Task<UpdateReferenceResponse> Execute(UpdateReferenceRequestModel model,
+        CancellationToken cancellationToken)
     {
         var trade = await tradeRepository.Find(model.TradeId);
         if (trade is null)

@@ -8,7 +8,8 @@ namespace SimpleTrading.Domain.User.UseCases.UpdateUserSettings;
 public class UpdateUserSettingsInteractor(IUserSettingsRepository userSettingsRepository, UowCommit uowCommit)
     : InteractorBase, IInteractor<UpdateUserSettingsRequestModel, Completed>
 {
-    public async Task<Completed> Execute(UpdateUserSettingsRequestModel requestModel, CancellationToken cancellationToken)
+    public async Task<Completed> Execute(UpdateUserSettingsRequestModel requestModel,
+        CancellationToken cancellationToken)
     {
         var userSettings = await userSettingsRepository.GetUserSettings();
 

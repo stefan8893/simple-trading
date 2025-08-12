@@ -2,7 +2,12 @@
 
 namespace SimpleTrading.Domain.Trading.UseCases.AddTrade;
 
-public record AddTradeResponseModel(Guid TradeId, bool DryRun, ResultModel? Result, short? Performance, IEnumerable<string> Warnings)
+public record AddTradeResponseModel(
+    Guid TradeId,
+    bool DryRun,
+    ResultModel? Result,
+    short? Performance,
+    IEnumerable<string> Warnings)
 {
     public static AddTradeResponseModel From(Trade trade, IEnumerable<string> warnings, bool dryRun)
     {

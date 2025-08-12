@@ -26,7 +26,8 @@ public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseMod
         return responseModel;
     }
 
-    private async Task<TResponseModel> TryExecution(Func<TRequestModel, CancellationToken, Task<TResponseModel>> executionFunc,
+    private async Task<TResponseModel> TryExecution(
+        Func<TRequestModel, CancellationToken, Task<TResponseModel>> executionFunc,
         TRequestModel requestModel, CancellationToken cancellationToken)
     {
         var stopwatch = new Stopwatch();
