@@ -5,10 +5,10 @@ public static class EnumerableExtensions
     // based on: https://github.com/DapperLib/Dapper/blob/9ed3525598494dddc1fbeb4e95e018239fffed13/Dapper/SqlMapper.cs#L518
 
     /// <summary>
-    ///     Obtains the data as a list; if it is *already* a list, the original object is returned without
+    ///     Collects the data as a list; if it is *already* a list, the original object is returned without
     ///     any duplication; otherwise, ToList() is invoked.
     /// </summary>
-    /// <typeparam name="T">The type of element in the list.</typeparam>
+    /// <typeparam name="T">The type of the element in the list.</typeparam>
     /// <param name="source">The enumerable to return as a list.</param>
     public static List<T> AsList<T>(this IEnumerable<T>? source)
     {
@@ -16,6 +16,7 @@ public static class EnumerableExtensions
         {
             null => [],
             List<T> list => list,
+            T[] array => [..array],
             _ => source.ToList()
         };
     }

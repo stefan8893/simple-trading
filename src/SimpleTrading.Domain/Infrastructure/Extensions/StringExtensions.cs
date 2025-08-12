@@ -21,24 +21,4 @@ public static class StringExtensions
 
         return char.ToLower(s[0]) + s[1..];
     }
-
-    public static string LocalizeMe(this string s,
-        [CallerMemberName] string memberName = "",
-        [CallerFilePath] string filePath = "",
-        [CallerLineNumber] int lineNumber = 0)
-    {
-        var initialColor = Console.ForegroundColor;
-
-        Console.Write("Please localize:");
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write($"{filePath} -> ");
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write($"{memberName}:${lineNumber}");
-        Console.WriteLine("");
-
-        Console.ForegroundColor = initialColor;
-
-        return s;
-    }
 }
