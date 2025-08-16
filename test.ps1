@@ -15,8 +15,8 @@ Write-Host "`n"
 
 $exitCodes = @();
 foreach ($project in $testProjects) {
-    Write-Host "Running tests for $project in the $Configuration Configuration"
-    dotnet run --project $project -c $Configuration -- `
+    Write-Host "Running tests in $project"
+    dotnet run --project $project --configuration $Configuration -- `
         --coverage `
         --coverage-output-format cobertura `
         --coverage-output ../../../../coverage.cobertura.xml
