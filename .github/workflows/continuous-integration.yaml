@@ -48,12 +48,6 @@ jobs:
           tag: '${{ github.run_number }}_${{ github.run_id }}'
           toolpath: 'reportgeneratortool'
 
-      - name: Upload Coverage Report Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: CoverageReport
-          path: CoverageReport
-
       - name: Publish Coverage in Build Summary
         run: cat CoverageReport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
