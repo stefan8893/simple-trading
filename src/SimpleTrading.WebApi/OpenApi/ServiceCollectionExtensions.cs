@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
 
             options.AddDocumentTransformer<OAuth2SecuritySchemeTransformer>();
             options.AddDocumentTransformer<BaseUrlTransformer>();
+            options.AddSchemaTransformer<ExampleDataTransformer>();
         });
 
         return services;
