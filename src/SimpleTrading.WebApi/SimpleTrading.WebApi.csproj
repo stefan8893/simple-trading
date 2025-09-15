@@ -15,7 +15,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Scalar.AspNetCore" Version="2.8.1" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.8.3" />
         <PackageReference Include="Microsoft.Identity.Web" Version="3.14.1" />
         <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.5.0"/>
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.5.0"/>
