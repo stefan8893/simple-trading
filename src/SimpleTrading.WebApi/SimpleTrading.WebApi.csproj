@@ -15,10 +15,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Scalar.AspNetCore" Version="2.8.3" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.8.8" />
         <PackageReference Include="Microsoft.Identity.Web" Version="3.14.1" />
-        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.5.0"/>
-        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.5.0"/>
+        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.6.1" />
+        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.6.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
