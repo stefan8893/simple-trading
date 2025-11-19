@@ -10,7 +10,7 @@ public static class SeedDatabaseCommand
 
     public static Command Create(WebApplication app)
     {
-        SeedDataCommand.SetHandler(() => SeedData(app));
+        SeedDataCommand.SetAction(_ => SeedData(app));
 
         return SeedDataCommand;
     }

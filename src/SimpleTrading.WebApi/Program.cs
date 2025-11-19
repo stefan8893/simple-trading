@@ -1,4 +1,4 @@
-using System.CommandLine;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -84,12 +84,13 @@ app.MapControllers()
     .RequireAuthorization();
 
 var rootCommand = AppRootCommand.Create(app);
-rootCommand.AddCommand(CreateDatabaseCommand.Create(app));
-rootCommand.AddCommand(SeedDatabaseCommand.Create(app));
-rootCommand.AddCommand(DropDatabaseCommand.Create(app));
-rootCommand.AddCommand(GenerateClientCommand.Create(app));
+rootCommand.Subcommands.Add(CreateDatabaseCommand.Create(app));
+rootCommand.Subcommands.Add(SeedDatabaseCommand.Create(app));
+rootCommand.Subcommands.Add(DropDatabaseCommand.Create(app));
+rootCommand.Subcommands.Add(GenerateClientCommand.Create(app));
 
-await rootCommand.InvokeAsync(args);
+var parsed = rootCommand.Parse(args);
+await parsed.InvokeAsync();
 
 namespace SimpleTrading.WebApi
 {

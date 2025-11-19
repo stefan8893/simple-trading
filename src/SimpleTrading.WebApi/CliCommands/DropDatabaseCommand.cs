@@ -1,5 +1,4 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Invocation;
 using SimpleTrading.DataAccess;
 
 namespace SimpleTrading.WebApi.CliCommands;
@@ -11,24 +10,26 @@ public static class DropDatabaseCommand
     private static readonly Command DropDbCommand = new("drop-db",
         "Drops the database, but only if it is not 'SqlServer'. Be careful, all your data will be lost");
 
-    private static readonly Option<bool> ForceOption = new(["-f", "--force"],
-        "Drop the db even it's SqlServer");
+    private static readonly Option<bool> ForceOption = new("Force", "-f", "--force")
+    {
+        Description = "Drop the db even it's SqlServer"
+    };
 
     public static Command Create(WebApplication app)
     {
-        DropDbCommand.AddOption(ForceOption);
-        DropDbCommand.SetHandler(ctx => DropDatabase(ctx, app));
+        DropDbCommand.Options.Add(ForceOption);
+        DropDbCommand.SetAction((pr, ct) => DropDatabase(pr, app, ct));
 
         return DropDbCommand;
     }
 
-    private static async Task DropDatabase(InvocationContext ctx, WebApplication app)
+    private static async Task DropDatabase(ParseResult parseResult, WebApplication app,
+        CancellationToken cancellationToken)
     {
         await using var scope = app.Services.CreateAsyncScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
         var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
-        var forceDeletion = ctx.ParseResult.GetValueForOption(ForceOption);
-        var cancellationToken = ctx.GetCancellationToken();
+        var forceDeletion = parseResult.GetValue(ForceOption);
 
         if (!forceDeletion && dbContext.Database.ProviderName == SqlServerProviderName)
         {

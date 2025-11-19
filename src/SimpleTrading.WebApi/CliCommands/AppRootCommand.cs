@@ -11,7 +11,7 @@ public static class AppRootCommand
             TreatUnmatchedTokensAsErrors = false
         };
 
-        rootCommand.SetHandler(() => app.Run());
+        rootCommand.SetAction(_ => app.Run());
         return rootCommand;
     }
 }

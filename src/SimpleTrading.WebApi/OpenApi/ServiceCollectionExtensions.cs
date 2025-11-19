@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿
+using Microsoft.OpenApi;
 
 namespace SimpleTrading.WebApi.OpenApi;
 
@@ -8,7 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddOpenApi(options =>
         {
-            options.AddDocumentTransformer((document, context, cancellationToken) =>
+            options.AddDocumentTransformer((document, _, _) =>
             {
                 document.Info = new OpenApiInfo
                 {

@@ -1,5 +1,4 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Invocation;
 using Microsoft.EntityFrameworkCore;
 using SimpleTrading.DataAccess;
 
@@ -12,30 +11,33 @@ public static class CreateDatabaseCommand
     private static readonly Command CreateDbCommand = new("create-db",
         "Creates the database and the schema, but without data. Run seed-data afterwards to add master data");
 
-    private static readonly Option<bool> DropExistingOption = new("--drop-existing",
-        () => false,
-        "An already existing database gets dropped");
+    private static readonly Option<bool> DropExistingOption = new("DropExisting",
+        "--drop-existing")
+    {
+        Description = "An already existing database gets dropped"
+    };
 
-    private static readonly Option<bool> ForceOption = new(["-f", "--force"],
-        "Drop the db even it's SqlServer");
+    private static readonly Option<bool> ForceOption = new("Force", "-f", "--force")
+    {
+        Description = "Drop the db even it's SqlServer"
+    };
 
     public static Command Create(WebApplication app)
     {
-        CreateDbCommand.AddOption(DropExistingOption);
-        CreateDbCommand.AddOption(ForceOption);
-        CreateDbCommand.SetHandler(ctx => CreateDatabase(ctx, app));
+        CreateDbCommand.Options.Add(DropExistingOption);
+        CreateDbCommand.Options.Add(ForceOption);
+        CreateDbCommand.SetAction((pr, ct) => CreateDatabase(pr, app, ct));
 
         return CreateDbCommand;
     }
 
-    private static async Task CreateDatabase(InvocationContext ctx, WebApplication app)
+    private static async Task CreateDatabase(ParseResult parseResult, WebApplication app, CancellationToken cancellationToken)
     {
         await using var scope = app.Services.CreateAsyncScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
         var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
-        var dropExisting = ctx.ParseResult.GetValueForOption(DropExistingOption);
-        var forceDeletion = ctx.ParseResult.GetValueForOption(ForceOption);
-        var cancellationToken = ctx.GetCancellationToken();
+        var dropExisting = parseResult.GetValue(DropExistingOption);
+        var forceDeletion = parseResult.GetValue(ForceOption);
 
         switch (dropExisting)
         {

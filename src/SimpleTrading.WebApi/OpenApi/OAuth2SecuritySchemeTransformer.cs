@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace SimpleTrading.WebApi.OpenApi;
 
@@ -14,9 +14,9 @@ public class OAuth2SecuritySchemeTransformer(IAuthenticationSchemeProvider authe
         var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
         if (authenticationSchemes.Any(authScheme => authScheme.Name == JwtBearerDefaults.AuthenticationScheme))
         {
-            var requirements = new Dictionary<string, OpenApiSecurityScheme>
+            var requirements = new Dictionary<string, IOpenApiSecurityScheme>
             {
-                [JwtBearerDefaults.AuthenticationScheme] = new()
+                [JwtBearerDefaults.AuthenticationScheme] = new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Scheme = "bearer",
