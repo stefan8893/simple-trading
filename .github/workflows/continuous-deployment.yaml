@@ -113,6 +113,10 @@ jobs:
       - name: Install dotnet-ef
         run: |
           dotnet tool update --global dotnet-ef
+          
+      - name: Restore packages
+        run: |
+          dotnet restore SimpleTrading.sln
 
       - name: Update Database
         working-directory: src/SimpleTrading.DataAccess
