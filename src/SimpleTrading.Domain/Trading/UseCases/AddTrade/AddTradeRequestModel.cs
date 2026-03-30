@@ -44,14 +44,14 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .NotEmpty()
             .WithName(SimpleTradingStrings.Asset)
             .MustAsync(async (x, _) => await assetRepository.Find(x) is not null)
-            .WithMessage(x => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Asset));
+            .WithMessage(_ => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Asset));
 
         RuleFor(x => x.ProfileId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithName(SimpleTradingStrings.Profile)
             .MustAsync(async (x, _) => await profileRepository.Find(x) is not null)
-            .WithMessage(x => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Profile));
+            .WithMessage(_ => string.Format(SimpleTradingStrings.NotFoundNamed, SimpleTradingStrings.Profile));
 
         RuleFor(x => x.Opened.DateTime)
             .GreaterThanOrEqualTo(Constants.MinDate)
