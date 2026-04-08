@@ -92,7 +92,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("Null is not allowed here.", error.ErrorMessage);
+        Assert.Equal("Literal is not allowed here.", error.ErrorMessage);
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The operator 'grt' is not supported.", error.ErrorMessage);
+        Assert.Equal("The operator 'grt' is here not supported.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
@@ -458,7 +458,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The operator 'gr' is not supported.", error.ErrorMessage);
+        Assert.Equal("The operator 'gr' is here not supported.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
@@ -521,7 +521,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The operator ' gt' is not supported.", error.ErrorMessage);
+        Assert.Equal("The operator ' gt' is here not supported.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
@@ -890,7 +890,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("Null is not allowed here.", error.ErrorMessage);
+        Assert.Equal("Literal is not allowed here.", error.ErrorMessage);
         Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
 

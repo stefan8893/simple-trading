@@ -7,4 +7,5 @@ public static class TradeProperty
     public const string ProfitLoss = nameof(Trade.ProfitLoss);
     public const string Size = nameof(Trade.Size);
     public const string Result = nameof(Trade.Result);
+    public const string IsClosed = nameof(Trade.IsClosed);
 }

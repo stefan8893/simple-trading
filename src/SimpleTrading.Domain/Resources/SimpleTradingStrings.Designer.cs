@@ -258,6 +258,15 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ein Literal ist hier nicht erlaubt..
+        /// </summary>
+        public static string LiteralNotAllowed {
+            get {
+                return ResourceManager.GetString("LiteralNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sie haben einen Gewinn angegeben, aber Ihre Long-Position deutet auf einen Verlust hin..
         /// </summary>
         public static string LongPositionExitLessThanEntryAndPositiveProfitLoss {
@@ -339,15 +348,6 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Null ist hier nicht erlaubt..
-        /// </summary>
-        public static string NullNotAllowed {
-            get {
-                return ResourceManager.GetString("NullNotAllowed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ein oder mehrere Validierungsfehler sind aufgetreten..
         /// </summary>
         public static string OneOrMoreValidationErrors {
@@ -375,7 +375,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Operator &apos;{PropertyValue}&apos; wird nicht unterstützt..
+        ///   Looks up a localized string similar to Der Operator &apos;{PropertyValue}&apos; wird hier nicht unterstützt..
         /// </summary>
         public static string OperatorNotSupported {
             get {

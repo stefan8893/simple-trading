@@ -219,7 +219,7 @@ public partial class TradesController : SimpleControllerBase
 
         return comparisonValue.Success
             ? comparisonValue.Value
-            : literal.Value.IsNullLiteral()
+            : literal.Value.IsNullLiteral() || literal.Value.IsBoolLiteral()
                 ? literal.Value
                 : throw new Exception($"Invalid literal '{literal.Value}'.");
     }
@@ -287,6 +287,6 @@ public partial class TradesController : SimpleControllerBase
     }
 
     [GeneratedRegex(
-        @"\s*(?<property>.*?)\s+\-(?<operator>.*?)\s+(?<literal>(?i)null(?-i)|\[(?<comparisonValue>.*?)\])\s*$")]
+        @"\s*(?<property>.*?)\s+\-(?<operator>.*?)\s+(?<literal>(?i)null|true|false(?-i)|\[(?<comparisonValue>.*?)\])\s*$")]
     public static partial Regex PropertyFilterSyntaxRegex();
 }

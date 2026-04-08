@@ -2,21 +2,35 @@
 
 public static class StringExtensions
 {
-    public static bool IsNullLiteral(this string candidate)
+    extension(string candidate)
     {
-        if (string.IsNullOrWhiteSpace(candidate))
-            return false;
+        public bool IsNullLiteral()
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+                return false;
 
-        return candidate
-            .Trim()
-            .Equals("null", StringComparison.OrdinalIgnoreCase);
-    }
+            return candidate
+                .Trim()
+                .Equals("null", StringComparison.OrdinalIgnoreCase);
+        }
 
-    public static string FirstCharToLower(this string s)
-    {
-        if (string.IsNullOrEmpty(s) || char.IsLower(s[0]))
-            return s;
+        public bool IsBoolLiteral()
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+                return false;
 
-        return char.ToLower(s[0]) + s[1..];
+            var trimmedCandidate = candidate.Trim();
+
+            return trimmedCandidate.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                   trimmedCandidate.Equals("false", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public string FirstCharToLower()
+        {
+            if (string.IsNullOrEmpty(candidate) || char.IsLower(candidate[0]))
+                return candidate;
+
+            return char.ToLower(candidate[0]) + candidate[1..];
+        }
     }
 }

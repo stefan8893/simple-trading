@@ -2,26 +2,29 @@
 
 public static class DateTimeExtensions
 {
-    public static DateTimeOffset ToLocal(this DateTime dateTime, string timeZone)
+    extension(DateTime dateTime)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(timeZone, nameof(timeZone));
+        public DateTimeOffset ToLocal(string timeZone)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(timeZone, nameof(timeZone));
 
-        if (dateTime.Kind != DateTimeKind.Utc)
-            throw new ArgumentException("The given DateTime is not in UTC");
+            if (dateTime.Kind != DateTimeKind.Utc)
+                throw new ArgumentException("The given DateTime is not in UTC");
 
-        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-        var dateTimeOffset = new DateTimeOffset(dateTime);
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            var dateTimeOffset = new DateTimeOffset(dateTime);
 
-        return TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo);
-    }
+            return TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo);
+        }
 
-    public static DateTime ToUnspecifiedKind(this DateTime dateTime)
-    {
-        return DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
-    }
+        public DateTime ToUnspecifiedKind()
+        {
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
+        }
 
-    public static DateTime ToUtcKind(this DateTime dateTime)
-    {
-        return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        public DateTime ToUtcKind()
+        {
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
     }
 }

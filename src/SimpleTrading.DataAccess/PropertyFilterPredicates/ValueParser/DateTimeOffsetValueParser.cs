@@ -19,10 +19,11 @@ public class NullableDateTimeOffsetValueParser : IValueParser<DateTimeOffset?>
     {
         result = null;
 
-        if (isLiteral && candidate.IsNullLiteral())
-            return true;
+        if (isLiteral)
+            return candidate.IsNullLiteral();
 
-        result = DateTimeOffset.Parse(candidate);
-        return true;
+        var isParsable = DateTimeOffset.TryParse(candidate, out var parsed);
+        result = isParsable ? parsed : null;
+        return isParsable;
     }
 }

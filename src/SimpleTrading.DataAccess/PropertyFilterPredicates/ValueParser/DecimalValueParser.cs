@@ -19,10 +19,11 @@ public class NullableDecimalValueParser : IValueParser<decimal?>
     {
         result = null;
 
-        if (isLiteral && candidate.IsNullLiteral())
-            return true;
+        if (isLiteral) 
+            return candidate.IsNullLiteral();
 
-        result = decimal.Parse(candidate);
-        return true;
+        var isParsable = decimal.TryParse(candidate, out var parsed);
+        result = isParsable ? parsed : null;
+        return isParsable;
     }
 }

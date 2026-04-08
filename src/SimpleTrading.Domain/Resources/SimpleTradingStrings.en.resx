@@ -238,7 +238,7 @@
         <value>The sorting based on '{PropertyValue}' does not work.</value>
     </data>
     <data name="OperatorNotSupported" xml:space="preserve">
-        <value>The operator '{PropertyValue}' is not supported.</value>
+        <value>The operator '{PropertyValue}' is here not supported.</value>
     </data>
     <data name="FilterNotSupported" xml:space="preserve">
         <value>'{PropertyValue}' cannot be used as a filter.</value>
@@ -261,8 +261,8 @@
     <data name="Field" xml:space="preserve">
         <value>Field</value>
     </data>
-    <data name="NullNotAllowed" xml:space="preserve">
-        <value>Null is not allowed here.</value>
+    <data name="LiteralNotAllowed" xml:space="preserve">
+        <value>Literal is not allowed here.</value>
     </data>
     <data name="LessThanOrEqualValidatorMessage" xml:space="preserve">
         <value>'{0}' must be less than or equal to '{1}'.</value>

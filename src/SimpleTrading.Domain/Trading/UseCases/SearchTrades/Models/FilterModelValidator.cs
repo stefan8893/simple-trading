@@ -44,7 +44,7 @@ public class FilterModelValidator : AbstractValidator<FilterModel>
             .Must(HaveParsableComparisonValue)
             .WithMessage(x =>
                 x.IsLiteral
-                    ? SimpleTradingStrings.NullNotAllowed
+                    ? SimpleTradingStrings.LiteralNotAllowed
                     : SimpleTradingStrings.ValueNotAllowed)
             .WithName(SimpleTradingStrings.ComparisonValue);
     }
