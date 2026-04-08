@@ -9,60 +9,63 @@ namespace SimpleTrading.WebApi.Extensions;
 
 public static class WebApplicationExtensions
 {
-    /// <summary>
-    ///     In cases where the request path cannot be mapped to an endpoint.
-    /// </summary>
     /// <param name="app"></param>
-    /// <returns></returns>
-    public static IApplicationBuilder UseNotFoundMiddleware(this WebApplication app)
+    extension(WebApplication app)
     {
-        return app.Use(async (context, next) =>
+        /// <summary>
+        ///     In cases where the request path cannot be mapped to an endpoint.
+        /// </summary>
+        /// <returns></returns>
+        public IApplicationBuilder UseNotFoundMiddleware()
         {
-            await next();
-
-            if (context.Response is {StatusCode: 404, HasStarted: false})
+            return app.Use(async (context, next) =>
             {
-                var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
+                await next();
 
-                var notFoundProblemDetails = simpleProblemDetails.CreateNotFoundDetails();
-                context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
-                var jsonResponse = JsonSerializer.Serialize(notFoundProblemDetails);
+                if (context.Response is {StatusCode: 404, HasStarted: false})
+                {
+                    var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
 
-                await context.Response.WriteAsync(jsonResponse);
-            }
-        });
-    }
+                    var notFoundProblemDetails = simpleProblemDetails.CreateNotFoundDetails();
+                    context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
+                    var jsonResponse = JsonSerializer.Serialize(notFoundProblemDetails);
 
-    public static IApplicationBuilder Use401ResponseBodyProblemDetailsMiddleware(this WebApplication app)
-    {
-        return app.Use(async (context, next) =>
+                    await context.Response.WriteAsync(jsonResponse);
+                }
+            });
+        }
+
+        public IApplicationBuilder Use401ResponseBodyProblemDetailsMiddleware()
         {
-            await next();
-
-            if (context.Response is {StatusCode: StatusCodes.Status401Unauthorized, HasStarted: false})
+            return app.Use(async (context, next) =>
             {
-                var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
+                await next();
 
-                var problemDetails = simpleProblemDetails.CreateUnauthenticatedDetails();
-                var jsonResponse = JsonSerializer.Serialize(problemDetails);
+                if (context.Response is {StatusCode: StatusCodes.Status401Unauthorized, HasStarted: false})
+                {
+                    var simpleProblemDetails = context.RequestServices.GetRequiredService<SimpleProblemDetails>();
 
-                context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
-                await context.Response.WriteAsync(jsonResponse);
-            }
-        });
-    }
+                    var problemDetails = simpleProblemDetails.CreateUnauthenticatedDetails();
+                    var jsonResponse = JsonSerializer.Serialize(problemDetails);
 
-    public static IApplicationBuilder UseRequestLocalization(this WebApplication app)
-    {
-        return app.UseRequestLocalization(options =>
+                    context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
+                    await context.Response.WriteAsync(jsonResponse);
+                }
+            });
+        }
+
+        public IApplicationBuilder UseRequestLocalization()
         {
-            options.DefaultRequestCulture = new RequestCulture(Constants.DefaultCulture, Constants.DefaultCulture);
-            options.SupportedCultures = Constants.SupportedCultures.ToList();
-            options.SupportedUICultures = Constants.SupportedCultures.ToList();
-            options.SetDefaultCulture(Constants.DefaultCulture.Name);
+            return app.UseRequestLocalization(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(Constants.DefaultCulture, Constants.DefaultCulture);
+                options.SupportedCultures = Constants.SupportedCultures.ToList();
+                options.SupportedUICultures = Constants.SupportedCultures.ToList();
+                options.SetDefaultCulture(Constants.DefaultCulture.Name);
 
-            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(GetCurrentRequestCulture));
-        });
+                options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(GetCurrentRequestCulture));
+            });
+        }
     }
 
     private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
