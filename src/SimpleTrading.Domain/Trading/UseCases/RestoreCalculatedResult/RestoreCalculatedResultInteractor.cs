@@ -21,7 +21,7 @@ public class RestoreCalculatedResultInteractor(ITradeRepository tradeRepository,
 
         var result = trade.RestoreCalculatedResult(utcNow);
 
-        if (result.Value is Completed)
+        if (result.Value is Completed<CloseTradeResult>)
             await uowCommit();
 
         return result
