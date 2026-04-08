@@ -60,6 +60,8 @@ var clientAppEntraIdConfig = builder.Configuration
                                  .Get<ClientAppEntraIdConfig>()
                              ?? throw new Exception("Missing Entra ID settings");
 
+builder.Services.AddSingleton(clientAppEntraIdConfig);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocumentation();
 
