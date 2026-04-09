@@ -262,7 +262,7 @@
         <value>Feld</value>
     </data>
     <data name="LiteralNotAllowed" xml:space="preserve">
-        <value>Ein Literal ist hier nicht erlaubt.</value>
+        <value>Literal '{PropertyValue}' ist hier nicht erlaubt.</value>
     </data>
     <data name="LessThanOrEqualValidatorMessage" xml:space="preserve">
         <value>Der Wert von '{0}' muss kleiner oder gleich '{1}' sein.</value>

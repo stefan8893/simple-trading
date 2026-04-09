@@ -258,7 +258,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ein Literal ist hier nicht erlaubt..
+        ///   Looks up a localized string similar to Literal &apos;{PropertyValue}&apos; ist hier nicht erlaubt..
         /// </summary>
         public static string LiteralNotAllowed {
             get {

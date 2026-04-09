@@ -3,11 +3,11 @@
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.ValueParser;
 
 [UsedImplicitly]
-public class BoolValueParser : IValueParser<bool>
+public class BooleanValueParser : IValueParser<bool>
 {
     public bool TryParse(string candidate, bool isLiteral, out bool result)
     {
         result = false;
-        return isLiteral &&  bool.TryParse(candidate, out result);
+        return isLiteral && bool.TryParse(candidate, out result);
     }
 }

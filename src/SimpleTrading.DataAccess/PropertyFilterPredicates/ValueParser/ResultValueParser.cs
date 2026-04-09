@@ -33,8 +33,8 @@ public class NullableResultValueParser : IValueParser<NullableReference<Result>>
     {
         result = NullableReference<Result>.Null;
 
-        if (isLiteral && candidate.IsNullLiteral())
-            return true;
+        if (isLiteral)
+            return candidate.IsNullLiteral();
 
         var index = Result.IndexOf(candidate);
         if (index < 0)

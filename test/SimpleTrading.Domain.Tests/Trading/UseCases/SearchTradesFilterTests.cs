@@ -35,7 +35,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -66,7 +67,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -88,11 +90,12 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("Literal is not allowed here.", error.ErrorMessage);
+        Assert.Equal("Literal 'null' is not allowed here.", error.ErrorMessage);
     }
 
     [Fact]
@@ -108,7 +111,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -130,14 +134,14 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The operator 'grt' is here not supported.", error.ErrorMessage);
+        Assert.Equal("The operator 'grt' is not supported here.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
-
 
     [Fact]
     public async Task Greater_than_opened_date_with_typo_in_property_name_returns_bad_input()
@@ -152,7 +156,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -182,7 +187,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var firstExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
@@ -215,7 +221,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
@@ -248,7 +255,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -279,7 +287,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -310,7 +319,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
         var secondExpected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
@@ -349,7 +359,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
 
@@ -370,7 +381,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -391,7 +403,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -412,7 +425,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -433,7 +447,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -454,11 +469,12 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The operator 'gr' is here not supported.", error.ErrorMessage);
+        Assert.Equal("The operator 'gr' is not supported here.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
@@ -475,7 +491,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -496,7 +513,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -517,11 +535,12 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The operator ' gt' is here not supported.", error.ErrorMessage);
+        Assert.Equal("The operator ' gt' is not supported here.", error.ErrorMessage);
         Assert.Equal("Filter[0].Operator", error.PropertyName);
     }
 
@@ -545,7 +564,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -572,7 +592,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -600,7 +621,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -628,7 +650,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -656,7 +679,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Empty(pagedTrades);
@@ -690,7 +714,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -724,7 +749,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -752,7 +778,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
@@ -789,7 +816,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
@@ -827,7 +855,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
@@ -863,7 +892,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
@@ -886,11 +916,12 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("Literal is not allowed here.", error.ErrorMessage);
+        Assert.Equal("Literal 'null' is not allowed here.", error.ErrorMessage);
         Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
     }
 
@@ -923,7 +954,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
@@ -960,7 +992,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
@@ -997,7 +1030,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
@@ -1033,7 +1067,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
@@ -1076,7 +1111,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
@@ -1119,7 +1155,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.Count);
@@ -1164,7 +1201,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
@@ -1207,7 +1245,8 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]}, TestContext.Current.CancellationToken);
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.Count);
@@ -1263,7 +1302,8 @@ public class SearchTradesFilterTests : DomainTests
             }
         ];
 
-        var response = await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter}, TestContext.Current.CancellationToken);
+        var response = await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter},
+            TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         var singleTrade = Assert.Single(pagedTrades);
