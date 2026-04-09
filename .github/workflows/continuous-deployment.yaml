@@ -116,7 +116,7 @@ jobs:
           
       - name: Restore packages
         run: |
-          dotnet restore SimpleTrading.sln
+          dotnet restore SimpleTrading.slnx
 
       - name: Update Database
         working-directory: src/SimpleTrading.DataAccess
