@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="test.ps1" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/SimpleTrading.DataAccess.Postgres/SimpleTrading.DataAccess.Postgres.csproj" />
+    <Project Path="src/SimpleTrading.DataAccess.Sqlite/SimpleTrading.DataAccess.Sqlite.csproj" />
+    <Project Path="src/SimpleTrading.DataAccess.SqlServer/SimpleTrading.DataAccess.SqlServer.csproj" />
+    <Project Path="src/SimpleTrading.DataAccess/SimpleTrading.DataAccess.csproj" />
+    <Project Path="src/SimpleTrading.Domain.Generators/SimpleTrading.Domain.Generators.csproj" />
+    <Project Path="src/SimpleTrading.Domain/SimpleTrading.Domain.csproj" />
+    <Project Path="src/SimpleTrading.WebApi/SimpleTrading.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/SimpleTrading.DataAccess.Tests/SimpleTrading.DataAccess.Tests.csproj" />
+    <Project Path="test/SimpleTrading.Domain.Generators.Tests/SimpleTrading.Domain.Generators.Tests.csproj" />
+    <Project Path="test/SimpleTrading.Domain.Tests/SimpleTrading.Domain.Tests.csproj" />
+    <Project Path="test/SimpleTrading.TestInfrastructure/SimpleTrading.TestInfrastructure.csproj" />
+    <Project Path="test/SimpleTrading.WebApi.Tests/SimpleTrading.WebApi.Tests.csproj" />
+  </Folder>
+</Solution>
