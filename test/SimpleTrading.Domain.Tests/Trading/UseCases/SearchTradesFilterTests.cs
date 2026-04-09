@@ -433,6 +433,28 @@ public class SearchTradesFilterTests : DomainTests
         Assert.Equal("'Field' must not be empty.", error.ErrorMessage);
         Assert.Equal("Filter[0].PropertyName", error.PropertyName);
     }
+    
+    [Fact]
+    public async Task Opened_equals_false_makes_no_sense()
+    {
+        var profile = TestData.Profile.Default.Build();
+        var filter = new FilterModel
+        {
+            PropertyName = "Opened",
+            Operator = "eq",
+            ComparisonValue = "FALSE",
+            IsLiteral = true
+        };
+
+        var response =
+            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+                TestContext.Current.CancellationToken);
+
+        var validationResult = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(validationResult.Errors);
+        Assert.Equal("Literal 'FALSE' is not allowed here.", error.ErrorMessage);
+        Assert.Equal("Filter[0].ComparisonValue", error.PropertyName);
+    }
 
     [Fact]
     public async Task Unknown_property_names_cannot_be_used_as_a_filter()
