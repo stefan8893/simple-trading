@@ -35,16 +35,13 @@ public class TradingDbContextModule(IConfiguration configuration) : Module
         var dbContextOptions = new DbContextOptionsBuilder<TradingDbContext>(
             new DbContextOptions<TradingDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
 
-        if (dbProvider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
-            return UseSqlServerDbContextOptions(connectionString, dbContextOptions);
-
-        if (dbProvider.Equals("Postgres", StringComparison.OrdinalIgnoreCase))
-            return UsePostgresDbContextOptions(connectionString, dbContextOptions);
-
-        if (dbProvider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
-            return UseSqliteDbContextOptions(connectionString, dbContextOptions);
-
-        throw new Exception("Unknown db provider");
+        return dbProvider.ToLower() switch
+        {
+            "sqlserver" => UseSqlServerDbContextOptions(connectionString, dbContextOptions),
+            "postgres" => UsePostgresDbContextOptions(connectionString, dbContextOptions),
+            "sqlite" => UseSqliteDbContextOptions(connectionString, dbContextOptions),
+            _ => throw new Exception("Unknown db provider")
+        };
     }
 
     private static DbContextOptionsBuilder<TradingDbContext> UseSqlServerDbContextOptions(string connectionString,
