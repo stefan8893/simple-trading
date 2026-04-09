@@ -162,6 +162,90 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         Assert.Equal(2, result.Count);
     }
 
+    [Fact]
+    public async Task IsClosed_does_not_take_a_null_literal_as_comparision_value()
+    {
+        var client = await CreateClient();
+        var profile = TestData.Profile.Default.Build();
+        const string searchFilter = "IsClosed -eq null";
+
+        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
+        Task<PageDtoOfTradeDto> Act()
+        {
+            return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
+        }
+
+        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
+        var error = Assert.Single(exception.Result.Errors);
+        Assert.Equal("filter[0].ComparisonValue", error.Key);
+        Assert.Equal("Literal 'null' ist hier nicht erlaubt.", Assert.Single(error.Value));
+    }
+
+    [Fact]
+    public async Task IsClosed_property_filter_accepts_true_literal()
+    {
+        var client = await CreateClient();
+        var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
+
+        var profile = TestData.Profile.Default.Build();
+        var trades = Enumerable.Range(1, 3)
+            .Select(x => TestData.Trade.Default with
+            {
+                ProfileOrId = profile,
+                Opened = now,
+                Closed = now,
+                ProfitLoss = 500m
+            })
+            .Select(x => x.Build());
+
+        DbContext.Trades.AddRange(trades);
+        DbContext.Profiles.Add(profile);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        const string searchFilter = "IsClosed -eq true";
+
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Equal(3, result.Count);
+    }
+
+    [Fact]
+    public async Task IsClosed_equals_false_returns_only_open_trades()
+    {
+        var client = await CreateClient();
+        var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
+
+        var profile = TestData.Profile.Default.Build();
+        var openedTrade = TestData.Trade.Default with
+        {
+            ProfileOrId = profile,
+            Opened = now
+        };
+
+        var closedTrade = TestData.Trade.Default with
+        {
+            ProfileOrId = profile,
+            Opened = now,
+            Closed = now,
+            ProfitLoss = 500m
+        };
+
+        DbContext.Profiles.Add(profile);
+        DbContext.Trades.AddRange(openedTrade.Build(), closedTrade.Build());
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        const string searchFilter = "IsClosed -eq false";
+
+        var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, result.Count);
+        var returnedOpenedTrade = result.Data.First();
+        Assert.Equal(openedTrade.Id, returnedOpenedTrade.Id);
+    }
+
     [Theory]
     [InlineData("null")]
     [InlineData("NULL")]
