@@ -2520,7 +2520,6 @@ namespace SimpleTrading.Client
     {
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReferenceTypeDto? Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2619,7 +2618,6 @@ namespace SimpleTrading.Client
         public bool DryRun { get; set; }
 
         [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.AllowNull)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ResultDto? Result { get; set; }
 
         [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -2864,8 +2862,6 @@ namespace SimpleTrading.Client
         public System.Guid Id { get; set; }
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReferenceTypeDto Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Always)]
@@ -2979,7 +2975,6 @@ namespace SimpleTrading.Client
         public double? ProfitLoss { get; set; }
 
         [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ResultDto? Result { get; set; }
 
         [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3047,7 +3042,6 @@ namespace SimpleTrading.Client
         public System.Guid TradeId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("result", Required = Newtonsoft.Json.Required.AllowNull)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ResultDto? Result { get; set; }
 
         [Newtonsoft.Json.JsonProperty("performance", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -3074,7 +3068,6 @@ namespace SimpleTrading.Client
     {
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReferenceTypeDto? Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("link", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3099,7 +3092,6 @@ namespace SimpleTrading.Client
     {
 
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ResultDto? Value { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
