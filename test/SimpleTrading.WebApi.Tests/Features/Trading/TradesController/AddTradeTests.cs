@@ -129,7 +129,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             Opened = _utcNow,
             Closed = _utcNow,
             ProfitLoss = 0,
-            ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss},
+            ManuallyEnteredResult = new UpdateResultValue {Value = ResultDto.Loss},
             Size = 5000,
             CurrencyId = currency.Id,
             EntryPrice = 1.08
@@ -368,7 +368,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 [
                     new AddReferenceDto
                     {
-                        Type = NullableOfReferenceTypeDto.Other,
+                        Type = ReferenceTypeDto.Other,
                         Link = "bad url"
                     }
                 ]

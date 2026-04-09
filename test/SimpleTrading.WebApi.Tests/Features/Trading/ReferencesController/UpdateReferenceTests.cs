@@ -20,7 +20,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
 
         await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
-            Type = NullableOfReferenceTypeDto.TradingView,
+            Type = ReferenceTypeDto.TradingView,
             Link = "https://www.tradingview.com/x/RRJnEMaI/"
         }, TestContext.Current.CancellationToken);
 
@@ -45,7 +45,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         {
             return client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
             {
-                Type = (NullableOfReferenceTypeDto) 50
+                Type = (ReferenceTypeDto) 50
             });
         }
 
@@ -73,7 +73,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             return client.UpdateReferenceAsync(notExistingTradeId, reference.Id,
                 new UpdateReferenceDto
                 {
-                    Type = NullableOfReferenceTypeDto.Other,
+                    Type = ReferenceTypeDto.Other,
                     Link = "https://example.org"
                 });
         }
@@ -100,7 +100,7 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         {
             return client.UpdateReferenceAsync(trade.Id, notExistingReference, new UpdateReferenceDto
             {
-                Type = NullableOfReferenceTypeDto.Other,
+                Type = ReferenceTypeDto.Other,
                 Link = "https://example.org"
             });
         }

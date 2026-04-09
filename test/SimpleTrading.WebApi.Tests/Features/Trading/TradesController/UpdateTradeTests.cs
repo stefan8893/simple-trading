@@ -51,7 +51,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
         {
-            ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}
+            ManuallyEnteredResult = new UpdateResultValue {Value = ResultDto.Loss}
         }, TestContext.Current.CancellationToken);
 
         Assert.NotNull(response);
@@ -76,7 +76,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         Task<WarningsDto> Act()
         {
             return client.UpdateTradeAsync(trade.Id,
-                new UpdateTradeDto {ManuallyEnteredResult = new UpdateResultValue {Value = NullableOfResultDto.Loss}});
+                new UpdateTradeDto {ManuallyEnteredResult = new UpdateResultValue {Value = ResultDto.Loss}});
         }
 
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);

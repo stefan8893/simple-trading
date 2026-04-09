@@ -1,5 +1,4 @@
-﻿
-using Microsoft.OpenApi;
+﻿using Microsoft.OpenApi;
 
 namespace SimpleTrading.WebApi.OpenApi;
 
@@ -21,6 +20,7 @@ public static class ServiceCollectionExtensions
                 return Task.CompletedTask;
             });
 
+            options.AddSchemaTransformer<RemoveNullFromEnumSchemaTransformer>();
             options.AddDocumentTransformer<OAuth2SecuritySchemeTransformer>();
             options.AddDocumentTransformer<BaseUrlTransformer>();
             options.AddSchemaTransformer<ExampleDataTransformer>();

@@ -345,8 +345,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(3, result.Count);
-        Assert.Equal(NullableOfResultDto.Mediocre, result.Data.ElementAt(0).Result!.Value);
-        Assert.Equal(NullableOfResultDto.BreakEven, result.Data.ElementAt(1).Result!.Value);
-        Assert.Equal(NullableOfResultDto.Loss, result.Data.ElementAt(2).Result!.Value);
+        Assert.Equal(ResultDto.Mediocre, result.Data.ElementAt(0).Result!.Value);
+        Assert.Equal(ResultDto.BreakEven, result.Data.ElementAt(1).Result!.Value);
+        Assert.Equal(ResultDto.Loss, result.Data.ElementAt(2).Result!.Value);
     }
 }
