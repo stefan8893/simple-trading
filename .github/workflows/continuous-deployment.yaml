@@ -175,21 +175,32 @@ jobs:
       packages: write
 
     steps:
-      - name: Remove old container images
-        uses: actions/delete-package-versions@v5
+      - name: Delete old package
+        uses: actions/github-script@v9
         with:
-          package-name: 'simple-trading'
-          package-type: 'container'
-          min-versions-to-keep: 10
-          token: ${{ secrets.GITHUB_TOKEN }}
-          delete-only-untagged-versions: 'false'
+          script: |
+            async function deletePackages(packageType, packageName, versionsToKeep) {
 
-      - name: Remove old NPM packages
-        uses: actions/delete-package-versions@v5
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          package-name: 'simple-trading-client'
-          package-type: 'npm'
-          min-versions-to-keep: 10
-          delete-only-pre-release-versions: 'false'
+              const versions = await github.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
+                package_type: packageType,
+                package_name: packageName,
+                username: 'stefan8893'
+              });
+
+              const sorted = versions.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+              const versionsToDelete = sorted.slice(versionsToKeep);
+
+              for (const version of versionsToDelete) {
+                await github.rest.packages.deletePackageVersionForUser({
+                  package_type: packageType,
+                  package_name: packageName,
+                  username: 'stefan8893',
+                  package_version_id: version.id
+                });
+
+                console.log(`package ${packageName} deleted`, version);
+              }
+            }
+
+            await deletePackages('npm', 'simple-trading-client', 10);
+            await deletePackages('container', 'simple-trading', 10);
