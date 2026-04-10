@@ -175,7 +175,7 @@ jobs:
       packages: write
 
     steps:
-      - name: Delete old package
+      - name: Delete old packages
         uses: actions/github-script@v9
         with:
           script: |
