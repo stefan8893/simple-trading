@@ -37,7 +37,6 @@ public class AddReferenceInteractor(
             Id = Guid.CreateVersion7(),
             TradeId = trade.Id,
             Trade = trade,
-            Type = model.Type,
             Link = new Uri(model.Link),
             Notes = model.Notes,
             Created = utcNow()

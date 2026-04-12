@@ -20,42 +20,14 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
 
         await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
         {
-            Type = ReferenceTypeDto.TradingView,
             Link = "https://www.tradingview.com/x/RRJnEMaI/"
         }, TestContext.Current.CancellationToken);
 
         var updatedReference = await DbContextSingleOrDefault<Reference>(x => x.Id == reference.Id);
         Assert.NotNull(updatedReference);
-        Assert.Equal(ReferenceType.TradingView, updatedReference.Type);
         Assert.Equal("https://www.tradingview.com/x/RRJnEMaI/", updatedReference.Link.AbsoluteUri);
     }
-
-    [Fact]
-    public async Task An_update_with_an_invalid_type_is_a_bad_request()
-    {
-        var client = await CreateClient();
-
-        var trade = TestData.Trade.Default.Build();
-        var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
-        DbContext.AddRange(trade, reference);
-        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-
-        // ReSharper disable once MoveLocalFunctionAfterJumpStatement
-        Task Act()
-        {
-            return client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
-            {
-                Type = (ReferenceTypeDto) 50
-            });
-        }
-
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
-        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
-        var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("type", error.Key);
-        Assert.Equal("'Referenztyp' hat einen Wertebereich, der '50' nicht enthält.", Assert.Single(error.Value));
-    }
-
+    
     [Fact]
     public async Task References_of_a_non_existing_trade_cannot_be_updated()
     {
@@ -73,7 +45,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
             return client.UpdateReferenceAsync(notExistingTradeId, reference.Id,
                 new UpdateReferenceDto
                 {
-                    Type = ReferenceTypeDto.Other,
                     Link = "https://example.org"
                 });
         }
@@ -100,7 +71,6 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         {
             return client.UpdateReferenceAsync(trade.Id, notExistingReference, new UpdateReferenceDto
             {
-                Type = ReferenceTypeDto.Other,
                 Link = "https://example.org"
             });
         }

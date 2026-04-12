@@ -136,11 +136,6 @@ namespace SimpleTrading.DataAccess.SqlServer.Migrations
                     b.Property<Guid>("TradeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TradeId");

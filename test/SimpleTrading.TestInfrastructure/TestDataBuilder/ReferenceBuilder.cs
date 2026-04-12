@@ -10,7 +10,6 @@ public static partial class TestData
     {
         public Guid Id { get; init; } = Guid.NewGuid();
         public OneOf<Guid, Trade, Domain.Trading.Trade> TradeOrId { get; init; } = Trade.Default;
-        public ReferenceType Type { get; init; } = ReferenceType.TradingView;
         public Uri Link { get; init; } = new("https://example.org");
         public string? Notes { get; init; } = null;
         public DateTime Created { get; init; } = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
@@ -29,7 +28,6 @@ public static partial class TestData
                 Id = Id,
                 TradeId = trade.Id,
                 Trade = trade,
-                Type = Type,
                 Link = Link,
                 Notes = Notes,
                 Created = Created

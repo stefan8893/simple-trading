@@ -11,10 +11,6 @@ public class ReferenceConfiguration : IEntityTypeConfiguration<Reference>
         builder.HasKey(x => x.Id);
 
         builder
-            .Property(x => x.Type)
-            .HasMaxLength(100);
-
-        builder
             .Property(x => x.Link)
             .HasMaxLength(4000);
 

@@ -1,25 +1,9 @@
-﻿using FluentValidation;
-using JetBrains.Annotations;
-using SimpleTrading.Domain.Resources;
-using SimpleTrading.WebApi.Features.Dto;
+﻿using SimpleTrading.WebApi.Features.Dto;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 
 public record UpdateReferenceDto
 {
-    public ReferenceTypeDto? Type { get; set; }
     public string? Link { get; set; }
     public UpdateStringValue? Notes { get; set; }
-}
-
-[UsedImplicitly]
-public class UpdateReferenceDtoValidator : AbstractValidator<UpdateReferenceDto>
-{
-    public UpdateReferenceDtoValidator()
-    {
-        RuleFor(x => x.Type)
-            .IsInEnum()
-            .WithName(SimpleTradingStrings.ReferenceType)
-            .When(x => x.Type.HasValue);
-    }
 }

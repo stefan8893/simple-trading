@@ -168,9 +168,6 @@
     <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-    <data name="ReferenceType" xml:space="preserve">
-        <value>Reference Type</value>
-    </data>
     <data name="Result" xml:space="preserve">
     <value>Result</value>
   </data>
@@ -296,9 +293,6 @@
     </data>
     <data name="AuthenticationRequired" xml:space="preserve">
         <value>Authentication Required</value>
-    </data>
-    <data name="NotTradingViewLink" xml:space="preserve">
-        <value>Not a TradingView Link.</value>
     </data>
     <data name="NotFoundNamedWithId" xml:space="preserve">
         <value>{0} with ID '{1}' could not be found.</value>

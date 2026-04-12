@@ -43,8 +43,9 @@ public class InteractorProxySourceTemplate(InteractorContext context)
     {
         var validatorsType = $"IEnumerable<IValidator<{_requestModelDisplayName}>>";
         var requestModelParameter = RequestModelParameter;
-        
-        var executeParameterList = $"{OnContainsRequestModel($"{requestModelParameter},\n\r            ")}CancellationToken cancellationToken = default";
+
+        var executeParameterList =
+            $"{OnContainsRequestModel($"{requestModelParameter},\n\r            ")}CancellationToken cancellationToken = default";
 
         var (isTransformed, responseModel) = context.GetResponseModelTransformed();
         var interactorInvocation = GetInteractorInvocation(responseModel, isTransformed);
@@ -109,7 +110,8 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
     private string GetInteractorInvocation(string responseModelTransformed, bool isResponseModelTransformed)
     {
-        var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel, cancellationToken)", "_interactor.Execute(cancellationToken)");
+        var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel, cancellationToken)",
+            "_interactor.Execute(cancellationToken)");
 
         var easyInteractorInvocation = $"return await {interactorCall};";
 

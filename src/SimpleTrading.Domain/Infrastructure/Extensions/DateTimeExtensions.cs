@@ -6,7 +6,7 @@ public static class DateTimeExtensions
     {
         public DateTimeOffset ToLocal(string timeZone)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(timeZone, nameof(timeZone));
+            ArgumentException.ThrowIfNullOrWhiteSpace(timeZone);
 
             if (dateTime.Kind != DateTimeKind.Utc)
                 throw new ArgumentException("The given DateTime is not in UTC");

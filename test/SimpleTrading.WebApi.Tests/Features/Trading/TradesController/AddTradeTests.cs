@@ -368,7 +368,6 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 [
                     new AddReferenceDto
                     {
-                        Type = ReferenceTypeDto.Other,
                         Link = "bad url"
                     }
                 ]

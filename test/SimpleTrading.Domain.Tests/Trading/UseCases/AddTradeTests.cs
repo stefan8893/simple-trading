@@ -240,7 +240,7 @@ public class AddTradeTests : DomainTests
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         
-        var reference = new ReferenceRequestModel(ReferenceType.Other, "foobar");
+        var reference = new ReferenceRequestModel("foobar");
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
@@ -274,9 +274,7 @@ public class AddTradeTests : DomainTests
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var reference = new ReferenceRequestModel(ReferenceType.Other,
-            "https://example.org",
-            new string('a', 20001));
+        var reference = new ReferenceRequestModel("https://example.org", new string('a', 20001));
 
         var requestModel = new AddTradeRequestModel
         {
@@ -477,7 +475,7 @@ public class AddTradeTests : DomainTests
             EntryPrice = 1.05m,
             CurrencyId = currency.Id,
             References =
-                [new ReferenceRequestModel(ReferenceType.Other, "https://example.org", "some notes")]
+                [new ReferenceRequestModel("https://example.org", "some notes")]
         };
 
         var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);

@@ -85,7 +85,6 @@ public class AddTradeInteractor(
                 Id = Guid.CreateVersion7(),
                 TradeId = newTrade.Id,
                 Trade = newTrade,
-                Type = m.Type,
                 Link = new Uri(m.Link),
                 Notes = m.Notes,
                 Created = utcNow()

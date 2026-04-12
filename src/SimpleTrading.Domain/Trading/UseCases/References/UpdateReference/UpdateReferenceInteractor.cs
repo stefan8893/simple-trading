@@ -32,9 +32,6 @@ public class UpdateReferenceInteractor(
 
     private static Reference UpdateReference(Reference reference, UpdateReferenceRequestModel model)
     {
-        if (model.Type.HasValue && model.Type.Value != reference.Type)
-            reference.Type = model.Type.Value;
-
         if (model.Link is not null && model.Link != reference.Link.AbsoluteUri)
             reference.Link = new Uri(model.Link);
 

@@ -12,25 +12,11 @@ public class AddReferenceTests : DomainTests
     private IAddReference Interactor => ServiceLocator.Resolve<IAddReference>();
 
     [Fact]
-    public async Task A_reference_type_out_of_enum_range_is_not_allowed()
-    {
-        var trade = TestData.Trade.Default.Build();
-        var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, (ReferenceType) 50, "https://example.org", "some notes");
-
-        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
-
-        var validationResult = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
-    }
-
-    [Fact]
     public async Task You_cant_add_a_reference_to_a_not_existing_trade()
     {
         var notExistingTradeId = Guid.Parse("a3e474d7-688a-46db-8f7f-2b8458490168");
         var referenceRequestModel =
-            new AddReferenceRequestModel(notExistingTradeId, ReferenceType.Other, "https://example.org", "some notes");
+            new AddReferenceRequestModel(notExistingTradeId, "https://example.org", "some notes");
 
         var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
@@ -52,7 +38,7 @@ public class AddReferenceTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
+            new AddReferenceRequestModel(trade.Id, "https://example.org", "some notes");
 
         var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
@@ -70,7 +56,7 @@ public class AddReferenceTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org");
+            new AddReferenceRequestModel(trade.Id, "https://example.org");
 
         var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
@@ -91,7 +77,7 @@ public class AddReferenceTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, ReferenceType.Other, $"https://example.org", new string('a', 2001));
+            new AddReferenceRequestModel(trade.Id, $"https://example.org", new string('a', 2001));
 
         var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 

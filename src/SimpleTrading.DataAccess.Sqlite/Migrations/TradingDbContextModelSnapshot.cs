@@ -17,7 +17,7 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
@@ -132,11 +132,6 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                     b.Property<Guid>("TradeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TradeId");
@@ -180,7 +175,7 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
                         .HasPrecision(24, 8)
                         .HasColumnType("TEXT");
 
-                    b.ComplexProperty<Dictionary<string, object>>("PositionPrices", "SimpleTrading.Domain.Trading.Trade.PositionPrices#PositionPrices", b1 =>
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "PositionPrices", "SimpleTrading.Domain.Trading.Trade.PositionPrices#PositionPrices", b1 =>
                         {
                             b1.IsRequired();
 
@@ -276,28 +271,25 @@ namespace SimpleTrading.DataAccess.Sqlite.Migrations
 
                     b.OwnsOne("SimpleTrading.Domain.Trading.Result", "Result", b1 =>
                         {
-                            b1.Property<Guid>("TradeId")
-                                .HasColumnType("TEXT");
+                            b1.Property<Guid>("TradeId");
 
-                            b1.Property<int>("Index")
-                                .HasColumnType("INTEGER");
+                            b1.Property<int>("Index");
 
                             b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
+                                .IsRequired();
 
-                            b1.Property<short?>("Performance")
-                                .HasColumnType("INTEGER");
+                            b1.Property<short?>("Performance");
 
                             b1.Property<string>("Source")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
+                                .IsRequired();
 
                             b1.HasKey("TradeId");
 
                             b1.ToTable("Trade");
 
-                            b1.ToJson("Result");
+                            b1
+                                .ToJson("Result")
+                                .HasColumnType("TEXT");
 
                             b1.WithOwner()
                                 .HasForeignKey("TradeId");

@@ -9,6 +9,24 @@ namespace SimpleTrading.WebApi.Extensions;
 
 public static class WebApplicationExtensions
 {
+    private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
+    {
+        var dbContext = context.RequestServices.GetRequiredService<IUserSettingsRepository>();
+        var userSettings = await dbContext.GetUserSettingsOrDefault();
+
+        if (userSettings is null)
+            return new ProviderCultureResult(Constants.DefaultCulture.Name);
+
+        if (userSettings.Language is null)
+            return new ProviderCultureResult(userSettings.Culture);
+
+        return new ProviderCultureResult(userSettings.Culture,
+            Constants.SupportedCultures
+                .Select(x => x.Name)
+                .FirstOrDefault(x => x.StartsWith(userSettings.Language, StringComparison.OrdinalIgnoreCase))
+            ?? Constants.DefaultCulture.Name);
+    }
+
     /// <param name="app"></param>
     extension(WebApplication app)
     {
@@ -66,23 +84,5 @@ public static class WebApplicationExtensions
                 options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(GetCurrentRequestCulture));
             });
         }
-    }
-
-    private static async Task<ProviderCultureResult?> GetCurrentRequestCulture(HttpContext context)
-    {
-        var dbContext = context.RequestServices.GetRequiredService<IUserSettingsRepository>();
-        var userSettings = await dbContext.GetUserSettingsOrDefault();
-
-        if (userSettings is null)
-            return new ProviderCultureResult(Constants.DefaultCulture.Name);
-
-        if (userSettings.Language is null)
-            return new ProviderCultureResult(userSettings.Culture);
-
-        return new ProviderCultureResult(userSettings.Culture,
-            Constants.SupportedCultures
-                .Select(x => x.Name)
-                .FirstOrDefault(x => x.StartsWith(userSettings.Language, StringComparison.OrdinalIgnoreCase))
-            ?? Constants.DefaultCulture.Name);
     }
 }

@@ -23,10 +23,9 @@ public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
             .Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(50);
-        
+
         builder
             .HasIndex(x => x.Name)
             .IsUnique();
-
     }
 }

@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
-using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.AddReference;
 using SimpleTrading.Domain.Trading.UseCases.References.DeleteReference;
 using SimpleTrading.Domain.Trading.UseCases.References.DeleteReferences;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReference;
 using SimpleTrading.Domain.Trading.UseCases.References.GetReferences;
 using SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
-using SimpleTrading.WebApi.Features.Trading.Dto;
 using SimpleTrading.WebApi.Features.Trading.Dto.Reference;
 using SimpleTrading.WebApi.Infrastructure;
 
@@ -60,7 +58,7 @@ public class ReferencesController : SimpleControllerBase
         [FromBody] AddReferenceDto addReferenceDto)
     {
         var addReferenceRequestModel =
-            new AddReferenceRequestModel(tradeId, addReferenceDto.Type.ToDomainReferenceType(), addReferenceDto.Link!,
+            new AddReferenceRequestModel(tradeId, addReferenceDto.Link!,
                 addReferenceDto.Notes);
 
         var result = await addReference.Execute(addReferenceRequestModel);
@@ -131,19 +129,8 @@ public class ReferencesController : SimpleControllerBase
         {
             TradeId = tradeId,
             ReferenceId = referenceId,
-            Type = MapToReferenceType(dto.Type),
             Link = dto.Link,
             Notes = dto.Notes is null ? new None() : dto.Notes.Value
-        };
-    }
-
-    private static ReferenceType? MapToReferenceType(ReferenceTypeDto? dto)
-    {
-        return dto switch
-        {
-            ReferenceTypeDto.Other => ReferenceType.Other,
-            ReferenceTypeDto.TradingView => ReferenceType.TradingView,
-            _ => null
         };
     }
 }

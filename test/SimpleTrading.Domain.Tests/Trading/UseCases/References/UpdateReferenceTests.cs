@@ -89,42 +89,12 @@ public class UpdateReferenceTests : DomainTests
     }
 
     [Fact]
-    public async Task A_reference_type_out_of_enum_range_is_not_allowed()
-    {
-        var trade = TestData.Trade.Default.Build();
-        var reference = (TestData.Reference.Default with
-        {
-            TradeOrId = trade,
-            Type = ReferenceType.Other,
-            Link = new Uri("https://example.org")
-        }).Build();
-
-        trade.References.Add(reference);
-
-        var referenceRequestModel =
-            new UpdateReferenceRequestModel
-            {
-                TradeId = trade.Id,
-                ReferenceId = reference.Id,
-                Type = (ReferenceType) 50
-            };
-
-        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
-
-        var validationResult = Assert.IsType<ValidationResult>(response.Value);
-        var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Reference Type' has a range of values which does not include '50'.", error.ErrorMessage);
-        Assert.Equal("Type", error.PropertyName);
-    }
-
-    [Fact]
     public async Task A_reference_link_must_be_a_valid_uri()
     {
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
             TradeOrId = trade,
-            Type = ReferenceType.Other,
             Link = new Uri("https://example.org")
         }).Build();
 
@@ -147,13 +117,12 @@ public class UpdateReferenceTests : DomainTests
     }
 
     [Fact]
-    public async Task Reference_notes_must_not_contain_more_than_4000_chars()
+    public async Task Reference_notes_must_not_contain_more_than_2000_chars()
     {
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
             TradeOrId = trade,
-            Type = ReferenceType.Other,
             Link = new Uri("https://example.org")
         }).Build();
 
@@ -164,14 +133,14 @@ public class UpdateReferenceTests : DomainTests
             {
                 TradeId = trade.Id,
                 ReferenceId = reference.Id,
-                Notes = new string('a', 4001)
+                Notes = new string('a', 2001)
             };
 
         var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The length of 'Notes' must be 4000 characters or fewer. You entered 4001 characters.",
+        Assert.Equal("The length of 'Notes' must be 2000 characters or fewer. You entered 2001 characters.",
             error.ErrorMessage);
         Assert.Equal("Notes", error.PropertyName);
     }

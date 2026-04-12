@@ -11,8 +11,8 @@ public class IsClosedFilterPredicate(IValueParser<bool> valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(bool value)
     {
-        return value 
-            ? t => t.Closed != null && t.ProfitLoss != null 
+        return value
+            ? t => t.Closed != null && t.ProfitLoss != null
             : t => t.Closed == null && t.ProfitLoss == null;
     }
 }

@@ -339,15 +339,6 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kein TradingView Link..
-        /// </summary>
-        public static string NotTradingViewLink {
-            get {
-                return ResourceManager.GetString("NotTradingViewLink", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ein oder mehrere Validierungsfehler sind aufgetreten..
         /// </summary>
         public static string OneOrMoreValidationErrors {
@@ -452,15 +443,6 @@ namespace SimpleTrading.Domain.Resources {
         public static string Reference {
             get {
                 return ResourceManager.GetString("Reference", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Referenztyp.
-        /// </summary>
-        public static string ReferenceType {
-            get {
-                return ResourceManager.GetString("ReferenceType", resourceCulture);
             }
         }
         

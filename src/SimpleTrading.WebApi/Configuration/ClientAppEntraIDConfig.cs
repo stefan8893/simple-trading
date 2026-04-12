@@ -7,8 +7,8 @@ public record Scope(string Value, string Description);
 
 public class ClientAppEntraIdConfig
 {
-    public required string AuthorizationUrl { init; get; }
-    public required string TokenUrl { init; get; }
-    public required string ClientId { init; get; }
-    public required IReadOnlyList<Scope> Scopes { init; get; }
+    public required string AuthorizationUrl { get; init; }
+    public required string TokenUrl { get; init; }
+    public required string ClientId { get; init; }
+    public required IReadOnlyList<Scope> Scopes { get; init; }
 }

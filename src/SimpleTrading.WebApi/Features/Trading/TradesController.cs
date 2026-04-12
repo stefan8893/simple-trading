@@ -246,7 +246,7 @@ public partial class TradesController : SimpleControllerBase
             Notes = dto.Notes,
             References = dto.References?
                 .Select(x =>
-                    new ReferenceRequestModel(x.Type.ToDomainReferenceType(), x.Link!, x.Notes))
+                    new ReferenceRequestModel(x.Link!, x.Notes))
                 .ToList() ?? []
         };
     }

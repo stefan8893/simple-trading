@@ -19,7 +19,7 @@ public class NullableDecimalValueParser : IValueParser<decimal?>
     {
         result = null;
 
-        if (isLiteral) 
+        if (isLiteral)
             return candidate.IsNullLiteral();
 
         var isParsable = decimal.TryParse(candidate, out var parsed);

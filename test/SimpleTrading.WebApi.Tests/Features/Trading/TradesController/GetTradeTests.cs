@@ -77,7 +77,6 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             {
                 TradeOrId = trade,
                 Link = new Uri("https://example.org"),
-                Type = ReferenceType.Other,
                 Notes = "Link does not point to trading view."
             })
             .Build();
@@ -86,7 +85,6 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             {
                 TradeOrId = trade,
                 Link = new Uri("https://www.tradingview.com/x/9MYkAogh/"),
-                Type = ReferenceType.TradingView
             })
             .Build();
 

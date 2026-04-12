@@ -14,7 +14,7 @@ public static class NamedTypeSymbolExtensions
 
         return namedTypeSymbol.ToDisplayString(displayFormat);
     }
-    
+
     public static IEnumerable<string> GetAllNamespaces(this INamedTypeSymbol namedTypeSymbol)
     {
         return CollectNamespaces(namedTypeSymbol)
@@ -24,7 +24,7 @@ public static class NamedTypeSymbolExtensions
         {
             if (symbol is null)
                 yield break;
-            
+
             var currentNamespace = symbol.ContainingNamespace?.ToDisplayString();
 
             if (!string.IsNullOrEmpty(currentNamespace))

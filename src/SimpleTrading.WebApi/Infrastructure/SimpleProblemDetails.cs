@@ -50,7 +50,7 @@ public class SimpleProblemDetails(IHttpContextAccessor httpContextAccessor)
         var localizedResourceName = notFound is not null
             ? SimpleTradingStrings.ResourceManager.GetString(notFound.ResourceType)
             : null;
-    
+
         var title = localizedResourceName is null
             ? SimpleTradingStrings.NotFound
             : string.Format(SimpleTradingStrings.NotFoundNamed, localizedResourceName);

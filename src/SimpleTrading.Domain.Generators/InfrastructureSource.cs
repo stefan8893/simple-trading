@@ -8,7 +8,7 @@ public static class InfrastructureSource
         using System;
         using System.Threading;
         using System.Threading.Tasks;
-        
+
         namespace SimpleTrading.Domain.Infrastructure;
 
         public interface IInteractor<TResponseModel>

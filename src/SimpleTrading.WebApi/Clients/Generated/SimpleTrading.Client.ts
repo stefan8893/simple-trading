@@ -915,6 +915,13 @@ export class SimpleTradingClient implements ISimpleTradingClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not Found", status, _responseText, _headers, result404);
             });
+        } else if (status === 409) {
+            return response.text().then((_responseText) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            });
         } else if (status === 422) {
             return response.text().then((_responseText) => {
             let result422: any = null;
@@ -1475,7 +1482,6 @@ export class SimpleTradingClient implements ISimpleTradingClient {
 }
 
 export class AddReferenceDto implements IAddReferenceDto {
-    type?: ReferenceTypeDto | undefined;
     link?: string | undefined;
     notes?: string | undefined;
 
@@ -1496,7 +1502,6 @@ export class AddReferenceDto implements IAddReferenceDto {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.type = _data["type"];
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
@@ -1515,7 +1520,6 @@ export class AddReferenceDto implements IAddReferenceDto {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["type"] = this.type;
         data["link"] = this.link;
         data["notes"] = this.notes;
         return data;
@@ -1523,7 +1527,6 @@ export class AddReferenceDto implements IAddReferenceDto {
 }
 
 export interface IAddReferenceDto {
-    type?: ReferenceTypeDto | undefined;
     link?: string | undefined;
     notes?: string | undefined;
 
@@ -2150,7 +2153,6 @@ export interface IProfileDto {
 
 export class ReferenceDto implements IReferenceDto {
     id!: string;
-    type!: ReferenceTypeDto;
     link!: string;
     notes?: string | undefined;
 
@@ -2172,7 +2174,6 @@ export class ReferenceDto implements IReferenceDto {
                     this[property] = _data[property];
             }
             this.id = _data["id"];
-            this.type = _data["type"];
             this.link = _data["link"];
             this.notes = _data["notes"];
         }
@@ -2192,7 +2193,6 @@ export class ReferenceDto implements IReferenceDto {
                 data[property] = this[property];
         }
         data["id"] = this.id;
-        data["type"] = this.type;
         data["link"] = this.link;
         data["notes"] = this.notes;
         return data;
@@ -2201,14 +2201,11 @@ export class ReferenceDto implements IReferenceDto {
 
 export interface IReferenceDto {
     id: string;
-    type: ReferenceTypeDto;
     link: string;
     notes?: string | undefined;
 
     [key: string]: any;
 }
-
-export type ReferenceTypeDto = "TradingView" | "Other";
 
 export type ResultDto = "Win" | "Mediocre" | "BreakEven" | "Loss";
 
@@ -2492,7 +2489,6 @@ export interface ITradeResultDto {
 }
 
 export class UpdateReferenceDto implements IUpdateReferenceDto {
-    type?: ReferenceTypeDto | undefined;
     link?: string | undefined;
     notes?: UpdateStringValue | undefined;
 
@@ -2513,7 +2509,6 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.type = _data["type"];
             this.link = _data["link"];
             this.notes = _data["notes"] ? UpdateStringValue.fromJS(_data["notes"]) : undefined as any;
         }
@@ -2532,7 +2527,6 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["type"] = this.type;
         data["link"] = this.link;
         data["notes"] = this.notes ? this.notes.toJSON() : undefined as any;
         return data;
@@ -2540,7 +2534,6 @@ export class UpdateReferenceDto implements IUpdateReferenceDto {
 }
 
 export interface IUpdateReferenceDto {
-    type?: ReferenceTypeDto | undefined;
     link?: string | undefined;
     notes?: UpdateStringValue | undefined;
 

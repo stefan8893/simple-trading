@@ -4,8 +4,8 @@ using SimpleTrading.Domain.Trading.UseCases.Shared;
 
 namespace SimpleTrading.Domain.Trading.UseCases.References.AddReference;
 
-public record AddReferenceRequestModel(Guid TradeId, ReferenceType Type, string Link, string? Notes = null)
-    : ReferenceRequestModel(Type, Link, Notes);
+public record AddReferenceRequestModel(Guid TradeId, string Link, string? Notes = null)
+    : ReferenceRequestModel(Link, Notes);
 
 [UsedImplicitly]
 public class AddReferenceRequestModelValidator : AbstractValidator<AddReferenceRequestModel>

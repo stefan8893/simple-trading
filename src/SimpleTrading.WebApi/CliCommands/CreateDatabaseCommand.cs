@@ -31,7 +31,8 @@ public static class CreateDatabaseCommand
         return CreateDbCommand;
     }
 
-    private static async Task CreateDatabase(ParseResult parseResult, WebApplication app, CancellationToken cancellationToken)
+    private static async Task CreateDatabase(ParseResult parseResult, WebApplication app,
+        CancellationToken cancellationToken)
     {
         await using var scope = app.Services.CreateAsyncScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
