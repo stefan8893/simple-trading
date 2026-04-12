@@ -51,6 +51,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
         positionPrices.Property(x => x.Exit).HasPrecision(24, 8);
 
         builder.Ignore(x => x.RiskRewardRatio);
+        builder.Ignore(x => x.IsClosed);
 
         builder
             .HasMany(x => x.References)
