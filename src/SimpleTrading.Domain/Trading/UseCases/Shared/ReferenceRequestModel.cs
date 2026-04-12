@@ -26,7 +26,7 @@ public class ReferenceRequestModelValidator : AbstractValidator<ReferenceRequest
             .When(x => x.Type == ReferenceType.TradingView);
 
         RuleFor(x => x.Notes)
-            .MaximumLength(4000)
+            .MaximumLength(2000)
             .WithName(SimpleTradingStrings.Notes);
     }
 }

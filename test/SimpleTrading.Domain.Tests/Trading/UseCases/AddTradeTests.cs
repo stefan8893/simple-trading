@@ -261,10 +261,10 @@ public class AddTradeTests : DomainTests
     }
 
     [Theory]
-    [InlineData("en-US", "The length of 'Notes' must be 4000 characters or fewer. You entered 40001 characters.")]
+    [InlineData("en-US", "The length of 'Notes' must be 2000 characters or fewer. You entered 20001 characters.")]
     [InlineData("de-AT",
-        "Die Länge von 'Anmerkungen' muss kleiner oder gleich 4000 sein. Sie haben 40001 Zeichen eingegeben.")]
-    public async Task Reference_notes_with_more_than_4000_chars_are_not_allowed(string culture, string errorMessage)
+        "Die Länge von 'Anmerkungen' muss kleiner oder gleich 2000 sein. Sie haben 20001 Zeichen eingegeben.")]
+    public async Task Reference_notes_with_more_than_2000_chars_are_not_allowed(string culture, string errorMessage)
     {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
         var asset = TestData.Asset.Default.Build();
@@ -276,7 +276,7 @@ public class AddTradeTests : DomainTests
 
         var reference = new ReferenceRequestModel(ReferenceType.Other,
             "https://example.org",
-            new string('a', 40001));
+            new string('a', 20001));
 
         var requestModel = new AddTradeRequestModel
         {

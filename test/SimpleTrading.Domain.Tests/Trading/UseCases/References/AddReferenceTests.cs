@@ -70,7 +70,7 @@ public class AddReferenceTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
-            new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org", "some notes");
+            new AddReferenceRequestModel(trade.Id, ReferenceType.Other, "https://example.org");
 
         var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
 
@@ -80,5 +80,23 @@ public class AddReferenceTests : DomainTests
         Assert.NotNull(tradeWithAddedReference);
         var reference = Assert.Single(tradeWithAddedReference.References);
         Assert.Equal(referenceId, reference.Id);
+    }
+    
+    [Fact]
+    public async Task A_reference_with_more_than_2000_characters_is_not_allowed()
+    {
+        var trade = TestData.Trade.Default.Build();
+
+        DbContext.Trades.Add(trade);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var referenceRequestModel =
+            new AddReferenceRequestModel(trade.Id, ReferenceType.Other, $"https://example.org", new string('a', 2001));
+
+        var response = await Interactor.Execute(referenceRequestModel, TestContext.Current.CancellationToken);
+
+        var result = Assert.IsType<ValidationResult>(response.Value);
+        var error = Assert.Single(result.Errors);
+        Assert.Equal("The length of 'Notes' must be 2000 characters or fewer. You entered 2001 characters.", error.ErrorMessage);
     }
 }
