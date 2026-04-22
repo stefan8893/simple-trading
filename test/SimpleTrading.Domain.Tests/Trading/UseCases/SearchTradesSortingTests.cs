@@ -34,14 +34,14 @@ public class SearchTradesSortingTests : DomainTests
     [Fact]
     public async Task Sort_by_result_descending_works_as_intended()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m * x,
                 Size = 5000m * x,
                 Result = (ResultModel) x
@@ -105,16 +105,16 @@ public class SearchTradesSortingTests : DomainTests
     }
 
     [Fact]
-    public async Task Sort_by_closed_works_as_intended()
+    public async Task Sort_by_finished_works_as_intended()
     {
-        var openedClosedDateTime = DateTime.Parse("2024-08-19T18:00:00");
+        var openedFinishedDateTime = DateTime.Parse("2024-08-19T18:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 2)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosedDateTime.AddHours(x),
-                Closed = openedClosedDateTime.AddHours(x),
+                Opened = openedFinishedDateTime.AddHours(x),
+                Finished = openedFinishedDateTime.AddHours(x),
                 ProfitLoss = 50m
             })
             .Select(x => x.Build());
@@ -123,7 +123,7 @@ public class SearchTradesSortingTests : DomainTests
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var sorting = new SortModel("Closed", false);
+        var sorting = new SortModel("Finished", false);
 
         var response = await Interactor.Execute(new SearchTradesRequestModel
         {
@@ -136,8 +136,8 @@ public class SearchTradesSortingTests : DomainTests
         var secondExpected = DateTimeOffset.Parse("2024-08-19T20:00:00+02:00");
 
         Assert.Collection(pagedTrades,
-            first => Assert.Equal(firstExpected, first.Closed),
-            second => Assert.Equal(secondExpected, second.Closed));
+            first => Assert.Equal(firstExpected, first.Finished),
+            second => Assert.Equal(secondExpected, second.Finished));
     }
 
 

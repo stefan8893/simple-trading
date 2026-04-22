@@ -9,9 +9,9 @@ public class SortByOpened(Order order) : SortBase<Trade>(order)
     public override Expression<Func<Trade, object?>> Selector => t => t.Opened;
 }
 
-public class SortByClosed(Order order) : SortBase<Trade>(order)
+public class SortByFinished(Order order) : SortBase<Trade>(order)
 {
-    public override Expression<Func<Trade, object?>> Selector => t => t.Closed;
+    public override Expression<Func<Trade, object?>> Selector => t => t.Finished;
 }
 
 public class SortByProfitLoss(Order order) : SortBase<Trade>(order)

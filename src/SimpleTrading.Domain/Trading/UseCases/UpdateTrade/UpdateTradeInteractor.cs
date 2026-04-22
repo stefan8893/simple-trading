@@ -43,13 +43,13 @@ public class UpdateTradeInteractor(
             return updatePropertiesConflict;
 
         var hasChanges = UpdatePositionPrices(trade, model);
-        var closeTradeResult = CloseTrade(trade, model, hasChanges);
+        var finishTradeResult = FinishTrade(trade, model, hasChanges);
 
-        if (closeTradeResult.Value is Conflict closeTradeConflict)
-            return closeTradeConflict;
+        if (finishTradeResult.Value is Conflict finishTradeConflict)
+            return finishTradeConflict;
 
         await uowCommit();
-        return closeTradeResult
+        return finishTradeResult
             .Match<UpdateTradeResponse>(
                 completed => Completed(new UpdateTradeResponseModel(completed.Data.TradeId,
                     completed.Data.Result?.ToResultModel(),
@@ -99,11 +99,11 @@ public class UpdateTradeInteractor(
     private static OneOf<Completed, Conflict> UpdateTradeProperties(Trade trade, UpdateTradeRequestModel model)
     {
         var updateOpenedDate = model.Opened.HasValue && model.Opened.Value.UtcDateTime != trade.Opened;
-        var isClosedBeforeOpened = updateOpenedDate && trade.Closed.HasValue &&
-                                   trade.Closed.Value < model.Opened!.Value.UtcDateTime;
+        var isFinishedBeforeOpened = updateOpenedDate && trade.Finished.HasValue &&
+                                   trade.Finished.Value < model.Opened!.Value.UtcDateTime;
 
-        if (isClosedBeforeOpened)
-            return Conflict(trade.Id, SimpleTradingStrings.ClosedBeforeOpened);
+        if (isFinishedBeforeOpened)
+            return Conflict(trade.Id, SimpleTradingStrings.FinishedBeforeOpened);
 
         if (updateOpenedDate)
             trade.Opened = model.Opened!.Value.UtcDateTime;
@@ -143,41 +143,41 @@ public class UpdateTradeInteractor(
         return true;
     }
 
-    private OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict> CloseTrade(Trade trade,
+    private OneOf<Completed<FinishTradeResult>, NothingToFinish, Conflict> FinishTrade(Trade trade,
         UpdateTradeRequestModel model,
         bool positionPricesHaveChanged)
     {
-        if (!trade.IsClosed)
-            return new NothingToClose(trade);
+        if (!trade.IsFinished)
+            return new NothingToFinish(trade);
 
         var profitLossHasChanged = model.ProfitLoss.HasValue && model.ProfitLoss.Value != trade.ProfitLoss;
-        var closedHasChanged = model.Closed.HasValue && model.Closed.Value.UtcDateTime != trade.Closed;
+        var finishedHasChanged = model.Finished.HasValue && model.Finished.Value.UtcDateTime != trade.Finished;
         var manuallyEnteredResultIsSpecified = model.ManuallyEnteredResult.IsT0;
 
         var nothingHasChanged =
             !positionPricesHaveChanged &&
             !profitLossHasChanged &&
-            !closedHasChanged &&
+            !finishedHasChanged &&
             !manuallyEnteredResultIsSpecified;
 
         if (nothingHasChanged)
-            return new NothingToClose(trade);
+            return new NothingToFinish(trade);
 
-        var closedDate = model.Closed?.UtcDateTime ?? trade.Closed!.Value;
+        var finishedDate = model.Finished?.UtcDateTime ?? trade.Finished!.Value;
         var profitLoss = model.ProfitLoss ?? trade.ProfitLoss!.Value;
 
-        var closeTradeConfiguration = new CloseTradeConfiguration(closedDate, profitLoss, utcNow)
+        var finishTradeConfiguration = new FinishTradeConfiguration(finishedDate, profitLoss, utcNow)
         {
             ManuallyEnteredResult = model.ManuallyEnteredResult
         };
 
-        return trade.Close(closeTradeConfiguration)
-            .Match<OneOf<Completed<CloseTradeResult>,
-                NothingToClose,
+        return trade.Finish(finishTradeConfiguration)
+            .Match<OneOf<Completed<FinishTradeResult>,
+                NothingToFinish,
                 Conflict>>(
                 completed => completed,
                 conflict => conflict);
     }
 
-    private record NothingToClose(Trade Trade);
+    private record NothingToFinish(Trade Trade);
 }

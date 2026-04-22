@@ -18,7 +18,7 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.7")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -152,14 +152,14 @@ namespace SimpleTrading.DataAccess.Postgres.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("Closed")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CurrencyId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("Finished")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(4000)

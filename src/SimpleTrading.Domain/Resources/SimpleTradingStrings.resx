@@ -135,16 +135,16 @@
     <data name="ExitPrice" xml:space="preserve">
     <value>Ausstiegspreis</value>
   </data>
-    <data name="Closed" xml:space="preserve">
+    <data name="Finished" xml:space="preserve">
         <value>Abgeschlossen</value>
     </data>
-    <data name="ClosedTooFarInTheFuture" xml:space="preserve">
+    <data name="FinishedTooFarInTheFuture" xml:space="preserve">
         <value>'Abgeschlossen' kann maximal nur einen Tag in der Zukunft liegen.</value>
     </data>
-    <data name="ClosedBeforeOpened" xml:space="preserve">
+    <data name="FinishedBeforeOpened" xml:space="preserve">
         <value>'Abgeschlossen' muss nach 'Eröffnet' liegen.</value>
     </data>
-    <data name="ClosedTradeNeedsClosedAndProfitLoss" xml:space="preserve">
+    <data name="FinishedTradeNeedsFinishedAndProfitLoss" xml:space="preserve">
         <value>Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie 'Gewinn/Verlust' und 'Abgeschlossen' angeben.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
@@ -217,7 +217,7 @@
         <value>'{0}' darf nicht leer sein, wenn '{1}' angegeben ist.</value>
     </data>
     <data name="ResultOfAnOpenedTradeCannotBeReset" xml:space="preserve">
-        <value>Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher.</value>
+        <value>Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher ab.</value>
     </data>
     <data name="Reference" xml:space="preserve">
         <value>Referenz</value>
@@ -267,10 +267,10 @@
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Ungültiges Filterformat.</value>
     </data>
-    <data name="ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
+    <data name="ProfitLossAndFinishedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
         <value>Das Ergebnis kann nur überschrieben werden, wenn 'Gewinn/Verlust' und 'Abgeschlossen' angegeben sind.</value>
     </data>
-    <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
+    <data name="XCanOnlyBeUpdatedIfTradeIsFinished" xml:space="preserve">
         <value>'{0}' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.</value>
     </data>
     <data name="LanguageNotSupported" xml:space="preserve">

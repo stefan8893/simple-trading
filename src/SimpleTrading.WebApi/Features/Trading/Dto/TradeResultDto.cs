@@ -1,11 +1,11 @@
-﻿using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+﻿using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
 public record TradeResultDto(Guid TradeId, ResultDto? Result, short? Performance, IEnumerable<string> Warnings)
 {
-    public static TradeResultDto From(CloseTradeResponseModel model)
+    public static TradeResultDto From(FinishTradeResponseModel model)
     {
         return new TradeResultDto(model.TradeId, model.Result.ToResultDto(), model.Performance, model.Warnings);
     }

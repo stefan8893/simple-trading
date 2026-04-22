@@ -80,7 +80,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_closed_trade_with_an_overriden_null_result_will_be_added()
+    public async Task A_finished_trade_with_an_overriden_null_result_will_be_added()
     {
         var client = await CreateClient();
 
@@ -95,7 +95,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 0,
             ManuallyEnteredResult = new UpdateResultValue {Value = null},
             Size = 5000,
@@ -112,7 +112,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_closed_trade_with_an_overriden_result_will_be_added()
+    public async Task A_finished_trade_with_an_overriden_result_will_be_added()
     {
         var client = await CreateClient();
 
@@ -127,7 +127,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 0,
             ManuallyEnteredResult = new UpdateResultValue {Value = ResultDto.Loss},
             Size = 5000,
@@ -208,7 +208,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_closed_trade_cant_be_added_if_the_profitLoss_is_missing()
+    public async Task A_finished_trade_cant_be_added_if_the_profitLoss_is_missing()
     {
         var client = await CreateClient();
 
@@ -226,7 +226,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 AssetId = asset.Id,
                 ProfileId = profile.Id,
                 Opened = _utcNow,
-                Closed = _utcNow,
+                Finished = _utcNow,
                 ManuallyEnteredResult = null,
                 Size = 5000,
                 ProfitLoss = null,
@@ -244,7 +244,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
     }
 
     [Fact]
-    public async Task A_closed_trade_cant_be_added_if_the_closed_date_is_missing()
+    public async Task A_finished_trade_cant_be_added_if_the_finished_date_is_missing()
     {
         var client = await CreateClient();
 
@@ -262,7 +262,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 AssetId = asset.Id,
                 ProfileId = profile.Id,
                 Opened = _utcNow,
-                Closed = null,
+                Finished = null,
                 Size = 5000,
                 ProfitLoss = 50,
                 CurrencyId = currency.Id,
@@ -273,7 +273,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
-        Assert.Equal("closed", error.Key);
+        Assert.Equal("finished", error.Key);
         Assert.Equal("'Abgeschlossen' darf nicht leer sein, wenn 'Gewinn/Verlust' angegeben ist.",
             Assert.Single(error.Value));
     }
@@ -359,7 +359,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
                 AssetId = asset.Id,
                 ProfileId = profile.Id,
                 Opened = _utcNow,
-                Closed = null,
+                Finished = null,
                 Size = 5000,
                 ProfitLoss = 50,
                 CurrencyId = currency.Id,

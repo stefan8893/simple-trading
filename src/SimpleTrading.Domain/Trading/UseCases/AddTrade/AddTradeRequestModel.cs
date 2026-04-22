@@ -15,7 +15,7 @@ public record AddTradeRequestModel
     public required Guid AssetId { get; init; }
     public required Guid ProfileId { get; init; }
     public required DateTimeOffset Opened { get; init; }
-    public DateTimeOffset? Closed { get; set; }
+    public DateTimeOffset? Finished { get; set; }
     public required decimal Size { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; }
     public decimal? ProfitLoss { get; set; }
@@ -75,27 +75,27 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .Empty()
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
-            .WithMessage(SimpleTradingStrings.ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult)
-            .When(x => !(x.ProfitLoss.HasValue && x.Closed.HasValue) && x.ManuallyEnteredResult.IsT0);
+            .WithMessage(SimpleTradingStrings.ProfitLossAndFinishedMustBeSpecifiedWhenOverridingResult)
+            .When(x => !(x.ProfitLoss.HasValue && x.Finished.HasValue) && x.ManuallyEnteredResult.IsT0);
 
         RuleFor(x => x.ProfitLoss)
             .NotEmpty()
             .WithName(SimpleTradingStrings.ProfitLoss)
             .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsPresent, "{PropertyName}",
-                SimpleTradingStrings.Closed))
-            .When(x => x.Closed.HasValue);
+                SimpleTradingStrings.Finished))
+            .When(x => x.Finished.HasValue);
 
-        RuleFor(x => x.Closed)
+        RuleFor(x => x.Finished)
             .NotEmpty()
-            .WithName(SimpleTradingStrings.Closed)
+            .WithName(SimpleTradingStrings.Finished)
             .WithMessage(string.Format(SimpleTradingStrings.XMustNotBeEmptyIfYIsPresent, "{PropertyName}",
                 SimpleTradingStrings.ProfitLoss))
             .When(x => x.ProfitLoss.HasValue);
 
-        RuleFor(x => x.Closed!.Value.UtcDateTime)
+        RuleFor(x => x.Finished!.Value.UtcDateTime)
             .GreaterThanOrEqualTo(x => x.Opened.UtcDateTime)
-            .WithName(SimpleTradingStrings.Closed)
-            .OverridePropertyName(x => x.Closed)
+            .WithName(SimpleTradingStrings.Finished)
+            .OverridePropertyName(x => x.Finished)
             .Configure(configuration =>
             {
                 configuration.MessageBuilder = context =>
@@ -105,7 +105,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
                     return context.GetDefaultMessage();
                 };
             })
-            .When(x => x.Closed.HasValue);
+            .When(x => x.Finished.HasValue);
 
         RuleFor(x => x.EntryPrice)
             .GreaterThan(0)

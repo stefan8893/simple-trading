@@ -4,7 +4,7 @@ using OneOf;
 using OneOf.Types;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
-using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
 using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
@@ -102,29 +102,29 @@ public partial class TradesController : SimpleControllerBase
                 UnprocessableEntityResult);
     }
 
-    [HttpPut("{tradeId:guid}/close", Name = nameof(CloseTrade))]
+    [HttpPut("{tradeId:guid}/finish", Name = nameof(FinishTrade))]
     [ProducesResponseType<TradeResultDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> CloseTrade(
-        [FromServices] ICloseTrade closeTrade,
+    public async Task<ActionResult> FinishTrade(
+        [FromServices] IFinishTrade finishTrade,
         [FromRoute] Guid tradeId,
-        [FromBody] CloseTradeDto closeTradeDto)
+        [FromBody] FinishTradeDto finishTradeDto)
     {
-        OneOf<ResultModel?, None> tradeResult = closeTradeDto.ManuallyEnteredResult is null
+        OneOf<ResultModel?, None> tradeResult = finishTradeDto.ManuallyEnteredResult is null
             ? new None()
-            : MapToResultModel(closeTradeDto.ManuallyEnteredResult.Value);
+            : MapToResultModel(finishTradeDto.ManuallyEnteredResult.Value);
 
-        var closeTradeRequestModel = new CloseTradeRequestModel(tradeId,
-            closeTradeDto.Closed!.Value,
-            closeTradeDto.ProfitLoss!.Value)
+        var finishTradeRequestModel = new FinishTradeRequestModel(tradeId,
+            finishTradeDto.Finished!.Value,
+            finishTradeDto.ProfitLoss!.Value)
         {
             ManuallyEnteredResult = tradeResult,
-            ExitPrice = closeTradeDto.ExitPrice
+            ExitPrice = finishTradeDto.ExitPrice
         };
-        var result = await closeTrade.Execute(closeTradeRequestModel);
+        var result = await finishTrade.Execute(finishTradeRequestModel);
 
         return result.Match(
             completed => Ok(TradeResultDto.From(completed.Data)),
@@ -232,7 +232,7 @@ public partial class TradesController : SimpleControllerBase
             AssetId = dto.AssetId!.Value,
             ProfileId = dto.ProfileId!.Value,
             Opened = dto.Opened!.Value,
-            Closed = dto.Closed,
+            Finished = dto.Finished,
             Size = dto.Size!.Value,
             ManuallyEnteredResult = dto.ManuallyEnteredResult is null
                 ? new None()
@@ -259,7 +259,7 @@ public partial class TradesController : SimpleControllerBase
             AssetId = dto.AssetId,
             ProfileId = dto.ProfileId,
             Opened = dto.Opened,
-            Closed = dto.Closed,
+            Finished = dto.Finished,
             Size = dto.Size,
             ManuallyEnteredResult = dto.ManuallyEnteredResult is null
                 ? new None()

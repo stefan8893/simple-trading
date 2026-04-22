@@ -4,17 +4,17 @@ using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
-using SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
-public class CloseTradeTests : DomainTests
+public class FinishTradeTests : DomainTests
 {
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-03T14:00:00").ToUtcKind();
 
-    private ICloseTrade Interactor => ServiceLocator.Resolve<ICloseTrade>();
+    private IFinishTrade Interactor => ServiceLocator.Resolve<IFinishTrade>();
 
     protected override void OverrideServices(ContainerBuilder builder)
     {
@@ -26,7 +26,7 @@ public class CloseTradeTests : DomainTests
     {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-AT");
 
-        var requestModel = new CloseTradeRequestModel(Guid.CreateVersion7(),
+        var requestModel = new FinishTradeRequestModel(Guid.CreateVersion7(),
             DateTime.Parse("2024-08-03T16:00:00+00:00"),
             0m
         )
@@ -44,11 +44,11 @@ public class CloseTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task A_not_existing_trade_cannot_be_closed()
+    public async Task A_not_existing_trade_cannot_be_finished()
     {
         var tradeId = Guid.Parse("2b58e712-e7d4-4df2-8a62-c9baac5ee889");
         var requestModel =
-            new CloseTradeRequestModel(tradeId, DateTime.Parse("2024-08-03T16:00:00Z"), 500)
+            new FinishTradeRequestModel(tradeId, DateTime.Parse("2024-08-03T16:00:00Z"), 500)
             {
                 ManuallyEnteredResult = ResultModel.Win,
                 ExitPrice = 1.05m
@@ -69,7 +69,7 @@ public class CloseTradeTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
+            new FinishTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
             {
                 ManuallyEnteredResult = ResultModel.Win,
                 ExitPrice = 0m
@@ -84,7 +84,7 @@ public class CloseTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task A_trade_can_be_closed_successfully()
+    public async Task A_trade_can_be_finished_successfully()
     {
         var trade = (TestData.Trade.Default with
         {
@@ -95,22 +95,22 @@ public class CloseTradeTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel =
-            new CloseTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
+            new FinishTradeRequestModel(trade.Id, _utcNow.AddHours(1), 500)
                 {ExitPrice = 1.2m};
 
         var response = await Interactor.Execute(requestModel, TestContext.Current.CancellationToken);
 
-        var responseModel = Assert.IsType<Completed<CloseTradeResponseModel>>(response.Value);
+        var responseModel = Assert.IsType<Completed<FinishTradeResponseModel>>(response.Value);
         Assert.Equal((short) 50, responseModel.Data.Performance);
         Assert.Equal(ResultModel.Mediocre, responseModel.Data.Result);
 
-        var closedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
-        Assert.NotNull(closedTrade);
+        var finishedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == trade.Id);
+        Assert.NotNull(finishedTrade);
 
-        Assert.Equal(requestModel.ProfitLoss, closedTrade.ProfitLoss);
-        Assert.NotNull(closedTrade.Closed);
-        Assert.True(closedTrade.IsClosed);
-        Assert.NotNull(closedTrade.PositionPrices.Exit);
-        Assert.Equal(requestModel.ExitPrice, closedTrade.PositionPrices.Exit);
+        Assert.Equal(requestModel.ProfitLoss, finishedTrade.ProfitLoss);
+        Assert.NotNull(finishedTrade.Finished);
+        Assert.True(finishedTrade.IsFinished);
+        Assert.NotNull(finishedTrade.PositionPrices.Exit);
+        Assert.Equal(requestModel.ExitPrice, finishedTrade.PositionPrices.Exit);
     }
 }

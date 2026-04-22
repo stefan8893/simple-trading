@@ -60,7 +60,7 @@ public class DataAccessModule : Module
                 new Dictionary<string, Func<Order, ISort<Trade>>>(StringComparer.OrdinalIgnoreCase)
                 {
                     [nameof(Trade.Opened)] = order => new SortByOpened(order),
-                    [nameof(Trade.Closed)] = order => new SortByClosed(order),
+                    [nameof(Trade.Finished)] = order => new SortByFinished(order),
                     [nameof(Trade.ProfitLoss)] = order => new SortByProfitLoss(order),
                     [nameof(Trade.Size)] = order => new SortBySize(order),
                     [nameof(Trade.Result)] = order => new SortByResult(order)

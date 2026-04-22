@@ -35,7 +35,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task A_trades_result_can_be_successfully_updated_since_the_trade_is_closed()
+    public async Task A_trades_result_can_be_successfully_updated_since_the_trade_is_finished()
     {
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
@@ -43,7 +43,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var trade = (TestData.Trade.Default with
         {
             Opened = now,
-            Closed = now,
+            Finished = now,
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
@@ -64,7 +64,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
 
     [Fact]
     public async Task
-        A_trades_result_cannot_be_successfully_updated_since_profitLoss_and_closed_date_are_missing_and_the_trade_is_not_closed()
+        A_trades_result_cannot_be_successfully_updated_since_profitLoss_and_finished_date_are_missing_and_the_trade_is_not_finished()
     {
         var client = await CreateClient();
 
@@ -89,7 +89,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task A_trades_result_can_be_successfully_updated_to_null_since_the_trade_is_closed()
+    public async Task A_trades_result_can_be_successfully_updated_to_null_since_the_trade_is_finished()
     {
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
@@ -97,7 +97,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var trade = (TestData.Trade.Default with
         {
             Opened = now,
-            Closed = now,
+            Finished = now,
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
@@ -124,7 +124,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var trade = (TestData.Trade.Default with
         {
             Opened = now,
-            Closed = now,
+            Finished = now,
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
@@ -163,7 +163,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
     }
 
     [Fact]
-    public async Task The_closed_date_of_a_non_closed_trade_cannot_be_updated()
+    public async Task The_finished_date_of_a_non_finished_trade_cannot_be_updated()
     {
         var client = await CreateClient();
 
@@ -175,13 +175,13 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         Task<WarningsDto> Act()
         {
             return client.UpdateTradeAsync(trade.Id,
-                new UpdateTradeDto {Closed = DateTimeOffset.Parse("2024-08-14T17:00:00")});
+                new UpdateTradeDto {Finished = DateTimeOffset.Parse("2024-08-14T17:00:00")});
         }
 
         var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);
-        Assert.Equal("closed", singleError.Key);
+        Assert.Equal("finished", singleError.Key);
         var singleMessage = Assert.Single(singleError.Value);
         Assert.Equal("'Abgeschlossen' kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist.",
             singleMessage);

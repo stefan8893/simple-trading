@@ -5,25 +5,25 @@ using SimpleTrading.WebApi.Features.Dto;
 
 namespace SimpleTrading.WebApi.Features.Trading.Dto;
 
-public class CloseTradeDto
+public class FinishTradeDto
 {
     public decimal? ProfitLoss { get; set; }
     public decimal? ExitPrice { get; set; }
-    public DateTimeOffset? Closed { get; set; }
+    public DateTimeOffset? Finished { get; set; }
     public UpdateResultValue? ManuallyEnteredResult { get; set; }
 }
 
 [UsedImplicitly]
-public class CloseTradeDtoValidator : AbstractValidator<CloseTradeDto>
+public class FinishTradeDtoValidator : AbstractValidator<FinishTradeDto>
 {
-    public CloseTradeDtoValidator()
+    public FinishTradeDtoValidator()
     {
         RuleFor(x => x.ProfitLoss)
             .NotNull()
             .WithName(SimpleTradingStrings.ProfitLoss);
 
-        RuleFor(x => x.Closed)
+        RuleFor(x => x.Finished)
             .NotNull()
-            .WithName(SimpleTradingStrings.Closed);
+            .WithName(SimpleTradingStrings.Finished);
     }
 }

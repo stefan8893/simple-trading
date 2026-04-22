@@ -135,17 +135,17 @@
     <data name="ExitPrice" xml:space="preserve">
         <value>Exit Price</value>
     </data>
-    <data name="Closed" xml:space="preserve">
-    <value>Closed</value>
-  </data>
-    <data name="ClosedTooFarInTheFuture" xml:space="preserve">
-        <value>'Closed' must not be greater than one day in the future.</value>
+    <data name="Finished" xml:space="preserve">
+        <value>Finished</value>
     </data>
-    <data name="ClosedBeforeOpened" xml:space="preserve">
-        <value>'Closed' must be after 'Opened'.</value>
+    <data name="FinishedTooFarInTheFuture" xml:space="preserve">
+        <value>'Finished' must not be greater than one day in the future.</value>
     </data>
-    <data name="ClosedTradeNeedsClosedAndProfitLoss" xml:space="preserve">
-        <value>In order to add a closed trade, you must specify 'Profit/Loss' and 'Closed'.</value>
+    <data name="FinishedBeforeOpened" xml:space="preserve">
+        <value>'Finished' must be after 'Opened'.</value>
+    </data>
+    <data name="FinishedTradeNeedsFinishedAndProfitLoss" xml:space="preserve">
+        <value>In order to add a finished trade, you must specify 'Profit/Loss' and 'Finished'.</value>
     </data>
     <data name="InvalidLink" xml:space="preserve">
     <value>Invalid link.</value>
@@ -217,7 +217,7 @@
         <value>'{0}' must not be empty, if '{1}' is specified.</value>
     </data>
     <data name="ResultOfAnOpenedTradeCannotBeReset" xml:space="preserve">
-        <value>You can't reset the result of an opened trade. Please close it before.</value>
+        <value>You can't reset the result of an opened trade. Please finish it before.</value>
     </data>
     <data name="Reference" xml:space="preserve">
         <value>Reference</value>
@@ -267,11 +267,11 @@
     <data name="InvalidFilterFormat" xml:space="preserve">
         <value>Invalid filter format.</value>
     </data>
-    <data name="ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
-        <value>The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.</value>
+    <data name="ProfitLossAndFinishedMustBeSpecifiedWhenOverridingResult" xml:space="preserve">
+        <value>The result can only be overridden if 'Profit/Loss' and 'Finished' are specified.</value>
     </data>
-    <data name="XCanOnlyBeUpdatedIfTradeIsClosed" xml:space="preserve">
-        <value>'{0}' can only be updated, if the trade has already been closed.</value>
+    <data name="XCanOnlyBeUpdatedIfTradeIsFinished" xml:space="preserve">
+        <value>'{0}' can only be updated, if the trade has already been finished.</value>
     </data>
     <data name="LanguageNotSupported" xml:space="preserve">
         <value>'{0}' is not supported. Only '{1}'.</value>

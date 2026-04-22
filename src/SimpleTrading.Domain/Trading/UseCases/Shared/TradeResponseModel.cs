@@ -12,11 +12,11 @@ public class TradeResponseModel
     public required string Profile { get; init; }
     public required decimal Size { get; init; }
     public required DateTimeOffset Opened { get; init; }
-    public required DateTimeOffset? Closed { get; init; }
+    public required DateTimeOffset? Finished { get; init; }
     public required decimal? ProfitLoss { get; init; }
     public required ResultModel? Result { get; init; }
     public required short? Performance { get; init; }
-    public required bool IsClosed { get; init; }
+    public required bool IsFinished { get; init; }
     public required Guid CurrencyId { get; init; }
     public required string Currency { get; init; }
     public required decimal EntryPrice { get; init; }
@@ -39,11 +39,11 @@ public class TradeResponseModel
             Profile = trade.Profile.Name,
             Size = trade.Size,
             Opened = trade.Opened.ToLocal(timeZone),
-            Closed = trade.Closed?.ToLocal(timeZone),
+            Finished = trade.Finished?.ToLocal(timeZone),
             ProfitLoss = trade.ProfitLoss,
             Result = trade.Result?.ToResultModel(),
             Performance = trade.Result?.Performance,
-            IsClosed = trade.IsClosed,
+            IsFinished = trade.IsFinished,
             CurrencyId = trade.CurrencyId,
             Currency = trade.Currency.IsoCode,
             EntryPrice = trade.PositionPrices.Entry,

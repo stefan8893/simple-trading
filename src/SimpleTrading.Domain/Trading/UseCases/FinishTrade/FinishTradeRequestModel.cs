@@ -5,24 +5,24 @@ using OneOf.Types;
 using SimpleTrading.Domain.Resources;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 
-namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+namespace SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 
-public class CloseTradeRequestModel(
+public class FinishTradeRequestModel(
     Guid tradeId,
-    DateTimeOffset closed,
+    DateTimeOffset finished,
     decimal profitLoss)
 {
     public Guid TradeId { get; init; } = tradeId;
-    public DateTimeOffset Closed { get; init; } = closed;
+    public DateTimeOffset Finished { get; init; } = finished;
     public decimal ProfitLoss { get; init; } = profitLoss;
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();
     public decimal? ExitPrice { get; init; }
 }
 
 [UsedImplicitly]
-public class CloseTradeRequestModelValidator : AbstractValidator<CloseTradeRequestModel>
+public class FinishTradeRequestModelValidator : AbstractValidator<FinishTradeRequestModel>
 {
-    public CloseTradeRequestModelValidator()
+    public FinishTradeRequestModelValidator()
     {
         RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .IsInEnum()

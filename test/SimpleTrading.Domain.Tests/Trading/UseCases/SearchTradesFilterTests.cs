@@ -78,12 +78,12 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Closed_greater_than_null_returns_bad_input()
+    public async Task Finished_greater_than_null_returns_bad_input()
     {
         var profile = TestData.Profile.Default.Build();
         var filter = new FilterModel
         {
-            PropertyName = "Closed",
+            PropertyName = "Finished",
             Operator = "gt",
             ComparisonValue = "null",
             IsLiteral = true
@@ -341,7 +341,7 @@ public class SearchTradesFilterTests : DomainTests
             {
                 ProfileOrId = profile,
                 Opened = now,
-                Closed = now,
+                Finished = now,
                 ProfitLoss = 500m * x
             })
             .Select(x => x.Build());
@@ -718,7 +718,7 @@ public class SearchTradesFilterTests : DomainTests
             {
                 ProfileOrId = profile,
                 Opened = now,
-                Closed = now,
+                Finished = now,
                 ProfitLoss = 500m * x
             })
             .Select(x => x.Build());
@@ -753,7 +753,7 @@ public class SearchTradesFilterTests : DomainTests
         {
             ProfileOrId = profile,
             Opened = now,
-            Closed = now,
+            Finished = now,
             ProfitLoss = 500m
         }).Build();
         var tradeWithoutProfitLoss = (TestData.Trade.Default with {ProfileOrId = profile}).Build();
@@ -812,14 +812,14 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Greater_than_result_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -849,16 +849,16 @@ public class SearchTradesFilterTests : DomainTests
 
 
     [Fact]
-    public async Task Greater_than_closed_with_valid_input_returns_correct_result()
+    public async Task Greater_than_finished_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed.AddHours(x),
-                Closed = openedClosed.AddHours(x),
+                Opened = openedFinished.AddHours(x),
+                Finished = openedFinished.AddHours(x),
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -870,7 +870,7 @@ public class SearchTradesFilterTests : DomainTests
 
         var filter = new FilterModel
         {
-            PropertyName = "Closed",
+            PropertyName = "Finished",
             Operator = "gt",
             ComparisonValue = "2024-08-19T15:00:00Z",
             IsLiteral = false
@@ -882,20 +882,20 @@ public class SearchTradesFilterTests : DomainTests
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(3, pagedTrades.Count);
-        Assert.DoesNotContain(pagedTrades, item => item.Closed!.Value.UtcDateTime == openedClosed);
+        Assert.DoesNotContain(pagedTrades, item => item.Finished!.Value.UtcDateTime == openedFinished);
     }
 
     [Fact]
     public async Task Greater_than_or_equal_to_result_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -950,14 +950,14 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_or_equal_to_result_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -988,14 +988,14 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Less_than_to_result_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -1026,14 +1026,14 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Equal_to_result_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -1063,14 +1063,14 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Not_equal_to_result_with_valid_input_returns_correct_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -1102,7 +1102,7 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Equal_to_null_result_returns_all_trades_without_a_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var tradesWithoutResult = Enumerable.Range(0, 2)
             .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
@@ -1113,8 +1113,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -1145,7 +1145,7 @@ public class SearchTradesFilterTests : DomainTests
     [Fact]
     public async Task Result_not_equal_to_null_returns_all_trades_with_a_result()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var tradesWithoutResult = Enumerable.Range(0, 2)
             .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
@@ -1155,9 +1155,9 @@ public class SearchTradesFilterTests : DomainTests
         var tradesWithResult = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
-                Opened = openedClosed,
+                Opened = openedFinished,
                 ProfileOrId = profile,
-                Closed = openedClosed,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
@@ -1189,34 +1189,34 @@ public class SearchTradesFilterTests : DomainTests
     }
 
     [Fact]
-    public async Task Closed_equal_to_null_returns_all_trades_without_closed_date()
+    public async Task Finished_equal_to_null_returns_all_trades_without_finished_date()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
-        var closedTrades = Enumerable.Range(0, 2)
+        var finishedTrades = Enumerable.Range(0, 2)
             .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build())
             .ToList();
 
-        var notClosedTrades = Enumerable.Range(0, 4)
+        var notFinishedTrades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build())
             .ToList();
 
-        DbContext.Trades.AddRange(closedTrades.Concat(notClosedTrades));
+        DbContext.Trades.AddRange(finishedTrades.Concat(notFinishedTrades));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
-            PropertyName = "Closed",
+            PropertyName = "Finished",
             Operator = "eq",
             ComparisonValue = "null",
             IsLiteral = true
@@ -1228,39 +1228,39 @@ public class SearchTradesFilterTests : DomainTests
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(2, pagedTrades.Count);
-        Assert.Contains(pagedTrades, item => closedTrades[0].Id == item.Id);
-        Assert.Contains(pagedTrades, item => closedTrades[1].Id == item.Id);
+        Assert.Contains(pagedTrades, item => finishedTrades[0].Id == item.Id);
+        Assert.Contains(pagedTrades, item => finishedTrades[1].Id == item.Id);
     }
 
     [Fact]
-    public async Task Closed_not_equal_to_null_returns_all_trades_with_closed_date()
+    public async Task Finished_not_equal_to_null_returns_all_trades_with_finished_date()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
-        var notClosedTrades = Enumerable.Range(0, 2)
+        var notFinishedTrades = Enumerable.Range(0, 2)
             .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build())
             .ToList();
 
-        var closedTrades = Enumerable.Range(0, 4)
+        var finishedTrades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m,
                 Result = (ResultModel) x
             })
             .Select(x => x.Build())
             .ToList();
 
-        DbContext.Trades.AddRange(notClosedTrades.Concat(closedTrades));
+        DbContext.Trades.AddRange(notFinishedTrades.Concat(finishedTrades));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
         {
-            PropertyName = "Closed",
+            PropertyName = "Finished",
             Operator = "ne",
             ComparisonValue = "null",
             IsLiteral = true
@@ -1272,23 +1272,23 @@ public class SearchTradesFilterTests : DomainTests
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
         Assert.Equal(4, pagedTrades.Count);
-        Assert.Contains(pagedTrades, item => closedTrades[0].Id == item.Id);
-        Assert.Contains(pagedTrades, item => closedTrades[1].Id == item.Id);
-        Assert.Contains(pagedTrades, item => closedTrades[2].Id == item.Id);
-        Assert.Contains(pagedTrades, item => closedTrades[3].Id == item.Id);
+        Assert.Contains(pagedTrades, item => finishedTrades[0].Id == item.Id);
+        Assert.Contains(pagedTrades, item => finishedTrades[1].Id == item.Id);
+        Assert.Contains(pagedTrades, item => finishedTrades[2].Id == item.Id);
+        Assert.Contains(pagedTrades, item => finishedTrades[3].Id == item.Id);
     }
 
     [Fact]
     public async Task Multiple_filters_applied_working_properly()
     {
-        var openedClosed = DateTime.Parse("2024-08-19T15:00:00");
+        var openedFinished = DateTime.Parse("2024-08-19T15:00:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(0, 4)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosed,
-                Closed = openedClosed,
+                Opened = openedFinished,
+                Finished = openedFinished,
                 ProfitLoss = 50m * x,
                 Size = 5000m * x,
                 Result = (ResultModel) x

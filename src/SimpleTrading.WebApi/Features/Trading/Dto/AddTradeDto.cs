@@ -11,7 +11,7 @@ public record AddTradeDto
     public Guid? AssetId { get; set; }
     public Guid? ProfileId { get; set; }
     public DateTimeOffset? Opened { get; set; }
-    public DateTimeOffset? Closed { get; set; }
+    public DateTimeOffset? Finished { get; set; }
     public decimal? Size { get; set; }
     public UpdateResultValue? ManuallyEnteredResult { get; set; }
     public decimal? ProfitLoss { get; set; }

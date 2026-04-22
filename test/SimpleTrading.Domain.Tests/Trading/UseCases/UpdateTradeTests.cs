@@ -45,7 +45,7 @@ public class UpdateTradeTests : DomainTests
         var trade = (TestData.Trade.Default with
         {
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 0
         }).Build();
 
@@ -231,10 +231,10 @@ public class UpdateTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task A_trades_closed_date_cannot_be_updated_if_it_is_before_the_opened_Date()
+    public async Task A_trades_finished_date_cannot_be_updated_if_it_is_before_the_opened_Date()
     {
         var trade = TestData.Trade.Default.Build();
-        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -242,20 +242,20 @@ public class UpdateTradeTests : DomainTests
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Closed = new DateTimeOffset(trade.Opened.AddSeconds(-1))
+            Finished = new DateTimeOffset(trade.Opened.AddSeconds(-1))
         };
 
         var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var conflict = Assert.IsType<Conflict>(response.Value);
-        Assert.Equal("'Closed' must be after 'Opened'.", conflict.Details);
+        Assert.Equal("'Finished' must be after 'Opened'.", conflict.Details);
     }
 
     [Fact]
     public async Task Updating_a_trades_opened_date_to_be_more_than_one_day_in_the_future_is_not_possible()
     {
         var trade = TestData.Trade.Default.Build();
-        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -275,7 +275,7 @@ public class UpdateTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task You_cant_update_the_closed_date_if_the_trade_has_not_yet_been_closed()
+    public async Task You_cant_update_the_finished_date_if_the_trade_has_not_yet_been_finished()
     {
         var trade = TestData.Trade.Default.Build();
 
@@ -285,19 +285,19 @@ public class UpdateTradeTests : DomainTests
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
             TradeId = trade.Id,
-            Closed = new DateTimeOffset(trade.Opened)
+            Finished = new DateTimeOffset(trade.Opened)
         };
 
         var response = await Interactor.Execute(updateTradeRequestModel, TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Closed' can only be updated, if the trade has already been closed.", error.ErrorMessage);
-        Assert.Equal("Closed", error.PropertyName);
+        Assert.Equal("'Finished' can only be updated, if the trade has already been finished.", error.ErrorMessage);
+        Assert.Equal("Finished", error.PropertyName);
     }
 
     [Fact]
-    public async Task You_cant_update_the_profitLoss_if_the_trade_has_not_yet_been_closed()
+    public async Task You_cant_update_the_profitLoss_if_the_trade_has_not_yet_been_finished()
     {
         var trade = TestData.Trade.Default.Build();
 
@@ -314,7 +314,7 @@ public class UpdateTradeTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Profit/Loss' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("'Profit/Loss' can only be updated, if the trade has already been finished.", error.ErrorMessage);
         Assert.Equal("ProfitLoss", error.PropertyName);
     }
 
@@ -322,7 +322,7 @@ public class UpdateTradeTests : DomainTests
     public async Task The_profitLoss_of_a_trade_can_be_updated_when_a_trade_is_finished()
     {
         var trade = TestData.Trade.Default.Build();
-        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
         const decimal newProfitLoss = 100m;
 
         DbContext.Trades.Add(trade);
@@ -377,7 +377,7 @@ public class UpdateTradeTests : DomainTests
                     PositionPrices = oldPositionPrice
                 }
             ).Build();
-        _ = trade.Close(new CloseTradeConfiguration(trade.Opened, 50, UtcNowStub));
+        _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -401,7 +401,7 @@ public class UpdateTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task Updating_position_prices_of_a_closed_trade_leads_to_recalculation_of_the_performance()
+    public async Task Updating_position_prices_of_a_finished_trade_leads_to_recalculation_of_the_performance()
     {
         var oldPositionPrice = new PositionPrices {Entry = 0.95m, StopLoss = 0.8m, TakeProfit = 1.4m, Exit = 1.25m};
 
@@ -409,7 +409,7 @@ public class UpdateTradeTests : DomainTests
                 {
                     ProfitLoss = 500,
                     Opened = UtcNowStub(),
-                    Closed = UtcNowStub(),
+                    Finished = UtcNowStub(),
                     PositionPrices = oldPositionPrice
                 }
             ).Build();
@@ -442,14 +442,14 @@ public class UpdateTradeTests : DomainTests
         var trade = (TestData.Trade.Default with
         {
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 500m,
             Result = ResultModel.Win
         }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
 
         _ = await Interactor.Execute(new UpdateTradeRequestModel
             {TradeId = trade.Id, ManuallyEnteredResult = ResultModel.Win}, TestContext.Current.CancellationToken);
@@ -470,13 +470,13 @@ public class UpdateTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task Result_cannot_be_overriden_since_the_trade_is_not_closed()
+    public async Task Result_cannot_be_overriden_since_the_trade_is_not_finished()
     {
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        Assert.False(trade.IsClosed);
+        Assert.False(trade.IsFinished);
 
         var response = await Interactor.Execute(new UpdateTradeRequestModel
         {
@@ -486,18 +486,18 @@ public class UpdateTradeTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("'Result' can only be updated, if the trade has already been finished.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
-    public async Task Result_cannot_be_overriden_to_null_since_the_trade_is_not_closed()
+    public async Task Result_cannot_be_overriden_to_null_since_the_trade_is_not_finished()
     {
         var trade = TestData.Trade.Default.Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        Assert.False(trade.IsClosed);
+        Assert.False(trade.IsFinished);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
         {
@@ -508,23 +508,23 @@ public class UpdateTradeTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Result' can only be updated, if the trade has already been closed.", error.ErrorMessage);
+        Assert.Equal("'Result' can only be updated, if the trade has already been finished.", error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
-    public async Task Result_can_be_overriden_since_the_trade_is_closed()
+    public async Task Result_can_be_overriden_since_the_trade_is_finished()
     {
         var trade = (TestData.Trade.Default with
         {
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 0m
         }).Build();
         DbContext.Trades.Add(trade);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
 
         var response = await Interactor.Execute(new UpdateTradeRequestModel
         {

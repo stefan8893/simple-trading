@@ -105,42 +105,6 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Abgeschlossen.
-        /// </summary>
-        public static string Closed {
-            get {
-                return ResourceManager.GetString("Closed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; muss nach &apos;Eröffnet&apos; liegen..
-        /// </summary>
-        public static string ClosedBeforeOpened {
-            get {
-                return ResourceManager.GetString("ClosedBeforeOpened", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
-        /// </summary>
-        public static string ClosedTooFarInTheFuture {
-            get {
-                return ResourceManager.GetString("ClosedTooFarInTheFuture", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Gewinn/Verlust&apos; und &apos;Abgeschlossen&apos; angeben..
-        /// </summary>
-        public static string ClosedTradeNeedsClosedAndProfitLoss {
-            get {
-                return ResourceManager.GetString("ClosedTradeNeedsClosedAndProfitLoss", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Vergleichswert.
         /// </summary>
         public static string ComparisonValue {
@@ -209,6 +173,42 @@ namespace SimpleTrading.Domain.Resources {
         public static string FilterNotSupported {
             get {
                 return ResourceManager.GetString("FilterNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Abgeschlossen.
+        /// </summary>
+        public static string Finished {
+            get {
+                return ResourceManager.GetString("Finished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; muss nach &apos;Eröffnet&apos; liegen..
+        /// </summary>
+        public static string FinishedBeforeOpened {
+            get {
+                return ResourceManager.GetString("FinishedBeforeOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;Abgeschlossen&apos; kann maximal nur einen Tag in der Zukunft liegen..
+        /// </summary>
+        public static string FinishedTooFarInTheFuture {
+            get {
+                return ResourceManager.GetString("FinishedTooFarInTheFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Um einen abgeschlossenen Trade hinzuzufügen, müssen Sie &apos;Gewinn/Verlust&apos; und &apos;Abgeschlossen&apos; angeben..
+        /// </summary>
+        public static string FinishedTradeNeedsFinishedAndProfitLoss {
+            get {
+                return ResourceManager.GetString("FinishedTradeNeedsFinishedAndProfitLoss", resourceCulture);
             }
         }
         
@@ -413,9 +413,9 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Das Ergebnis kann nur überschrieben werden, wenn &apos;Gewinn/Verlust&apos; und &apos;Abgeschlossen&apos; angegeben sind..
         /// </summary>
-        public static string ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult {
+        public static string ProfitLossAndFinishedMustBeSpecifiedWhenOverridingResult {
             get {
-                return ResourceManager.GetString("ProfitLossAndClosedMustBeSpecifiedWhenOverridingResult", resourceCulture);
+                return ResourceManager.GetString("ProfitLossAndFinishedMustBeSpecifiedWhenOverridingResult", resourceCulture);
             }
         }
         
@@ -456,7 +456,7 @@ namespace SimpleTrading.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher..
+        ///   Looks up a localized string similar to Sie können das Ergebnis eines offenen Trades nicht zurücksetzen. Bitte schließen die den Trade vorher ab..
         /// </summary>
         public static string ResultOfAnOpenedTradeCannotBeReset {
             get {
@@ -566,9 +566,9 @@ namespace SimpleTrading.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; kann nur aktualisiert werden, wenn der Trade bereits abgeschlossen ist..
         /// </summary>
-        public static string XCanOnlyBeUpdatedIfTradeIsClosed {
+        public static string XCanOnlyBeUpdatedIfTradeIsFinished {
             get {
-                return ResourceManager.GetString("XCanOnlyBeUpdatedIfTradeIsClosed", resourceCulture);
+                return ResourceManager.GetString("XCanOnlyBeUpdatedIfTradeIsFinished", resourceCulture);
             }
         }
         

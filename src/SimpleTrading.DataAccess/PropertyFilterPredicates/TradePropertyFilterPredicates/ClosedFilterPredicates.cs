@@ -6,67 +6,67 @@ using SimpleTrading.Domain.Trading;
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 [UsedImplicitly]
-public class ClosedEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset?>(TradeProperty.Closed, Operator.EqualTo, valueParser)
+public class FinishedEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset?>(TradeProperty.Finished, Operator.EqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset? value)
     {
         var nullableValue = value?.UtcDateTime;
-        return t => t.Closed == nullableValue;
+        return t => t.Finished == nullableValue;
     }
 }
 
 [UsedImplicitly]
-public class ClosedGreaterThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Closed, Operator.GreaterThan,
+public class FinishedGreaterThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Finished, Operator.GreaterThan,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
-        return t => t.Closed > value.UtcDateTime;
+        return t => t.Finished > value.UtcDateTime;
     }
 }
 
 [UsedImplicitly]
-public class ClosedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Closed, Operator.GreaterThanOrEqualTo,
+public class FinishedGreaterThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Finished, Operator.GreaterThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
-        return t => t.Closed >= value.UtcDateTime;
+        return t => t.Finished >= value.UtcDateTime;
     }
 }
 
 [UsedImplicitly]
-public class ClosedLessThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Closed, Operator.LessThan, valueParser)
+public class FinishedLessThanFilterPredicate(IValueParser<DateTimeOffset> valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Finished, Operator.LessThan, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
-        return t => t.Closed < value.UtcDateTime;
+        return t => t.Finished < value.UtcDateTime;
     }
 }
 
 [UsedImplicitly]
-public class ClosedLessThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Closed, Operator.LessThanOrEqualTo,
+public class FinishedLessThanOrEqualToFilterPredicate(IValueParser<DateTimeOffset> valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset>(TradeProperty.Finished, Operator.LessThanOrEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset value)
     {
-        return t => t.Closed <= value.UtcDateTime;
+        return t => t.Finished <= value.UtcDateTime;
     }
 }
 
 [UsedImplicitly]
-public class ClosedNotEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
-    : FilterPredicateBase<Trade, DateTimeOffset?>(TradeProperty.Closed, Operator.NotEqualTo,
+public class FinishedNotEqualToFilterPredicate(IValueParser<DateTimeOffset?> valueParser)
+    : FilterPredicateBase<Trade, DateTimeOffset?>(TradeProperty.Finished, Operator.NotEqualTo,
         valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(DateTimeOffset? value)
     {
         var nullableValue = value?.UtcDateTime;
-        return t => t.Closed != nullableValue;
+        return t => t.Finished != nullableValue;
     }
 }

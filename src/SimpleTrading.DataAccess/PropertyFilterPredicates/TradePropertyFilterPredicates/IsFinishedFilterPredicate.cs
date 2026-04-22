@@ -6,13 +6,13 @@ using SimpleTrading.Domain.Trading;
 namespace SimpleTrading.DataAccess.PropertyFilterPredicates.TradePropertyFilterPredicates;
 
 [UsedImplicitly]
-public class IsClosedFilterPredicate(IValueParser<bool> valueParser)
-    : FilterPredicateBase<Trade, bool>(TradeProperty.IsClosed, Operator.EqualTo, valueParser)
+public class IsFinishedFilterPredicate(IValueParser<bool> valueParser)
+    : FilterPredicateBase<Trade, bool>(TradeProperty.IsFinished, Operator.EqualTo, valueParser)
 {
     protected override Expression<Func<Trade, bool>> GetPredicate(bool value)
     {
         return value
-            ? t => t.Closed != null && t.ProfitLoss != null
-            : t => t.Closed == null && t.ProfitLoss == null;
+            ? t => t.Finished != null && t.ProfitLoss != null
+            : t => t.Finished == null && t.ProfitLoss == null;
     }
 }

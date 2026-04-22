@@ -1,8 +1,8 @@
 ﻿using SimpleTrading.Domain.Trading.UseCases.Shared;
 
-namespace SimpleTrading.Domain.Trading.UseCases.CloseTrade;
+namespace SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 
-public record CloseTradeResponseModel(
+public record FinishTradeResponseModel(
     Guid TradeId,
     ResultModel? Result,
     short? Performance,

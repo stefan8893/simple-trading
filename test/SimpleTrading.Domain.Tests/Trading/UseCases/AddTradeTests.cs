@@ -26,10 +26,10 @@ public class AddTradeTests : DomainTests
     {
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        
+
         var requestModel = new AddTradeRequestModel
         {
             AssetId = Guid.Empty,
@@ -53,10 +53,10 @@ public class AddTradeTests : DomainTests
     {
         var asset = TestData.Asset.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        
+
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
@@ -80,10 +80,10 @@ public class AddTradeTests : DomainTests
     {
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
-        
+
         DbContext.AddRange(asset, profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        
+
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
@@ -111,7 +111,7 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -142,7 +142,7 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -151,7 +151,7 @@ public class AddTradeTests : DomainTests
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
-            Closed = new DateTimeOffset(_utcNow),
+            Finished = new DateTimeOffset(_utcNow),
             ProfitLoss = 500,
             Size = 5000,
             EntryPrice = 1.05m,
@@ -176,7 +176,7 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -236,10 +236,10 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        
+
         var reference = new ReferenceRequestModel("foobar");
         var requestModel = new AddTradeRequestModel
         {
@@ -270,7 +270,7 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -301,10 +301,10 @@ public class AddTradeTests : DomainTests
         var asset = TestData.Asset.Default.Build();
         var profile = TestData.Profile.Default.Build();
         var currency = TestData.Currency.Default.Build();
-        
+
         DbContext.AddRange(asset, profile, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        
+
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
@@ -487,7 +487,7 @@ public class AddTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task A_closed_trade_can_be_added_successfully()
+    public async Task A_finished_trade_can_be_added_successfully()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -500,7 +500,7 @@ public class AddTradeTests : DomainTests
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
-            Closed = new DateTimeOffset(_utcNow),
+            Finished = new DateTimeOffset(_utcNow),
             ManuallyEnteredResult = ResultModel.Win,
             ProfitLoss = 10,
             EntryPrice = 1.00m,
@@ -514,7 +514,7 @@ public class AddTradeTests : DomainTests
         var completed = Assert.IsType<Completed<AddTradeResponseModel>>(response.Value);
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
         Assert.NotNull(newlyAddedTrade);
-        Assert.True(newlyAddedTrade.IsClosed);
+        Assert.True(newlyAddedTrade.IsFinished);
     }
 
     [Fact]
@@ -531,7 +531,7 @@ public class AddTradeTests : DomainTests
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
-            Closed = new DateTimeOffset(_utcNow),
+            Finished = new DateTimeOffset(_utcNow),
             ManuallyEnteredResult = ResultModel.Win,
             ProfitLoss = 10m,
             EntryPrice = 0m,
@@ -558,7 +558,7 @@ public class AddTradeTests : DomainTests
     }
 
     [Fact]
-    public async Task A_new_closed_trade_without_a_profitLoss_cant_be_closed()
+    public async Task A_new_finished_trade_without_a_profitLoss_cant_be_finished()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -571,7 +571,7 @@ public class AddTradeTests : DomainTests
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = new DateTimeOffset(_utcNow),
-            Closed = new DateTimeOffset(_utcNow),
+            Finished = new DateTimeOffset(_utcNow),
             ProfitLoss = null,
             Size = 5000,
             EntryPrice = 1.05m,
@@ -582,12 +582,12 @@ public class AddTradeTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Profit/Loss' must not be empty, if 'Closed' is specified.", error.ErrorMessage);
+        Assert.Equal("'Profit/Loss' must not be empty, if 'Finished' is specified.", error.ErrorMessage);
         Assert.Equal("ProfitLoss", error.PropertyName);
     }
 
     [Fact]
-    public async Task Opened_passed_as_utc_and_closed_as_local_time_will_both_stored_in_utc()
+    public async Task Opened_passed_as_utc_and_finished_as_local_time_will_both_stored_in_utc()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -596,14 +596,14 @@ public class AddTradeTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var opened = DateTimeOffset.Parse("2024-08-05T14:00:00Z");
-        var closed = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
+        var finished = DateTimeOffset.Parse("2024-08-05T10:00:00-04:00");
 
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = opened,
-            Closed = closed,
+            Finished = finished,
             Size = 5000,
             ProfitLoss = 50,
             EntryPrice = 1.05m,
@@ -617,12 +617,12 @@ public class AddTradeTests : DomainTests
         var newlyAddedTrade = await DbContextSingleOrDefault<Trade>(x => x.Id == completed.Data.TradeId);
         Assert.NotNull(newlyAddedTrade);
         Assert.Equal(DateTime.Parse("2024-08-05T14:00:00"), newlyAddedTrade.Opened);
-        Assert.Equal(DateTime.Parse("2024-08-05T14:00:00"), newlyAddedTrade.Closed);
+        Assert.Equal(DateTime.Parse("2024-08-05T14:00:00"), newlyAddedTrade.Finished);
     }
 
     [Fact]
     public async Task
-        Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_profitLoss_and_no_closed_date()
+        Specifying_a_manually_entered_result_is_not_possible_if_there_is_no_profitLoss_and_no_finished_date()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -647,13 +647,13 @@ public class AddTradeTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Closed' are specified.",
+        Assert.Equal("The result can only be overridden if 'Profit/Loss' and 'Finished' are specified.",
             error.ErrorMessage);
         Assert.Equal("ManuallyEnteredResult", error.PropertyName);
     }
 
     [Fact]
-    public async Task Specifying_a_manually_entered_result_is_possible_if_profitLoss_and_closed_date_are_present()
+    public async Task Specifying_a_manually_entered_result_is_possible_if_profitLoss_and_finished_date_are_present()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -668,7 +668,7 @@ public class AddTradeTests : DomainTests
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = now,
-            Closed = now,
+            Finished = now,
             ProfitLoss = 500m,
             Size = 5000,
             EntryPrice = 1.05m,
@@ -684,9 +684,9 @@ public class AddTradeTests : DomainTests
         Assert.Equal(Result.Loss, newlyAddedTrade.Result.Name);
         Assert.Equal(ResultSource.ManuallyEntered, newlyAddedTrade.Result.Source);
     }
-    
+
     [Fact]
-    public async Task Opened_must_be_before_closed_date()
+    public async Task Opened_must_be_before_finished_date()
     {
         var currency = TestData.Currency.Default.Build();
         var profile = TestData.Profile.Default.Build();
@@ -695,14 +695,14 @@ public class AddTradeTests : DomainTests
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var opened = DateTimeOffset.Parse("2024-08-05T14:00:00");
-        var closed = DateTimeOffset.Parse("2024-08-05T13:00:00");
+        var finished = DateTimeOffset.Parse("2024-08-05T13:00:00");
 
         var requestModel = new AddTradeRequestModel
         {
             AssetId = asset.Id,
             ProfileId = profile.Id,
             Opened = opened,
-            Closed = closed,
+            Finished = finished,
             Size = 5000,
             ProfitLoss = 50,
             EntryPrice = 1.05m,
@@ -714,8 +714,8 @@ public class AddTradeTests : DomainTests
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
         var error = Assert.Single(validationResult.Errors);
-        Assert.Equal("'Closed' must be greater than or equal to '05.08.2024 14:00:00'.",
+        Assert.Equal("'Finished' must be greater than or equal to '05.08.2024 14:00:00'.",
             error.ErrorMessage);
-        Assert.Equal("Closed", error.PropertyName);
+        Assert.Equal("Finished", error.PropertyName);
     }
 }

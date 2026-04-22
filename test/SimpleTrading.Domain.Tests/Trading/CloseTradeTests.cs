@@ -13,89 +13,89 @@ public class CloseTradeTests : TestBase
     private readonly DateTime _utcNow = DateTime.Parse("2024-08-04T12:00").ToUtcKind();
 
     [Fact]
-    public void You_cant_close_a_trade_before_it_was_opened()
+    public void You_cant_finish_a_trade_before_it_was_opened()
     {
         var opened = _utcNow.AddHours(-2);
-        var closed = _utcNow.AddHours(-3);
+        var finished = _utcNow.AddHours(-3);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(finished, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m,
             ManuallyEnteredResult = ResultModel.Win
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
         var conflict = Assert.IsType<Conflict>(response.Value);
         Assert.Equal(trade.Id, conflict.ResourceId);
-        Assert.Equal("'Closed' must be after 'Opened'.", conflict.Details);
+        Assert.Equal("'Finished' must be after 'Opened'.", conflict.Details);
     }
 
     [Fact]
-    public void A_trade_is_considered_as_closed_when_closed_date_and_profitLoss_are_specified()
+    public void A_trade_is_considered_as_finished_when_finished_date_and_profitLoss_are_specified()
     {
-        var trade = (TestData.Trade.Default with {Opened = _utcNow, Closed = _utcNow, ProfitLoss = 50m}).Build();
+        var trade = (TestData.Trade.Default with {Opened = _utcNow, Finished = _utcNow, ProfitLoss = 50m}).Build();
 
-        var isClosed = trade.IsClosed;
+        var isFinished = trade.IsFinished;
 
-        Assert.True(isClosed);
+        Assert.True(isFinished);
     }
 
     [Fact]
-    public void The_closed_date_cannot_be_greater_than_one_day_in_the_future()
+    public void The_finished_date_cannot_be_greater_than_one_day_in_the_future()
     {
         var opened = _utcNow;
-        var closed = _utcNow.AddDays(1).AddSeconds(1);
+        var finished = _utcNow.AddDays(1).AddSeconds(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(finished, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m,
             ManuallyEnteredResult = ResultModel.Win
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
         var conflict = Assert.IsType<Conflict>(response.Value);
 
         Assert.Equal(trade.Id, conflict.ResourceId);
-        Assert.Equal("'Closed' must not be greater than one day in the future.", conflict.Details);
+        Assert.Equal("'Finished' must not be greater than one day in the future.", conflict.Details);
     }
 
     [Fact]
-    public void The_closed_date_can_at_maximum_one_day_in_the_future_for_trades_that_were_opened_in_the_past()
+    public void The_finished_date_can_at_maximum_one_day_in_the_future_for_trades_that_were_opened_in_the_past()
     {
         var opened = _utcNow.AddHours(-5);
-        var closed = opened.AddDays(1);
+        var finished = opened.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(finished, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
     }
 
     [Fact]
     public void
-        The_closed_date_can_at_maximum_one_day_in_the_future_based_on_the_opened_date_if_the_trade_was_opened_in_the_future()
+        The_finished_date_can_at_maximum_one_day_in_the_future_based_on_the_opened_date_if_the_trade_was_opened_in_the_future()
     {
         var opened = _utcNow.AddHours(5);
-        var closed = opened.AddDays(1);
+        var finished = opened.AddDays(1);
 
         var trade = (TestData.Trade.Default with {Opened = opened}).Build();
-        var closeTradeDto = new CloseTradeConfiguration(closed, 500m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(finished, 500m, UtcNowStub)
         {
             ExitPrice = 1.05m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
     }
 
     [Fact]
@@ -103,12 +103,12 @@ public class CloseTradeTests : TestBase
         The_result_gets_calculated_by_the_profitLoss_if_ExitPrice_SL_and_TP_are_missing_and_the_user_has_not_entered_the_result_manually()
     {
         var trade = TestData.Trade.Default.Build();
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        Assert.True(trade.IsClosed);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
     }
@@ -122,69 +122,69 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {ExitPrice = 0.1m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
 
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
     }
 
     [Fact]
     public void
-        If_the_profitLoss_is_zero_and_the_entry_and_exit_prices_are_not_equal_the_trade_gets_closed_but_returns_a_warning()
+        If_the_profitLoss_is_zero_and_the_entry_and_exit_prices_are_not_equal_the_trade_gets_finished_but_returns_a_warning()
     {
         var trade = (TestData.Trade.Default with
         {
             PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.0m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Profit/loss is 0, but the position indicates a profit or a loss.", singleWarning);
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
     }
 
     [Fact]
     public void
-        If_the_profitLoss_is_below_zero_and_the_entry_and_exit_prices_are_equal_the_trade_gets_closed_but_returns_a_warning()
+        If_the_profitLoss_is_below_zero_and_the_entry_and_exit_prices_are_equal_the_trade_gets_finished_but_returns_a_warning()
     {
         var trade = (TestData.Trade.Default with
         {
             PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.1m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Profit/loss is not 0, but the position indicates a break-even trade.", singleWarning);
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
     }
 
     [Fact]
-    public void A_short_position_can_be_successfully_closed()
+    public void A_short_position_can_be_successfully_finished()
     {
         var trade = (TestData.Trade.Default with
         {
             PositionPrices = TestData.PositionPrices.Default with {EntryPrice = 1.1m, ExitPrice = 1.4m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        Assert.True(trade.IsClosed);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
+        Assert.True(trade.IsFinished);
     }
 
     [Fact]
@@ -196,12 +196,12 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default with {StopLoss = 1.0m, EntryPrice = 1.1m, ExitPrice = 1.1m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        Assert.True(trade.IsClosed);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByProfitLoss, trade.Result?.Source);
     }
@@ -218,12 +218,12 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 10m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        Assert.True(trade.IsClosed);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.Mediocre, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
@@ -236,14 +236,14 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0m, UtcNowStub)
         {
             ManuallyEnteredResult = ResultModel.BreakEven
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
         Assert.Equal(ResultSource.ManuallyEntered, trade.Result?.Source);
     }
@@ -257,14 +257,14 @@ public class CloseTradeTests : TestBase
             PositionPrices = TestData.PositionPrices.Default
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ManuallyEnteredResult = ResultModel.BreakEven
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.", singleWarning);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
@@ -283,15 +283,15 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 10m, UtcNowStub)
         {
             ManuallyEnteredResult = ResultModel.BreakEven,
             ExitPrice = 0.9m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your trade indicates a 'Win' result, but you have entered 'Break-Even'.", singleWarning);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
@@ -310,15 +310,15 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ManuallyEnteredResult = ResultModel.Mediocre,
             ExitPrice = 1.0m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your trade indicates a 'Loss' result, but you have entered 'Mediocre'.", singleWarning);
         Assert.Equal(Result.Mediocre, trade.Result?.Name);
@@ -337,12 +337,12 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
-        Assert.True(trade.IsClosed);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
@@ -359,11 +359,11 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 10m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.Win, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
@@ -377,11 +377,11 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.0m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
     }
@@ -395,9 +395,9 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.05m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
@@ -413,9 +413,9 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 0.95m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.Loss, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
@@ -431,9 +431,9 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.175m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 5m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 5m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.Mediocre, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
@@ -449,9 +449,9 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.397m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.Mediocre, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
@@ -467,9 +467,9 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.4m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.Win, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
@@ -485,9 +485,9 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m, ExitPrice = 1.46m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 30m, UtcNowStub);
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.Win, trade.Result?.Name);
         Assert.Equal(ResultSource.CalculatedByPositionPrices, trade.Result?.Source);
@@ -504,22 +504,22 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.4m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
             ProfitLoss = 10m,
             ExitPrice = 1.0m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("You have entered a profit, but your long position indicates a loss.", singleWarning);
     }
 
     [Fact]
     public void
-        If_position_prices_indicate_a_mediocre_result_but_profitLoss_is_negative__the_trade_gets_negatively_closed_and_a_warnings_is_returned()
+        If_position_prices_indicate_a_mediocre_result_but_profitLoss_is_negative__the_trade_gets_negatively_finished_and_a_warnings_is_returned()
     {
         var trade = (TestData.Trade.Default with
         {
@@ -529,22 +529,22 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -30m, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -30m, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.",
             singleWarning);
 
-        Assert.True(trade.IsClosed);
+        Assert.True(trade.IsFinished);
         Assert.Equal(Result.Loss, trade.Result?.Name);
     }
 
     [Fact]
     public void
-        If_position_prices_indicate_a_loss_but_profitLoss_is_positive__the_trade_gets_closed_without_a_result_and_a_warning_is_returned()
+        If_position_prices_indicate_a_loss_but_profitLoss_is_positive__the_trade_gets_finished_without_a_result_and_a_warning_is_returned()
     {
         var trade = (TestData.Trade.Default with
         {
@@ -552,14 +552,14 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.2m, TakeProfit = 0.8m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
             ExitPrice = 1.2m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("You have entered a profit, but your short position indicates a loss.", singleWarning);
 
@@ -568,7 +568,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        If_position_prices_indicate_a_loss_of_a_long_position_but_profitLoss_is_positive__the_trade_gets_closed_without_a_result_and_a_warning_is_returned()
+        If_position_prices_indicate_a_loss_of_a_long_position_but_profitLoss_is_positive__the_trade_gets_finished_without_a_result_and_a_warning_is_returned()
     {
         var trade = (TestData.Trade.Default with
         {
@@ -576,14 +576,14 @@ public class CloseTradeTests : TestBase
                 {EntryPrice = 1.1m, StopLoss = 1.0m, TakeProfit = 1.8m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 30m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 30m, UtcNowStub)
         {
             ExitPrice = 1.0m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("You have entered a profit, but your long position indicates a loss.", singleWarning);
 
@@ -594,11 +594,11 @@ public class CloseTradeTests : TestBase
     public void Performance_is_zero_if_the_result_break_even_calculated_by_profitLoss()
     {
         var trade = TestData.Trade.Default.Build();
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub);
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub);
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         Assert.Equal((short) 0, trade.Result?.Performance);
     }
 
@@ -614,15 +614,15 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ExitPrice = 0.9m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
         //assert
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.",
             singleWarning);
@@ -637,15 +637,15 @@ public class CloseTradeTests : TestBase
             PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.95m, TakeProfit = 1.4m}
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, -10m, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, -10m, UtcNowStub)
         {
             ExitPrice = 1.1m,
             ManuallyEnteredResult = ResultModel.BreakEven
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var warnings = Assert.IsType<Completed<CloseTradeResult>>(response.Value).Data.Warnings.ToList();
+        var warnings = Assert.IsType<Completed<FinishTradeResult>>(response.Value).Data.Warnings.ToList();
         Assert.Equal(2, warnings.Count);
         Assert.Contains("Your trade indicates a 'Loss' result, but you have entered 'Break-Even'.", warnings);
         Assert.Contains("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Loss'.",
@@ -654,7 +654,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        Long_position_indicates_a_mediocre_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_but_a_warning_is_returned()
+        Long_position_indicates_a_mediocre_result_but_the_profitLoss_is_zero__the_trade_gets_finished_as_BreakEven_but_a_warning_is_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
@@ -665,14 +665,14 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 1.25m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your position indicates the result 'Mediocre', but based on your Profit/Loss it is 'Break-Even'.",
             singleWarning);
@@ -680,7 +680,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        Long_position_indicates_a_loss_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
+        Long_position_indicates_a_loss_result_but_the_profitLoss_is_zero__the_trade_gets_finished_as_BreakEven_and_a_warning_is_returned()
     {
         var trade = (TestData.Trade.Default with
         {
@@ -690,14 +690,14 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 0.9m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.",
             singleWarning);
@@ -705,7 +705,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        Short_position_indicates_a_win_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
+        Short_position_indicates_a_win_result_but_the_profitLoss_is_zero__the_trade_gets_finished_as_BreakEven_and_a_warning_is_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
@@ -716,14 +716,14 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 0.7m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your position indicates the result 'Win', but based on your Profit/Loss it is 'Break-Even'.",
             singleWarning);
@@ -731,7 +731,7 @@ public class CloseTradeTests : TestBase
 
     [Fact]
     public void
-        Short_position_indicates_a_loss_result_but_the_profitLoss_is_zero__the_trade_gets_closed_as_BreakEven_and_a_warning_is_returned()
+        Short_position_indicates_a_loss_result_but_the_profitLoss_is_zero__the_trade_gets_finished_as_BreakEven_and_a_warning_is_returned()
     {
         // arrange        
         var trade = (TestData.Trade.Default with
@@ -742,14 +742,14 @@ public class CloseTradeTests : TestBase
             }
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ExitPrice = 1.1m
         };
 
-        var response = trade.Close(closeTradeDto);
+        var response = trade.Finish(finishTradeDto);
 
-        var result = Assert.IsType<Completed<CloseTradeResult>>(response.Value);
+        var result = Assert.IsType<Completed<FinishTradeResult>>(response.Value);
         var singleWarning = Assert.Single(result.Data.Warnings);
         Assert.Equal("Your position indicates the result 'Loss', but based on your Profit/Loss it is 'Break-Even'.",
             singleWarning);
@@ -762,16 +762,16 @@ public class CloseTradeTests : TestBase
         var trade = (TestData.Trade.Default with
         {
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 0m
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ManuallyEnteredResult = null
         };
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Null(trade.Result);
     }
@@ -783,16 +783,16 @@ public class CloseTradeTests : TestBase
         var trade = (TestData.Trade.Default with
         {
             Opened = _utcNow,
-            Closed = _utcNow,
+            Finished = _utcNow,
             ProfitLoss = 0m
         }).Build();
 
-        var closeTradeDto = new CloseTradeConfiguration(_utcNow, 0, UtcNowStub)
+        var finishTradeDto = new FinishTradeConfiguration(_utcNow, 0, UtcNowStub)
         {
             ManuallyEnteredResult = new None()
         };
 
-        _ = trade.Close(closeTradeDto);
+        _ = trade.Finish(finishTradeDto);
 
         Assert.Equal(Result.BreakEven, trade.Result?.Name);
         ;

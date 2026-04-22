@@ -15,7 +15,7 @@ public record UpdateTradeRequestModel
     public Guid? AssetId { get; init; }
     public Guid? ProfileId { get; init; }
     public DateTimeOffset? Opened { get; init; }
-    public DateTimeOffset? Closed { get; set; }
+    public DateTimeOffset? Finished { get; set; }
     public decimal? Size { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; set; } = new None();
     public decimal? ProfitLoss { get; set; }
@@ -57,11 +57,11 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
         RuleFor(x => new OpenedDateTime(x.Opened))
             .SetValidator(openedLessThanOneDayInTheFutureValidator);
 
-        RuleFor(x => x.Closed)
-            .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
-            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
-                SimpleTradingStrings.Closed))
-            .When(x => x.Closed.HasValue);
+        RuleFor(x => x.Finished)
+            .MustAsync((m, _, _) => IsTradeFinished(m.TradeId))
+            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsFinished,
+                SimpleTradingStrings.Finished))
+            .When(x => x.Finished.HasValue);
 
         RuleFor(x => x.Size)
             .GreaterThan(0)
@@ -69,8 +69,8 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .When(x => x.Size.HasValue);
 
         RuleFor(x => x.ProfitLoss)
-            .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
-            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
+            .MustAsync((m, _, _) => IsTradeFinished(m.TradeId))
+            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsFinished,
                 SimpleTradingStrings.ProfitLoss))
             .When(x => x.ProfitLoss.HasValue);
 
@@ -81,8 +81,8 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
 
         RuleFor(x => x.ManuallyEnteredResult)
-            .MustAsync((m, _, _) => IsTradeClosed(m.TradeId))
-            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsClosed,
+            .MustAsync((m, _, _) => IsTradeFinished(m.TradeId))
+            .WithMessage(string.Format(SimpleTradingStrings.XCanOnlyBeUpdatedIfTradeIsFinished,
                 SimpleTradingStrings.Result))
             .When(x => x.ManuallyEnteredResult.IsT0);
 
@@ -121,12 +121,12 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .When(x => x.Notes is {IsT0: true, AsT0: not null});
     }
 
-    private async Task<bool> IsTradeClosed(Guid tradeId)
+    private async Task<bool> IsTradeFinished(Guid tradeId)
     {
         var trade = await _tradeRepository.Find(tradeId);
 
         // return true if the trade does not exist.
         // the interactor itself will then handle that case
-        return trade?.IsClosed ?? true;
+        return trade?.IsFinished ?? true;
     }
 }

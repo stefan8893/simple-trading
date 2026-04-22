@@ -20,7 +20,7 @@ public class Trade : IEntity
     public virtual required Profile Profile { get; set; }
     public required DateTime Opened { get; set; }
     public required decimal Size { get; set; }
-    public DateTime? Closed { get; private set; }
+    public DateTime? Finished { get; private set; }
     public decimal? ProfitLoss { get; private set; }
     public Result? Result { get; private set; }
     public required Guid CurrencyId { get; set; }
@@ -29,13 +29,13 @@ public class Trade : IEntity
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public virtual ICollection<Reference> References { get; [UsedImplicitly] set; } = [];
     public string? Notes { get; set; }
-    public bool IsClosed => Closed.HasValue && ProfitLoss.HasValue;
+    public bool IsFinished => Finished.HasValue && ProfitLoss.HasValue;
     public required Guid Id { get; init; }
     public required DateTime Created { get; init; }
 
     internal IImmutableList<string> GetWarnings()
     {
-        if (!IsClosed)
+        if (!IsFinished)
             return ImmutableList<string>.Empty;
 
         var results = CalculateResults(new None());
@@ -46,33 +46,33 @@ public class Trade : IEntity
             .ToImmutableList();
     }
 
-    internal OneOf<Completed<CloseTradeResult>, Conflict> RestoreCalculatedResult(UtcNow utcNow)
+    internal OneOf<Completed<FinishTradeResult>, Conflict> RestoreCalculatedResult(UtcNow utcNow)
     {
-        if (!IsClosed)
+        if (!IsFinished)
             return new Conflict(Id, SimpleTradingStrings.ResultOfAnOpenedTradeCannotBeReset);
 
         Result = null;
-        return Close(new CloseTradeConfiguration(Closed!.Value, ProfitLoss!.Value, utcNow));
+        return Finish(new FinishTradeConfiguration(Finished!.Value, ProfitLoss!.Value, utcNow));
     }
 
-    internal OneOf<Completed<CloseTradeResult>, Conflict> Close(CloseTradeConfiguration configuration)
+    internal OneOf<Completed<FinishTradeResult>, Conflict> Finish(FinishTradeConfiguration configuration)
     {
-        if (configuration.Closed < Opened)
-            return new Conflict(Id, SimpleTradingStrings.ClosedBeforeOpened);
+        if (configuration.Finished < Opened)
+            return new Conflict(Id, SimpleTradingStrings.FinishedBeforeOpened);
 
         var utcNow = configuration.UtcNow();
-        var closedDateUpperBound =
+        var finishedDateUpperBound =
             (Opened > utcNow ? Opened : utcNow).AddDays(Constants.OpenedDateMaxDaysInTheFutureBoundary);
 
-        if (configuration.Closed > closedDateUpperBound)
-            return new Conflict(Id, SimpleTradingStrings.ClosedTooFarInTheFuture);
+        if (configuration.Finished > finishedDateUpperBound)
+            return new Conflict(Id, SimpleTradingStrings.FinishedTooFarInTheFuture);
 
-        return new Completed<CloseTradeResult>(CloseTrade(configuration));
+        return new Completed<FinishTradeResult>(FinishTrade(configuration));
     }
 
-    private CloseTradeResult CloseTrade(CloseTradeConfiguration configuration)
+    private FinishTradeResult FinishTrade(FinishTradeConfiguration configuration)
     {
-        Closed = configuration.Closed.ToUtcKind();
+        Finished = configuration.Finished.ToUtcKind();
         ProfitLoss = configuration.ProfitLoss;
 
         if (configuration.ExitPrice.HasValue)
@@ -82,21 +82,21 @@ public class Trade : IEntity
         var currentResultWasManuallyEntered = Result?.Source == ResultSource.ManuallyEntered;
 
         var doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne =
-            IsClosed
+            IsFinished
             && currentResultWasManuallyEntered
             && !thereIsANewManuallyEnteredResult;
 
         var (result, warnings) = CalculateResult(configuration);
 
         if (doNotOverrideResultThatWasPreviouslyManuallyEnteredWithANewCalculatedOne)
-            return new CloseTradeResult(Id, Result, warnings);
+            return new FinishTradeResult(Id, Result, warnings);
 
         Result = result;
 
-        return new CloseTradeResult(Id, Result, warnings);
+        return new FinishTradeResult(Id, Result, warnings);
     }
 
-    private (Result? result, IReadOnlyList<string> warnings) CalculateResult(CloseTradeConfiguration configuration)
+    private (Result? result, IReadOnlyList<string> warnings) CalculateResult(FinishTradeConfiguration configuration)
     {
         var results = CalculateResults(configuration.ManuallyEnteredResult);
         var calculatedResult =
@@ -205,10 +205,10 @@ public class Trade : IEntity
         Result? CalculatedByPositionPrices);
 }
 
-internal record CloseTradeConfiguration(DateTime Closed, decimal ProfitLoss, UtcNow UtcNow)
+internal record FinishTradeConfiguration(DateTime Finished, decimal ProfitLoss, UtcNow UtcNow)
 {
     public decimal? ExitPrice { get; init; }
     public OneOf<ResultModel?, None> ManuallyEnteredResult { get; init; } = new None();
 }
 
-internal record CloseTradeResult(Guid TradeId, Result? Result, IEnumerable<string> Warnings);
+internal record FinishTradeResult(Guid TradeId, Result? Result, IEnumerable<string> Warnings);

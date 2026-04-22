@@ -12,11 +12,11 @@ public class TradeDto
     public required string Profile { get; init; }
     public decimal Size { get; init; }
     public DateTimeOffset Opened { get; init; }
-    public DateTimeOffset? Closed { get; init; }
+    public DateTimeOffset? Finished { get; init; }
     public decimal? ProfitLoss { get; init; }
     public ResultDto? Result { get; init; }
     public short? Performance { get; init; }
-    public bool IsClosed { get; init; }
+    public bool IsFinished { get; init; }
     public Guid CurrencyId { get; init; }
     public required string Currency { get; init; }
     public decimal Entry { get; init; }
@@ -39,11 +39,11 @@ public class TradeDto
             Profile = model.Profile,
             Size = model.Size,
             Opened = model.Opened,
-            Closed = model.Closed,
+            Finished = model.Finished,
             ProfitLoss = model.ProfitLoss,
             Result = MapToResultDto(model.Result),
             Performance = model.Performance,
-            IsClosed = model.IsClosed,
+            IsFinished = model.IsFinished,
             CurrencyId = model.CurrencyId,
             Currency = model.Currency,
             Entry = model.EntryPrice,

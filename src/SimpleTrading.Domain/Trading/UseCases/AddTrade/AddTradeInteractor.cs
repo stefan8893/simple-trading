@@ -36,16 +36,16 @@ public class AddTradeInteractor(
     {
         var trade = CreateTrade(model, asset, profile, currency);
 
-        var potentiallyClosedTrade = TryCloseTrade(trade, model);
+        var potentiallyFinishedTrade = TryFinishTrade(trade, model);
 
-        if (potentiallyClosedTrade.Value is Conflict conflict)
+        if (potentiallyFinishedTrade.Value is Conflict conflict)
             return conflict;
 
         tradeRepository.Add(trade);
         if (!model.DryRun)
             await uowCommit();
 
-        return potentiallyClosedTrade.Match<AddTradeResponse>(
+        return potentiallyFinishedTrade.Match<AddTradeResponse>(
             x => Completed(new AddTradeResponseModel(x.Data.TradeId,
                 model.DryRun,
                 x.Data.Result?.ToResultModel(),
@@ -93,21 +93,21 @@ public class AddTradeInteractor(
         return newTrade;
     }
 
-    private OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict> TryCloseTrade(
+    private OneOf<Completed<FinishTradeResult>, NothingToFinish, Conflict> TryFinishTrade(
         Trade trade,
         AddTradeRequestModel model)
     {
         return model switch
         {
-            {ProfitLoss: not null, Closed: not null} => Map(Close()),
-            {ProfitLoss: null, Closed: null} => new NothingToClose(trade),
-            _ => Conflict(trade.Id, SimpleTradingStrings.ClosedTradeNeedsClosedAndProfitLoss)
+            {ProfitLoss: not null, Finished: not null} => Map(Finish()),
+            {ProfitLoss: null, Finished: null} => new NothingToFinish(trade),
+            _ => Conflict(trade.Id, SimpleTradingStrings.FinishedTradeNeedsFinishedAndProfitLoss)
         };
 
-        OneOf<Completed<CloseTradeResult>, Conflict> Close()
+        OneOf<Completed<FinishTradeResult>, Conflict> Finish()
         {
-            return trade.Close(new CloseTradeConfiguration(
-                model.Closed!.Value.UtcDateTime,
+            return trade.Finish(new FinishTradeConfiguration(
+                model.Finished!.Value.UtcDateTime,
                 model.ProfitLoss!.Value,
                 utcNow)
             {
@@ -116,15 +116,15 @@ public class AddTradeInteractor(
             });
         }
 
-        OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict> Map(
-            OneOf<Completed<CloseTradeResult>, Conflict> closeTradeResult)
+        OneOf<Completed<FinishTradeResult>, NothingToFinish, Conflict> Map(
+            OneOf<Completed<FinishTradeResult>, Conflict> finishTradeResult)
         {
-            return closeTradeResult
-                .Match<OneOf<Completed<CloseTradeResult>, NothingToClose, Conflict>>(
+            return finishTradeResult
+                .Match<OneOf<Completed<FinishTradeResult>, NothingToFinish, Conflict>>(
                     x => x,
                     x => x);
         }
     }
 
-    private record NothingToClose(Trade Trade);
+    private record NothingToFinish(Trade Trade);
 }

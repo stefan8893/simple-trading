@@ -145,7 +145,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             {
                 ProfileOrId = profile,
                 Opened = now,
-                Closed = now,
+                Finished = now,
                 ProfitLoss = 500m * x
             })
             .Select(x => x.Build());
@@ -163,11 +163,11 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task IsClosed_does_not_take_a_null_literal_as_comparision_value()
+    public async Task IsFinished_does_not_take_a_null_literal_as_comparision_value()
     {
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
-        const string searchFilter = "IsClosed -eq null";
+        const string searchFilter = "IsFinished -eq null";
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
         Task<PageDtoOfTradeDto> Act()
@@ -183,7 +183,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task IsClosed_property_filter_accepts_true_literal()
+    public async Task IsFinished_property_filter_accepts_true_literal()
     {
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
@@ -194,7 +194,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             {
                 ProfileOrId = profile,
                 Opened = now,
-                Closed = now,
+                Finished = now,
                 ProfitLoss = 500m
             })
             .Select(x => x.Build());
@@ -203,7 +203,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        const string searchFilter = "IsClosed -eq true";
+        const string searchFilter = "IsFinished -eq true";
 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
@@ -212,7 +212,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task IsClosed_equals_false_returns_only_open_trades()
+    public async Task IsFinished_equals_false_returns_only_open_trades()
     {
         var client = await CreateClient();
         var now = DateTime.Parse("2024-09-22T10:00:00").ToUtcKind();
@@ -224,19 +224,19 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             Opened = now
         };
 
-        var closedTrade = TestData.Trade.Default with
+        var finishedTrade = TestData.Trade.Default with
         {
             ProfileOrId = profile,
             Opened = now,
-            Closed = now,
+            Finished = now,
             ProfitLoss = 500m
         };
 
         DbContext.Profiles.Add(profile);
-        DbContext.Trades.AddRange(openedTrade.Build(), closedTrade.Build());
+        DbContext.Trades.AddRange(openedTrade.Build(), finishedTrade.Build());
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        const string searchFilter = "IsClosed -eq false";
+        const string searchFilter = "IsFinished -eq false";
 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
@@ -267,7 +267,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var searchFilter = $"Closed -eq {nullLiteral}";
+        var searchFilter = $"Finished -eq {nullLiteral}";
 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
@@ -276,7 +276,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     }
 
     [Fact]
-    public async Task Filtering_for_trades_that_have_a_closed_date_returns_nothing_when_there_are_no_closed_trades()
+    public async Task Filtering_for_trades_that_have_a_finished_date_returns_nothing_when_there_are_no_finished_trades()
     {
         var client = await CreateClient();
         var profile = TestData.Profile.Default.Build();
@@ -288,7 +288,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        const string searchFilter = "Closed -ne null";
+        const string searchFilter = "Finished -ne null";
 
         var result = await client.SearchTradesAsync(profile.Id, [], [searchFilter],
             cancellationToken: TestContext.Current.CancellationToken);
@@ -322,14 +322,14 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
     {
         var client = await CreateClient();
 
-        var openedClosedDate = DateTime.Parse("2024-08-19T19:30:00");
+        var openedFinishedDate = DateTime.Parse("2024-08-19T19:30:00");
         var profile = TestData.Profile.Default.Build();
         var trades = Enumerable.Range(1, 3)
             .Select(x => TestData.Trade.Default with
             {
                 ProfileOrId = profile,
-                Opened = openedClosedDate,
-                Closed = openedClosedDate,
+                Opened = openedFinishedDate,
+                Finished = openedFinishedDate,
                 ProfitLoss = 500m * x,
                 Result = (ResultModel) x
             })
