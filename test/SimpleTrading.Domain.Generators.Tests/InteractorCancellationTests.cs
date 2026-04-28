@@ -35,7 +35,7 @@ public class InteractorCancellationTests
     }
 
     [Fact]
-    public async Task Cancellation_is_requested_when_invoked_without_cancellationToken()
+    public async Task Cancellation_is_requested_when_invoked_with_cancellationToken()
     {
         var proxy = new IsCancellationRequestedInteractorProxy(
             NullLogger<IsCancellationRequestedInteractorProxy>.Instance, new IsCancellationRequestedInteractor());
