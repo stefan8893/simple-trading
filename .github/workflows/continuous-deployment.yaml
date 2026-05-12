@@ -41,7 +41,7 @@ jobs:
     needs: has_next_version
     if: ${{ needs.has_next_version.outputs.HasNextVersion == 'true' }}
     permissions:
-      contents: read
+      contents: write
       packages: write
     env:
       Version: ${{ needs.has_next_version.outputs.Version }}
