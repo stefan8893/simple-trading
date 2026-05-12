@@ -41,7 +41,7 @@ jobs:
     needs: has_next_version
     if: ${{ needs.has_next_version.outputs.HasNextVersion == 'true' }}
     permissions:
-      contents: write
+      contents: read
       packages: write
     env:
       Version: ${{ needs.has_next_version.outputs.Version }}
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CI_PAT }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4
