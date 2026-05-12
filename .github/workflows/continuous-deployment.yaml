@@ -60,7 +60,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.CI_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4
@@ -103,7 +103,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.CI_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-dotnet@v5
         with:
@@ -150,7 +150,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.CI_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
             
       - name: Setup dotnet 10.x
