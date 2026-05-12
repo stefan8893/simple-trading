@@ -20,7 +20,7 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.CI_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Get next version
@@ -32,6 +32,12 @@ jobs:
         shell: pwsh
         run: |
           $nextVersion = '${{ steps.get_next_version.outputs.version }}'
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
           git tag $nextVersion
           git push origin $nextVersion
 
