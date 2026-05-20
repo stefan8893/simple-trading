@@ -15,8 +15,8 @@ public class ClientGenerator(ILogger<ClientGenerator> logger)
         logger.LogInformation("Generate {target} Client", target);
 
         var apiDescriptionFile = Path.Combine(AppContext.BaseDirectory, ApiDescriptionFileName);
-        var openDescription = await File.ReadAllTextAsync(apiDescriptionFile);
-        var openApiDocument = await OpenApiDocument.FromJsonAsync(openDescription);
+        var openApiSpecifications = await File.ReadAllTextAsync(apiDescriptionFile);
+        var openApiDocument = await OpenApiDocument.FromJsonAsync(openApiSpecifications);
 
         var fileContent = target switch
         {

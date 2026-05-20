@@ -8,7 +8,7 @@ public class RemoveNullFromEnumSchemaTransformer : IOpenApiSchemaTransformer
     public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context,
         CancellationToken cancellationToken)
     {
-        if (schema.Enum == null)
+        if (schema.Enum is null)
             return Task.CompletedTask;
 
         schema.Enum = schema.Enum

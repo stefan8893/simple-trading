@@ -36,6 +36,7 @@ public class OAuth2SecuritySchemeTransformer(
                     }
                 }
             };
+
             document.Components ??= new OpenApiComponents();
             document.Components.SecuritySchemes = requirements;
         }

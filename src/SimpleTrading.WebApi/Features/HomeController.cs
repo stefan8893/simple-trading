@@ -6,7 +6,7 @@ using SimpleTrading.WebApi.Infrastructure;
 namespace SimpleTrading.WebApi.Features;
 
 [Route("")]
-public class HomeController(IHostEnvironment hostEnvironment, IConfiguration configuration) : SimpleControllerBase
+public class HomeController(IHostEnvironment hostEnvironment) : SimpleControllerBase
 {
     private static readonly Lazy<string> AssemblyVersion =
         new(() =>
@@ -26,7 +26,7 @@ public class HomeController(IHostEnvironment hostEnvironment, IConfiguration con
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<ApiInfo> GetAppInfo()
     {
-        var baseUrl = configuration.GetValue<string>("BaseUrl") ?? "";
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
         var docs = $"{baseUrl.Trim('/')}/docs";
 
         var apiInfo = new ApiInfo(AssemblyName,
