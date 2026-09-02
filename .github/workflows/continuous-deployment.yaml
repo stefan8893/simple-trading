@@ -25,7 +25,7 @@ jobs:
 
       - name: Get next version
         id: get_next_version
-        uses: thenativeweb/get-next-version@2.7.1
+        uses: thenativeweb/get-next-version@2.7.7
 
       - name: Tag new version
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
@@ -105,7 +105,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.x'
 
@@ -154,7 +154,7 @@ jobs:
           fetch-depth: 0
             
       - name: Setup dotnet 10.x
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.x'
 
