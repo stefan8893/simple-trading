@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="xunit.v3" Version="4.0.0" />
-        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.0.4" />
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.10.0" />
     </ItemGroup>
 
     <ItemGroup>
