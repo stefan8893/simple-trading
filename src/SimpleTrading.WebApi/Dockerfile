@@ -8,6 +8,7 @@ ARG BuildConfiguration=Release
 ARG Version=0.0.0
 WORKDIR /src
 
+COPY Directory.Packages.props ./
 COPY src/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p src/${file%.*}/ && mv $file src/${file%.*}/; done
 
