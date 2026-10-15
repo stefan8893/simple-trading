@@ -24,8 +24,7 @@ public static class GenerateClientCommand
         DefaultValueFactory = _ => [new DirectoryInfo(".")]
     };
 
-    private static readonly Option<string> FileNameOption = new("Filename", "--file-name"
-    )
+    private static readonly Option<string> FileNameOption = new("Filename", "--file-name")
     {
         Required = true,
         Description = "The file name of the generated client. e.g. SimpleTrading.Client.cs"
