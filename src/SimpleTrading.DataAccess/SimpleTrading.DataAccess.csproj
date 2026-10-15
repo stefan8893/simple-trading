@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SimpleTrading.Domain\SimpleTrading.Domain.csproj"/>
+        <ProjectReference Include="..\SimpleTrading.Domain\SimpleTrading.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.12" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
     </ItemGroup>
 
 </Project>
