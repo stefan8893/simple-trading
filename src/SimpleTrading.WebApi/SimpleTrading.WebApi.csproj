@@ -9,24 +9,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-        <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" >
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Scalar.AspNetCore" />
-        <PackageReference Include="Microsoft.Identity.Web" />
-        <PackageReference Include="NSwag.CodeGeneration.CSharp" />
-        <PackageReference Include="NSwag.CodeGeneration.TypeScript" />
+        <PackageReference Include="Scalar.AspNetCore"/>
+        <PackageReference Include="Microsoft.Identity.Web"/>
+        <PackageReference Include="NSwag.CodeGeneration.CSharp"/>
+        <PackageReference Include="NSwag.CodeGeneration.TypeScript"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Autofac" />
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" />
-        <PackageReference Include="System.CommandLine" />
-        <PackageReference Include="Serilog.AspNetCore" />
+        <PackageReference Include="Autofac"/>
+        <PackageReference Include="Autofac.Extensions.DependencyInjection"/>
+        <PackageReference Include="System.CommandLine"/>
+        <PackageReference Include="Serilog.AspNetCore"/>
     </ItemGroup>
 
     <ItemGroup>

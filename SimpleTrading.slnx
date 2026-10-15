@@ -5,6 +5,7 @@
     <File Path="LICENSE" />
     <File Path="README.md" />
     <File Path="test.ps1" />
+    <File Path="test.sh" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/SimpleTrading.DataAccess.Postgres/SimpleTrading.DataAccess.Postgres.csproj" />

@@ -16,15 +16,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="xunit.v3" />
-        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-        <PackageReference Include="JetBrains.Annotations" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-        <PackageReference Include="FluentValidation" />
-        <PackageReference Include="OneOf" />
+        <PackageReference Include="xunit.v3"/>
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
+        <PackageReference Include="JetBrains.Annotations"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="OneOf"/>
     </ItemGroup>
 
     <ItemGroup>

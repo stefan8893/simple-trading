@@ -10,11 +10,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" />
-        <PackageReference Include="OneOf" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-        <PackageReference Include="JetBrains.Annotations" />
-        <PackageReference Include="NodaTime" />
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="OneOf"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+        <PackageReference Include="JetBrains.Annotations"/>
+        <PackageReference Include="NodaTime"/>
     </ItemGroup>
 
     <ItemGroup>
