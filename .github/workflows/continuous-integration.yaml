@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup dotnet 10.x
         uses: actions/setup-dotnet@v6
@@ -34,7 +34,7 @@ jobs:
         run: ./test.ps1
 
       - name: Generate Coverage Report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.4
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
         with:
           reports: 'test/**/coverage.cobertura.xml'
           targetdir: 'CoverageReport'
