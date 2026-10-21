@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -22,7 +22,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             return client.AddTradeAsync(new AddTradeDto());
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
 
@@ -168,7 +168,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("size", error.Key);
@@ -200,7 +200,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var (identifier, errors) = Assert.Single(exception.Result.Errors);
         Assert.Equal("assetId", identifier);
@@ -235,7 +235,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("profitLoss", error.Key);
@@ -270,7 +270,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("finished", error.Key);
@@ -374,7 +374,7 @@ public class AddTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("references[0].Link", error.Key);

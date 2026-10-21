@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
@@ -48,7 +48,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("filter[0]", error.Key);
@@ -68,7 +68,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("filter[0]", error.Key);
@@ -86,7 +86,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             return client.SearchTradesAsync(null, [], []);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("profileId", error.Key);
@@ -106,7 +106,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("filter[0].ComparisonValue", error.Key);
@@ -126,7 +126,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("filter[0]", error.Key);
@@ -175,7 +175,7 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             return client.SearchTradesAsync(profile.Id, [], [searchFilter]);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("filter[0].ComparisonValue", error.Key);

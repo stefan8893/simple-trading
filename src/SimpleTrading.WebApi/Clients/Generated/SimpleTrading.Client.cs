@@ -20,135 +20,135 @@
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace SimpleTrading.Client
+namespace SimpleTrading.ApiClient
 {
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial interface ISimpleTradingClient
+    public partial interface ISimpleTradingApiClient
     {
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<ApiInfo> GetAppInfoAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<UserSettingsDto> GetUserSettingsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task UpdateUserSettingsAsync(UpdateUserSettingsDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.DateTimeOffset> GetUserLocalNowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TimeZoneOption>> GetAvailableTimezonesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AssetDto>> GetAssetsAsync(string searchTerm = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CurrencyDto>> GetCurrenciesAsync(string searchTerm = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ProfileDto>> GetProfilesAsync(string searchTerm = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<ProfileDto> GetActiveProfileAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<ReferenceDto> GetReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task UpdateReferenceAsync(System.Guid tradeId, System.Guid referenceId, UpdateReferenceDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task DeleteReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ReferenceDto>> GetReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Guid> AddReferenceAsync(System.Guid tradeId, AddReferenceDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<int> DeleteReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<PageDtoOfTradeDto> SearchTradesAsync(System.Guid? profileId = null, System.Collections.Generic.IEnumerable<string> sort = null, System.Collections.Generic.IEnumerable<string> filter = null, int? page = null, int? pageSize = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<AddTradeResultDto> AddTradeAsync(AddTradeDto body, bool? dryRun = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<TradeDto> GetTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<WarningsDto> UpdateTradeAsync(System.Guid tradeId, UpdateTradeDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task DeleteTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<TradeResultDto> FinishTradeAsync(System.Guid tradeId, FinishTradeDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<TradeResultDto> RestoreCalculatedResultAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SimpleTradingClient : ISimpleTradingClient
+    public partial class SimpleTradingApiClient : ISimpleTradingApiClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings, true);
         private Newtonsoft.Json.JsonSerializerSettings _instanceSettings;
 
     #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public SimpleTradingClient(System.Net.Http.HttpClient httpClient)
+        public SimpleTradingApiClient(System.Net.Http.HttpClient httpClient)
     #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
@@ -174,7 +174,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<ApiInfo> GetAppInfoAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -218,14 +218,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ApiInfo>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -244,7 +244,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<UserSettingsDto> GetUserSettingsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -289,7 +289,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<UserSettingsDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -299,14 +299,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -325,7 +325,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task UpdateUserSettingsAsync(UpdateUserSettingsDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (body == null)
@@ -382,9 +382,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -392,14 +392,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -418,7 +418,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.DateTimeOffset> GetUserLocalNowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -463,7 +463,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.DateTimeOffset>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -473,14 +473,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -499,7 +499,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TimeZoneOption>> GetAvailableTimezonesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -544,7 +544,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<TimeZoneOption>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -554,14 +554,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -580,7 +580,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AssetDto>> GetAssetsAsync(string searchTerm = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -631,7 +631,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<AssetDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -641,9 +641,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -651,14 +651,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -677,7 +677,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CurrencyDto>> GetCurrenciesAsync(string searchTerm = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -728,7 +728,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<CurrencyDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -738,9 +738,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -748,14 +748,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -774,7 +774,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ProfileDto>> GetProfilesAsync(string searchTerm = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -825,7 +825,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ProfileDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -835,9 +835,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -845,14 +845,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -871,7 +871,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<ProfileDto> GetActiveProfileAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -916,7 +916,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProfileDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -926,14 +926,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -952,7 +952,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<ReferenceDto> GetReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1006,7 +1006,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ReferenceDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1016,9 +1016,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1026,14 +1026,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1052,7 +1052,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task UpdateReferenceAsync(System.Guid tradeId, System.Guid referenceId, UpdateReferenceDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1117,9 +1117,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -1127,9 +1127,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1137,9 +1137,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -1147,14 +1147,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1173,7 +1173,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task DeleteReferenceAsync(System.Guid tradeId, System.Guid referenceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1231,9 +1231,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1241,14 +1241,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1267,7 +1267,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ReferenceDto>> GetReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1317,7 +1317,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ReferenceDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1327,9 +1327,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1337,14 +1337,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1363,7 +1363,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Guid> AddReferenceAsync(System.Guid tradeId, AddReferenceDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1420,7 +1420,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<System.Guid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1430,9 +1430,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -1440,9 +1440,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1450,9 +1450,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 409)
@@ -1460,9 +1460,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -1470,14 +1470,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1496,7 +1496,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<int> DeleteReferencesAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1546,7 +1546,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<int>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1556,9 +1556,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1566,14 +1566,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1592,7 +1592,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<PageDtoOfTradeDto> SearchTradesAsync(System.Guid? profileId = null, System.Collections.Generic.IEnumerable<string> sort = null, System.Collections.Generic.IEnumerable<string> filter = null, int? page = null, int? pageSize = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -1659,7 +1659,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<PageDtoOfTradeDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1669,9 +1669,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -1679,9 +1679,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -1689,14 +1689,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1715,7 +1715,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<AddTradeResultDto> AddTradeAsync(AddTradeDto body, bool? dryRun = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (body == null)
@@ -1773,7 +1773,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<AddTradeResultDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1783,9 +1783,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -1793,9 +1793,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1803,9 +1803,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 409)
@@ -1813,9 +1813,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -1823,14 +1823,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1849,7 +1849,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<TradeDto> GetTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -1898,7 +1898,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<TradeDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -1908,9 +1908,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1918,14 +1918,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -1944,7 +1944,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<WarningsDto> UpdateTradeAsync(System.Guid tradeId, UpdateTradeDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -2000,7 +2000,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<WarningsDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -2010,9 +2010,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -2020,9 +2020,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2030,9 +2030,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 409)
@@ -2040,9 +2040,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -2050,14 +2050,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -2076,7 +2076,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task DeleteTradeAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -2129,14 +2129,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -2155,7 +2155,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<TradeResultDto> FinishTradeAsync(System.Guid tradeId, FinishTradeDto body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -2212,7 +2212,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<TradeResultDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -2222,9 +2222,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
@@ -2232,9 +2232,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2242,9 +2242,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 409)
@@ -2252,9 +2252,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 422)
@@ -2262,14 +2262,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ValidationProblemDetails>("Unprocessable Entity", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -2288,7 +2288,7 @@ namespace SimpleTrading.Client
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="SimpleTradingClientException">A server side error occurred.</exception>
+        /// <exception cref="SimpleTradingApiClientException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<TradeResultDto> RestoreCalculatedResultAsync(System.Guid tradeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tradeId == null)
@@ -2339,7 +2339,7 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<TradeResultDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -2349,9 +2349,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Unauthorized", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2359,9 +2359,9 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 409)
@@ -2369,14 +2369,14 @@ namespace SimpleTrading.Client
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new SimpleTradingClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new SimpleTradingApiClientException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new SimpleTradingClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new SimpleTradingApiClientException<ProblemDetails>("Conflict", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SimpleTradingClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new SimpleTradingApiClientException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -2446,7 +2446,7 @@ namespace SimpleTrading.Client
                 catch (Newtonsoft.Json.JsonException exception)
                 {
                     var message = "Could not deserialize the response body string as " + typeof(T).FullName + ".";
-                    throw new SimpleTradingClientException(message, (int)response.StatusCode, responseText, headers, exception);
+                    throw new SimpleTradingApiClientException(message, (int)response.StatusCode, responseText, headers, exception);
                 }
             }
             else
@@ -2465,7 +2465,7 @@ namespace SimpleTrading.Client
                 catch (Newtonsoft.Json.JsonException exception)
                 {
                     var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
-                    throw new SimpleTradingClientException(message, (int)response.StatusCode, string.Empty, headers, exception);
+                    throw new SimpleTradingApiClientException(message, (int)response.StatusCode, string.Empty, headers, exception);
                 }
             }
         }
@@ -3298,7 +3298,7 @@ namespace SimpleTrading.Client
 
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SimpleTradingClientException : System.Exception
+    public partial class SimpleTradingApiClientException : System.Exception
     {
         public int StatusCode { get; private set; }
 
@@ -3306,7 +3306,7 @@ namespace SimpleTrading.Client
 
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-        public SimpleTradingClientException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
+        public SimpleTradingApiClientException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
         {
             StatusCode = statusCode;
@@ -3321,11 +3321,11 @@ namespace SimpleTrading.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SimpleTradingClientException<TResult> : SimpleTradingClientException
+    public partial class SimpleTradingApiClientException<TResult> : SimpleTradingApiClientException
     {
         public TResult Result { get; private set; }
 
-        public SimpleTradingClientException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException)
+        public SimpleTradingApiClientException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException)
             : base(message, statusCode, response, headers, innerException)
         {
             Result = result;

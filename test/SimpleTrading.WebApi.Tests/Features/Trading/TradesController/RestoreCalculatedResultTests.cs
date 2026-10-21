@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
@@ -51,7 +51,7 @@ public class RestoreCalculatedResultTests(
             return client.RestoreCalculatedResultAsync(notExistingTradeId);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
         Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
@@ -70,7 +70,7 @@ public class RestoreCalculatedResultTests(
             return client.RestoreCalculatedResultAsync(tradeId);
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
         Assert.Equal("Something went badly wrong.", exception.Result.Detail);
     }

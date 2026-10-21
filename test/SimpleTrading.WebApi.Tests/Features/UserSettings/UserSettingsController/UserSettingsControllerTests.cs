@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Hosting;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;

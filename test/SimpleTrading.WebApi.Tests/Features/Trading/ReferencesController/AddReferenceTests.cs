@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
@@ -44,7 +44,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("link", error.Key);
@@ -66,7 +66,7 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
             });
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
         Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);

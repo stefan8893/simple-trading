@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -79,7 +79,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new UpdateTradeDto {ManuallyEnteredResult = new UpdateResultValue {Value = ResultDto.Loss}});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);
         Assert.Equal("manuallyEnteredResult", singleError.Key);
@@ -156,7 +156,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             return client.UpdateTradeAsync(notExistingTradeId, new UpdateTradeDto());
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
         Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
@@ -178,7 +178,7 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new UpdateTradeDto {Finished = DateTimeOffset.Parse("2024-08-14T17:00:00")});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status422UnprocessableEntity, exception.StatusCode);
         var singleError = Assert.Single(exception.Result.Errors);
         Assert.Equal("finished", singleError.Key);

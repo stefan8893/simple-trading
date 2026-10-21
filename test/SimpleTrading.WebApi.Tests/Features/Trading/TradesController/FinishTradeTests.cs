@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
@@ -25,7 +25,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new FinishTradeDto {Finished = new DateTimeOffset(_utcNow), ProfitLoss = -20d, ExitPrice = 1.05});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status401Unauthorized, exception.StatusCode);
     }
 
@@ -43,7 +43,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new FinishTradeDto {Finished = new DateTimeOffset(_utcNow), ProfitLoss = -20d, ExitPrice = 1.05});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status404NotFound, exception.StatusCode);
         Assert.Equal("Trade nicht gefunden.", exception.Result.Title);
         Assert.Equal($"Trade mit der ID '{notExistingTradeId}' nicht gefunden.", exception.Result.Detail);
@@ -64,7 +64,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new FinishTradeDto {Finished = new DateTimeOffset(_utcNow), ProfitLoss = null, ExitPrice = 1.05});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("profitLoss", error.Key);
@@ -85,7 +85,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
                 new FinishTradeDto {Finished = null, ProfitLoss = 0d, ExitPrice = 1.05});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ValidationProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ValidationProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
         var error = Assert.Single(exception.Result.Errors);
         Assert.Equal("finished", error.Key);
@@ -109,7 +109,7 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
                     {Finished = new DateTimeOffset(_utcNow).AddDays(-1), ProfitLoss = -50d, ExitPrice = 1.05});
         }
 
-        var exception = await Assert.ThrowsAsync<SimpleTradingClientException<ProblemDetails>>(Act);
+        var exception = await Assert.ThrowsAsync<SimpleTradingApiClientException<ProblemDetails>>(Act);
         Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
         Assert.Equal("'Abgeschlossen' muss nach 'Eröffnet' liegen.", exception.Result.Detail);
     }
