@@ -37,16 +37,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="Clients\Generated\SimpleTrading.Client.ts"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Folder Include="wwwroot\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="Clients\Generated\SimpleTrading.Client.cs"/>
-        <None Include="Clients\Generated\SimpleTrading.Client.cs"/>
+        <Compile Remove="Clients\Generated\simple-trading-api-client.g.ts"/>
+
+        <Compile Remove="Clients\Generated\SimpleTradingApiClient.g.cs"/>
+        <None Include="Clients\Generated\SimpleTradingApiClient.g.cs"/>
     </ItemGroup>
 
     <Target Name="CopyApiDescriptionFile" AfterTargets="Build">

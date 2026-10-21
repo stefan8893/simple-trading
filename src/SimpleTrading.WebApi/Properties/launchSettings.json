@@ -49,7 +49,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "commandLineArgs": "generate-client --target CSharp --file-name SimpleTrading.Client.cs --output-dir ./Clients/Generated --output-dir ../../test/SimpleTrading.TestInfrastructure"
+      "commandLineArgs": "generate-client --target CSharp --file-name SimpleTradingApiClient.g.cs --output-dir ./Clients/Generated --output-dir ../../test/SimpleTrading.TestInfrastructure"
     },
     "Generate TypeScript Client": {
       "commandName": "Project",
