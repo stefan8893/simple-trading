@@ -8,14 +8,14 @@ public static class ClientSettings
 {
     public static readonly CSharpClientGeneratorSettings CSharp = new()
     {
-        ClassName = "SimpleTradingApiClient",
+        ClassName = "SimpleTradingClient",
         CSharpGeneratorSettings =
         {
-            Namespace = "SimpleTrading.ApiClient",
+            Namespace = "SimpleTrading.Client",
             GenerateOptionalPropertiesAsNullable = true
         },
         GenerateExceptionClasses = true,
-        ExceptionClass = "SimpleTradingApiClientException",
+        ExceptionClass = "SimpleTradingClientException",
         GenerateOptionalParameters = true,
         GenerateClientClasses = true,
         GenerateClientInterfaces = true,
@@ -23,21 +23,21 @@ public static class ClientSettings
         InjectHttpClient = true,
         UseBaseUrl = false,
         WrapResponses = false,
-        ResponseClass = "SimpleTradingApiClientResponse",
+        ResponseClass = "SimpleTradingClientResponse",
         WrapDtoExceptions = true
     };
 
     public static readonly TypeScriptClientGeneratorSettings TypeScript = new()
     {
-        ClassName = "SimpleTradingApiClient",
+        ClassName = "SimpleTradingClient",
         Template = TypeScriptTemplate.Fetch,
-        ExceptionClass = "SimpleTradingApiClientException",
+        ExceptionClass = "SimpleTradingClientException",
         PromiseType = PromiseType.Promise,
         WrapResponses = true,
         GenerateClientInterfaces = true,
         GenerateClientClasses = true,
         GenerateDtoTypes = true,
-        ResponseClass = "SimpleTradingApiClientResponse",
+        ResponseClass = "SimpleTradingClientResponse",
         UseAbortSignal = true,
         TypeScriptGeneratorSettings =
         {

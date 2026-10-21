@@ -7,11 +7,11 @@ param (
 
 Push-Location ..
 
-dotnet run -- generate-client --target TypeScript --file-name index.ts --output-dir ./Clients/Npm/simple-trading-api-client
+dotnet run -- generate-client --target TypeScript --file-name index.ts --output-dir ./Clients/Npm/simple-trading-client
 
 Pop-Location
 
-Push-Location Npm/simple-trading-api-client
+Push-Location Npm/simple-trading-client
 
 npm install
 npm run build

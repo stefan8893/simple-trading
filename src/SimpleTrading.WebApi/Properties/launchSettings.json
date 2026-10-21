@@ -48,7 +48,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "commandLineArgs": "generate-client --target CSharp --file-name SimpleTradingApiClient.g.cs --output-dir ./Clients/Generated --output-dir ../../test/SimpleTrading.TestInfrastructure"
+      "commandLineArgs": "generate-client --target CSharp --file-name SimpleTrading.Client.cs --output-dir ./Clients/Generated --output-dir ../../test/SimpleTrading.TestInfrastructure"
     },
     "Generate TypeScript Client": {
       "commandName": "Project",
@@ -58,7 +58,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "commandLineArgs": "generate-client --target TypeScript --file-name simple-trading-api-client.g.ts --output-dir ./Clients/Generated"
+      "commandLineArgs": "generate-client --target TypeScript --file-name SimpleTrading.Client.ts --output-dir ./Clients/Generated"
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json"
