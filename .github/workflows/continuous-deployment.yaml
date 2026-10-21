@@ -185,12 +185,14 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
+            const owner = context.repo.owner;
+
             async function deletePackages(packageType, packageName, versionsToKeep) {
 
               const versions = await github.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
                 package_type: packageType,
                 package_name: packageName,
-                username: 'stefan8893'
+                username: owner
               });
 
               const sorted = versions.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -200,7 +202,7 @@ jobs:
                 await github.rest.packages.deletePackageVersionForUser({
                   package_type: packageType,
                   package_name: packageName,
-                  username: 'stefan8893',
+                  username: owner,
                   package_version_id: version.id
                 });
 
@@ -208,5 +210,5 @@ jobs:
               }
             }
 
-            await deletePackages('npm', 'simple-trading-client', 10);
+            await deletePackages('npm', 'simple-trading-api-client', 10);
             await deletePackages('container', 'simple-trading', 10);
