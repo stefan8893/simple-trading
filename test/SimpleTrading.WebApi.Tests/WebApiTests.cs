@@ -4,7 +4,7 @@ using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SimpleTrading.Client;
+using SimpleTrading.ApiClient;
 using SimpleTrading.DataAccess;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.TestInfrastructure;
@@ -54,7 +54,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
     {
     }
 
-    protected async Task<SimpleTradingClient> CreateClient(bool includeAccessToken = true)
+    protected async Task<SimpleTradingApiClient> CreateClient(bool includeAccessToken = true)
     {
         var client = factory.CreateClient();
 
@@ -65,7 +65,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
-        return new SimpleTradingClient(client);
+        return new SimpleTradingApiClient(client);
     }
 
     protected Task<T?> DbContextSingleOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class, IEntity
