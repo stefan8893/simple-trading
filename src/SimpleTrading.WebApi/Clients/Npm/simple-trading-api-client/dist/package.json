@@ -1,17 +1,13 @@
 {
-  "name": "@stefan8893/simple-trading-client-builder",
+  "name": "@stefan8893/simple-trading-api-client",
   "version": "0.0.0",
   "description": "A client for the SimpleTrading Backend",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stefan8893/simple-trading.git"
+    "url": "git+https://github.com/stefan8893/simple-trading.git"
   },
   "keywords": [
     "simple-trading"
@@ -24,9 +20,5 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "homepage": "https://github.com/stefan8893/simple-trading#readme",
-  "devDependencies": {
-    "@types/node": "^24.19.2",
-    "typescript": "^6.0.3"
-  }
+  "homepage": "https://github.com/stefan8893/simple-trading#readme"
 }
