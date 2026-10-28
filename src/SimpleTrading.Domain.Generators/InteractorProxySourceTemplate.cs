@@ -108,7 +108,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                  """;
     }
 
-    private string GetInteractorInvocation(string responseModelTransformed, bool isResponseModelTransformed)
+    private string GetInteractorInvocation(string responseModel, bool isResponseModelTransformed)
     {
         var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel, cancellationToken)",
             "_interactor.Execute(cancellationToken)");
@@ -116,17 +116,17 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         var easyInteractorInvocation = $"return await {interactorCall};";
 
         var interactorInvocationWithFromT0 =
-            $"return {responseModelTransformed}.FromT0(await {interactorCall});";
+            $"return {responseModel}.FromT0(await {interactorCall});";
 
         var count = context.ResponseModel.TypeArguments.Length;
         var matchFunctions = string.Join(",\n\r",
-            Enumerable.Range(0, count).Select(x => $"            x => {responseModelTransformed}.FromT{x}(x)"));
+            Enumerable.Range(0, count).Select(x => $"            x => {responseModel}.FromT{x}(x)"));
 
         var interactorInvocationWithMatch =
             // lang=C#
             $"""
              var result =  await _interactor.Execute(requestModel, cancellationToken);
-                     return  result.Match<{responseModelTransformed}>(
+                     return  result.Match<{responseModel}>(
              {matchFunctions});
              """;
 
