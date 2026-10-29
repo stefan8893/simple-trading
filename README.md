@@ -133,6 +133,9 @@ Or, on a system with PowerShell:
 ./test.ps1
 ```
 
+Both scripts accept `Release` or `Debug` as the configuration. Use `--no-build` with `test.sh` or `-NoBuild` with
+`test.ps1` to skip building when the selected configuration has already been built.
+
 ### Database Setup
 
 The application supports three database systems:

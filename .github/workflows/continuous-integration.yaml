@@ -31,7 +31,7 @@ jobs:
           Auth__SimpleTradingWebApi__TenantId: ${{ secrets.AUTH_TENANT_ID }}
           Auth__SimpleTradingWebApi__ClientId: ${{ secrets.AUTH_CLIENT_ID }}
           Auth__SimpleTradingWebApi__Audience: ${{ secrets.AUTH_AUDIENCE }}
-        run: ./test.ps1
+        run: ./test.ps1 -NoBuild
 
       - name: Generate Coverage Report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
