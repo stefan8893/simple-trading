@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 
@@ -40,9 +40,11 @@ public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseMod
         {
             stopwatch.Stop();
 
-            logger.LogError("An error occured while executing '{interactorName}': {exceptionMessage}",
-                interactorName, exception.Message);
-            logger.LogError(exception, "{interactorName} exception", interactorName);
+            logger.LogError(
+                exception,
+                "An error occurred while executing '{interactorName}': {exceptionMessage}",
+                interactorName,
+                exception.Message);
 
             throw;
         }
