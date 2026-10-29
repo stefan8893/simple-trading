@@ -42,12 +42,12 @@ public class InteractorContext
                                                                    StringComparison.Ordinal));
     }
 
-    public (bool isTransformed, string responseModel) GetResponseModelTransformed()
+    public (string responseModel, bool isAdapted) GetResponseModel()
     {
         var addValidationResultCase = HasValidators && !IsResponseModelOneOfWithValidationResultCase;
         return addValidationResultCase
-            ? (true, AddValidationResultCaseToResponseModel())
-            : (false, ResponseModel.GetDisplayName());
+            ? (AddValidationResultCaseToResponseModel(), true)
+            : (ResponseModel.GetDisplayName(), false);
     }
 
     private string AddValidationResultCaseToResponseModel()

@@ -1,8 +1,10 @@
+using System.Collections.Immutable;
+
 namespace SimpleTrading.Domain.Generators;
 
 public class InteractorProxySourceTemplate(InteractorContext context)
 {
-    private static readonly IReadOnlyList<string> DefaultNamespaces =
+    private static readonly IImmutableList<string> DefaultNamespaces =
     [
         "System",
         "System.Threading",
@@ -21,13 +23,13 @@ public class InteractorProxySourceTemplate(InteractorContext context)
 
     private IEnumerable<string> Namespaces =>
     [
-        ..DefaultNamespaces,
+        .. DefaultNamespaces,
         OnValidation("FluentValidation"),
         OnValidation("FluentValidation.Results"),
         context.ResponseModel.ContainingNamespace.ToDisplayString(),
-        ..context.ResponseModel.GetAllNamespaces(),
-        ..context.ClosedInteractorInterface.GetAllNamespaces(),
-        ..context.RequestModel?.GetAllNamespaces() ?? []
+        .. context.ResponseModel.GetAllNamespaces(),
+        .. context.ClosedInteractorInterface.GetAllNamespaces(),
+        .. context.RequestModel?.GetAllNamespaces() ?? []
     ];
 
     private IEnumerable<string> UsingStatements => Namespaces
@@ -47,8 +49,8 @@ public class InteractorProxySourceTemplate(InteractorContext context)
         var executeParameterList =
             $"{OnContainsRequestModel($"{requestModelParameter},\n\r            ")}CancellationToken cancellationToken = default";
 
-        var (isTransformed, responseModel) = context.GetResponseModelTransformed();
-        var interactorInvocation = GetInteractorInvocation(responseModel, isTransformed);
+        var (responseModel, isAdapted) = context.GetResponseModel();
+        var interactorInvocation = GetInteractorInvocation(responseModel, isAdapted);
 
         // lang=C#
         return $$"""
@@ -108,19 +110,17 @@ public class InteractorProxySourceTemplate(InteractorContext context)
                  """;
     }
 
-    private string GetInteractorInvocation(string responseModel, bool isResponseModelTransformed)
+    private string GetInteractorInvocation(string responseModel, bool isResponseModelAdapted)
     {
         var interactorCall = OnContainsRequestModel("_interactor.Execute(requestModel, cancellationToken)",
             "_interactor.Execute(cancellationToken)");
 
         var easyInteractorInvocation = $"return await {interactorCall};";
+        var interactorInvocationWithFromT0 = $"return {responseModel}.FromT0(await {interactorCall});";
 
-        var interactorInvocationWithFromT0 =
-            $"return {responseModel}.FromT0(await {interactorCall});";
-
-        var count = context.ResponseModel.TypeArguments.Length;
+        var countOfOneOfCases = context.ResponseModel.TypeArguments.Length;
         var matchFunctions = string.Join(",\n\r",
-            Enumerable.Range(0, count).Select(x => $"            x => {responseModel}.FromT{x}(x)"));
+            Enumerable.Range(0, countOfOneOfCases).Select(x => $"            x => {responseModel}.FromT{x}(x)"));
 
         var interactorInvocationWithMatch =
             // lang=C#
@@ -130,7 +130,7 @@ public class InteractorProxySourceTemplate(InteractorContext context)
              {matchFunctions});
              """;
 
-        return !isResponseModelTransformed
+        return !isResponseModelAdapted
             ? easyInteractorInvocation
             : context.IsResponseModelOneOf
                 ? interactorInvocationWithMatch
