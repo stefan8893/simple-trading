@@ -81,10 +81,11 @@ For example, create a database and add its master data:
 dotnet run --project src/SimpleTrading.WebApi -- create-db
 dotnet run --project src/SimpleTrading.WebApi -- seed-data
 ```
+
 > [!IMPORTANT]  
 > The `--force` option can delete a SQL Server database. Use it with care, especially if the configured connection
 points to production.
-    
+
 To generate a client, specify its language and file name. You can pass `--output-dir` more than once. If you omit it,
 the client is written to the current directory:
 
