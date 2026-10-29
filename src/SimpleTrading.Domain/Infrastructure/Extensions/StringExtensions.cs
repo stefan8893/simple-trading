@@ -1,36 +1,36 @@
-﻿namespace SimpleTrading.Domain.Infrastructure.Extensions;
+namespace SimpleTrading.Domain.Infrastructure.Extensions;
 
 public static class StringExtensions
 {
-    extension(string candidate)
+    extension(string value)
     {
         public bool IsNullLiteral()
         {
-            if (string.IsNullOrWhiteSpace(candidate))
+            if (string.IsNullOrWhiteSpace(value))
                 return false;
 
-            return candidate
+            return value
                 .Trim()
                 .Equals("null", StringComparison.OrdinalIgnoreCase);
         }
 
         public bool IsBoolLiteral()
         {
-            if (string.IsNullOrWhiteSpace(candidate))
+            if (string.IsNullOrWhiteSpace(value))
                 return false;
 
-            var trimmedCandidate = candidate.Trim();
+            var trimmedValue = value.Trim();
 
-            return trimmedCandidate.Equals("true", StringComparison.OrdinalIgnoreCase) ||
-                   trimmedCandidate.Equals("false", StringComparison.OrdinalIgnoreCase);
+            return trimmedValue.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                   trimmedValue.Equals("false", StringComparison.OrdinalIgnoreCase);
         }
 
         public string FirstCharToLower()
         {
-            if (string.IsNullOrEmpty(candidate) || char.IsLower(candidate[0]))
-                return candidate;
+            if (string.IsNullOrEmpty(value) || char.IsLower(value[0]))
+                return value;
 
-            return char.ToLower(candidate[0]) + candidate[1..];
+            return char.ToLower(value[0]) + value[1..];
         }
     }
 }
