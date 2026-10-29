@@ -38,8 +38,6 @@ public abstract class InteractorLoggingDecoratorBase<TRequestModel, TResponseMod
         }
         catch (Exception exception)
         {
-            stopwatch.Stop();
-
             logger.LogError(
                 exception,
                 "An error occurred while executing '{interactorName}': {exceptionMessage}",
