@@ -18,7 +18,7 @@ npm run build
 
 Push-Location .\dist
 
-npm version $Version
+npm version --no-git-tag-version $Version
 npm publish --access public
 
 Pop-Location
