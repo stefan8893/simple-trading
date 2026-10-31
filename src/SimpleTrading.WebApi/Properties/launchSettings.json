@@ -19,7 +19,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "commandLineArgs": "create-db --dbProvider Postgres"
+      "commandLineArgs": "create-db"
     },
     "Seed Data": {
       "commandName": "Project",
@@ -29,7 +29,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "commandLineArgs": "seed-data --dbProvider Postgres"
+      "commandLineArgs": "seed-data"
     },
     "Drop Database": {
       "commandName": "Project",
@@ -39,7 +39,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "commandLineArgs": "drop-db --dbProvider Postgres"
+      "commandLineArgs": "drop-db"
     },
     "Generate CSharp Client": {
       "commandName": "Project",
