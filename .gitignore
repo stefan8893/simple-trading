@@ -398,3 +398,5 @@ FodyWeavers.xsd
 
 # sqlite dbs
 *.Development.db
+*.Development.db-shm
+*.Development.db-wal

@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/simple_trading</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="simple-trading.development.db" uuid="53da453f-8afc-40b3-8d7b-18e03a3a41c6">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:src/SimpleTrading.WebApi/simple-trading.development.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
