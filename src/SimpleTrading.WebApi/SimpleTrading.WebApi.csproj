@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
         <UserSecretsId>SimpleTrading.WebApi</UserSecretsId>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <ApiDescriptionFileName>simple-trading-api-description</ApiDescriptionFileName>
