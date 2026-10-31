@@ -395,3 +395,6 @@ FodyWeavers.xsd
 
 # MacOS file system
 .DS_Store
+
+# sqlite dbs
+*.Development.db
