@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Globalization;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging.Abstractions;
 using OneOf;
@@ -44,6 +45,12 @@ public class WithValidatorAndValidationResultInResponseModelInteractor : IIntera
 
 public class InteractorWithValidatorTests
 {
+    public InteractorWithValidatorTests()
+    {
+        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+    }
+    
     [Fact]
     public async Task Response_model_is_transformed_when_a_validator_exists()
     {
