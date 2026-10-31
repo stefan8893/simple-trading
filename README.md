@@ -149,16 +149,17 @@ The application supports three database systems:
 
 In production, the application connects to an **Azure SQL Database** using the SQL Server provider.
 
-#### Local Development (PostgreSQL)
+#### Local Development on Windows (PostgreSQL)
 
 PostgreSQL is used for local development because it is already installed on the development machine. No additional
 database system is required.
 
-#### Testing (SQLite)
+#### Testing and Local Development on Mac (SQLite)
 
 Tests use an **in-memory SQLite database**. EF Core's separate `Microsoft.EntityFrameworkCore.InMemory` provider does
 not support essential SQL features such as referential integrity. SQLite offers a good balance of speed and
-realistic database behavior.
+realistic database behavior. I also use this database on my MacBook for development, since I don’t have a database server running there. 
+However, the data isn't stored in memory like for testing purposes; it's stored in a file.
 
 The `DbProvider` configuration value selects the provider. The application then uses the connection string with the
 matching provider name.
