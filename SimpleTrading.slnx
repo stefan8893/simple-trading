@@ -5,6 +5,7 @@
     <File Path=".github/workflows/continuous-deployment.yaml" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
     <File Path="SimpleTrading.sln.DotSettings.user" />
     <File Path="LICENSE" />
     <File Path="README.md" />
