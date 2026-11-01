@@ -143,7 +143,7 @@ database system is required.
 
 Tests use an **in-memory SQLite database**. EF Core's separate `Microsoft.EntityFrameworkCore.InMemory` provider does
 not support essential SQL features such as referential integrity. SQLite offers a good balance of speed and
-realistic database behavior. I also use this database on my MacBook for development, since I don’t have a database server running there. 
+realistic database behavior. I also use this database on my MacBook for development, since I don’t have a database server running there.
 However, the data isn't stored in memory like for testing purposes; it's stored in a file.
 
 The `DbProvider` configuration value selects the provider. The application then uses the connection string with the
