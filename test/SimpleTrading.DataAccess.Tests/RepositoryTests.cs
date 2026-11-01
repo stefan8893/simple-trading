@@ -25,6 +25,8 @@ public abstract class RepositoryTests
         await DbContext.Database.EnsureDeletedAsync();
         _lifetimeScope?.Dispose();
         _container?.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 
     public async ValueTask InitializeAsync()

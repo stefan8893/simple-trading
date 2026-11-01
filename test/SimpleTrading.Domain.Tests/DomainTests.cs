@@ -26,6 +26,8 @@ public abstract class DomainTests
         await DbContext.Database.EnsureDeletedAsync();
         _lifetimeScope?.Dispose();
         _container?.Dispose();
+        
+        GC.SuppressFinalize(this);
     }
 
     public async ValueTask InitializeAsync()

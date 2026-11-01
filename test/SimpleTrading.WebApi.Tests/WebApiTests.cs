@@ -29,6 +29,8 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
         if (_serviceScope.HasValue)
             await _serviceScope.Value.DisposeAsync();
+
+        GC.SuppressFinalize(this);
     }
 
     public async ValueTask InitializeAsync()
