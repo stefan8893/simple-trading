@@ -21,7 +21,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          dotnet build --configuration Release
+          dotnet build
 
       - name: Test
         shell: pwsh
@@ -31,12 +31,12 @@ jobs:
           Auth__SimpleTradingWebApi__TenantId: ${{ secrets.AUTH_TENANT_ID }}
           Auth__SimpleTradingWebApi__ClientId: ${{ secrets.AUTH_CLIENT_ID }}
           Auth__SimpleTradingWebApi__Audience: ${{ secrets.AUTH_AUDIENCE }}
-        run: dotnet test
+        run: dotnet test --coverage --coverage-output-format 'cobertura' --no-build
 
       - name: Generate Coverage Report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
         with:
-          reports: 'test/**/coverage.cobertura.xml'
+          reports: 'TestResults/*.cobertura.xml'
           targetdir: 'CoverageReport'
           reporttypes: 'HtmlInline;MarkdownSummaryGithub;Cobertura'
           assemblyfilters: '-SimpleTrading.TestInfrastructure'
