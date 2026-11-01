@@ -122,21 +122,6 @@ publishes the TypeScript API client to GitHub Packages and keeps the ten most re
 The solution includes tests for the domain use cases, data access, web API, and source generator. Tests use an
 in-memory **SQLite** database, which provides relational behavior without a separate database server.
 
-Run all test projects with coverage from the repository root:
-
-```bash
-./test.sh
-```
-
-Or, on a system with PowerShell:
-
-```powershell
-./test.ps1
-```
-
-Both scripts accept `Release` or `Debug` as the configuration. Use `--no-build` with `test.sh` or `-NoBuild` with
-`test.ps1` to skip building when the selected configuration has already been built.
-
 ### Database Setup
 
 The application supports three database systems:
