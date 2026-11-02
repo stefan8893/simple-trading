@@ -78,7 +78,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
-            .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
+            .When(x => x.ManuallyEnteredResult is { IsT0: true, AsT0: not null });
 
         RuleFor(x => x.ManuallyEnteredResult)
             .MustAsync((m, _, _) => IsTradeFinished(m.TradeId))
@@ -95,19 +95,19 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.StopLoss)
             .OverridePropertyName(x => x.StopLoss)
-            .When(x => x.StopLoss is {IsT0: true, AsT0: not null});
+            .When(x => x.StopLoss is { IsT0: true, AsT0: not null });
 
         RuleFor(x => x.TakeProfit.AsT0)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.TakeProfit)
             .OverridePropertyName(x => x.TakeProfit)
-            .When(x => x.TakeProfit is {IsT0: true, AsT0: not null});
+            .When(x => x.TakeProfit is { IsT0: true, AsT0: not null });
 
         RuleFor(x => x.ExitPrice.AsT0)
             .GreaterThan(0)
             .WithName(SimpleTradingStrings.ExitPrice)
             .OverridePropertyName(x => x.ExitPrice)
-            .When(x => x.ExitPrice is {IsT0: true, AsT0: not null});
+            .When(x => x.ExitPrice is { IsT0: true, AsT0: not null });
 
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
@@ -118,7 +118,7 @@ public class UpdateTradeRequestModelValidator : AbstractValidator<UpdateTradeReq
             .MaximumLength(4000)
             .WithName(SimpleTradingStrings.Notes)
             .OverridePropertyName(x => x.Notes)
-            .When(x => x.Notes is {IsT0: true, AsT0: not null});
+            .When(x => x.Notes is { IsT0: true, AsT0: not null });
     }
 
     private async Task<bool> IsTradeFinished(Guid tradeId)

@@ -16,7 +16,7 @@ public class DeleteReferencesInteractor(ITradeRepository tradeRepository, UowCom
         if (trade is null)
             return NotFound<Trade>(model.TradeId);
 
-        var referencesCount = (ushort) trade.References.Count;
+        var referencesCount = (ushort)trade.References.Count;
         tradeRepository.RemoveReferences(trade.References);
         await uowCommit();
 

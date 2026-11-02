@@ -19,7 +19,7 @@ public record PositionPrices
     public double? RiskRewardRatio =>
         !StopLoss.HasValue || !TakeProfit.HasValue
             ? null
-            : (double) Math.Round(Math.Abs((Entry - TakeProfit.Value) / (Entry - StopLoss.Value)), 2);
+            : (double)Math.Round(Math.Abs((Entry - TakeProfit.Value) / (Entry - StopLoss.Value)), 2);
 
     public PositionType? Type
         => IsLongPosition
@@ -79,21 +79,21 @@ public record PositionPrices
         var diffBetweenEntryAndExit = Entry - Exit!.Value;
         var performance = Math.Abs(diffBetweenEntryAndExit / diffBetweenEntryAndStopLoss * 100) * -1m;
 
-        return new Result(Result.Loss, ResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Loss, ResultSource.CalculatedByPositionPrices, (short)performance);
     }
 
     private Result CalculateWinResult()
     {
         var performance = CalculatePositivePerformance();
 
-        return new Result(Result.Win, ResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Win, ResultSource.CalculatedByPositionPrices, (short)performance);
     }
 
     private Result CalculateMediocreResult()
     {
         var performance = CalculatePositivePerformance();
 
-        return new Result(Result.Mediocre, ResultSource.CalculatedByPositionPrices, (short) performance);
+        return new Result(Result.Mediocre, ResultSource.CalculatedByPositionPrices, (short)performance);
     }
 
     private decimal CalculatePositivePerformance()

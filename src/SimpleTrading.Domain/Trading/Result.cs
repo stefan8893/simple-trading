@@ -21,8 +21,7 @@ public record Result
 
     static Result()
     {
-        SupportedResults = new List<string>([Loss, BreakEven, Mediocre, Win])
-            .ToImmutableList();
+        SupportedResults = [Loss, BreakEven, Mediocre, Win];
     }
 
     public Result(string name, ResultSource source, short? performance = null)

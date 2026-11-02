@@ -15,8 +15,8 @@ public static class ResultModelExtensions
         var success = Enum.TryParse(typeof(ResultModel), tradingResult.Name, true, out var result);
 
         if (!success)
-            throw new ArgumentOutOfRangeException(nameof(tradingResult.Name), tradingResult.Name, null);
+            throw new ArgumentOutOfRangeException(nameof(tradingResult), tradingResult.Name, null);
 
-        return (ResultModel) result!;
+        return (ResultModel)result!;
     }
 }

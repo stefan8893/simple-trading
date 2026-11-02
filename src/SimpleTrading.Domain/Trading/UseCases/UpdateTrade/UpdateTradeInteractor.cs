@@ -100,7 +100,7 @@ public class UpdateTradeInteractor(
     {
         var updateOpenedDate = model.Opened.HasValue && model.Opened.Value.UtcDateTime != trade.Opened;
         var isFinishedBeforeOpened = updateOpenedDate && trade.Finished.HasValue &&
-                                   trade.Finished.Value < model.Opened!.Value.UtcDateTime;
+                                     trade.Finished.Value < model.Opened!.Value.UtcDateTime;
 
         if (isFinishedBeforeOpened)
             return Conflict(trade.Id, SimpleTradingStrings.FinishedBeforeOpened);
@@ -124,7 +124,7 @@ public class UpdateTradeInteractor(
         var positionPrices = model.EntryPrice.HasValue && model.EntryPrice.Value != trade.PositionPrices.Entry
             // create a copy of the current prices to compare it later with the original
             // by doing so you can easily detect changes
-            ? trade.PositionPrices with {Entry = model.EntryPrice.Value}
+            ? trade.PositionPrices with { Entry = model.EntryPrice.Value }
             : trade.PositionPrices with { };
 
         if (model.ExitPrice.IsT0 && model.ExitPrice.AsT0 != trade.PositionPrices.Exit)

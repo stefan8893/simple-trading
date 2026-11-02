@@ -99,8 +99,8 @@ public class AddTradeInteractor(
     {
         return model switch
         {
-            {ProfitLoss: not null, Finished: not null} => Map(Finish()),
-            {ProfitLoss: null, Finished: null} => new NothingToFinish(trade),
+            { ProfitLoss: not null, Finished: not null } => Map(Finish()),
+            { ProfitLoss: null, Finished: null } => new NothingToFinish(trade),
             _ => Conflict(trade.Id, SimpleTradingStrings.FinishedTradeNeedsFinishedAndProfitLoss)
         };
 

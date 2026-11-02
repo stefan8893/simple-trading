@@ -69,7 +69,7 @@ public class AddTradeRequestModelValidator : AbstractValidator<AddTradeRequestMo
             .IsInEnum()
             .WithName(SimpleTradingStrings.Result)
             .OverridePropertyName(x => x.ManuallyEnteredResult)
-            .When(x => x.ManuallyEnteredResult is {IsT0: true, AsT0: not null});
+            .When(x => x.ManuallyEnteredResult is { IsT0: true, AsT0: not null });
 
         RuleFor(x => x.ManuallyEnteredResult.AsT0)
             .Empty()
