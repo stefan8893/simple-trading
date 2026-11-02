@@ -2,6 +2,6 @@
 
 public interface IEntity
 {
-    public Guid Id { get; }
-    public DateTime Created { get; }
+    Guid Id { get; }
+    DateTime Created { get; }
 }

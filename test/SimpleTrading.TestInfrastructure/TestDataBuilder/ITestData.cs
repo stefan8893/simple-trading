@@ -1,7 +1,9 @@
-﻿namespace SimpleTrading.TestInfrastructure.TestDataBuilder;
+﻿using SimpleTrading.Domain.Infrastructure;
 
-public interface ITestData<out TEntity, out TTestData>
+namespace SimpleTrading.TestInfrastructure.TestDataBuilder;
+
+public interface ITestData<out TTarget, out TTestData>
 {
     static abstract TTestData Default { get; }
-    TEntity Build();
+    TTarget Build();
 }
