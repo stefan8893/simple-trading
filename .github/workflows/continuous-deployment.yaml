@@ -107,7 +107,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.x'
+          dotnet-version: '11.x'
 
       - name: Login to Azure
         uses: azure/login@v3
@@ -153,10 +153,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
             
-      - name: Setup dotnet 10.x
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.x'
+          dotnet-version: '11.x'
 
       - name: Setup node 24.x
         uses: actions/setup-node@v7

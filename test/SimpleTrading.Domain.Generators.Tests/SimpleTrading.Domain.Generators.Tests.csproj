@@ -21,7 +21,6 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
         <PackageReference Include="JetBrains.Annotations"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="OneOf"/>
     </ItemGroup>

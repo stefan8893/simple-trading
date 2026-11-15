@@ -13,10 +13,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v7
 
-      - name: Setup dotnet 10.x
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.x'
+          dotnet-version: '11.x'
 
       - name: Build
         shell: pwsh
