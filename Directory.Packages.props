@@ -5,7 +5,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftPackagesVersion>11.0.0</MicrosoftPackagesVersion>
-    <MicrosoftCodeAnalysisPackages>5.9.0</MicrosoftCodeAnalysisPackages>
+    <MicrosoftCodeAnalysisPackages>5.12.0</MicrosoftCodeAnalysisPackages>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftPackagesVersion)" />
@@ -24,14 +24,14 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftPackagesVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="11.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.21.0" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="3.2.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.18.0" />
     <PackageVersion Include="NSwag.CodeGeneration.CSharp" Version="14.8.0" />
     <PackageVersion Include="NSwag.CodeGeneration.TypeScript" Version="14.8.0" />
     <PackageVersion Include="Autofac" Version="9.3.4" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="11.0.2" />
-    <PackageVersion Include="System.CommandLine" Version="2.0.14" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="System.CommandLine" Version="3.0.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="11.0.0" />
     <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.3" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.12.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(MicrosoftPackagesVersion)" />
