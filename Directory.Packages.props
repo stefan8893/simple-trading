@@ -4,14 +4,14 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftPackagesVersion>10.0.14</MicrosoftPackagesVersion>
+    <MicrosoftPackagesVersion>11.0.0</MicrosoftPackagesVersion>
     <MicrosoftCodeAnalysisPackages>5.9.0</MicrosoftCodeAnalysisPackages>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftPackagesVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(MicrosoftPackagesVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(MicrosoftPackagesVersion)" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(MicrosoftPackagesVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftPackagesVersion)" />
     <PackageVersion Include="FluentValidation" Version="12.2.0" />
