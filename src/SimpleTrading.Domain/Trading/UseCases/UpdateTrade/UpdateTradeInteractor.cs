@@ -69,7 +69,6 @@ public class UpdateTradeInteractor(
                 return NotFound<Asset>(model.AssetId.Value);
 
             trade.AssetId = newAsset.Id;
-            trade.Asset = newAsset;
         }
 
         if (model.ProfileId.HasValue && model.ProfileId.Value != trade.ProfileId)
@@ -79,7 +78,6 @@ public class UpdateTradeInteractor(
                 return NotFound<Profile>(model.ProfileId.Value);
 
             trade.ProfileId = newProfile.Id;
-            trade.Profile = newProfile;
         }
 
         // ReSharper disable once InvertIf
@@ -90,7 +88,6 @@ public class UpdateTradeInteractor(
                 return NotFound<Currency>(model.CurrencyId.Value);
 
             trade.CurrencyId = newCurrency.Id;
-            trade.Currency = newCurrency;
         }
 
         return Completed();

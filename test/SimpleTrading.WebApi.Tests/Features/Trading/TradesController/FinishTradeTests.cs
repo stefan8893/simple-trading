@@ -3,6 +3,7 @@ using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
@@ -98,7 +99,10 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -120,7 +124,10 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var result = await client.FinishTradeAsync(trade.Id, new FinishTradeDto
@@ -142,7 +149,10 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         await client.FinishTradeAsync(trade.Id, new FinishTradeDto
@@ -163,7 +173,10 @@ public class FinishTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var finishedInNewYork = DateTimeOffset.Parse("2024-08-05T12:00:00-04:00");

@@ -16,16 +16,13 @@ public class Trade : IEntity
 {
     public required Guid Id { get; init; }
     public required Guid AssetId { get; set; }
-    public virtual required Asset Asset { get; set; }
     public required Guid ProfileId { get; set; }
-    public virtual required Profile Profile { get; set; }
     public required DateTime Opened { get; set; }
     public required decimal Size { get; set; }
     public DateTime? Finished { get; private set; }
     public decimal? ProfitLoss { get; private set; }
     public Result? Result { get; private set; }
     public required Guid CurrencyId { get; set; }
-    public virtual required Currency Currency { get; set; }
     public required PositionPrices PositionPrices { get; set; }
     public double? RiskRewardRatio => PositionPrices.RiskRewardRatio;
     public virtual ICollection<Reference> References { get; [UsedImplicitly] set; } = [];

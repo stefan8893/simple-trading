@@ -2,6 +2,7 @@
 using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.ReferencesController;
@@ -35,7 +36,11 @@ public class DeleteReferenceTests(TestingWebApplicationFactory<Program> factory)
         var trade = TestData.Trade.Default.Build();
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
-        DbContext.AddRange(trade, reference1, reference2);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.AddRange(reference1, reference2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var countOfDeletedReferences =

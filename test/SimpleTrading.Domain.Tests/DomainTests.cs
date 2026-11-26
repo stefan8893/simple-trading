@@ -21,6 +21,7 @@ public abstract class DomainTests
 
     protected ILifetimeScope ServiceLocator => _lifetimeScope!;
 
+
     public async ValueTask DisposeAsync()
     {
         await DbContext.Database.EnsureDeletedAsync();

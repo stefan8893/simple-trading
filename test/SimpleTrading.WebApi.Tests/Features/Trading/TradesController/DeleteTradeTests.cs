@@ -1,5 +1,6 @@
 ﻿using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
@@ -21,7 +22,10 @@ public class DeleteTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         await client.DeleteTradeAsync(trade.Id, TestContext.Current.CancellationToken);

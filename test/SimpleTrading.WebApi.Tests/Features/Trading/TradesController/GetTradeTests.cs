@@ -4,6 +4,7 @@ using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.User.DataAccess;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
@@ -34,7 +35,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
         var client = await CreateClient();
         var trade = TestData.Trade.Default.Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
@@ -57,7 +61,10 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             .GetUserSettings();
         userSettings.TimeZone = "America/New_York";
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);
@@ -87,7 +94,11 @@ public class GetTradeTests(TestingWebApplicationFactory<Program> factory) : WebA
             })
             .Build();
 
-        DbContext.AddRange(trade, exampleReference, tradingViewReference);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.AddRange(exampleReference, tradingViewReference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var returnedTrade = await client.GetTradeAsync(trade.Id, TestContext.Current.CancellationToken);

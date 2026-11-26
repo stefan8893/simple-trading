@@ -1,15 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
-using SimpleTrading.Domain.Infrastructure.Extensions;
+using SimpleTrading.Domain.Infrastructure;
+using SimpleTrading.Domain.Trading;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.AddTrade;
 using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 using SimpleTrading.Domain.Trading.UseCases.DeleteTrade;
-using SimpleTrading.Domain.Trading.UseCases.GetTrade;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
 using SimpleTrading.WebApi.Features.Trading.Dto;
@@ -19,43 +18,46 @@ namespace SimpleTrading.WebApi.Features.Trading;
 
 [Route("[controller]")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public partial class TradesController : SimpleControllerBase
+public class TradesController : SimpleControllerBase
 {
     [HttpGet(Name = nameof(SearchTrades))]
     [ProducesResponseType<PageDto<TradeDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SearchTrades(
-        [FromServices] ISearchTrades searchTrades,
+        [FromServices] ITradeQueries tradeQueries,
+        [FromServices] IValidator<SearchQueryDto> searchQueryValidator,
         [FromQuery] SearchQueryDto searchQueryDto)
     {
-        var searchTradesRequestModel = MapToRequestModel(searchQueryDto);
+        var validationResult = await searchQueryValidator.ValidateAsync(searchQueryDto,
+            options => options.IncludeRuleSets(SearchQueryDto.UnprocessableEntityRuleSet),
+            HttpContext.RequestAborted);
 
-        var result = await searchTrades.Execute(searchTradesRequestModel);
+        if (!validationResult.IsValid)
+            return UnprocessableEntityResult(validationResult);
 
-        return result.Match(
-            page => Ok(new PageDto<TradeDto>(
-                Enumerable.Select(page, TradeDto.From),
-                page.Count,
-                page.TotalCount,
-                page.TotalPages,
-                page.Page,
-                page.PageSize)),
-            UnprocessableEntityResult
-        );
+        var page = await tradeQueries.SearchTrades(searchQueryDto.ToRequestModel(), HttpContext.RequestAborted);
+
+        return Ok(new PageDto<TradeDto>(
+            Enumerable.Select(page, TradeDto.From),
+            page.Count,
+            page.TotalCount,
+            page.TotalPages,
+            page.Page,
+            page.PageSize));
     }
 
     [HttpGet("{tradeId:guid}", Name = nameof(GetTrade))]
     [ProducesResponseType<TradeDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetTrade([FromServices] IGetTrade getTrade, [FromRoute] Guid tradeId)
+    public async Task<ActionResult> GetTrade([FromServices] ITradeQueries tradeQueries, [FromRoute] Guid tradeId)
     {
-        var result = await getTrade.Execute(tradeId);
+        var tradeResponseModel = await tradeQueries.FindTradeModel(tradeId);
 
-        return result.Match(
-            tradeModel => Ok(TradeDto.From(tradeModel)),
-            NotFoundResult
-        );
+        if (tradeResponseModel is null)
+            return NotFoundResult(new NotFound<Trade>(tradeId));
+        
+        return Ok(TradeDto.From(tradeResponseModel));
     }
 
     [HttpPost(Name = nameof(AddTrade))]
@@ -161,69 +163,6 @@ public partial class TradesController : SimpleControllerBase
         return NoContent();
     }
 
-    private static SearchTradesRequestModel MapToRequestModel(SearchQueryDto queryDto)
-    {
-        var searchTradesRequestModel = new SearchTradesRequestModel
-        {
-            ProfileId = queryDto.ProfileId!.Value,
-            Sort = queryDto.Sort?
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(ParseSorting)
-                .ToList() ?? [],
-            Filter = queryDto.Filter?
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x =>
-                {
-                    var match = PropertyFilterSyntaxRegex().Match(x);
-                    return new FilterModel
-                    {
-                        PropertyName = match.Groups["property"].Value,
-                        Operator = match.Groups["operator"].Value,
-                        ComparisonValue = GetComparisonValue(match),
-                        IsLiteral = IsLiteral(match)
-                    };
-                })
-                .ToList() ?? []
-        };
-
-        if (queryDto.Page.HasValue)
-            searchTradesRequestModel.Page = queryDto.Page.Value;
-
-        if (queryDto.PageSize.HasValue)
-            searchTradesRequestModel.PageSize = queryDto.PageSize.Value;
-
-        return searchTradesRequestModel;
-
-        SortModel ParseSorting(string sortBy)
-        {
-            var sortByTrimmed = sortBy.Trim();
-
-            return sortByTrimmed.StartsWith('-')
-                ? new SortModel(sortByTrimmed[1..], false)
-                : new SortModel(sortByTrimmed);
-        }
-    }
-
-    private static bool IsLiteral(Match match)
-    {
-        var comparisonValue = match.Groups["comparisonValue"];
-        var literal = match.Groups["literal"];
-
-        return !comparisonValue.Success && literal.Success;
-    }
-
-    private static string GetComparisonValue(Match match)
-    {
-        var comparisonValue = match.Groups["comparisonValue"];
-        var literal = match.Groups["literal"];
-
-        return comparisonValue.Success
-            ? comparisonValue.Value
-            : literal.Value.IsNullLiteral() || literal.Value.IsBoolLiteral()
-                ? literal.Value
-                : throw new Exception($"Invalid literal '{literal.Value}'.");
-    }
-
     private static AddTradeRequestModel MapToRequestModel(AddTradeDto dto, bool? dryRun)
     {
         return new AddTradeRequestModel
@@ -285,8 +224,4 @@ public partial class TradesController : SimpleControllerBase
             _ => null
         };
     }
-
-    [GeneratedRegex(
-        @"\s*(?<property>.*?)\s+\-(?<operator>.*?)\s+(?<literal>(?i)null|true|false(?-i)|\[(?<comparisonValue>.*?)\])\s*$")]
-    public static partial Regex PropertyFilterSyntaxRegex();
 }

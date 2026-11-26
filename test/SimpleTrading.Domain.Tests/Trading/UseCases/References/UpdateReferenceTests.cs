@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.UpdateReference;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
@@ -21,7 +22,11 @@ public class UpdateReferenceTests : DomainTests
             Notes = "Some Notes"
         }).Build();
 
-        DbContext.AddRange(trade, reference);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.Add(reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateReferenceRequestModel = new UpdateReferenceRequestModel
@@ -45,12 +50,18 @@ public class UpdateReferenceTests : DomainTests
     public async Task You_cannot_update_references_of_a_non_existing_trade()
     {
         var notExistingTradeId = Guid.Parse("e5a40443-6a65-4bc1-9141-3ae859c0a665");
+        var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with
         {
+            TradeOrId = trade,
             Notes = "Some Notes"
         }).Build();
 
-        DbContext.AddRange(reference);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.Add(reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateReferenceRequestModel = new UpdateReferenceRequestModel
@@ -72,7 +83,10 @@ public class UpdateReferenceTests : DomainTests
         var trade = TestData.Trade.Default.Build();
         var notExistingReferenceId = Guid.Parse("7ddbfd72-4e97-499d-9fff-7f1615eae562");
 
-        DbContext.AddRange(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateReferenceRequestModel = new UpdateReferenceRequestModel

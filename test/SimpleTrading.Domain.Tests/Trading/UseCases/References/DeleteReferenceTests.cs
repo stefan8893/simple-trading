@@ -2,6 +2,7 @@
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.DeleteReference;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
@@ -17,7 +18,11 @@ public class DeleteReferenceTests : DomainTests
         var reference1 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
         var reference2 = (TestData.Reference.Default with {TradeOrId = trade}).Build();
 
-        DbContext.AddRange(trade, reference1, reference2);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.AddRange(reference1, reference2);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await Interactor.Execute(new DeleteReferenceRequestModel(trade.Id, reference1.Id), TestContext.Current.CancellationToken);

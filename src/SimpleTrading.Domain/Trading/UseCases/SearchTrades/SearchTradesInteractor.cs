@@ -39,8 +39,10 @@ public class SearchTradesInteractor(
 
         var userSettings = await userSettingsRepository.GetUserSettings();
 
-        return trades
-            .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));
+        
+        throw new NotImplementedException();
+        // return trades
+        //     .Select(x => TradeResponseModel.From(x, userSettings.TimeZone));
     }
 
     private static Expression<Func<Trade, bool>> Add(Expression<Func<Trade, bool>> acc,

@@ -2,6 +2,7 @@
 using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.ReferencesController;
@@ -14,7 +15,10 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
-        DbContext.AddRange(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var idOfAddedReference = await client.AddReferenceAsync(trade.Id, new AddReferenceDto
@@ -32,7 +36,10 @@ public class AddReferenceTests(TestingWebApplicationFactory<Program> factory) : 
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
-        DbContext.AddRange(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement

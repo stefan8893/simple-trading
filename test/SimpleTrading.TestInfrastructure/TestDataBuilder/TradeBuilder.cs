@@ -60,13 +60,10 @@ public static partial class TestData
             {
                 Id = Id,
                 AssetId = asset.Id,
-                Asset = asset,
                 ProfileId = profile.Id,
-                Profile = profile,
                 Size = Size,
                 Opened = opened,
                 CurrencyId = currency.Id,
-                Currency = currency,
                 PositionPrices = positionPrices,
                 References = [],
                 Notes = Notes,

@@ -23,6 +23,7 @@ public abstract class WebApiTests(TestingWebApplicationFactory<Program> factory)
 
     protected ILifetimeScope ServiceLocator => _lifetimeScope!;
 
+
     public async ValueTask DisposeAsync()
     {
         await DbContext.Database.EnsureDeletedAsync();

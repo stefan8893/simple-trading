@@ -6,6 +6,7 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.FinishTrade;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -65,7 +66,10 @@ public class FinishTradeTests : DomainTests
     public async Task A_trades_exit_price_must_be_greater_than_zero()
     {
         var trade = (TestData.Trade.Default with {Opened = _utcNow}).Build();
-        DbContext.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel =
@@ -91,7 +95,10 @@ public class FinishTradeTests : DomainTests
             PositionPrices = new TestData.PositionPrices {EntryPrice = 1m, StopLoss = 0.9m, TakeProfit = 1.4m},
             Opened = _utcNow
         }).Build();
-        DbContext.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var requestModel =

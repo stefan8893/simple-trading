@@ -24,9 +24,17 @@ public class DeleteTradeTests : DomainTests
     [Fact]
     public async Task A_trade_can_be_successfully_deleted()
     {
-        var trade = TestData.Trade.Default.Build();
+        var profile = TestData.Profile.Default.Build();
+        var asset = TestData.Asset.Default.Build();
+        var currency = TestData.Currency.Default.Build();
+        var trade = (TestData.Trade.Default with
+        {
+            ProfileOrId = profile,
+            AssetOrId = asset,
+            CurrencyOrId = currency
+        }).Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.AddRange(trade, profile, asset, currency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await Interactor.Execute(trade.Id, TestContext.Current.CancellationToken);

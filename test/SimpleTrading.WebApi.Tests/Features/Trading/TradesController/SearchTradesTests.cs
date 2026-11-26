@@ -3,6 +3,7 @@ using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
@@ -20,7 +21,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -150,7 +152,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -199,7 +202,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -233,7 +237,9 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
         };
 
         DbContext.Profiles.Add(profile);
-        DbContext.Trades.AddRange(openedTrade.Build(), finishedTrade.Build());
+        DbContext.Trades.AddRange(
+            openedTrade.Build().AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext),
+            finishedTrade.Build().AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         const string searchFilter = "IsFinished -eq false";
@@ -263,7 +269,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .Select(x => x.Build())
             .ToList();
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -284,7 +291,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -305,7 +313,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             .Select(_ => TestData.Trade.Default with {ProfileOrId = profile})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -335,7 +344,8 @@ public class SearchTradesTests(TestingWebApplicationFactory<Program> factory) : 
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

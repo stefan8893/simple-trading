@@ -28,15 +28,15 @@ public class TradeResponseModel
     public required string? Notes { get; init; }
     public required IImmutableList<string> Warnings { get; init; }
 
-    public static TradeResponseModel From(Trade trade, string timeZone)
+    public static TradeResponseModel From(Trade trade, Profile profile, Asset asset, Currency currency, string timeZone)
     {
         return new TradeResponseModel
         {
             Id = trade.Id,
             AssetId = trade.AssetId,
-            Asset = trade.Asset.Symbol,
+            Asset = asset.Symbol,
             ProfileId = trade.ProfileId,
-            Profile = trade.Profile.Name,
+            Profile = profile.Name,
             Size = trade.Size,
             Opened = trade.Opened.ToLocal(timeZone),
             Finished = trade.Finished?.ToLocal(timeZone),
@@ -45,15 +45,17 @@ public class TradeResponseModel
             Performance = trade.Result?.Performance,
             IsFinished = trade.IsFinished,
             CurrencyId = trade.CurrencyId,
-            Currency = trade.Currency.IsoCode,
+            Currency = currency.IsoCode,
             EntryPrice = trade.PositionPrices.Entry,
             StopLoss = trade.PositionPrices.StopLoss,
             TakeProfit = trade.PositionPrices.TakeProfit,
             ExitPrice = trade.PositionPrices.Exit,
             RiskRewardRatio = trade.RiskRewardRatio,
-            References = trade.References
-                .Select(ReferenceResponseModel.From)
-                .ToList(),
+            References =
+            [
+                .. trade.References
+                    .Select(ReferenceResponseModel.From)
+            ],
             Notes = trade.Notes,
             Warnings = trade.GetWarnings()
         };

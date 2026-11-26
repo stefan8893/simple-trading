@@ -2,16 +2,17 @@
 using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class SearchTradesFilterTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
+    private ITradeQueries TradeQueries => ServiceLocator.Resolve<ITradeQueries>();
 
     [Fact]
     public async Task Greater_than_opened_date_with_comparison_value_in_local_time_returns_correct_result()
@@ -23,7 +24,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Profiles.Add(profile);
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
@@ -35,7 +37,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
@@ -54,7 +56,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -67,7 +70,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T18:00:00+02:00");
@@ -90,7 +93,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -111,7 +114,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -134,7 +137,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -156,7 +159,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -174,7 +177,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -187,7 +191,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var firstExpected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
@@ -208,7 +212,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -221,7 +226,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
@@ -242,7 +247,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -255,7 +261,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
@@ -274,7 +280,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -287,7 +294,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var expected = DateTimeOffset.Parse("2024-08-19T17:00:00+02:00");
@@ -306,7 +313,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -319,7 +327,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var firstExpected = DateTimeOffset.Parse("2024-08-19T16:00:00+02:00");
@@ -347,7 +355,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Profiles.Add(profile);
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
@@ -359,7 +368,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -381,7 +390,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -403,7 +412,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -425,7 +434,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -447,7 +456,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -469,7 +478,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -491,7 +500,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -513,7 +522,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -535,7 +544,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -557,7 +566,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -574,7 +583,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultProfile(DbContext).AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
@@ -586,7 +596,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -602,7 +612,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultProfile(DbContext).AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var filter = new FilterModel
@@ -614,7 +625,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -630,7 +641,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -643,7 +655,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -659,7 +671,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Size = 5000m * x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -672,7 +685,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -688,7 +701,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, ProfitLoss = 500m * x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -701,7 +715,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -723,7 +737,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -736,7 +751,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -771,7 +786,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -787,7 +802,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Result = (ResultModel) x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -800,7 +816,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -825,7 +841,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -838,7 +855,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -864,7 +881,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -877,7 +895,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -901,7 +919,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -914,7 +933,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -938,7 +957,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var validationResult = Assert.IsType<ValidationResult>(response.Value);
@@ -963,7 +982,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -976,7 +996,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1001,7 +1021,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -1014,7 +1035,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1039,7 +1060,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -1052,7 +1074,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1076,7 +1098,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -1089,7 +1112,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1133,7 +1156,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1177,7 +1200,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1210,7 +1233,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => x.Build())
             .ToList();
 
-        DbContext.Trades.AddRange(finishedTrades.Concat(notFinishedTrades));
+        DbContext.Trades.AddRange(finishedTrades.Concat(notFinishedTrades).Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -1223,7 +1247,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1254,7 +1278,8 @@ public class SearchTradesFilterTests : DomainTests
             .Select(x => x.Build())
             .ToList();
 
-        DbContext.Trades.AddRange(notFinishedTrades.Concat(finishedTrades));
+        DbContext.Trades.AddRange(notFinishedTrades.Concat(finishedTrades).Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -1267,7 +1292,7 @@ public class SearchTradesFilterTests : DomainTests
         };
 
         var response =
-            await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
+            await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = [filter]},
                 TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);
@@ -1295,7 +1320,8 @@ public class SearchTradesFilterTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -1324,7 +1350,7 @@ public class SearchTradesFilterTests : DomainTests
             }
         ];
 
-        var response = await Interactor.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter},
+        var response = await TradeQueries.Execute(new SearchTradesRequestModel {ProfileId = profile.Id, Filter = filter},
             TestContext.Current.CancellationToken);
 
         var pagedTrades = Assert.IsType<PagedList<TradeResponseModel>>(response.Value);

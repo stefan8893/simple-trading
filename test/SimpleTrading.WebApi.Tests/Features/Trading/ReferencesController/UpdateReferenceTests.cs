@@ -2,6 +2,7 @@
 using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.ReferencesController;
@@ -15,7 +16,11 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
 
         var trade = TestData.Trade.Default.Build();
         var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
-        DbContext.AddRange(trade, reference);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.Add(reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         await client.UpdateReferenceAsync(trade.Id, reference.Id, new UpdateReferenceDto
@@ -34,8 +39,13 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var client = await CreateClient();
 
         var notExistingTradeId = Guid.Parse("c2e4edf0-8fa9-492b-9f9f-be883c7ad3ed");
-        var reference = TestData.Reference.Default.Build();
+        var trade = TestData.Trade.Default.Build();
+        var reference = (TestData.Reference.Default with {TradeOrId = trade}).Build();
 
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         DbContext.References.Add(reference);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -63,7 +73,10 @@ public class UpdateReferenceTests(TestingWebApplicationFactory<Program> factory)
         var trade = TestData.Trade.Default.Build();
         var notExistingReference = Guid.Parse("cab4f9ae-c690-4875-8560-7121e73e1183");
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement

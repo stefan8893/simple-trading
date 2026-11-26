@@ -1,15 +1,16 @@
 ﻿using Autofac;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class SearchTradesProfileTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
+    private ITradeQueries Interactor => ServiceLocator.Resolve<ITradeQueries>();
 
 
     [Fact]
@@ -22,7 +23,8 @@ public class SearchTradesProfileTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Profiles.Add(profile);
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response =
@@ -49,8 +51,10 @@ public class SearchTradesProfileTests : DomainTests
             .Select(x => x.Build());
 
         DbContext.Profiles.AddRange(profileA, profileB);
-        DbContext.Trades.AddRange(tradesA);
-        DbContext.Trades.AddRange(tradesB);
+        DbContext.Trades.AddRange(tradesA.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
+        DbContext.Trades.AddRange(tradesB.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response =

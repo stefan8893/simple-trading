@@ -9,9 +9,9 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
     public void Configure(EntityTypeBuilder<Trade> builder)
     {
         builder.HasKey(x => x.Id);
-
+        
         builder
-            .HasOne(x => x.Asset)
+            .HasOne<Asset>()
             .WithMany()
             .HasForeignKey(x => x.AssetId)
             .HasPrincipalKey(x => x.Id)
@@ -19,7 +19,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
             .IsRequired();
 
         builder
-            .HasOne(x => x.Profile)
+            .HasOne<Profile>()
             .WithMany()
             .HasForeignKey(x => x.ProfileId)
             .HasPrincipalKey(x => x.Id)
@@ -27,7 +27,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
             .IsRequired();
 
         builder
-            .HasOne(x => x.Currency)
+            .HasOne<Currency>()
             .WithMany()
             .HasForeignKey(x => x.CurrencyId)
             .HasPrincipalKey(x => x.Id)

@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.References.AddReference;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases.References;
@@ -33,7 +34,10 @@ public class AddReferenceTests : DomainTests
             .Select(_ => (TestData.Reference.Default with {TradeOrId = trade}).Build())
             .ToList();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         DbContext.References.AddRange(references);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -52,7 +56,10 @@ public class AddReferenceTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =
@@ -73,7 +80,10 @@ public class AddReferenceTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var referenceRequestModel =

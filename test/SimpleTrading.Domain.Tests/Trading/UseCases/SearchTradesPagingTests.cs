@@ -1,16 +1,17 @@
 ﻿using Autofac;
 using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class SearchTradesPagingTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
+    private ITradeQueries Interactor => ServiceLocator.Resolve<ITradeQueries>();
 
     [Fact]
     public async Task Paged_result_contains_only_requested_subset()
@@ -21,7 +22,8 @@ public class SearchTradesPagingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -45,7 +47,8 @@ public class SearchTradesPagingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -69,7 +72,8 @@ public class SearchTradesPagingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -93,7 +97,8 @@ public class SearchTradesPagingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -117,7 +122,8 @@ public class SearchTradesPagingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -141,7 +147,8 @@ public class SearchTradesPagingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, Opened = initialOpenedDate.AddHours(x)})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 

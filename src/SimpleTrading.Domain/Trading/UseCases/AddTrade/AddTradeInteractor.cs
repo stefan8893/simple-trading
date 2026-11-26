@@ -61,13 +61,10 @@ public class AddTradeInteractor(
         {
             Id = Guid.CreateVersion7(),
             AssetId = asset.Id,
-            Asset = asset,
             ProfileId = profile.Id,
-            Profile = profile,
             Size = model.Size,
             Opened = model.Opened.UtcDateTime,
             CurrencyId = currency.Id,
-            Currency = currency,
             PositionPrices = new PositionPrices
             {
                 Entry = model.EntryPrice,

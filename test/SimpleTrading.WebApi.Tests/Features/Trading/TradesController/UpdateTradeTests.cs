@@ -3,6 +3,7 @@ using SimpleTrading.ApiClient;
 using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.TestInfrastructure;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.WebApi.Tests.Features.Trading.TradesController;
@@ -18,7 +19,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         {
             Size = 5000
         }).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
@@ -46,7 +50,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             Finished = now,
             ProfitLoss = 0m
         }).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
@@ -69,7 +76,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement
@@ -100,7 +110,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             Finished = now,
             ProfitLoss = 0m
         }).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
@@ -127,7 +140,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
             Finished = now,
             ProfitLoss = 0m
         }).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var response = await client.UpdateTradeAsync(trade.Id, new UpdateTradeDto
@@ -168,7 +184,10 @@ public class UpdateTradeTests(TestingWebApplicationFactory<Program> factory) : W
         var client = await CreateClient();
 
         var trade = TestData.Trade.Default.Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // ReSharper disable once MoveLocalFunctionAfterJumpStatement

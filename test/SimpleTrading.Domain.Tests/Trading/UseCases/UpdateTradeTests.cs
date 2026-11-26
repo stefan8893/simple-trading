@@ -6,6 +6,7 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
 using SimpleTrading.Domain.Trading.UseCases.UpdateTrade;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -49,7 +50,10 @@ public class UpdateTradeTests : DomainTests
             ProfitLoss = 0
         }).Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -164,7 +168,11 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
         var newAsset = TestData.Asset.Default.Build();
 
-        DbContext.AddRange(trade, newAsset);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.Assets.Add(newAsset);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -188,7 +196,11 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
         var newProfile = TestData.Profile.Default.Build();
 
-        DbContext.AddRange(trade, newProfile);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.Profiles.Add(newProfile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -212,7 +224,11 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
         var newCurrency = TestData.Currency.Default.Build();
 
-        DbContext.AddRange(trade, newCurrency);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
+        DbContext.Currencies.Add(newCurrency);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -236,7 +252,10 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
         _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -257,7 +276,10 @@ public class UpdateTradeTests : DomainTests
         var trade = TestData.Trade.Default.Build();
         _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -279,7 +301,10 @@ public class UpdateTradeTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -301,7 +326,10 @@ public class UpdateTradeTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -325,7 +353,10 @@ public class UpdateTradeTests : DomainTests
         _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
         const decimal newProfitLoss = 100m;
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -348,7 +379,10 @@ public class UpdateTradeTests : DomainTests
     {
         var trade = TestData.Trade.Default.Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -379,7 +413,10 @@ public class UpdateTradeTests : DomainTests
             ).Build();
         _ = trade.Finish(new FinishTradeConfiguration(trade.Opened, 50, UtcNowStub));
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -414,7 +451,10 @@ public class UpdateTradeTests : DomainTests
                 }
             ).Build();
 
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var updateTradeRequestModel = new UpdateTradeRequestModel
@@ -446,7 +486,10 @@ public class UpdateTradeTests : DomainTests
             ProfitLoss = 500m,
             Result = ResultModel.Win
         }).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.True(trade.IsFinished);
@@ -473,7 +516,10 @@ public class UpdateTradeTests : DomainTests
     public async Task Result_cannot_be_overriden_since_the_trade_is_not_finished()
     {
         var trade = TestData.Trade.Default.Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.False(trade.IsFinished);
@@ -494,7 +540,10 @@ public class UpdateTradeTests : DomainTests
     public async Task Result_cannot_be_overriden_to_null_since_the_trade_is_not_finished()
     {
         var trade = TestData.Trade.Default.Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.False(trade.IsFinished);
@@ -521,7 +570,10 @@ public class UpdateTradeTests : DomainTests
             Finished = _utcNow,
             ProfitLoss = 0m
         }).Build();
-        DbContext.Trades.Add(trade);
+        DbContext.Trades.Add(trade
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.True(trade.IsFinished);

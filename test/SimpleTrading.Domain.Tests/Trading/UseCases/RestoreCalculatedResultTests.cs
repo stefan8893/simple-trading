@@ -4,6 +4,7 @@ using SimpleTrading.Domain.Infrastructure.Extensions;
 using SimpleTrading.Domain.Trading;
 using SimpleTrading.Domain.Trading.UseCases.RestoreCalculatedResult;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
@@ -31,7 +32,10 @@ public class RestoreCalculatedResultTests : DomainTests
             }
         }).Build();
 
-        DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
+        DbContext.Trades.Add(tradeWithCalculatedMediocreResult
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(Result.Mediocre, tradeWithCalculatedMediocreResult.Result!.Name);
@@ -82,7 +86,10 @@ public class RestoreCalculatedResultTests : DomainTests
             ManuallyEnteredResult = ResultModel.Loss
         });
 
-        DbContext.Trades.Add(tradeWithCalculatedMediocreResult);
+        DbContext.Trades.Add(tradeWithCalculatedMediocreResult
+            .AddDefaultProfile(DbContext)
+            .AddDefaultAsset(DbContext)
+            .AddDefaultCurrency(DbContext));
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(Result.Loss, tradeWithCalculatedMediocreResult.Result!.Name);

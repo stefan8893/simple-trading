@@ -2,16 +2,17 @@
 using FluentValidation.Results;
 using SimpleTrading.Domain.Infrastructure;
 using SimpleTrading.Domain.Infrastructure.Extensions;
-using SimpleTrading.Domain.Trading.UseCases.SearchTrades;
+using SimpleTrading.Domain.Trading.DataAccess;
 using SimpleTrading.Domain.Trading.UseCases.SearchTrades.Models;
 using SimpleTrading.Domain.Trading.UseCases.Shared;
+using SimpleTrading.TestInfrastructure.Extensions;
 using SimpleTrading.TestInfrastructure.TestDataBuilder;
 
 namespace SimpleTrading.Domain.Tests.Trading.UseCases;
 
 public class SearchTradesSortingTests : DomainTests
 {
-    private ISearchTrades Interactor => ServiceLocator.Resolve<ISearchTrades>();
+    private ITradeQueries Interactor => ServiceLocator.Resolve<ITradeQueries>();
 
     [Fact]
     public async Task Sort_by_invalid_property_does_not_work()
@@ -48,7 +49,8 @@ public class SearchTradesSortingTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -85,7 +87,8 @@ public class SearchTradesSortingTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -119,7 +122,8 @@ public class SearchTradesSortingTests : DomainTests
             })
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -149,7 +153,8 @@ public class SearchTradesSortingTests : DomainTests
             .Select(x => TestData.Trade.Default with {ProfileOrId = profile, ProfitLoss = 50m * x})
             .Select(x => x.Build());
 
-        DbContext.Trades.AddRange(trades);
+        DbContext.Trades.AddRange(trades.Select(trade =>
+            trade.AddDefaultAsset(DbContext).AddDefaultCurrency(DbContext)));
         DbContext.Profiles.Add(profile);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
